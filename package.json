@@ -9,8 +9,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "yarn build",
-    "deploy": "gh-pages -d dist",
+    "deploy": "yarn build && gh-pages -d dist",
     "clean": "rm -rf node_modules && yarn cache clean"
   },
   "dependencies": {
