@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export function useDayCountdown() {
   const [timeLeft, setTimeLeft] = useState('');
@@ -17,7 +17,7 @@ export function useDayCountdown() {
 
       // Pad with zeros (e.g., "09:05:01")
       const formatted = [hours, minutes, seconds]
-        .map(n => n.toString().padStart(2, '0'))
+        .map((n) => n.toString().padStart(2, '0'))
         .join(':');
 
       setTimeLeft(formatted);
