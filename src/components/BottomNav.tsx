@@ -1,5 +1,5 @@
+import { Calendar, Puzzle, User } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import { Puzzle, Calendar, User } from 'lucide-react';
 
 export function BottomNav() {
   const navItems = [
@@ -30,7 +30,9 @@ export function BottomNav() {
                 }`}
                 strokeWidth={isActive ? 2.5 : 2}
               />
-              <span className={`text-[10px] font-medium tracking-wide ${isActive ? 'font-bold text-white' : ''}`}>
+              <span
+                className={`text-[10px] font-medium tracking-wide ${isActive ? 'font-bold text-white' : ''}`}
+              >
                 {item.label}
               </span>
             </>

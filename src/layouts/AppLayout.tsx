@@ -1,11 +1,11 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
-import { TopBar } from '@components/TopBar';
-import { BottomNav } from '@components/BottomNav';
 import { AnimatedPage } from '@components/AnimatedPage';
+import { BottomNav } from '@components/BottomNav';
+import { TopBar } from '@components/TopBar';
 import { ArchiveScreen } from '@screens/ArchiveScreen';
-import { ProfileScreen } from '@screens/ProfileScreen';
 import { HubScreen } from '@screens/HubScreen';
+import { ProfileScreen } from '@screens/ProfileScreen';
+import { AnimatePresence } from 'framer-motion';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 export function AppLayout() {
   const location = useLocation();
@@ -24,15 +24,27 @@ export function AppLayout() {
           <Routes location={location} key={location.pathname}>
             <Route
               path="/"
-              element={<AnimatedPage><HubScreen /></AnimatedPage>}
+              element={
+                <AnimatedPage>
+                  <HubScreen />
+                </AnimatedPage>
+              }
             />
             <Route
               path="/archive"
-              element={<AnimatedPage><ArchiveScreen /></AnimatedPage>}
+              element={
+                <AnimatedPage>
+                  <ArchiveScreen />
+                </AnimatedPage>
+              }
             />
             <Route
               path="/profile"
-              element={<AnimatedPage><ProfileScreen /></AnimatedPage>}
+              element={
+                <AnimatedPage>
+                  <ProfileScreen />
+                </AnimatedPage>
+              }
             />
           </Routes>
         </AnimatePresence>

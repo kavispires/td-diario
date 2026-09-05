@@ -1,7 +1,7 @@
 import { Clock } from 'lucide-react';
+import flameIcon from '../assets/svg/flame.svg';
 import { useDayCountdown } from '../hooks/useDayCountdown';
 import { useDailyStore } from '../store/useDailyStore';
-import flameIcon from '../assets/svg/flame.svg';
 
 export function DailyStatusBoard() {
   const timeLeft = useDayCountdown();
@@ -30,8 +30,8 @@ export function DailyStatusBoard() {
         <div className="bg-slate-900 text-white px-4 py-1.5 rounded-full flex items-center gap-2 shadow-md">
           <Clock className="w-4.5 h-4.5 text-slate-200 shrink-0" />
 
-          <span className="text-[14px] font-normal racking-wide uppercase whitespace-nowrap">
-            Próximos em{' '}
+          <span className="text-[14px] font-normal tracking-wide uppercase whitespace-nowrap">
+            Termina em{' '}
             <span className="inline-block w-[8ch] text-center font-mono font-semibold tabular-nums">
               {timeLeft || '00:00:00'}
             </span>
@@ -42,7 +42,8 @@ export function DailyStatusBoard() {
       {/* Bottom Row: Progress */}
       <div className="flex flex-col gap-2 ">
         <p className="text-[15px] text-slate-900">
-          <span className="font-bold">Progresso:</span> {completedCount} de {totalGames} jogos concluídos
+          <span className="font-bold">Progresso:</span> {completedCount} de{' '}
+          {totalGames} jogos concluídos
         </p>
 
         {/*

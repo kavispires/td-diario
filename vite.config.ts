@@ -1,11 +1,11 @@
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { defineConfig } from 'vite'
-import { VitePWA } from 'vite-plugin-pwa'
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/",
+  base: '/',
   plugins: [
     react(),
     tailwindcss(),
@@ -26,17 +26,17 @@ export default defineConfig({
             src: '/icon-192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any maskable',
           },
           {
             src: '/icon-512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
-      }
-    })
+            purpose: 'any maskable',
+          },
+        ],
+      },
+    }),
   ],
   server: {
     open: true,
@@ -44,5 +44,5 @@ export default defineConfig({
   },
   resolve: {
     tsconfigPaths: true,
-  }
-})
+  },
+});
