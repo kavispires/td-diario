@@ -4,24 +4,30 @@ import { TopBar } from '@components/TopBar';
 import { ArchiveScreen } from '@screens/ArchiveScreen';
 import { HubScreen } from '@screens/HubScreen';
 import { ProfileScreen } from '@screens/ProfileScreen';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'motion/react';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import { MainContent } from './MainContent';
 
 export function AppLayout() {
   const location = useLocation();
 
   return (
-    <div className="flex flex-col min-h-screen max-w-md mx-auto border-x border-slate-200 bg-[#FDFBF7] shadow-2xl relative overflow-hidden">
-      <TopBar />
+    <div className="relative flex h-dvh w-full flex-col overflow-hidden">
+      <div className="z-20 w-full max-w-md self-center border-x border-slate-200 shadow-2xl">
+        <TopBar />
+      </div>
 
       {/*
         overflow-x-hidden prevents horizontal scrollbars
         from appearing while the screens are sliding side-to-side
       */}
-      <main className="flex-1 overflow-x-hidden relative">
+      <MainContent>
         {/* mode="wait" ensures the old page finishes exiting before the new one enters */}
         <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
+          <Routes
+            location={location}
+            key={location.pathname}
+          >
             <Route
               path="/"
               element={
@@ -48,9 +54,11 @@ export function AppLayout() {
             />
           </Routes>
         </AnimatePresence>
-      </main>
+      </MainContent>
 
-      <BottomNav />
+      <div className="z-20 w-full max-w-md self-center border-x border-slate-200 shadow-2xl">
+        <BottomNav />
+      </div>
     </div>
   );
 }

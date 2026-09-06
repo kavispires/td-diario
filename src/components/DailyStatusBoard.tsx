@@ -1,11 +1,14 @@
 import { Clock } from 'lucide-react';
 import flameIcon from '../assets/svg/flame.svg';
 import { useDayCountdown } from '../hooks/useDayCountdown';
-import { useDailyStore } from '../store/useDailyStore';
 
 export function DailyStatusBoard() {
   const timeLeft = useDayCountdown();
-  const { streak, completedCount, totalGames } = useDailyStore();
+  const { streak, completedCount, totalGames } = {
+    streak: 0,
+    completedCount: 0,
+    totalGames: 0,
+  };
 
   const progressPercent = Math.round((completedCount / totalGames) * 100);
 
