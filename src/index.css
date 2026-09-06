@@ -9,4 +9,33 @@ body {
   user-select: none;
   /* Disables the tap highlight color on mobile */
   -webkit-tap-highlight-color: transparent;
+
+  background: linear-gradient(
+    -45deg,
+    #fac0a3,
+    #eac3bd,
+    #c8c1d0,
+    #b9ded8,
+    #fcd4b5,
+    #f9d8c8,
+    #e6d4dc,
+    #fac0a3
+  );
+  background-size: 1000% 1000%;
+  animation: gradient 30s ease infinite;
+  min-height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
