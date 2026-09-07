@@ -1,8 +1,10 @@
 import { TDLogoIcon } from '@components/TDLogoIcon';
-import { signInWithGoogle } from '@services/firebase';
+import { signIn, signInWithGoogle } from '@services/firebase';
 import { useMutation } from '@tanstack/react-query';
+import { isDevEnv } from '@utils/helpers';
 import type { UserCredential } from 'firebase/auth';
 import { motion } from 'motion/react';
+import { type ChangeEvent, useState } from 'react';
 
 export function LoginScreen() {
   const {
@@ -36,6 +38,8 @@ export function LoginScreen() {
           </p>
         </div>
       </div>
+
+      {isDevEnv && <DevLoginForm />}
 
       {/* Action Area */}
       <div className="flex w-full flex-col items-center gap-4">
@@ -86,5 +90,76 @@ export function LoginScreen() {
         </p>
       </div>
     </motion.div>
+  );
+}
+
+function DevLoginForm() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const {
+    mutate: loginWithCredentials,
+    isPending,
+    error,
+  } = useMutation<
+    UserCredential,
+    Error,
+    { username: string; password: string }
+  >({
+    mutationFn: ({ username, password }) => signIn(username, password),
+  });
+
+  function handleSubmit(event: ChangeEvent<HTMLFormElement>) {
+    event.preventDefault();
+    loginWithCredentials({ username, password });
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="flex w-full max-w-xs flex-col gap-3 rounded-2xl bg-white/75 p-4 shadow-lg backdrop-blur-sm mb-4"
+    >
+      <p className="text-center text-sm font-semibold text-slate-800">
+        Desenvolvimento
+      </p>
+      <label className="flex flex-col gap-1 text-xs font-medium text-slate-700">
+        Usuário
+        <input
+          type="email"
+          name="username"
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+          autoComplete="username"
+          required
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-normal text-slate-900 outline-none focus:border-slate-500"
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-xs font-medium text-slate-700">
+        Senha
+        <input
+          type="password"
+          name="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          autoComplete="current-password"
+          required
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-normal text-slate-900 outline-none focus:border-slate-500"
+        />
+      </label>
+      <button
+        type="submit"
+        disabled={isPending}
+        className="rounded-lg bg-slate-700 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {isPending ? 'Entrando...' : 'Entrar com usuário'}
+      </button>
+      {error && (
+        <p
+          className="text-center text-xs text-red-700"
+          role="alert"
+        >
+          Não foi possível entrar com essas credenciais.
+        </p>
+      )}
+    </form>
   );
 }
