@@ -2,6 +2,7 @@ import { AnimatedPage } from '@components/AnimatedPage';
 import { ChromeHeader } from '@components/chrome/Header';
 import { ChromeNav } from '@components/chrome/Nav';
 import { ArchiveScreen } from '@screens/ArchiveScreen';
+import { GameScreen } from '@screens/GameScreen';
 import { HubScreen } from '@screens/HubScreen';
 import { ProfileScreen } from '@screens/ProfileScreen';
 import { AnimatePresence } from 'motion/react';
@@ -34,6 +35,16 @@ export function AppLayout() {
                 </AnimatedPage>
               }
             />
+
+            <Route
+              path="/game/:gameId"
+              element={
+                <AnimatedPage>
+                  <GameScreen />
+                </AnimatedPage>
+              }
+            />
+
             <Route
               path="/archive"
               element={

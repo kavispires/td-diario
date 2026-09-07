@@ -6,8 +6,8 @@ interface UserPreferencesState {
   /**
    * The ID of an active game. This is used to keep track of the last game the user was playing, so we can restore it when they come back.
    */
-  activeGame: string | null;
-  setActiveGame: (gameId: string | null) => void;
+  ongoingGame: string | null;
+  setOngoingGame: (gameId: string | null) => void;
   /**
    * Whether the sound is enabled or not. This is used to keep track of the user's preference for sound, so we can restore it when they come back.
    */
@@ -23,8 +23,8 @@ interface UserPreferencesState {
 export const useUserPreferencesStore = create<UserPreferencesState>()(
   persist(
     (set) => ({
-      activeGame: null,
-      setActiveGame: (gameId) => set({ activeGame: gameId }),
+      ongoingGame: null,
+      setOngoingGame: (gameId) => set({ ongoingGame: gameId }),
       soundEnabled: true,
       setSoundEnabled: (enabled) => set({ soundEnabled: enabled }),
       lastSeenNews: null,
