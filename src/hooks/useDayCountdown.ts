@@ -1,3 +1,4 @@
+import { getMillisecondsUntilTomorrow } from '@utils/helpers';
 import { useEffect, useState } from 'react';
 
 export function useDayCountdown() {
@@ -5,11 +6,7 @@ export function useDayCountdown() {
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const now = new Date();
-      const tomorrow = new Date(now);
-      tomorrow.setHours(24, 0, 0, 0); // Set to next midnight
-
-      const diff = tomorrow.getTime() - now.getTime();
+      const diff = getMillisecondsUntilTomorrow();
 
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / 1000 / 60) % 60);

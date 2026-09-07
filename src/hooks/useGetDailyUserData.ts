@@ -1,21 +1,19 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getMillisecondsUntilTomorrow, getToday } from '@utils/helpers';
 import { doc, getDoc, setDoc } from 'firebase/firestore'; // Added setDoc
 import { useEffect } from 'react';
 import { firestore } from '../services/firebase';
 import { useAuthStore } from '../store/useAuthStore';
 import type { DailyUser } from '../types/user';
 
-export function useDailyUserData() {
+export function useGetDailyUserData() {
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
 
   // The user is refreshed every midnight, so we need to invalidate the query at that time
   useEffect(() => {
     if (!user?.uid) return;
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setHours(24, 0, 0, 0);
-    const msUntilMidnight = tomorrow.getTime() - now.getTime();
+    const msUntilMidnight = getMillisecondsUntilTomorrow();
 
     const timer = setTimeout(() => {
       queryClient.invalidateQueries({ queryKey: ['dailyUser', user.uid] });
@@ -30,14 +28,16 @@ export function useDailyUserData() {
       if (!user?.uid) throw new Error('No user ID');
 
       const docRef = doc(firestore, 'dailyUsers', user.uid);
-      const docSnap = await getDoc(docRef);
+      const docSnap = await getDoc(docRef).catch((error) => {
+        // TODO: Use try/catch
+        throw error;
+      });
 
       if (docSnap.exists()) {
         return docSnap.data() as DailyUser;
       }
 
-      // STEP 3a: Create the user if they don't exist
-      const todayString = new Date().toLocaleDateString('en-CA'); // Gets YYYY-MM-DD safely
+      const todayString = getToday();
 
       const newUser: DailyUser = {
         uid: user.uid,
@@ -58,6 +58,5 @@ export function useDailyUserData() {
       return newUser;
     },
     enabled: !!user?.uid,
-    staleTime: Infinity,
   });
 }
