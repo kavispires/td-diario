@@ -1,4 +1,5 @@
 import { TDLogoIcon } from '@components/TDLogoIcon';
+import { Text } from '@components/ui/Typography';
 
 type LoadingScreenProps = {
   message?: string;
@@ -14,12 +15,13 @@ export function LoadingScreen({
       aria-live="polite"
     >
       <TDLogoIcon className="h-32 w-32 object-contain sm:h-40 sm:w-40" />
-      <p
-        className="animate-pulse font-medium"
+      <Text
+        className="animate-pulse"
         role="status"
+        strong
       >
         {message}
-      </p>
+      </Text>
     </main>
   );
 }

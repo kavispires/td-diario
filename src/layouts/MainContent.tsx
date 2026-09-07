@@ -43,7 +43,7 @@ export function MainContent({ children, fullscreen }: MainContentProps) {
         />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-full w-full max-w-md flex-col">
+      <div className="relative z-10 mx-auto flex min-h-full w-full max-w-md flex-col shadow-[0_0_24px_rgba(0,0,0,0.1)]">
         {children}
       </div>
     </main>

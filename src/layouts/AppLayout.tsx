@@ -1,6 +1,6 @@
 import { AnimatedPage } from '@components/AnimatedPage';
-import { BottomNav } from '@components/BottomNav';
-import { TopBar } from '@components/TopBar';
+import { ChromeHeader } from '@components/chrome/Header';
+import { ChromeNav } from '@components/chrome/Nav';
 import { ArchiveScreen } from '@screens/ArchiveScreen';
 import { HubScreen } from '@screens/HubScreen';
 import { ProfileScreen } from '@screens/ProfileScreen';
@@ -13,9 +13,7 @@ export function AppLayout() {
 
   return (
     <div className="relative flex h-dvh w-full flex-col overflow-hidden">
-      <div className="z-20 w-full max-w-md self-center border-x border-slate-200 shadow-2xl">
-        <TopBar />
-      </div>
+      <ChromeHeader />
 
       {/*
         overflow-x-hidden prevents horizontal scrollbars
@@ -56,9 +54,7 @@ export function AppLayout() {
         </AnimatePresence>
       </MainContent>
 
-      <div className="z-20 w-full max-w-md self-center border-x border-slate-200 shadow-2xl">
-        <BottomNav />
-      </div>
+      <ChromeNav />
     </div>
   );
 }
