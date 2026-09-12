@@ -1,1 +1,0 @@
-import{t as e}from"./index-yxsgBJeu.js";var t=e();function n(){return(0,t.jsx)(`div`,{children:`VitraisInfinitos`})}export{n as DailyVitraisInfinitosGame};

@@ -1,0 +1,1 @@
+import{t as e}from"./index-Ck4Myrjg.js";var t=e();function n(){return(0,t.jsx)(`div`,{children:`Vitral`})}export{n as DailyVitralGame};
