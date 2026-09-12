@@ -24,16 +24,16 @@ export function ErrorScreen({
       role="alert"
       aria-live="assertive"
     >
-      <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#f8d8cf]/70 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-[#d5ece8]/70 blur-3xl" />
+      <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-accent-soft/70 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-secondary-soft/70 blur-3xl" />
 
-      <section className="relative z-10 flex w-full max-w-md flex-col items-center rounded-[2rem] border border-white/70 bg-[#fffaf7]/90 px-6 py-9 text-center shadow-[0_20px_60px_rgba(64,59,70,0.14)] backdrop-blur-sm sm:px-10">
+      <section className="relative z-10 flex w-full max-w-md flex-col items-center rounded-4xl border border-white/70 bg-surface/90 px-6 py-9 text-center shadow-[0_20px_60px_rgba(64,59,70,0.14)] backdrop-blur-sm sm:px-10">
         <TDLogoIcon
           static
           className="mb-6 h-20 w-20 object-contain sm:h-24 sm:w-24"
         />
 
-        <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f8d8cf] text-[#d67878]">
+        <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft text-destructive">
           <AlertTriangle
             size={28}
             strokeWidth={2.25}
@@ -54,7 +54,7 @@ export function ErrorScreen({
         >
           Voltamos já já
         </Title>
-        <Paragraph className="mb-7 mt-3 max-w-sm text-center text-[#746d79]">
+        <Paragraph className="mb-7 mt-3 max-w-sm text-center text-muted-foreground">
           {message} Tente novamente — seus desafios estão esperando por você.
         </Paragraph>
 
@@ -66,7 +66,7 @@ export function ErrorScreen({
             />
           }
           onClick={onRetry}
-          className="w-full max-w-xs bg-[#8f7fb8] shadow-md hover:bg-[#7c6aa6]"
+          className="w-full max-w-xs bg-primary shadow-md hover:bg-primary-hover"
         >
           Tentar novamente
         </Button>
