@@ -72,3 +72,8 @@ type Merge<A, B> = Omit<A, keyof B> & B;
 type StringifyValues<TData> = {
   [K in keyof TData]: string;
 };
+
+/**
+ * Represents a non-empty string. Use when a value is a enum list.
+ */
+type NonEmptyString = string & NonNullable<unknown>;

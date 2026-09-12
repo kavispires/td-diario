@@ -1,27 +1,32 @@
+type PlaceholderGameData = {
+  type: string;
+  [key: string]: unknown;
+};
+
 export type DailyResponse = {
   id: string;
   // Games
-  alienado?: unknown;
-  'aqui-o'?: unknown;
-  'arte-ruim'?: unknown;
-  conjuntos?: unknown;
-  cruzadas?: unknown;
-  filmaco?: unknown;
-  investigacao?: unknown;
-  mapeamento?: unknown;
-  organiku?: unknown;
-  palavreado?: unknown;
-  panico?: unknown;
-  pirralhos?: unknown;
-  portais?: unknown;
-  quartetos?: unknown;
-  vitral?: unknown;
+  alienado?: PlaceholderGameData;
+  'aqui-o'?: PlaceholderGameData;
+  'arte-ruim'?: PlaceholderGameData;
+  conjuntos?: PlaceholderGameData;
+  cruzadas?: PlaceholderGameData;
+  filmaco?: PlaceholderGameData;
+  investigacao?: PlaceholderGameData;
+  mapeamento?: PlaceholderGameData;
+  organiku?: PlaceholderGameData;
+  palavreado?: PlaceholderGameData;
+  panico?: PlaceholderGameData;
+  pirralhos?: PlaceholderGameData;
+  portais?: PlaceholderGameData;
+  quartetos?: PlaceholderGameData;
+  vitral?: PlaceholderGameData;
   // Contributions
-  picaco?: unknown;
-  'ta-na-cara'?: unknown;
+  picaco?: PlaceholderGameData;
+  'ta-na-cara'?: PlaceholderGameData;
   // Deprecated
-  estoquista?: unknown;
-  conexoes?: unknown;
+  estoquista?: PlaceholderGameData;
+  conexoes?: PlaceholderGameData;
   // Other
   data?: {
     dictionary?: Dictionary<string>;
@@ -50,17 +55,13 @@ export interface GameInfo {
    */
   emoji: string;
   /**
-   * Game icon key
-   */
-  hubIcon: string;
-  /**
    * Game name
    */
-  name: string;
+  name: DualLanguageValue<string>;
   /**
    * Game tagline
    */
-  tagline: string;
+  tagline: DualLanguageValue<string>;
   /**
    * The day the game was released
    */
