@@ -1,5 +1,13 @@
 import { create } from 'zustand';
 
+/**
+ * Describes the in-flight shared-element splash for a game being launched.
+ */
+type LaunchingGame = {
+  /** The id of the game whose card/logo is animating. */
+  id: string;
+};
+
 interface AppRuntimeState {
   /**
    * The current width of the app window. This is used to determine which layout to apply to the UI. It can be any number representing the width in pixels.
@@ -16,6 +24,16 @@ interface AppRuntimeState {
    */
   language: 'pt' | 'en';
   setLanguage: (lang: 'pt' | 'en') => void;
+  /**
+   * The game currently animating into or out of the fullscreen splash, or null when idle.
+   */
+  launchingGame: LaunchingGame | null;
+  setLaunchingGame: (launchingGame: LaunchingGame | null) => void;
+  /**
+   * The id of the game whose logo currently occupies the Header, or null when on the Hub.
+   */
+  activeGameId: string | null;
+  setActiveGameId: (gameId: string | null) => void;
 }
 
 export const useAppRuntimeStore = create<AppRuntimeState>((set) => ({
@@ -25,4 +43,8 @@ export const useAppRuntimeStore = create<AppRuntimeState>((set) => ({
   setDarkMode: (enabled) => set({ isDarkMode: enabled }),
   language: 'pt',
   setLanguage: (lang) => set({ language: lang }),
+  launchingGame: null,
+  setLaunchingGame: (launchingGame) => set({ launchingGame }),
+  activeGameId: null,
+  setActiveGameId: (gameId) => set({ activeGameId: gameId }),
 }));

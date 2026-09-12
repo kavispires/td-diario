@@ -1,8 +1,9 @@
 import { ErrorScreen } from '@screens/ErrorScreen';
-import { LoadingScreen } from '@screens/LoadingScreen';
+import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import type { ComponentType, LazyExoticComponent } from 'react';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { SplashScreen } from './SplashScreen';
 
 type GameComponent = LazyExoticComponent<ComponentType>;
 
@@ -105,13 +106,33 @@ export function GameScreen() {
   const { gameId } = useParams<{ gameId: string }>();
   const Game = gameId ? gameComponents[gameId] : undefined;
 
-  if (!Game) {
+  if (!Game || !gameId) {
     return <ErrorScreen message="Não encontramos esse jogo." />;
   }
 
   return (
-    <Suspense fallback={<LoadingScreen message="Carregando jogo..." />}>
+    <Suspense fallback={<SplashScreen />}>
+      <GameReadyNotifier gameId={gameId} />
       <Game />
     </Suspense>
   );
+}
+
+/**
+ * Clears the game launch splash once the lazy game chunk has mounted, letting its logo
+ * finish traveling into the Header while the splash background fades away.
+ */
+function GameReadyNotifier({ gameId }: { gameId: string }) {
+  const setLaunchingGame = useAppRuntimeStore(
+    (state) => state.setLaunchingGame,
+  );
+  const setActiveGameId = useAppRuntimeStore((state) => state.setActiveGameId);
+
+  useEffect(() => {
+    // Header must render the matching layoutId in this same commit so the logo has somewhere to travel to.
+    setActiveGameId(gameId);
+    setLaunchingGame(null);
+  }, [gameId, setLaunchingGame, setActiveGameId]);
+
+  return null;
 }

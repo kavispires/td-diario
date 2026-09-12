@@ -1,6 +1,8 @@
 import { AnimatedPage } from '@components/AnimatedPage';
 import { ChromeHeader } from '@components/chrome/Header';
 import { ChromeNav } from '@components/chrome/Nav';
+import { GameLaunchOverlay } from '@components/GameLaunchOverlay';
+import { useGameLaunchOrchestrator } from '@hooks/useGameLaunchOrchestrator';
 import { ArchiveScreen } from '@screens/ArchiveScreen';
 import { GameScreen } from '@screens/GameScreen';
 import { HubScreen } from '@screens/HubScreen';
@@ -11,6 +13,7 @@ import { MainContent } from './MainContent';
 
 export function AppLayout() {
   const location = useLocation();
+  useGameLaunchOrchestrator();
 
   return (
     <div className="relative flex h-dvh w-full flex-col overflow-hidden">
@@ -66,6 +69,8 @@ export function AppLayout() {
       </MainContent>
 
       <ChromeNav />
+
+      <GameLaunchOverlay />
     </div>
   );
 }

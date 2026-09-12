@@ -94,7 +94,7 @@ export function GameCard({
       return;
     }
     if (props.onClick) props.onClick(e);
-    else navigate(gameInfo.id);
+    else navigate(`/game/${gameInfo.id}`);
   };
 
   return (
@@ -127,14 +127,22 @@ export function GameCard({
       )}
 
       {/* Icon Area */}
-      <div
+      <motion.div
+        layoutId={`game-logo-${gameInfo.id}`}
+        transition={{
+          layout: {
+            type: 'spring',
+            stiffness: 180,
+            damping: 20,
+          },
+        }}
         className={`${size === 'large' ? 'w-20 h-20 mb-3' : 'w-12 h-12 mb-1'} flex items-center justify-center`}
       >
         <GameLogos
           gameId={gameInfo.id}
           className="w-full h-full drop-shadow-sm"
         />
-      </div>
+      </motion.div>
 
       {/* Text Area */}
       {/* Note: Assuming 'pt' is the default for DualLanguageValue for now */}
