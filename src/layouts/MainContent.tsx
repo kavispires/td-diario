@@ -1,7 +1,7 @@
 import { useTDBaseUrl } from '@hooks/useTDBaseUrl';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import { motion, useScroll, useSpring, useTransform } from 'motion/react';
-import { type ReactNode, useRef } from 'react';
+import type { ReactNode } from 'react';
 
 type MainContentProps = {
   children: ReactNode;
@@ -12,11 +12,9 @@ export function MainContent({ children, fullscreen }: MainContentProps) {
   const { getUrl } = useTDBaseUrl('assets');
   const isDarkMode = useAppRuntimeStore((state) => state.isDarkMode);
 
-  const mainRef = useRef<HTMLElement>(null);
-
-  const { scrollY } = useScroll({
-    container: mainRef,
-  });
+  // No `container` target means this tracks the page's own scroll position,
+  // which is required for mobile browsers to auto-hide their address bar.
+  const { scrollY } = useScroll();
 
   const backgroundY = useSpring(
     useTransform(scrollY, [0, 500], ['0%', '12%']),
@@ -28,18 +26,26 @@ export function MainContent({ children, fullscreen }: MainContentProps) {
 
   return (
     <main
-      ref={mainRef}
-      className={`relative flex w-full flex-1 overflow-x-hidden overflow-y-auto ${
-        fullscreen ? 'min-h-dvh' : 'min-h-0'
+      className={`relative flex w-full overflow-x-hidden ${
+        fullscreen ? 'min-h-dvh' : 'flex-1'
       }`}
     >
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* Fixed to the viewport (not `main`) since `main` can now grow taller
+          than the screen — the page itself scrolls so the address bar can
+          auto-hide, and this backdrop should stay pinned behind it. */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <motion.img
           src={getUrl(`backgrounds/daily${isDarkMode ? '-dark' : ''}.jpg`)}
           alt=""
           aria-hidden="true"
-          style={{ y: backgroundY }}
-          className="h-full w-full scale-110 object-cover"
+          // `scale` must be set via Motion's `style` (not a Tailwind class):
+          // Motion writes its own inline `transform` for the animated `y`
+          // value, which would otherwise silently override a `scale-*`
+          // class's `transform` and remove the buffer needed to hide the
+          // translated image's edges. 1.3 gives a 15% edge buffer per side,
+          // comfortably covering the 12% max `y` translation below.
+          style={{ y: backgroundY, scale: 1.3 }}
+          className="h-full w-full object-cover"
         />
       </div>
 

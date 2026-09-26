@@ -16,7 +16,7 @@ export function AppLayout() {
   useGameLaunchOrchestrator();
 
   return (
-    <div className="relative flex h-dvh w-full flex-col overflow-hidden">
+    <div className="relative flex min-h-dvh w-full flex-col overflow-x-hidden">
       <ChromeHeader />
 
       {/*
