@@ -1,0 +1,1 @@
+import{t as e}from"./index-CAbASt_k.js";var t=e();function n(){return(0,t.jsx)(`div`,{children:`Filmaco`})}export{n as DailyFilmacoGame};
