@@ -39,3 +39,39 @@ body {
     background-position: 0% 50%;
   }
 }
+
+@theme {
+  --color-chrome: var(--color-slate-900);
+  /* Main brand */
+  --color-primary: #8f7fb8;
+  --color-primary-hover: #7c6aa6;
+  --color-primary-soft: #ded5eb;
+
+  /* Supporting brand */
+  --color-secondary: #7fbeb7;
+  --color-secondary-hover: #68aaa2;
+  --color-secondary-soft: #d5ece8;
+
+  /* Attention / decoration */
+  --color-accent: #ee9d89;
+  --color-accent-soft: #f8d8cf;
+
+  /* Surfaces */
+  --color-background: #f8eee9;
+  --color-surface: #fffaf7;
+  --color-surface-raised: #ffffff;
+
+  /* Typography */
+  --color-foreground: #403b46;
+  --color-muted-foreground: #746d79;
+  --color-subtle-foreground: #9b929d;
+
+  /* Structure */
+  --color-border: #e7deda;
+  --color-border-strong: #d6cbc9;
+
+  /* Feedback */
+  --color-success: #6ca99b;
+  --color-warning: #dca55b;
+  --color-destructive: #d67878;
+}

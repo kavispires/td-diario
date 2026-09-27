@@ -5,6 +5,9 @@ import { lazy, Suspense, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { SplashScreen } from './SplashScreen';
 
+/**
+ * A lazily-loaded game engine component, resolved on demand by game id.
+ */
 type GameComponent = LazyExoticComponent<ComponentType>;
 
 const gameComponents: Record<string, GameComponent> = {
@@ -102,6 +105,13 @@ const gameComponents: Record<string, GameComponent> = {
   ),
 };
 
+/**
+ * Resolves the `:gameId` route param to its lazy game engine component and
+ * renders it, falling back to an error screen for unknown ids.
+ *
+ * @returns The matched game's engine, an error screen, or a splash screen
+ *   while the game chunk loads.
+ */
 export function GameScreen() {
   const { gameId } = useParams<{ gameId: string }>();
   const Game = gameId ? gameComponents[gameId] : undefined;
@@ -119,10 +129,20 @@ export function GameScreen() {
 }
 
 /**
+ * Props accepted by the {@link GameReadyNotifier} component.
+ */
+type GameReadyNotifierProps = {
+  /**
+   * Id of the game engine that just mounted.
+   */
+  gameId: string;
+};
+
+/**
  * Clears the game launch splash once the lazy game chunk has mounted, letting its logo
  * finish traveling into the Header while the splash background fades away.
  */
-function GameReadyNotifier({ gameId }: { gameId: string }) {
+function GameReadyNotifier({ gameId }: GameReadyNotifierProps) {
   const setLaunchingGame = useAppRuntimeStore(
     (state) => state.setLaunchingGame,
   );

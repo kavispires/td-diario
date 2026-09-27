@@ -9,6 +9,13 @@ import type { UserCredential } from 'firebase/auth';
 import { motion } from 'motion/react';
 import { type SyntheticEvent, useState } from 'react';
 
+/**
+ * Renders the login screen with a Google sign-in button, plus a
+ * dev-only username/password form when running in a development
+ * environment.
+ *
+ * @returns The login screen element.
+ */
 export function LoginScreen() {
   const {
     mutate: loginWithGoogle,
@@ -22,7 +29,7 @@ export function LoginScreen() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex min-h-full w-full flex-col items-center justify-between px-6 pb-8 pt-12 text-slate-900"
+      className="flex min-h-full w-full flex-col items-center justify-between px-6 pb-8 pt-12 text-foreground"
     >
       {/* Top Branding / Logo */}
       <div className="flex w-full flex-1 items-center justify-center">
@@ -50,6 +57,7 @@ export function LoginScreen() {
         <div className="w-full max-w-xs">
           <Button
             block
+            variant="chrome"
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -103,6 +111,12 @@ export function LoginScreen() {
   );
 }
 
+/**
+ * Renders a development-only username/password sign-in form, used to log in
+ * without going through the Google OAuth flow.
+ *
+ * @returns The dev login form element.
+ */
 function DevLoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -126,17 +140,17 @@ function DevLoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-4 flex w-full max-w-xs flex-col gap-3 rounded-2xl bg-white/75 p-4 shadow-lg backdrop-blur-sm"
+      className="mb-4 flex w-full max-w-xs flex-col gap-3 rounded-2xl bg-surface-raised/75 p-4 shadow-lg backdrop-blur-sm"
     >
       <Text
         strong
-        className="text-center text-sm text-slate-800"
+        className="text-center text-sm text-foreground"
       >
         Desenvolvimento
       </Text>
       <label
         htmlFor="dev-username"
-        className="flex flex-col gap-1 text-xs font-medium text-slate-700"
+        className="flex flex-col gap-1 text-xs font-medium text-muted-foreground"
       >
         Usuário
         <TextInput
@@ -147,12 +161,12 @@ function DevLoginForm() {
           onChange={(event) => setUsername(event.target.value)}
           autoComplete="username"
           required
-          className="rounded-lg border-slate-300 px-3 py-2 text-sm focus:border-slate-500"
+          className="rounded-lg border-border px-3 py-2 text-sm focus:border-primary"
         />
       </label>
       <label
         htmlFor="dev-password"
-        className="flex flex-col gap-1 text-xs font-medium text-slate-700"
+        className="flex flex-col gap-1 text-xs font-medium text-muted-foreground"
       >
         Senha
         <TextInput
@@ -163,13 +177,14 @@ function DevLoginForm() {
           onChange={(event) => setPassword(event.target.value)}
           autoComplete="current-password"
           required
-          className="rounded-lg border-slate-300 px-3 py-2 text-sm focus:border-slate-500"
+          className="rounded-lg border-border px-3 py-2 text-sm focus:border-primary"
         />
       </label>
       <Button
         type="submit"
+        variant="chrome"
         loading={isPending}
-        className="rounded-lg bg-slate-700 px-3 py-2 text-sm hover:bg-slate-800"
+        className="rounded-lg px-3 py-2 text-sm"
       >
         {isPending ? 'Entrando...' : 'Entrar com usuário'}
       </Button>

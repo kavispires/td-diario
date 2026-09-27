@@ -4,7 +4,7 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 /**
  * Visual styles available for the {@link Button} component.
  */
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'chrome';
 
 /**
  * Positions available for an optional button icon.
@@ -14,7 +14,7 @@ type ButtonIconPlacement = 'start' | 'end';
 /**
  * Props accepted by the {@link Button} component.
  */
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   /**
    * Visual style applied to the button. Defaults to `primary`.
    */
@@ -35,7 +35,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
    * Replaces the icon with a spinner and disables the button while loading.
    */
   loading?: boolean;
-}
+};
 
 /**
  * Renders a styled button with visual variants, optional icons, and a loading
@@ -65,10 +65,11 @@ export function Button({
     'font-semibold py-3.5 px-6 rounded-2xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100';
 
   const variants = {
-    primary: 'bg-slate-900 text-white shadow-lg hover:bg-slate-800',
-    secondary: 'bg-slate-200 text-slate-900 hover:bg-slate-300',
+    primary: 'bg-primary text-white shadow-lg hover:bg-primary-hover',
+    secondary: 'bg-border text-foreground hover:bg-border-strong',
     ghost:
-      'bg-transparent text-slate-600 shadow-none hover:bg-slate-100 active:bg-slate-200',
+      'bg-transparent text-muted-foreground shadow-none hover:bg-border active:bg-border-strong',
+    chrome: 'bg-chrome text-white shadow-lg hover:bg-slate-800',
   };
 
   const renderIcon = loading ? (

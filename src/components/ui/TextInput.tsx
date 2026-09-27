@@ -23,7 +23,7 @@ export function TextInput({
   return (
     <input
       type={type}
-      className={`w-full bg-white border-2 border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-100 transition-all ${className}`}
+      className={`w-full bg-white border-2 border-border rounded-xl px-4 py-3 text-base text-foreground placeholder:text-subtle-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-soft transition-all ${className}`}
       {...props}
     />
   );

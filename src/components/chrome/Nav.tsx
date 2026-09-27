@@ -1,6 +1,13 @@
 import { Calendar, Puzzle, User } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
+/**
+ * Renders the app's bottom navigation bar with links to the hub, archive,
+ * and profile sections. The archive and profile sections are currently
+ * disabled placeholders.
+ *
+ * @returns The sticky bottom navigation element.
+ */
 export function ChromeNav() {
   const navItems = [
     { to: '/', icon: Puzzle, label: 'Jogos' },
@@ -9,8 +16,8 @@ export function ChromeNav() {
   ];
 
   return (
-    // Swapped to bg-slate-900 to match the TopBar, with a subtle top shadow
-    <nav className="sticky bottom-0 z-50 w-full bg-slate-900 text-slate-50 shadow-[0_-4px_10px_rgba(0,0,0,0.15)]">
+    // Swapped to bg-chrome to match the TopBar, with a subtle top shadow
+    <nav className="sticky bottom-0 z-50 w-full bg-chrome text-slate-50 shadow-[0_-4px_10px_rgba(0,0,0,0.15)]">
       <div className="mx-auto flex w-full max-w-md items-center justify-around px-2 pt-3 pb-2">
         {navItems.map((item) =>
           item.disabled ? (

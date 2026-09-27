@@ -2,23 +2,36 @@ import { LOCAL_STORAGE_KEYS } from '@utils/constants';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface UserPreferencesState {
+/**
+ * Shape of the {@link useUserPreferencesStore} state and actions. Persisted
+ * to local storage.
+ */
+type UserPreferencesState = {
   /**
    * The ID of an active game. This is used to keep track of the last game the user was playing, so we can restore it when they come back.
    */
   ongoingGame: string | null;
+  /**
+   * Sets or clears the id of the ongoing game.
+   */
   setOngoingGame: (gameId: string | null) => void;
   /**
    * Whether the sound is enabled or not. This is used to keep track of the user's preference for sound, so we can restore it when they come back.
    */
   soundEnabled: boolean;
+  /**
+   * Enables or disables sound.
+   */
   setSoundEnabled: (enabled: boolean) => void;
   /**
    * The date of the last news item the user has seen. This is used to determine if there are new news items that the user hasn't seen yet.
    */
   lastSeenNews: string | null;
+  /**
+   * Updates the date of the last seen news item.
+   */
   setLastSeenNews: (date: string | null) => void;
-}
+};
 
 export const useUserPreferencesStore = create<UserPreferencesState>()(
   persist(

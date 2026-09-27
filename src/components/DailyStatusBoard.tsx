@@ -4,6 +4,12 @@ import flameIcon from '../assets/svg/flame.svg';
 import { useDayCountdown } from '../hooks/useDayCountdown';
 import { Pill } from './ui/Pill';
 
+/**
+ * Renders the hub's daily status summary: streak and countdown pills, plus
+ * a progress bar tracking today's completed games.
+ *
+ * @returns A styled status board section.
+ */
 export function DailyStatusBoard() {
   const timeLeft = useDayCountdown();
   const { streak, completedCount, totalGames } = {
@@ -15,7 +21,7 @@ export function DailyStatusBoard() {
   const progressPercent = Math.round((completedCount / totalGames) * 100);
 
   return (
-    <div className="px-4 pt-2 pb-2 flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       {/* Top Row: Navy Pills */}
       <div className="flex justify-between items-center">
         {/* Streak Pill */}
@@ -46,10 +52,10 @@ export function DailyStatusBoard() {
 
       {/* Bottom Row: Progress */}
       <div className="flex flex-col gap-1">
-        <Paragraph className="mb-0 text-[15px] text-slate-900">
+        <Paragraph className="mb-0 text-[15px] text-foreground">
           <Text
             strong
-            className="text-slate-900"
+            className="text-foreground"
           >
             Progresso:
           </Text>{' '}
@@ -60,10 +66,10 @@ export function DailyStatusBoard() {
           Progress Track
           Using p-0.5 creates that "inner fill" look seen in the screenshot
         */}
-        <div className="w-full h-3 bg-slate-900 rounded-full p-0.5 shadow-sm">
+        <div className="w-full h-3 bg-chrome rounded-full p-0.5 shadow-sm">
           {/* Progress Fill */}
           <div
-            className="h-full bg-[#77B28C] rounded-full transition-all duration-1000 ease-out"
+            className="h-full bg-success rounded-full transition-all duration-1000 ease-out"
             style={{ width: `${progressPercent}%` }}
           />
         </div>

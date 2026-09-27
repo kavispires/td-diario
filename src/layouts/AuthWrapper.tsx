@@ -7,10 +7,24 @@ import { useAuthStore } from '@store/useAuthStore';
 import { print } from '@utils/helpers';
 import { type ReactNode, useEffect } from 'react';
 
+/**
+ * Props accepted by the {@link AuthWrapper} component.
+ */
 type AuthWrapperProps = {
+  /**
+   * Content rendered once the user is authenticated and their daily data is
+   * loaded.
+   */
   children: ReactNode;
 };
 
+/**
+ * Gatekeeps app content behind Firebase authentication and the user's daily
+ * data, rendering loading, login, or error states as needed.
+ *
+ * @param props Content to render once auth and data are ready.
+ * @returns The appropriate loading, login, error, or content element.
+ */
 export function AuthWrapper({ children }: AuthWrapperProps) {
   const isAuthLoading = useAuthStore((state) => state.isAuthLoading);
   const user = useAuthStore((state) => state.user);

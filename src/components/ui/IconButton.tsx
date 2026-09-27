@@ -31,16 +31,19 @@ const SHAPE_CLASSES: Record<IconButtonShape, string> = {
 };
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: 'bg-slate-900 text-white shadow-lg hover:bg-slate-800',
-  secondary: 'bg-slate-200 text-slate-900 hover:bg-slate-300',
+  primary: 'bg-primary text-white shadow-lg hover:bg-primary-hover',
+  secondary: 'bg-border text-foreground hover:bg-border-strong',
   ghost: 'bg-transparent text-current hover:bg-current/10 active:bg-current/15',
+  chrome: 'bg-chrome text-white shadow-lg hover:bg-slate-800',
 };
 
 /**
  * Props accepted by the {@link IconButton} component.
  */
-interface IconButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label'> {
+type IconButtonProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'aria-label'
+> & {
   /**
    * Icon rendered inside the button. Replaced by a spinner while `loading`.
    */
@@ -70,7 +73,7 @@ interface IconButtonProps
    * unread content.
    */
   dot?: boolean;
-}
+};
 
 /**
  * Renders a compact, icon-only button with visual variants, sizes, shapes,

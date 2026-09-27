@@ -8,6 +8,12 @@ import { motion } from 'motion/react';
 // import { VolumeX } from 'lucide-react'; // Use this when sound is off
 import { TDLogoIcon } from '../TDLogoIcon';
 
+/**
+ * Renders the app's sticky top header, showing the current game's logo and
+ * title (or the app brand on the hub) plus notification and sound controls.
+ *
+ * @returns The sticky header element.
+ */
 export function ChromeHeader() {
   const activeGameId = useAppRuntimeStore((state) => state.activeGameId);
   const language = useAppRuntimeStore((state) => state.language);
@@ -20,7 +26,7 @@ export function ChromeHeader() {
     : 'TD Diário';
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-slate-900 text-slate-50 shadow-md">
+    <header className="sticky top-0 z-50 w-full bg-chrome text-slate-50 shadow-md">
       <div className="mx-auto flex w-full max-w-md items-center justify-between px-4 py-3">
         {/* Brand / Logo */}
         <div className="flex items-center gap-2">

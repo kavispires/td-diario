@@ -8,33 +8,51 @@ type LaunchingGame = {
   id: string;
 };
 
-interface AppRuntimeState {
+/**
+ * Shape of the {@link useAppRuntimeStore} state and actions.
+ */
+type AppRuntimeState = {
   /**
    * The current width of the app window. This is used to determine which layout to apply to the UI. It can be any number representing the width in pixels.
    */
   width: number;
+  /**
+   * Updates the current app window width.
+   */
   setWidth: (width: number) => void;
   /**
    * Whether the app is in dark mode or not. This is used to determine which theme to apply to the UI. It can be either true for dark mode or false for light mode.
    */
   isDarkMode: boolean;
+  /**
+   * Enables or disables dark mode.
+   */
   setDarkMode: (enabled: boolean) => void;
   /**
    * The current language of the app. This is used to determine which language to display in the UI. It can be either 'pt' for Portuguese or 'en' for English.
    */
   language: 'pt' | 'en';
+  /**
+   * Updates the current app language.
+   */
   setLanguage: (lang: 'pt' | 'en') => void;
   /**
    * The game currently animating into or out of the fullscreen splash, or null when idle.
    */
   launchingGame: LaunchingGame | null;
+  /**
+   * Sets or clears the game currently animating in the fullscreen splash.
+   */
   setLaunchingGame: (launchingGame: LaunchingGame | null) => void;
   /**
    * The id of the game whose logo currently occupies the Header, or null when on the Hub.
    */
   activeGameId: string | null;
+  /**
+   * Sets or clears the id of the game whose logo occupies the Header.
+   */
   setActiveGameId: (gameId: string | null) => void;
-}
+};
 
 export const useAppRuntimeStore = create<AppRuntimeState>((set) => ({
   width: 0,

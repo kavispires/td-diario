@@ -3,11 +3,29 @@ import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import { motion, useScroll, useSpring, useTransform } from 'motion/react';
 import type { ReactNode } from 'react';
 
+/**
+ * Props accepted by the {@link MainContent} component.
+ */
 type MainContentProps = {
+  /**
+   * Content rendered inside the scrollable content area.
+   */
   children: ReactNode;
+  /**
+   * Whether the content area should always span the full viewport height,
+   * even when its content is shorter.
+   */
   fullscreen?: boolean;
 };
 
+/**
+ * Renders the app's main scrollable content area with a fixed, parallax
+ * background image that tracks document scroll (required for mobile
+ * browsers to auto-hide their address bar).
+ *
+ * @param props Content to render and whether to force full-viewport height.
+ * @returns The main content element.
+ */
 export function MainContent({ children, fullscreen }: MainContentProps) {
   const { getUrl } = useTDBaseUrl('assets');
   const isDarkMode = useAppRuntimeStore((state) => state.isDarkMode);

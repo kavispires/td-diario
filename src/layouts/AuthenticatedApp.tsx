@@ -5,6 +5,13 @@ import { useUserPreferencesStore } from '@store/useUserPreferencesStore';
 import { Navigate } from 'react-router-dom';
 import { AppLayout } from './AppLayout';
 
+/**
+ * Gatekeeps the authenticated app: loads today's challenges, shows loading
+ * or error states as needed, redirects back into an ongoing game, and
+ * otherwise renders the main app layout.
+ *
+ * @returns The appropriate loading, error, redirect, or app layout element.
+ */
 export function AuthenticatedApp() {
   const { isPending, isError } = useGetDailyChallenges();
   const ongoingGame = useUserPreferencesStore((state) => state.ongoingGame);

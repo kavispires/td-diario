@@ -6,18 +6,43 @@ import { useNavigate } from 'react-router-dom';
 import type { GameInfo } from '../../types/puzzles';
 import { GameLogos } from './GameLogos';
 
-interface GameCardProps extends HTMLMotionProps<'button'> {
+/**
+ * Props accepted by the {@link GameCard} component.
+ */
+type GameCardProps = HTMLMotionProps<'button'> & {
+  /**
+   * Game metadata (id, name, tagline, color, version) rendered on the card.
+   */
   gameInfo: GameInfo;
+  /**
+   * Visual size of the card. Defaults to `small`.
+   */
   size?: 'large' | 'rectangle' | 'small' | NonEmptyString;
+  /**
+   * Current state of the game represented by the card. Defaults to
+   * `available`.
+   */
   state?:
     | 'available'
     | 'in-progress'
     | 'completed'
     | 'disabled'
     | NonEmptyString;
-  progressPercent?: number; // 0 to 100
-}
+  /**
+   * Completion percentage (0 to 100) shown by the progress bar when `state`
+   * is `in-progress`.
+   */
+  progressPercent?: number;
+};
 
+/**
+ * Renders a clickable card for a single game on the hub screen, showing its
+ * logo, name, tagline, and state-specific badges or progress bar.
+ *
+ * @param props Game metadata, size, state, progress, and native `motion`
+ *   button properties.
+ * @returns A styled, navigable game card button.
+ */
 export function GameCard({
   gameInfo,
   size = 'small',
@@ -53,9 +78,9 @@ export function GameCard({
   // Determine dynamic styles based on state
   const dynamicStyles = {
     backgroundColor: isInProgress
-      ? '#FFFFFF'
+      ? 'var(--color-surface-raised)'
       : isDisabled
-        ? '#E2E8F0'
+        ? 'var(--color-border)'
         : gameInfo.color,
     borderColor: isInProgress ? gameInfo.color : 'transparent',
   };
@@ -71,7 +96,7 @@ export function GameCard({
     // Priority 1: If it's coming soon
     if (gameInfo.version === 'soon' || gameInfo.version === 'unreleased') {
       return (
-        <div className="absolute -top-2 -right-2 bg-slate-700 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
+        <div className="absolute -top-2 -right-2 bg-foreground text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
           BREVE
         </div>
       );
@@ -79,7 +104,7 @@ export function GameCard({
     // Priority 2: If it's new (and not completed, to avoid clutter)
     if (gameInfo.version === 'demo' || gameInfo.version === 'beta') {
       return (
-        <div className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
+        <div className="absolute -top-2 -right-2 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
           NOVO
         </div>
       );
@@ -118,7 +143,7 @@ export function GameCard({
 
       {/* Completed Checkmark */}
       {isCompleted && (
-        <div className="absolute top-2 right-2 bg-slate-900 text-white p-1 rounded-full shadow-sm">
+        <div className="absolute top-2 right-2 bg-success text-white p-1 rounded-full shadow-sm">
           <Check
             size={12}
             strokeWidth={4}
@@ -147,13 +172,13 @@ export function GameCard({
       {/* Text Area */}
       {/* Note: Assuming 'pt' is the default for DualLanguageValue for now */}
       <h3
-        className={`${size === 'large' ? 'text-lg' : 'text-xs'} font-bold text-slate-900 text-center leading-tight`}
+        className={`${size === 'large' ? 'text-lg' : 'text-xs'} font-bold text-foreground text-center leading-tight`}
       >
         {gameInfo.name[language] || gameInfo.name.pt}
       </h3>
 
       {size === 'large' && gameInfo.tagline?.[language] && (
-        <p className="text-xs text-slate-700 text-center mt-1 leading-snug px-2">
+        <p className="text-xs text-foreground text-center mt-1 leading-snug px-2">
           {gameInfo.tagline[language] || gameInfo.tagline.pt}
         </p>
       )}
@@ -161,7 +186,7 @@ export function GameCard({
       {/* Progress Bar (Only visible if in-progress) */}
       {isInProgress && (
         <div className="w-full mt-auto pt-2">
-          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-border h-1.5 rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{

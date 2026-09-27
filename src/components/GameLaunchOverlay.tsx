@@ -54,13 +54,13 @@ export function GameLaunchOverlay() {
           <div className="flex flex-col items-center gap-2">
             <Title
               level={2}
-              className="text-slate-900 text-center"
+              className="text-foreground text-center"
             >
               {gameInfo.name[language] || gameInfo.name.pt}
             </Title>
             {/* Placeholder loading indicator until a dedicated one is built */}
             <Text
-              className="animate-pulse text-slate-800"
+              className="animate-pulse text-muted-foreground"
               role="status"
               strong
             >

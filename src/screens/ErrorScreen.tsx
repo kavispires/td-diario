@@ -3,6 +3,9 @@ import { Button } from '@components/ui/Button';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
+/**
+ * Props accepted by the {@link ErrorScreen} component.
+ */
 type ErrorScreenProps = {
   /**
    * Additional context shown below the default error message.
@@ -14,13 +17,20 @@ type ErrorScreenProps = {
   onRetry?: () => void;
 };
 
+/**
+ * Renders a full-screen error state with a retry action, shown when a route
+ * or data fetch fails to load.
+ *
+ * @param props Optional custom message and retry handler.
+ * @returns The error screen element.
+ */
 export function ErrorScreen({
   message = 'Não conseguimos carregar esta página agora.',
   onRetry = () => window.location.reload(),
 }: ErrorScreenProps) {
   return (
     <main
-      className="relative flex min-h-dvh w-full items-center justify-center overflow-hidden px-5 py-10 text-slate-900"
+      className="relative flex min-h-dvh w-full items-center justify-center overflow-hidden px-5 py-10 text-foreground"
       role="alert"
       aria-live="assertive"
     >
@@ -59,6 +69,7 @@ export function ErrorScreen({
         </Paragraph>
 
         <Button
+          variant="primary"
           icon={
             <RefreshCw
               size={18}
@@ -66,7 +77,7 @@ export function ErrorScreen({
             />
           }
           onClick={onRetry}
-          className="w-full max-w-xs bg-primary shadow-md hover:bg-primary-hover"
+          className="w-full max-w-xs shadow-md"
         >
           Tentar novamente
         </Button>

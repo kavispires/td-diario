@@ -6,8 +6,17 @@ import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
 import { orderBy, random, sample } from 'lodash';
 import { LayoutGroup } from 'motion/react';
 
+/**
+ * Union of valid game ids, derived from the registered game engines.
+ */
 type GameId = keyof typeof gameInfos;
 
+/**
+ * Renders the hub screen: the daily status board and the grid of playable
+ * game cards, ordered by progress and availability.
+ *
+ * @returns The hub screen element.
+ */
 export function HubScreen() {
   const { data } = useGetDailyChallenges();
 
@@ -65,7 +74,7 @@ export function HubScreen() {
       <Title className="p-1 text-center text-lg">Jogue</Title>
 
       <LayoutGroup>
-        <div className="grid grid-cols-6 gap-3 mx-4">
+        <div className="grid grid-cols-6 gap-3">
           {orderedChallenges.map((entry, index) => (
             <GameCard
               key={entry.key}

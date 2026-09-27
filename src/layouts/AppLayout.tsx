@@ -11,6 +11,12 @@ import { AnimatePresence } from 'motion/react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { MainContent } from './MainContent';
 
+/**
+ * Renders the main authenticated app shell: header, animated routed screens,
+ * bottom nav, and the game-launch overlay.
+ *
+ * @returns The app layout element.
+ */
 export function AppLayout() {
   const location = useLocation();
   useGameLaunchOrchestrator();

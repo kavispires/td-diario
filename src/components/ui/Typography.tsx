@@ -1,10 +1,12 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 
 /**
- * Matches a Tailwind text-color utility (e.g. `text-slate-900`, `text-white`).
+ * Matches a Tailwind text-color utility, including numeric-scale colors
+ * (e.g. `text-slate-900`) and the app's semantic theme tokens (e.g.
+ * `text-foreground`, `text-muted-foreground`).
  */
 const TEXT_COLOR_CLASS_PATTERN =
-  /^text-(inherit|current|transparent|black|white|[a-z]+-\d{2,3})$/;
+  /^text-(inherit|current|transparent|black|white|primary|primary-hover|primary-soft|secondary|secondary-hover|secondary-soft|accent|accent-soft|background|surface|surface-raised|foreground|muted-foreground|subtle-foreground|border|border-strong|success|warning|destructive|chrome|[a-z]+-\d{2,3})$/;
 
 /**
  * Matches a Tailwind margin-bottom utility (e.g. `mb-4`, `-mb-2`, `mb-px`).
@@ -51,7 +53,7 @@ type HeadingTag = `h${HeadingLevel}`;
 /**
  * Props accepted by the {@link Title} component.
  */
-interface TitleProps extends HTMLAttributes<HTMLHeadingElement> {
+type TitleProps = HTMLAttributes<HTMLHeadingElement> & {
   /**
    * Heading level to render. Defaults to `1`.
    */
@@ -60,7 +62,7 @@ interface TitleProps extends HTMLAttributes<HTMLHeadingElement> {
    * Content displayed inside the heading.
    */
   children: ReactNode;
-}
+};
 
 /**
  * Renders a semantic heading with a consistent typography scale.
@@ -90,7 +92,7 @@ export function Title({
     <Component
       {...props}
       className={mergeClassName(
-        `${sizes[level]} tracking-wide text-slate-900`,
+        `${sizes[level]} tracking-wide text-foreground`,
         className,
         [TEXT_COLOR_CLASS_PATTERN],
       )}
@@ -103,12 +105,12 @@ export function Title({
 /**
  * Props accepted by the {@link Paragraph} component.
  */
-interface ParagraphProps extends HTMLAttributes<HTMLParagraphElement> {
+type ParagraphProps = HTMLAttributes<HTMLParagraphElement> & {
   /**
    * Content displayed inside the paragraph.
    */
   children: ReactNode;
-}
+};
 
 /**
  * Renders body text with the application's default paragraph styling.
@@ -125,7 +127,7 @@ export function Paragraph({
     <p
       {...props}
       className={mergeClassName(
-        'text-base text-slate-600 leading-relaxed mb-4',
+        'text-base text-muted-foreground leading-relaxed mb-4',
         className,
         [TEXT_COLOR_CLASS_PATTERN, MARGIN_BOTTOM_CLASS_PATTERN],
       )}
@@ -143,7 +145,7 @@ type TextType = 'default' | 'secondary' | 'danger' | 'success';
 /**
  * Props accepted by the {@link Text} component.
  */
-interface TextProps extends HTMLAttributes<HTMLSpanElement> {
+type TextProps = HTMLAttributes<HTMLSpanElement> & {
   /**
    * Color variant for the text. Defaults to `default`.
    */
@@ -156,7 +158,7 @@ interface TextProps extends HTMLAttributes<HTMLSpanElement> {
    * Content displayed inside the span.
    */
   children: ReactNode;
-}
+};
 
 /**
  * Renders inline text with semantic color and emphasis variants.
@@ -172,10 +174,10 @@ export function Text({
   ...props
 }: TextProps) {
   const colors = {
-    default: 'text-slate-700',
-    secondary: 'text-slate-500',
-    danger: 'text-red-500',
-    success: 'text-emerald-600',
+    default: 'text-foreground',
+    secondary: 'text-subtle-foreground',
+    danger: 'text-destructive',
+    success: 'text-success',
   };
 
   const weight = strong ? 'font-semibold' : 'font-normal';

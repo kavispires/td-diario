@@ -85,8 +85,10 @@
 ## TypeScript and constants
 
 - Prefer precise types and discriminated unions over broad types.
+- Use `type` instead of `interface` for object shapes, including component props; do not introduce new `interface` declarations.
 - Use `as const` for constant objects whose keys and values should remain literal types.
 - Avoid unnecessary type assertions; narrow values through control flow when possible.
+- JSDoc every type declaration and every one of its properties, describing its purpose (see "Documentation and JSDoc" above).
 
 ## Services and environment
 
