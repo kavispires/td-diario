@@ -1,38 +1,41 @@
 type PlaceholderGameData = {
+  id: DateKey;
+  number: number;
   type: string;
   [key: string]: unknown;
 };
 
-export type DailyResponse = {
-  id: string;
-  // Games
-  alienado?: PlaceholderGameData;
-  'aqui-o'?: PlaceholderGameData;
+type GamesEntries = {
   'arte-ruim'?: PlaceholderGameData;
-  conjuntos?: PlaceholderGameData;
-  cruzadas?: PlaceholderGameData;
-  filmaco?: PlaceholderGameData;
+  'aqui-o'?: PlaceholderGameData;
+  alienado?: PlaceholderGameData;
   investigacao?: PlaceholderGameData;
+  filmaco?: PlaceholderGameData;
   mapeamento?: PlaceholderGameData;
   organiku?: PlaceholderGameData;
   palavreado?: PlaceholderGameData;
-  panico?: PlaceholderGameData;
-  pirralhos?: PlaceholderGameData;
   portais?: PlaceholderGameData;
   quartetos?: PlaceholderGameData;
+  conjuntos?: PlaceholderGameData;
   vitral?: PlaceholderGameData;
-  // Contributions
+  pirralhos?: PlaceholderGameData;
+};
+
+type ContributionsEntries = {
   picaco?: PlaceholderGameData;
   'ta-na-cara'?: PlaceholderGameData;
-  // Deprecated
-  estoquista?: PlaceholderGameData;
-  conexoes?: PlaceholderGameData;
-  // Other
-  data?: {
+};
+
+export type DailyResponse = {
+  id: DateKey;
+  // Games
+  challenges: GamesEntries;
+  //
+  contributions: ContributionsEntries;
+  // Additional info
+  metadata?: {
     dictionary?: Dictionary<string>;
   };
-  // Legacy (replaced by data.dictionary)
-  dictionary?: Dictionary<string>;
 };
 
 export type DateKey = string; // Format YYYY-MM-DD

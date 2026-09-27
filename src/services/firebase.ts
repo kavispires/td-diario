@@ -1,3 +1,4 @@
+import { USE_FIRESTORE_EMULATOR, USE_FUNCTIONS_EMULATOR } from '@dev-config';
 import { isDevEnv } from '@utils/helpers';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 import { type FirebaseApp, initializeApp } from 'firebase/app';
@@ -20,9 +21,6 @@ import {
   type Functions,
   getFunctions,
 } from 'firebase/functions';
-
-const USE_FIRESTORE_EMULATOR = false;
-const USE_FUNCTIONS_EMULATOR = false;
 
 const buildKey = () => {
   return [

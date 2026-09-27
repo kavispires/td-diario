@@ -1,4 +1,4 @@
-import { USE_FIRESTORE_EMULATOR } from '@services/firebase';
+import { USE_FIRESTORE_EMULATOR } from '@dev-config';
 import { differenceInMilliseconds, format, startOfTomorrow } from 'date-fns';
 /**
  * Flag indicating if the environment is for development

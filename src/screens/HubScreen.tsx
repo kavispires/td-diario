@@ -8,15 +8,6 @@ import { LayoutGroup } from 'motion/react';
 
 type GameId = keyof typeof gameInfos;
 
-function isGameChallenge(value: unknown): value is { type: GameId } {
-  if (!value || typeof value !== 'object' || !('type' in value)) {
-    return false;
-  }
-
-  const type = value.type;
-  return typeof type === 'string' && Object.keys(gameInfos).includes(type);
-}
-
 export function HubScreen() {
   const { data } = useGetDailyChallenges();
 
@@ -31,8 +22,7 @@ export function HubScreen() {
   // Order the challenge data. First separate contributions from daily games
   // Then sort the games by name, then sort by ongoing, undone and completed. (there is no logic for this yet)
   const orderedChallenges = orderBy(
-    Object.values(data ?? {})
-      .filter(isGameChallenge)
+    Object.values(data?.challenges ?? {})
       .map((challenge) => {
         const progress = Math.random() < 0.2 ? random(15, 85) : 0;
         const state =
@@ -52,7 +42,7 @@ export function HubScreen() {
         return {
           key: challenge.type,
           challenge: challenge,
-          info: gameInfos[challenge.type],
+          info: gameInfos[challenge.type as GameId],
           size: 'small',
           state: state,
           progressPercent: progress,
