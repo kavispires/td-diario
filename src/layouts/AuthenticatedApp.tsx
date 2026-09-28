@@ -1,6 +1,6 @@
 import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
-import { ErrorScreen } from '@screens/ErrorScreen';
-import { LoadingScreen } from '@screens/LoadingScreen';
+import { ErrorScreen } from '@screens/states/ErrorScreen';
+import { LoadingScreen } from '@screens/states/LoadingScreen';
 import { useUserPreferencesStore } from '@store/useUserPreferencesStore';
 import { Navigate } from 'react-router-dom';
 import { AppLayout } from './AppLayout';

@@ -1,8 +1,8 @@
 import { useGetDailyUserData } from '@hooks/useGetDailyUserData';
 import { MainContent } from '@layouts/MainContent';
-import { ErrorScreen } from '@screens/ErrorScreen';
-import { LoadingScreen } from '@screens/LoadingScreen';
-import { LoginScreen } from '@screens/LoginScreen';
+import { ErrorScreen } from '@screens/states/ErrorScreen';
+import { LoadingScreen } from '@screens/states/LoadingScreen';
+import { LoginScreen } from '@screens/states/LoginScreen';
 import { useAuthStore } from '@store/useAuthStore';
 import { print } from '@utils/helpers';
 import { type ReactNode, useEffect } from 'react';

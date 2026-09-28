@@ -1,9 +1,9 @@
-import { ErrorScreen } from '@screens/ErrorScreen';
+import { ErrorScreen } from '@screens/states/ErrorScreen';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import type { ComponentType, LazyExoticComponent } from 'react';
 import { lazy, Suspense, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { SplashScreen } from './SplashScreen';
+import { SplashScreen } from './states/SplashScreen';
 
 /**
  * A lazily-loaded game engine component, resolved on demand by game id.
