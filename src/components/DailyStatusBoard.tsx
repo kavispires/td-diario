@@ -1,4 +1,5 @@
 import { Paragraph, Text } from '@components/ui/Typography';
+import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
 import { Clock } from 'lucide-react';
 import flameIcon from '../assets/svg/flame.svg';
 import { useDayCountdown } from '../hooks/useDayCountdown';
@@ -11,14 +12,16 @@ import { Pill } from './ui/Pill';
  * @returns A styled status board section.
  */
 export function DailyStatusBoard() {
-  const timeLeft = useDayCountdown();
-  const { streak, completedCount, totalGames } = {
+  const { data } = useGetDailyChallenges();
+  const totalChallenges = Object.keys(data?.challenges ?? {}).length;
+  const { streak, completedCount } = {
     streak: 0,
     completedCount: 0,
-    totalGames: 0,
   };
 
-  const progressPercent = Math.round((completedCount / totalGames) * 100);
+  const progressPercent = totalChallenges
+    ? Math.round((completedCount / totalChallenges) * 100)
+    : 0;
 
   return (
     <div className="flex flex-col gap-2">
@@ -38,16 +41,7 @@ export function DailyStatusBoard() {
         </Pill>
 
         {/* Timer Pill */}
-        <Pill>
-          <Clock className="w-4.5 h-4.5 text-slate-200 shrink-0" />
-
-          <Text className="whitespace-nowrap text-[14px] uppercase tracking-wide text-white">
-            Termina em{' '}
-            <span className="inline-block w-[8ch] text-center font-mono font-semibold tabular-nums">
-              {timeLeft || '00:00:00'}
-            </span>
-          </Text>
-        </Pill>
+        <CountdownPill />
       </div>
 
       {/* Bottom Row: Progress */}
@@ -59,7 +53,7 @@ export function DailyStatusBoard() {
           >
             Progresso:
           </Text>{' '}
-          {completedCount} de {totalGames} jogos concluídos
+          {completedCount} de {totalChallenges} jogos concluídos
         </Paragraph>
 
         {/*
@@ -75,5 +69,22 @@ export function DailyStatusBoard() {
         </div>
       </div>
     </div>
+  );
+}
+
+function CountdownPill() {
+  const timeLeft = useDayCountdown();
+
+  return (
+    <Pill>
+      <Clock className="w-4.5 h-4.5 text-slate-200 shrink-0" />
+
+      <Text className="whitespace-nowrap text-[14px] uppercase tracking-wide text-white">
+        Termina em{' '}
+        <span className="inline-block w-[8ch] text-center font-mono font-semibold tabular-nums">
+          {timeLeft || '00:00:00'}
+        </span>
+      </Text>
+    </Pill>
   );
 }
