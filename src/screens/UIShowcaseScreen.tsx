@@ -1,15 +1,21 @@
 import { Alert } from '@components/ui/Alert';
+import { Avatar } from '@components/ui/Avatar';
+import { Badge } from '@components/ui/Badge';
 import { Button } from '@components/ui/Button';
+import { Carousel } from '@components/ui/Carousel';
 import { Divider } from '@components/ui/Divider';
 import { Flex } from '@components/ui/Flex';
 import { IconButton } from '@components/ui/IconButton';
+import { Image } from '@components/ui/Image';
 import { Modal } from '@components/ui/Modal';
 import { Pill } from '@components/ui/Pill';
+import { Popconfirm } from '@components/ui/Popconfirm';
 import { Popover } from '@components/ui/Popover';
+import { Switch } from '@components/ui/Switch';
 import { TextInput } from '@components/ui/TextInput';
 import { Tooltip } from '@components/ui/Tooltip';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
-import { Bell, Flame, Heart, Info } from 'lucide-react';
+import { Bell, Flame, Heart, Info, User } from 'lucide-react';
 import { useState } from 'react';
 
 /**
@@ -23,6 +29,7 @@ export function UIShowcaseScreen() {
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [warningVisible, setWarningVisible] = useState(true);
+  const [switchOn, setSwitchOn] = useState(true);
 
   return (
     <div className="flex flex-col gap-6 p-4">
@@ -235,6 +242,152 @@ export function UIShowcaseScreen() {
             fecha pelo botão de X ou pelo footer.
           </Paragraph>
         </Modal>
+      </section>
+
+      <Divider />
+
+      <section className="flex flex-col gap-3">
+        <Text strong>Avatar</Text>
+        <Flex
+          gap="small"
+          align="center"
+        >
+          <Avatar size="small">AB</Avatar>
+          <Avatar>CD</Avatar>
+          <Avatar
+            size="large"
+            shape="square"
+          >
+            EF
+          </Avatar>
+          <Avatar icon={<User size={18} />} />
+          <Avatar
+            src="https://picsum.photos/seed/avatar/200"
+            alt="Foto do usuário"
+          />
+          <Avatar src="https://broken-url.invalid/image.png">QR</Avatar>
+        </Flex>
+      </section>
+
+      <Divider />
+
+      <section className="flex flex-col gap-3">
+        <Text strong>Badge</Text>
+        <Flex
+          gap="large"
+          align="center"
+        >
+          <Badge count={5}>
+            <IconButton
+              icon={<Bell />}
+              aria-label="Notificações"
+            />
+          </Badge>
+          <Badge count={128}>
+            <IconButton
+              icon={<Bell />}
+              aria-label="Notificações"
+            />
+          </Badge>
+          <Badge dot>
+            <IconButton
+              icon={<Bell />}
+              aria-label="Notificações"
+            />
+          </Badge>
+          <Badge
+            status="success"
+            text="Online"
+          />
+          <Badge
+            status="error"
+            text="Offline"
+          />
+        </Flex>
+      </section>
+
+      <Divider />
+
+      <section className="flex flex-col gap-3">
+        <Text strong>Switch</Text>
+        <Flex
+          gap="large"
+          align="center"
+        >
+          <Switch
+            checked={switchOn}
+            onChange={setSwitchOn}
+            aria-label="Alternar exemplo"
+          />
+          <Switch
+            size="small"
+            defaultChecked
+            aria-label="Alternar pequeno"
+          />
+          <Switch
+            loading
+            aria-label="Alternar carregando"
+          />
+          <Switch
+            disabled
+            aria-label="Alternar desabilitado"
+          />
+        </Flex>
+      </section>
+
+      <Divider />
+
+      <section className="flex flex-col gap-3">
+        <Text strong>Image</Text>
+        <Flex gap="small">
+          <Image
+            src="https://picsum.photos/seed/showcase/300/200"
+            alt="Imagem de exemplo"
+            width={140}
+            height={100}
+          />
+          <Image
+            src="https://broken-url.invalid/image.png"
+            alt="Imagem quebrada"
+            width={140}
+            height={100}
+          />
+        </Flex>
+      </section>
+
+      <Divider />
+
+      <section className="flex flex-col gap-3">
+        <Text strong>Popconfirm</Text>
+        <Popconfirm
+          title="Excluir este item?"
+          description="Esta ação não pode ser desfeita."
+          okVariant="primary"
+          onConfirm={() => alert('Confirmado')}
+          onCancel={() => alert('Cancelado')}
+        >
+          <Button variant="outlined">Excluir</Button>
+        </Popconfirm>
+      </section>
+
+      <Divider />
+
+      <section className="flex flex-col gap-3">
+        <Text strong>Carousel</Text>
+        <Carousel
+          autoplay
+          className="w-full max-w-xs"
+        >
+          <div className="flex h-40 items-center justify-center rounded-2xl bg-primary text-white">
+            Slide 1
+          </div>
+          <div className="flex h-40 items-center justify-center rounded-2xl bg-secondary text-white">
+            Slide 2
+          </div>
+          <div className="flex h-40 items-center justify-center rounded-2xl bg-accent text-white">
+            Slide 3
+          </div>
+        </Carousel>
       </section>
     </div>
   );
