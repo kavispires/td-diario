@@ -169,3 +169,16 @@ export const logAnalyticsEvent = (
   if (isDevEnv) return Promise.resolve();
   return logEvent(analytics, eventName, eventParams);
 };
+
+/**
+ * Composes a namespaced analytics event name for a game outcome, e.g.
+ * `daily_organiku_win`.
+ *
+ * @param gameId - Kebab-case game id, matching a `GameInfo.id` from `gameInfos`.
+ * @param action - The outcome being logged.
+ * @returns The composed analytics event name.
+ */
+export const getGameAnalyticsEventName = (
+  gameId: string,
+  action: 'win' | 'lose',
+): string => `daily_${gameId}_${action}`;

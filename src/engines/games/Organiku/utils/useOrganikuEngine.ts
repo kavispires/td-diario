@@ -2,6 +2,10 @@ import {
   gameIdToLocalTodayKey,
   useDailyLocalToday,
 } from '@hooks/useDailyLocalToday';
+import {
+  getGameAnalyticsEventName,
+  logAnalyticsEvent,
+} from '@services/firebase';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
 import { playSFX } from '@utils/soundEffects';
@@ -94,6 +98,9 @@ export function useOrganikuEngine(
               tilesToReveal
             : 1;
         playSFX(isWin ? 'win' : 'wee');
+        if (isWin) {
+          logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+        }
 
         setState((prev) => ({
           ...prev,
@@ -119,6 +126,9 @@ export function useOrganikuEngine(
       const isLose = hearts <= 0;
       playSFX(isLose ? 'lose' : 'wrong');
       vibrate(isLose ? 'lose' : 'wrong');
+      if (isLose) {
+        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+      }
 
       setState((prev) => ({
         ...prev,
