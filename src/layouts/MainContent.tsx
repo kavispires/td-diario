@@ -1,5 +1,6 @@
 import { useTDBaseUrl } from '@hooks/useTDBaseUrl';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
+import { cn } from '@utils/cn';
 import { motion, useScroll, useSpring, useTransform } from 'motion/react';
 import type { ReactNode } from 'react';
 
@@ -44,9 +45,10 @@ export function MainContent({ children, fullscreen }: MainContentProps) {
 
   return (
     <main
-      className={`relative flex w-full overflow-x-hidden ${
-        fullscreen ? 'min-h-dvh' : 'flex-1'
-      }`}
+      className={cn(
+        'relative flex w-full overflow-x-hidden',
+        fullscreen ? 'min-h-dvh' : 'flex-1',
+      )}
     >
       {/* Fixed to the viewport (not `main`) since `main` can now grow taller
           than the screen — the page itself scrolls so the address bar can

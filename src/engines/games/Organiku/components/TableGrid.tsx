@@ -1,4 +1,5 @@
 import { DailyItem } from '@components/games/DailyItem';
+import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import { useMemo } from 'react';
 import type { DailyOrganikuEntry } from '../../../../types/games';
@@ -99,17 +100,16 @@ export function TableGrid({
             transition={{ duration: 0.25, ease: 'easeOut' }}
             disabled={!isClickable}
             onClick={isClickable ? () => onSelectTile(index) : undefined}
-            className={`flex items-center justify-center rounded-xl transition-colors ${
-              isAllRevealed
-                ? 'bg-gold'
-                : defaultRevealedIndexes.includes(index)
-                  ? 'bg-secondary'
-                  : isBlocked
-                    ? 'cursor-not-allowed bg-border'
-                    : isActive
-                      ? 'z-10 bg-secondary-soft outline outline-2 outline-secondary'
-                      : 'bg-surface-raised'
-            }`}
+            className={cn(
+              'flex items-center justify-center rounded-xl bg-surface-raised transition-colors',
+              // Listed in increasing priority: tailwind-merge keeps only the
+              // last conflicting `bg-*`/state class applied here.
+              isActive &&
+                'z-10 bg-secondary-soft outline outline-2 outline-secondary',
+              isBlocked && 'cursor-not-allowed bg-border',
+              defaultRevealedIndexes.includes(index) && 'bg-secondary',
+              isAllRevealed && 'bg-gold',
+            )}
             style={{ width: itemWidth, height: itemWidth }}
           >
             {isVisible ? (

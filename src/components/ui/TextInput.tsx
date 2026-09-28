@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import type { ComponentPropsWithRef } from 'react';
 
 /**
@@ -16,14 +17,17 @@ type TextInputProps = ComponentPropsWithRef<'input'>;
  * @returns A styled input element.
  */
 export function TextInput({
-  className = '',
+  className,
   type = 'text',
   ...props
 }: TextInputProps) {
   return (
     <input
       type={type}
-      className={`w-full bg-white border-2 border-border rounded-xl px-4 py-3 text-base text-foreground placeholder:text-subtle-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-soft transition-all ${className}`}
+      className={cn(
+        'w-full rounded-xl border-2 border-border bg-white px-4 py-3 text-base text-foreground placeholder:text-subtle-foreground transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-soft',
+        className,
+      )}
       {...props}
     />
   );

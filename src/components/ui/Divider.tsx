@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import type { ReactNode } from 'react';
 
 /**
@@ -52,7 +53,7 @@ export function Divider({
   dashed = false,
   children,
   labelAlign = 'center',
-  className = '',
+  className,
 }: DividerProps) {
   const lineStyle = dashed ? 'border-dashed' : 'border-solid';
 
@@ -60,7 +61,11 @@ export function Divider({
     return (
       <div
         aria-hidden="true"
-        className={`inline-block h-full min-h-4 w-px self-stretch border-l ${lineStyle} border-border ${className}`}
+        className={cn(
+          'inline-block h-full min-h-4 w-px self-stretch border-l border-border',
+          lineStyle,
+          className,
+        )}
       />
     );
   }
@@ -68,7 +73,7 @@ export function Divider({
   if (!children) {
     return (
       <hr
-        className={`w-full border-t ${lineStyle} border-border ${className}`}
+        className={cn('w-full border-t border-border', lineStyle, className)}
       />
     );
   }
@@ -79,7 +84,12 @@ export function Divider({
 
   return (
     <div
-      className={`flex w-full items-center gap-3 text-sm text-muted-foreground before:border-t before:content-[''] after:border-t after:content-[''] before:border-border after:border-border ${pseudoLineStyle} ${LABEL_ALIGN_CLASSES[labelAlign]} ${className}`}
+      className={cn(
+        "flex w-full items-center gap-3 text-sm text-muted-foreground before:border-t before:border-border before:content-[''] after:border-t after:border-border after:content-['']",
+        pseudoLineStyle,
+        LABEL_ALIGN_CLASSES[labelAlign],
+        className,
+      )}
     >
       {children}
     </div>

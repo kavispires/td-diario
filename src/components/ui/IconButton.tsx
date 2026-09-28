@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import { Loader2 } from 'lucide-react';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import type { ButtonVariant } from './Button';
@@ -96,7 +97,7 @@ export function IconButton({
   shape = 'circle',
   loading = false,
   dot = false,
-  className = '',
+  className,
   disabled,
   type = 'button',
   ...props
@@ -106,15 +107,21 @@ export function IconButton({
 
   return (
     <button
-      className={`${baseStyles} ${SIZE_PADDING[size]} ${SHAPE_CLASSES[shape]} ${VARIANT_CLASSES[variant]} ${className}`}
+      className={cn(
+        baseStyles,
+        SIZE_PADDING[size],
+        SHAPE_CLASSES[shape],
+        VARIANT_CLASSES[variant],
+        className,
+      )}
       disabled={disabled || loading}
       type={type}
       {...props}
     >
       {loading ? (
-        <Loader2 className={`animate-spin ${SIZE_ICON[size]}`} />
+        <Loader2 className={cn('animate-spin', SIZE_ICON[size])} />
       ) : (
-        <span className={`inline-flex ${SIZE_ICON[size]}`}>{icon}</span>
+        <span className={cn('inline-flex', SIZE_ICON[size])}>{icon}</span>
       )}
       {dot && !loading && (
         <span className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-red-500" />

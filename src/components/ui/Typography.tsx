@@ -1,44 +1,5 @@
+import { cn } from '@utils/cn';
 import type { HTMLAttributes, ReactNode } from 'react';
-
-/**
- * Matches a Tailwind text-color utility, including numeric-scale colors
- * (e.g. `text-slate-900`) and the app's semantic theme tokens (e.g.
- * `text-foreground`, `text-muted-foreground`).
- */
-const TEXT_COLOR_CLASS_PATTERN =
-  /^text-(inherit|current|transparent|black|white|primary|primary-hover|primary-soft|secondary|secondary-hover|secondary-soft|accent|accent-soft|background|surface|surface-raised|foreground|muted-foreground|subtle-foreground|border|border-strong|success|warning|destructive|chrome|[a-z]+-\d{2,3})$/;
-
-/**
- * Matches a Tailwind margin-bottom utility (e.g. `mb-4`, `-mb-2`, `mb-px`).
- */
-const MARGIN_BOTTOM_CLASS_PATTERN = /^-?mb-(\d+(\.\d+)?|px)$/;
-
-/**
- * Merges a base className with a caller-provided override, dropping any
- * `base` utility that conflicts with one supplied by `override` (matched via
- * `patterns`). This avoids relying on Tailwind's generated stylesheet order,
- * which does not respect the order classes appear in the `class` attribute.
- */
-function mergeClassName(
-  base: string,
-  override: string,
-  patterns: RegExp[],
-): string {
-  const overrideClasses = override.split(/\s+/).filter(Boolean);
-  const baseClasses = base
-    .split(/\s+/)
-    .filter(Boolean)
-    .filter(
-      (baseCls) =>
-        !patterns.some(
-          (pattern) =>
-            pattern.test(baseCls) &&
-            overrideClasses.some((overrideCls) => pattern.test(overrideCls)),
-        ),
-    );
-
-  return [...baseClasses, ...overrideClasses].join(' ');
-}
 
 /**
  * Supported heading levels rendered by {@link Title}.
@@ -73,7 +34,7 @@ type TitleProps = HTMLAttributes<HTMLHeadingElement> & {
  */
 export function Title({
   level = 1,
-  className = '',
+  className,
   children,
   ...props
 }: TitleProps) {
@@ -91,11 +52,7 @@ export function Title({
   return (
     <Component
       {...props}
-      className={mergeClassName(
-        `${sizes[level]} tracking-wide text-foreground`,
-        className,
-        [TEXT_COLOR_CLASS_PATTERN],
-      )}
+      className={cn(sizes[level], 'tracking-wide text-foreground', className)}
     >
       {children}
     </Component>
@@ -118,18 +75,13 @@ type ParagraphProps = HTMLAttributes<HTMLParagraphElement> & {
  * @param props Paragraph element properties and content.
  * @returns A styled paragraph element.
  */
-export function Paragraph({
-  className = '',
-  children,
-  ...props
-}: ParagraphProps) {
+export function Paragraph({ className, children, ...props }: ParagraphProps) {
   return (
     <p
       {...props}
-      className={mergeClassName(
-        'text-base text-muted-foreground leading-relaxed mb-4',
+      className={cn(
+        'mb-4 text-base text-muted-foreground leading-relaxed',
         className,
-        [TEXT_COLOR_CLASS_PATTERN, MARGIN_BOTTOM_CLASS_PATTERN],
       )}
     >
       {children}
@@ -169,7 +121,7 @@ type TextProps = HTMLAttributes<HTMLSpanElement> & {
 export function Text({
   type = 'default',
   strong = false,
-  className = '',
+  className,
   children,
   ...props
 }: TextProps) {
@@ -185,9 +137,7 @@ export function Text({
   return (
     <span
       {...props}
-      className={mergeClassName(`${colors[type]} ${weight}`, className, [
-        TEXT_COLOR_CLASS_PATTERN,
-      ])}
+      className={cn(colors[type], weight, className)}
     >
       {children}
     </span>

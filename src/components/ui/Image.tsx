@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import { ImageOff, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
@@ -73,6 +74,12 @@ function clampScale(value: number): number {
   return Math.min(Math.max(value, MIN_SCALE), MAX_SCALE);
 }
 
+const OBJECT_FIT_CLASSES: Record<ImageObjectFit, string> = {
+  cover: 'object-cover',
+  contain: 'object-contain',
+  fill: 'object-fill',
+};
+
 /**
  * Renders an image with a loading skeleton, an optional fallback on error,
  * and an optional tap-to-preview full-screen overlay, similar to Ant
@@ -92,7 +99,7 @@ export function Image({
   fallback,
   rounded = true,
   preview = true,
-  className = '',
+  className,
 }: ImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -258,7 +265,11 @@ export function Image({
   return (
     <>
       <span
-        className={`relative inline-block overflow-hidden bg-border ${rounded ? 'rounded-2xl' : ''} ${className}`}
+        className={cn(
+          'relative inline-block overflow-hidden bg-border',
+          rounded && 'rounded-2xl',
+          className,
+        )}
         style={style}
       >
         {!loaded && !showBrokenState && (
@@ -282,13 +293,11 @@ export function Image({
             onLoad={() => setLoaded(true)}
             onError={() => setFailed(true)}
             onClick={preview ? () => setPreviewOpen(true) : undefined}
-            className={`h-full w-full ${
-              objectFit === 'cover'
-                ? 'object-cover'
-                : objectFit === 'contain'
-                  ? 'object-contain'
-                  : 'object-fill'
-            } ${preview ? 'cursor-zoom-in' : ''}`}
+            className={cn(
+              'h-full w-full',
+              OBJECT_FIT_CLASSES[objectFit],
+              preview && 'cursor-zoom-in',
+            )}
           />
         )}
       </span>
@@ -322,9 +331,10 @@ export function Image({
                   transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
                   transition: interacting ? 'none' : 'transform 0.16s ease-out',
                 }}
-                className={`max-h-full max-w-full touch-none object-contain select-none ${
-                  scale > MIN_SCALE ? 'cursor-grab' : 'cursor-zoom-in'
-                }`}
+                className={cn(
+                  'max-h-full max-w-full touch-none object-contain select-none',
+                  scale > MIN_SCALE ? 'cursor-grab' : 'cursor-zoom-in',
+                )}
               />
               <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
                 <button

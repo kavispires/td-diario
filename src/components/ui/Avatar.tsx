@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
@@ -86,7 +87,7 @@ export function Avatar({
   children,
   shape = 'circle',
   size = 'default',
-  className = '',
+  className,
 }: AvatarProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const showImage = src && !imageFailed;
@@ -98,7 +99,12 @@ export function Avatar({
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center overflow-hidden bg-primary-soft font-semibold text-primary ${SHAPE_CLASSES[shape]} ${sizeClassName} ${className}`}
+      className={cn(
+        'inline-flex shrink-0 items-center justify-center overflow-hidden bg-primary-soft font-semibold text-primary',
+        SHAPE_CLASSES[shape],
+        sizeClassName,
+        className,
+      )}
       style={sizeStyle}
     >
       {showImage ? (

@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import type { ReactNode } from 'react';
 
 /**
@@ -20,7 +21,10 @@ type PillProps = {
 export function Pill({ children, className, ...props }: PillProps) {
   return (
     <span
-      className={`bg-chrome text-white px-4 py-1.5 rounded-full flex items-center gap-2 shadow-sm ${className ?? ''}`}
+      className={cn(
+        'flex items-center gap-2 rounded-full bg-chrome px-4 py-1.5 text-white shadow-sm',
+        className,
+      )}
       {...props}
     >
       {children}

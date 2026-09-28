@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import { AlertTriangle, CheckCircle2, Info, X, XCircle } from 'lucide-react';
 import type { ReactNode } from 'react';
 
@@ -76,14 +77,18 @@ export function Alert({
   closable = false,
   onClose,
   action,
-  className = '',
+  className,
 }: AlertProps) {
   const Icon = TYPE_ICONS[type];
 
   return (
     <div
       role="alert"
-      className={`flex items-start gap-3 rounded-2xl border px-4 py-3 ${TYPE_CLASSES[type]} ${className}`}
+      className={cn(
+        'flex items-start gap-3 rounded-2xl border px-4 py-3',
+        TYPE_CLASSES[type],
+        className,
+      )}
     >
       {showIcon && (
         <Icon

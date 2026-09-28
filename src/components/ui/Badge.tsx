@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import type { ReactNode } from 'react';
 
 /**
@@ -78,16 +79,19 @@ export function Badge({
   status = 'default',
   text,
   color,
-  className = '',
+  className,
 }: BadgeProps) {
   const hasCount = count !== undefined;
   const shouldShowCount = hasCount && (count !== 0 || showZero);
 
   if (!children) {
     return (
-      <span className={`inline-flex items-center gap-1.5 ${className}`}>
+      <span className={cn('inline-flex items-center gap-1.5', className)}>
         <span
-          className={`h-2 w-2 shrink-0 rounded-full ${color ? '' : STATUS_CLASSES[status]}`}
+          className={cn(
+            'h-2 w-2 shrink-0 rounded-full',
+            !color && STATUS_CLASSES[status],
+          )}
           style={color ? { backgroundColor: color } : undefined}
           aria-hidden="true"
         />
@@ -99,13 +103,15 @@ export function Badge({
   const showIndicator = dot || shouldShowCount;
 
   return (
-    <span className={`relative inline-flex ${className}`}>
+    <span className={cn('relative inline-flex', className)}>
       {children}
       {showIndicator && (
         <span
-          className={`absolute -top-1 -right-1 flex items-center justify-center rounded-full text-white ${
-            dot ? 'h-2.5 w-2.5' : 'h-5 min-w-5 px-1 text-[10px] font-semibold'
-          } ${color ? '' : 'bg-destructive'}`}
+          className={cn(
+            'absolute -top-1 -right-1 flex items-center justify-center rounded-full text-white',
+            dot ? 'h-2.5 w-2.5' : 'h-5 min-w-5 px-1 text-[10px] font-semibold',
+            !color && 'bg-destructive',
+          )}
           style={color ? { backgroundColor: color } : undefined}
         >
           {!dot &&

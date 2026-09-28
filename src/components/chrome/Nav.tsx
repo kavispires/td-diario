@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import { Calendar, Puzzle, User } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
@@ -34,24 +35,29 @@ export function ChromeNav() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `flex flex-col items-center gap-1 p-2 min-w-18 transition-colors duration-200 ${
+                cn(
+                  'flex min-w-18 flex-col items-center gap-1 p-2 transition-colors duration-200',
                   // Active state is bright blue/white, inactive is muted slate
                   isActive
                     ? 'text-blue-400'
-                    : 'text-slate-400 hover:text-slate-300'
-                }`
+                    : 'text-slate-400 hover:text-slate-300',
+                )
               }
             >
               {({ isActive }) => (
                 <>
                   <item.icon
-                    className={`w-6 h-6 transition-transform duration-200 ${
-                      isActive ? 'scale-110 drop-shadow-md' : 'scale-100'
-                    }`}
+                    className={cn(
+                      'h-6 w-6 transition-transform duration-200',
+                      isActive ? 'scale-110 drop-shadow-md' : 'scale-100',
+                    )}
                     strokeWidth={isActive ? 2.5 : 2}
                   />
                   <span
-                    className={`text-[10px] font-medium tracking-wide ${isActive ? 'font-bold text-white' : ''}`}
+                    className={cn(
+                      'text-[10px] font-medium tracking-wide',
+                      isActive && 'font-bold text-white',
+                    )}
                   >
                     {item.label}
                   </span>

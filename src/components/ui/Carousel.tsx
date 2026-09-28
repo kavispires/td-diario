@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import {
   Children,
   type ReactNode,
@@ -54,7 +55,7 @@ export function Carousel({
   autoplaySpeed = 3000,
   dots = true,
   afterChange,
-  className = '',
+  className,
 }: CarouselProps) {
   const slides = Children.toArray(children);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -115,7 +116,7 @@ export function Carousel({
   }, [autoplay, autoplaySpeed, slides.length, scrollToIndex]);
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={cn('relative', className)}>
       <div
         ref={trackRef}
         className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden"
@@ -139,9 +140,10 @@ export function Carousel({
               aria-label={`Ir para o slide ${index + 1}`}
               aria-current={active === index}
               onClick={() => scrollToIndex(index)}
-              className={`h-1.5 rounded-full transition-all duration-200 ${
-                active === index ? 'w-4 bg-white' : 'w-1.5 bg-white/50'
-              }`}
+              className={cn(
+                'h-1.5 rounded-full transition-all duration-200',
+                active === index ? 'w-4 bg-white' : 'w-1.5 bg-white/50',
+              )}
             />
           ))}
         </div>

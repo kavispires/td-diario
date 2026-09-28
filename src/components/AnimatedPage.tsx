@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import type { ReactNode } from 'react';
 
@@ -29,7 +30,7 @@ export function AnimatedPage({ children, className }: AnimatedPageProps) {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
-      className={`w-full h-full py-4 px-4 ${className ?? ''}`}
+      className={cn('h-full w-full px-4 py-4', className)}
     >
       {children}
     </motion.div>

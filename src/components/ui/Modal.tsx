@@ -1,4 +1,5 @@
 import { IconButton } from '@components/ui/IconButton';
+import { cn } from '@utils/cn';
 import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { type ReactNode, useEffect, useId } from 'react';
@@ -81,7 +82,7 @@ export function Modal({
   closeOnEsc = true,
   lockScroll = true,
   'aria-label': ariaLabel,
-  className = '',
+  className,
   zIndex = 40,
 }: ModalProps) {
   const titleId = useId();
@@ -129,7 +130,10 @@ export function Modal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className={`relative flex w-full max-w-md flex-col overflow-hidden rounded-3xl bg-surface-raised shadow-2xl ${className}`}
+            className={cn(
+              'relative flex w-full max-w-md flex-col overflow-hidden rounded-3xl bg-surface-raised shadow-2xl',
+              className,
+            )}
           >
             <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
               <div

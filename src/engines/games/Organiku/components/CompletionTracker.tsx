@@ -1,5 +1,6 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { Badge } from '@components/ui/Badge';
+import { cn } from '@utils/cn';
 import type { useOrganikuEngine } from '../utils/useOrganikuEngine';
 
 /**
@@ -45,7 +46,10 @@ export function CompletionTracker({
             color={isCompleted ? 'var(--color-gold)' : 'var(--color-secondary)'}
           >
             <div
-              className={`rounded-xl ${isCompleted ? 'bg-gold-soft' : 'bg-secondary-soft'}`}
+              className={cn(
+                'rounded-xl',
+                isCompleted ? 'bg-gold-soft' : 'bg-secondary-soft',
+              )}
             >
               <DailyItem
                 itemId={itemId}

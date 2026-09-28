@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -78,7 +79,7 @@ export function Switch({
   loading = false,
   size = 'default',
   'aria-label': ariaLabel,
-  className = '',
+  className,
 }: SwitchProps) {
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
   const isControlled = checked !== undefined;
@@ -100,14 +101,19 @@ export function Switch({
       aria-label={ariaLabel}
       disabled={disabled || loading}
       onClick={handleClick}
-      className={`relative inline-flex shrink-0 items-center rounded-full p-0.5 transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none ${
-        isChecked ? 'bg-primary' : 'bg-border-strong'
-      } ${TRACK_SIZE_CLASSES[size]} ${className}`}
+      className={cn(
+        'relative inline-flex shrink-0 items-center rounded-full p-0.5 transition-colors duration-200 disabled:pointer-events-none disabled:opacity-50',
+        isChecked ? 'bg-primary' : 'bg-border-strong',
+        TRACK_SIZE_CLASSES[size],
+        className,
+      )}
     >
       <span
-        className={`flex items-center justify-center rounded-full bg-white shadow transition-transform duration-200 ${THUMB_SIZE_CLASSES[size]} ${
-          isChecked ? THUMB_TRANSLATE_CLASSES[size] : 'translate-x-0'
-        }`}
+        className={cn(
+          'flex items-center justify-center rounded-full bg-white shadow transition-transform duration-200',
+          THUMB_SIZE_CLASSES[size],
+          isChecked ? THUMB_TRANSLATE_CLASSES[size] : 'translate-x-0',
+        )}
       >
         {loading && (
           <Loader2

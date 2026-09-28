@@ -3,6 +3,7 @@ import type {
   NotificationType,
 } from '@store/useNotificationStore';
 import { useNotificationStore } from '@store/useNotificationStore';
+import { cn } from '@utils/cn';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -57,11 +58,14 @@ function NotificationItem({ id, type, content, duration }: Notification) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.18 }}
-      className={`pointer-events-auto flex max-w-xs items-center gap-2 rounded-full border px-4 py-2 shadow-lg ${TYPE_CLASSES[type]}`}
+      className={cn(
+        'pointer-events-auto flex max-w-xs items-center gap-2 rounded-full border px-4 py-2 shadow-lg',
+        TYPE_CLASSES[type],
+      )}
     >
       <Icon
         size={18}
-        className={`shrink-0 ${type === 'loading' ? 'animate-spin' : ''}`}
+        className={cn('shrink-0', type === 'loading' && 'animate-spin')}
         aria-hidden="true"
       />
       <span className="min-w-0 truncate text-sm font-medium text-foreground">

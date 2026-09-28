@@ -1,4 +1,5 @@
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
+import { cn } from '@utils/cn';
 import { Check } from 'lucide-react';
 import type { HTMLMotionProps } from 'motion/react';
 import { motion } from 'motion/react';
@@ -48,7 +49,7 @@ export function GameCard({
   size = 'small',
   state = 'available',
   progressPercent = 0,
-  className = '',
+  className,
   ...props
 }: GameCardProps) {
   const navigate = useNavigate();
@@ -135,7 +136,13 @@ export function GameCard({
       onClick={handleClick}
       style={dynamicStyles}
       disabled={isDisabled}
-      className={`relative rounded-xl flex flex-col items-center justify-center transition-all duration-200 w-full h-full ${borderClasses} ${sizeClass} ${stateClasses} ${className}`}
+      className={cn(
+        'relative flex h-full w-full flex-col items-center justify-center rounded-xl transition-all duration-200',
+        borderClasses,
+        sizeClass,
+        stateClasses,
+        className,
+      )}
       {...props}
     >
       {/* Absolute Badges */}
@@ -161,7 +168,10 @@ export function GameCard({
             damping: 20,
           },
         }}
-        className={`${size === 'large' ? 'w-20 h-20 mb-3' : 'w-12 h-12 mb-1'} flex items-center justify-center`}
+        className={cn(
+          'flex items-center justify-center',
+          size === 'large' ? 'mb-3 h-20 w-20' : 'mb-1 h-12 w-12',
+        )}
       >
         <GameLogos
           gameId={gameInfo.id}
@@ -172,7 +182,10 @@ export function GameCard({
       {/* Text Area */}
       {/* Note: Assuming 'pt' is the default for DualLanguageValue for now */}
       <h3
-        className={`${size === 'large' ? 'text-lg' : 'text-xs'} font-bold text-foreground text-center leading-tight`}
+        className={cn(
+          'text-center font-bold leading-tight text-foreground',
+          size === 'large' ? 'text-lg' : 'text-xs',
+        )}
       >
         {gameInfo.name[language] || gameInfo.name.pt}
       </h3>

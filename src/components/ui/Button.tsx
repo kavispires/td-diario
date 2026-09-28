@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import { Loader2 } from 'lucide-react';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
@@ -79,7 +80,7 @@ export function Button({
   icon,
   iconPlacement = 'start',
   loading = false,
-  className = '',
+  className,
   children,
   disabled,
   type = 'button',
@@ -100,14 +101,20 @@ export function Button({
   };
 
   const renderIcon = loading ? (
-    <Loader2 className={`animate-spin ${SIZE_ICON_CLASSES[size]}`} />
+    <Loader2 className={cn('animate-spin', SIZE_ICON_CLASSES[size])} />
   ) : (
     icon
   );
 
   return (
     <button
-      className={`${widthClass} ${baseStyles} ${SIZE_CLASSES[size]} ${variants[variant]} ${className}`}
+      className={cn(
+        widthClass,
+        baseStyles,
+        SIZE_CLASSES[size],
+        variants[variant],
+        className,
+      )}
       disabled={disabled || loading}
       type={type}
       {...props}

@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import type {
   ComponentPropsWithRef,
   CSSProperties,
@@ -146,7 +147,7 @@ export function Flex<T extends ElementType = 'div'>({
   justify,
   align,
   gap,
-  className = '',
+  className,
   style,
   children,
   ...props
@@ -159,17 +160,15 @@ export function Flex<T extends ElementType = 'div'>({
       ? { gap: typeof gap === 'number' ? `${gap}px` : gap }
       : undefined;
 
-  const classes = [
+  const classes = cn(
     'flex',
     vertical ? 'flex-col' : 'flex-row',
     resolveWrapClassName(wrap),
-    justify ? JUSTIFY_CLASSES[justify] : '',
-    align ? ALIGN_CLASSES[align] : '',
+    justify && JUSTIFY_CLASSES[justify],
+    align && ALIGN_CLASSES[align],
     gapClassName,
     className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   return (
     <Component
