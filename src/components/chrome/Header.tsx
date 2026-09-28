@@ -4,7 +4,7 @@ import { Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import { isDevEnv } from '@utils/helpers';
-import { Bell, BookOpen, LayoutGrid, Volume2 } from 'lucide-react';
+import { Bell, BookOpen, CodeXml, Volume2 } from 'lucide-react';
 import { motion } from 'motion/react';
 // import { VolumeX } from 'lucide-react'; // Use this when sound is off
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +19,9 @@ import { TDLogoIcon } from '../TDLogoIcon';
  */
 export function ChromeHeader() {
   const activeGameId = useAppRuntimeStore((state) => state.activeGameId);
+  const activeGameNumber = useAppRuntimeStore(
+    (state) => state.activeGameNumber,
+  );
   const language = useAppRuntimeStore((state) => state.language);
   const openRules = useAppRuntimeStore((state) => state.openRules);
   const navigate = useNavigate();
@@ -60,6 +63,11 @@ export function ChromeHeader() {
             className="text-xl text-slate-50"
           >
             {headerTitle}
+            {activeGameId && activeGameNumber != null && (
+              <span className="ml-1 text-base text-slate-50/70">
+                #{activeGameNumber}
+              </span>
+            )}
           </Title>
         </div>
 
@@ -67,7 +75,7 @@ export function ChromeHeader() {
         <div className="flex items-center gap-2">
           {isDevEnv && (
             <IconButton
-              icon={<LayoutGrid />}
+              icon={<CodeXml />}
               aria-label="Componentes de UI (dev)"
               onClick={() => navigate('/dev/showcase')}
             />

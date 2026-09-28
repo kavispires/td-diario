@@ -58,6 +58,16 @@ type AppRuntimeState = {
    */
   setActiveGameId: (gameId: string | null) => void;
   /**
+   * Today's daily-challenge number for the game occupying the Header, or
+   * null when on the Hub or not yet loaded.
+   */
+  activeGameNumber: number | null;
+  /**
+   * Sets or clears the daily-challenge number shown alongside the Header's
+   * game title.
+   */
+  setActiveGameNumber: (number: number | null) => void;
+  /**
    * The id of the game whose rules screen is currently open, or null when
    * closed.
    */
@@ -83,6 +93,8 @@ export const useAppRuntimeStore = create<AppRuntimeState>((set) => ({
   setLaunchingGame: (launchingGame) => set({ launchingGame }),
   activeGameId: null,
   setActiveGameId: (gameId) => set({ activeGameId: gameId }),
+  activeGameNumber: null,
+  setActiveGameNumber: (number) => set({ activeGameNumber: number }),
   rulesGameId: null,
   openRules: (gameId) => set({ rulesGameId: gameId }),
   closeRules: () => set({ rulesGameId: null }),

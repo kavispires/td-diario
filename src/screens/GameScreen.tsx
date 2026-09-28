@@ -1,14 +1,19 @@
+import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
 import { ErrorScreen } from '@screens/states/ErrorScreen';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import type { ComponentType, LazyExoticComponent } from 'react';
 import { lazy, Suspense, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import type { PlaceholderGameData } from '../types/puzzles';
 import { SplashScreen } from './states/SplashScreen';
 
 /**
  * A lazily-loaded game engine component, resolved on demand by game id.
+ * Receives today's daily payload for that game once it has loaded.
  */
-type GameComponent = LazyExoticComponent<ComponentType>;
+type GameComponent = LazyExoticComponent<
+  ComponentType<{ data: PlaceholderGameData }>
+>;
 
 const gameComponents: Record<string, GameComponent> = {
   alienado: lazy(() =>
@@ -43,7 +48,13 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   organiku: lazy(() =>
     import('@engines/games/Organiku').then(({ DailyOrganikuGame }) => ({
-      default: DailyOrganikuGame,
+      // DailyOrganikuGame is typed against its real `DailyOrganikuEntry`
+      // payload (src/types/games.ts) rather than the generic placeholder;
+      // this cast bridges it to the shared registry's contract. Ported
+      // games can follow this same pattern.
+      default: DailyOrganikuGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   palavreado: lazy(() =>
@@ -106,24 +117,51 @@ const gameComponents: Record<string, GameComponent> = {
 };
 
 /**
- * Resolves the `:gameId` route param to its lazy game engine component and
- * renders it, falling back to an error screen for unknown ids.
+ * Resolves the `:gameId` route param to its lazy game engine component,
+ * fetches today's daily payload for it, and renders the game with that
+ * data. Falls back to an error screen for unknown ids or missing/failed
+ * daily data, and a splash screen while either is loading.
  *
- * @returns The matched game's engine, an error screen, or a splash screen
- *   while the game chunk loads.
+ * @returns The matched game's engine, an error/splash screen while data or
+ *   the game chunk loads.
  */
 export function GameScreen() {
   const { gameId } = useParams<{ gameId: string }>();
   const Game = gameId ? gameComponents[gameId] : undefined;
+  const dailyChallenges = useGetDailyChallenges();
 
   if (!Game || !gameId) {
     return <ErrorScreen message="Não encontramos esse jogo." />;
   }
 
+  if (dailyChallenges.isLoading) {
+    return <SplashScreen />;
+  }
+
+  // `challenges`/`contributions` only declare known game ids as optional
+  // fields (no string index signature), so a dynamic lookup by `gameId`
+  // needs this cast; the underlying value is still `PlaceholderGameData`.
+  const gamesById = dailyChallenges.data?.challenges as
+    | Record<string, PlaceholderGameData | undefined>
+    | undefined;
+  const contributionsById = dailyChallenges.data?.contributions as
+    | Record<string, PlaceholderGameData | undefined>
+    | undefined;
+  const data = gamesById?.[gameId] ?? contributionsById?.[gameId];
+
+  if (dailyChallenges.isError || !data) {
+    return (
+      <ErrorScreen message="Não encontramos o desafio de hoje para esse jogo." />
+    );
+  }
+
   return (
     <Suspense fallback={<SplashScreen />}>
-      <GameReadyNotifier gameId={gameId} />
-      <Game />
+      <GameReadyNotifier
+        gameId={gameId}
+        number={typeof data.number === 'number' ? data.number : null}
+      />
+      <Game data={data} />
     </Suspense>
   );
 }
@@ -136,18 +174,26 @@ type GameReadyNotifierProps = {
    * Id of the game engine that just mounted.
    */
   gameId: string;
+  /**
+   * Today's daily-challenge number for this game, shown in the Header.
+   */
+  number: number | null;
 };
 
 /**
  * Flips the game launch splash from `loading` to `ready` once the lazy game
  * chunk has mounted, so the splash can offer Jogar/Regras instead of
  * disappearing immediately. Entering a game from elsewhere (not a direct
- * landing) is the only case with a `loading` splash to flip.
+ * landing) is the only case with a `loading` splash to flip. Also publishes
+ * today's challenge number to the Header for as long as this game is mounted.
  */
-function GameReadyNotifier({ gameId }: GameReadyNotifierProps) {
+function GameReadyNotifier({ gameId, number }: GameReadyNotifierProps) {
   const launchingGame = useAppRuntimeStore((state) => state.launchingGame);
   const setLaunchingGame = useAppRuntimeStore(
     (state) => state.setLaunchingGame,
+  );
+  const setActiveGameNumber = useAppRuntimeStore(
+    (state) => state.setActiveGameNumber,
   );
 
   useEffect(() => {
@@ -155,6 +201,11 @@ function GameReadyNotifier({ gameId }: GameReadyNotifierProps) {
       setLaunchingGame({ id: gameId, phase: 'ready' });
     }
   }, [gameId, launchingGame, setLaunchingGame]);
+
+  useEffect(() => {
+    setActiveGameNumber(number);
+    return () => setActiveGameNumber(null);
+  }, [number, setActiveGameNumber]);
 
   return null;
 }

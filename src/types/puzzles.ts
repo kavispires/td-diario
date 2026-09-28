@@ -1,9 +1,13 @@
+import type { DailyOrganikuEntry } from './games';
+
 /**
  * Placeholder shape for a game's daily payload before its final data model
  * is defined. Always includes an id, sequence number, and type, plus any
- * additional game-specific fields.
+ * additional game-specific fields. Once a game is ported, replace its
+ * `PlaceholderGameData` field in `GamesEntries`/`ContributionsEntries` below
+ * with a real type defined in `./games`.
  */
-type PlaceholderGameData = {
+export type PlaceholderGameData = {
   id: DateKey;
   number: number;
   type: string;
@@ -20,7 +24,7 @@ type GamesEntries = {
   investigacao?: PlaceholderGameData;
   filmaco?: PlaceholderGameData;
   mapeamento?: PlaceholderGameData;
-  organiku?: PlaceholderGameData;
+  organiku?: DailyOrganikuEntry;
   palavreado?: PlaceholderGameData;
   portais?: PlaceholderGameData;
   quartetos?: PlaceholderGameData;

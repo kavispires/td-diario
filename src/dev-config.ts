@@ -15,4 +15,4 @@ export const USE_FUNCTIONS_EMULATOR = _isDevEnv ? false : false;
 /**
  * Trigger all use mocks (only in development mode)
  */
-export const USE_MOCK_DATA = _isDevEnv ? true : true;
+export const USE_MOCK_DATA = _isDevEnv ? true : false;

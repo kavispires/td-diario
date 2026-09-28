@@ -52,6 +52,10 @@ body {
   --color-secondary-hover: #68aaa2;
   --color-secondary-soft: #d5ece8;
 
+  /* Winning brand gold */
+  --color-gold: #ffd700;
+  --color-gold-soft: #fff8d3;
+
   /* Attention / decoration */
   --color-accent: #ee9d89;
   --color-accent-soft: #f8d8cf;

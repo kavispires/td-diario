@@ -60,12 +60,12 @@ export function Sprite({
   style,
   ...props
 }: SpriteProps) {
-  const { baseUrl } = useTDBaseUrl('sprites');
+  const { getUrl } = useTDBaseUrl('sprites');
 
   const { isLoading, data, isError } = useQuery({
     queryKey: ['sprite', source],
     queryFn: async () => {
-      const response = await fetch(`${baseUrl}/${source}.svg`);
+      const response = await fetch(getUrl(`${source}.svg`));
 
       if (!response.ok) {
         throw new Error(`Failed to load sprite source: ${source}`);

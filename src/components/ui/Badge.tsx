@@ -16,9 +16,10 @@ type BadgeProps = {
    */
   children?: ReactNode;
   /**
-   * Numeric value shown inside the badge. Ignored when `dot` is `true`.
+   * Value shown inside the badge (usually a number, but any short content
+   * works, e.g. a checkmark). Ignored when `dot` is `true`.
    */
-  count?: number;
+  count?: ReactNode;
   /**
    * Highest number displayed before switching to `${overflowCount}+`.
    * Defaults to `99`.
@@ -79,7 +80,7 @@ export function Badge({
   color,
   className = '',
 }: BadgeProps) {
-  const hasCount = typeof count === 'number';
+  const hasCount = count !== undefined;
   const shouldShowCount = hasCount && (count !== 0 || showZero);
 
   if (!children) {
@@ -107,7 +108,10 @@ export function Badge({
           } ${color ? '' : 'bg-destructive'}`}
           style={color ? { backgroundColor: color } : undefined}
         >
-          {!dot && ((count ?? 0) > overflowCount ? `${overflowCount}+` : count)}
+          {!dot &&
+            (typeof count === 'number' && count > overflowCount
+              ? `${overflowCount}+`
+              : count)}
         </span>
       )}
     </span>
