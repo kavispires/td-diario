@@ -120,7 +120,7 @@ export function ResultsSplash({
         type="secondary"
         className="text-center"
       >
-        {flips} de {swapLimit} viradas
+        {flips} de {swapLimit} viradas projetadas
       </Text>
 
       <div className="flex w-full max-w-xs flex-col gap-3 pt-2">
@@ -132,9 +132,8 @@ export function ResultsSplash({
           Voltar ao Hub
         </Button>
         <Button
-          variant="outlined"
+          variant="ghost"
           block
-          className="!border-white !text-white hover:!bg-white/10"
           onClick={onClose}
         >
           Fechar

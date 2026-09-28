@@ -2,6 +2,8 @@ import {
   gameIdToLocalTodayKey,
   useDailyLocalToday,
 } from '@hooks/useDailyLocalToday';
+import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { getGameStatuses } from '@utils/helpers';
 import { playSFX } from '@utils/soundEffects';
 import { vibrate } from '@utils/vibrate';
 import { useEffect, useMemo, useState } from 'react';
@@ -32,6 +34,10 @@ export function useOrganikuEngine(
   const [state, setState] = useState<GameState>(initialState);
   const [session, setSession] = useState<SessionState>(INITIAL_SESSION);
   const [showResults, setShowResults] = useState(false);
+
+  // Tiles that still need to be matched beyond the ones revealed by
+  // default, used as the denominator for `progress`.
+  const tilesToReveal = data.grid.length - data.defaultRevealedIndexes.length;
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
     key: gameIdToLocalTodayKey(gameInfo.id),
@@ -80,13 +86,20 @@ export function useOrganikuEngine(
       updateSession({ activeTileIndex: null, pairActiveTileIndex: null });
 
       if (isMatch) {
-        const isWin =
-          Object.keys(state.revealed).length + 2 === data.grid.length;
+        const revealedCount = Object.keys(state.revealed).length + 2;
+        const isWin = revealedCount === data.grid.length;
+        const progress =
+          tilesToReveal > 0
+            ? (revealedCount - data.defaultRevealedIndexes.length) /
+              tilesToReveal
+            : 1;
         playSFX(isWin ? 'win' : 'wee');
 
         setState((prev) => ({
           ...prev,
-          status: isWin ? 'win' : 'in-progress',
+          status: isWin
+            ? GAME_LIFECYCLE_STATUS.WIN
+            : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
           revealed: {
             ...prev.revealed,
             [activeTileIndex]: true,
@@ -96,6 +109,8 @@ export function useOrganikuEngine(
             ...prev.foundCount,
             [activeItemId]: (prev.foundCount[activeItemId] || 0) + 2,
           },
+          score: prev.score + (isWin ? 10 * prev.hearts : prev.hearts),
+          progress,
         }));
         return;
       }
@@ -107,7 +122,9 @@ export function useOrganikuEngine(
 
       setState((prev) => ({
         ...prev,
-        status: isLose ? 'lose' : 'in-progress',
+        status: isLose
+          ? GAME_LIFECYCLE_STATUS.LOSE
+          : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
         hearts,
       }));
     }, 750); // Show both tiles for 750ms before resolving the match.
@@ -138,9 +155,7 @@ export function useOrganikuEngine(
     return { remainingCounts, completedItems };
   }, [data, state.revealed]);
 
-  const isWin = state.status === 'win';
-  const isLose = state.status === 'lose';
-  const isComplete = isWin || isLose;
+  const { isWin, isLose, isComplete } = getGameStatuses(state.status);
 
   // Auto-open the results splash once the game reaches a final state.
   useEffect(() => {
@@ -154,6 +169,8 @@ export function useOrganikuEngine(
     revealed: state.revealed,
     foundCount: state.foundCount,
     flips: state.flips,
+    score: state.score,
+    progress: state.progress,
     activeTileIndex: session.activeTileIndex,
     pairActiveTileIndex: session.pairActiveTileIndex,
     showResults,

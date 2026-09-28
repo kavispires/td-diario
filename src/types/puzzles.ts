@@ -1,3 +1,4 @@
+import type { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type { DailyOrganikuEntry } from './games';
 
 /**
@@ -107,3 +108,26 @@ export type GameInfo = {
     | 'soon'
     | 'unreleased';
 };
+
+/**
+ * Persisted per-day progress for Organiku, kept in local storage so a page
+ * reload doesn't lose the player's progress within the same day.
+ */
+export type DefaultGameState<T = unknown> = {
+  /**
+   * Today's daily challenge id (a date string); used to detect a new day.
+   */
+  id: string;
+  /**
+   * Current lifecycle status of the game.
+   */
+  status: (typeof GAME_LIFECYCLE_STATUS)[keyof typeof GAME_LIFECYCLE_STATUS];
+  /**
+   * Progress of the game, represented as a number between 0 and 1.
+   */
+  progress: number;
+  /**
+   * Current score of the player in the game.
+   */
+  score: number;
+} & T;

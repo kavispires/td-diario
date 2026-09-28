@@ -44,6 +44,7 @@ export function DailyOrganikuGame({ data }: DailyOrganikuGameProps) {
     isWin,
     isComplete,
     tracker,
+    score,
   } = useOrganikuEngine(data, initialState);
   const [itemWidth, containerRef] = useCardWidthByContainerRef(5, {
     margin: 48,
@@ -74,14 +75,14 @@ export function DailyOrganikuGame({ data }: DailyOrganikuGameProps) {
         <div className="flex items-center justify-center">
           <Hearts
             remaining={hearts}
-            total={5}
+            total={data.itemsIds.length}
             size={16}
           />
         </div>
 
         <GameStat
           icon={Coins}
-          value="0"
+          value={score}
           label="Pontuação"
           align="end"
         />

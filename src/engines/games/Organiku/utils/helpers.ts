@@ -2,7 +2,8 @@ import {
   gameIdToLocalTodayKey,
   loadLocalToday,
 } from '@hooks/useDailyLocalToday';
-import type { DailyOrganikuEntry } from '../../../../types/games';
+import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { DailyOrganikuEntry } from 'types/games';
 import { gameInfo } from '../info';
 import type { GameState } from './types';
 
@@ -26,11 +27,13 @@ function getDefaultState(data: DailyOrganikuEntry): GameState {
 
   return {
     id: data.id,
-    status: 'in-progress',
+    status: GAME_LIFECYCLE_STATUS.IDLE,
     hearts: data.itemsIds.length,
     revealed,
     foundCount,
     flips: 0,
+    score: 0,
+    progress: 0,
   };
 }
 

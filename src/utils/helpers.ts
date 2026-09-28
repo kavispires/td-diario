@@ -1,5 +1,6 @@
 import { USE_FIRESTORE_EMULATOR } from '@dev-config';
 import { differenceInMilliseconds, format, startOfTomorrow } from 'date-fns';
+import { GAME_LIFECYCLE_STATUS } from './constants';
 /**
  * Flag indicating if the environment is for development
  */
@@ -64,4 +65,17 @@ export const print = (message: any, method: keyof typeof methods = 'log') => {
   if (isDevEnv) {
     methods[method](message);
   }
+};
+
+/**
+ * Determines the win, lose, and complete statuses of a game based on its current status.
+ * @param status - The current status of the game.
+ * @returns An object containing boolean flags for the game's win, lose, and complete statuses.
+ */
+export const getGameStatuses = (status: string) => {
+  const isWin = status === GAME_LIFECYCLE_STATUS.WIN;
+  const isLose = status === GAME_LIFECYCLE_STATUS.LOSE;
+  const isComplete = isWin || isLose;
+
+  return { isWin, isLose, isComplete };
 };

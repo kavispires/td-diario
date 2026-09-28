@@ -1,21 +1,10 @@
-/**
- * Lifecycle status of a single day's Organiku game.
- */
-export type OrganikuStatus = 'in-progress' | 'win' | 'lose';
+import type { DefaultGameState } from 'types/puzzles';
 
 /**
  * Persisted per-day progress for Organiku, kept in local storage so a page
  * reload doesn't lose the player's progress within the same day.
  */
-export type GameState = {
-  /**
-   * Today's daily challenge id (a date string); used to detect a new day.
-   */
-  id: string;
-  /**
-   * Current lifecycle status of the game.
-   */
-  status: OrganikuStatus;
+export type GameState = DefaultGameState<{
   /**
    * Remaining hearts (lives).
    */
@@ -32,7 +21,7 @@ export type GameState = {
    * Number of tile flips made so far.
    */
   flips: number;
-};
+}>;
 
 /**
  * Ephemeral, non-persisted interaction state (the tiles currently flipped

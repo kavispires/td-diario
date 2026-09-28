@@ -18,7 +18,7 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Um item <strong>não</strong> pode aparecer mais de uma vez em uma
+          Uma coisa <strong>não</strong> pode aparecer mais de uma vez em uma
           mesma linha e coluna.
         </Text>
       </li>
@@ -30,6 +30,12 @@ export function Rules() {
             aria-hidden="true"
           />
           .
+        </Text>
+      </li>
+      <li>
+        <Text>
+          Mas quando você acerta o par, você ganha pontos de acordo com o número
+          de corações restantes.
         </Text>
       </li>
       <li>
