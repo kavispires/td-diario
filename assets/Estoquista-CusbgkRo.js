@@ -1,0 +1,1 @@
+import{g as e}from"./index-Dzs-Bm6T.js";var t=e();function n(){return(0,t.jsx)(`div`,{children:`Estoquista`})}export{n as DailyEstoquistaGame};
