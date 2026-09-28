@@ -15,6 +15,7 @@ import { Switch } from '@components/ui/Switch';
 import { TextInput } from '@components/ui/TextInput';
 import { Tooltip } from '@components/ui/Tooltip';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
+import { notification } from '@utils/notification';
 import { Bell, Flame, Heart, Info, User } from 'lucide-react';
 import { useState } from 'react';
 
@@ -388,6 +389,56 @@ export function UIShowcaseScreen() {
             Slide 3
           </div>
         </Carousel>
+      </section>
+
+      <Divider />
+
+      <section className="flex flex-col gap-3">
+        <Text strong>Notification</Text>
+        <Flex
+          wrap
+          gap="small"
+        >
+          <Button
+            variant="outlined"
+            onClick={() => notification.success('Progresso salvo!')}
+          >
+            Success
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => notification.error('Falha ao carregar desafio')}
+          >
+            Error
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => notification.info('Novo desafio disponível')}
+          >
+            Info
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => notification.warning('Sua sequência está em risco')}
+          >
+            Warning
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              const key = notification.loading('Salvando...');
+              window.setTimeout(() => {
+                notification.update(key, {
+                  type: 'success',
+                  content: 'Salvo com sucesso!',
+                  duration: 3000,
+                });
+              }, 1500);
+            }}
+          >
+            Loading → Success
+          </Button>
+        </Flex>
       </section>
     </div>
   );

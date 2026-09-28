@@ -1,6 +1,7 @@
 import { AnimatedPage } from '@components/AnimatedPage';
 import { ChromeHeader } from '@components/chrome/Header';
 import { ChromeNav } from '@components/chrome/Nav';
+import { NotificationHost } from '@components/chrome/NotificationHost';
 import { GameLaunchOverlay } from '@components/GameLaunchOverlay';
 import { useGameLaunchOrchestrator } from '@hooks/useGameLaunchOrchestrator';
 import { ArchiveScreen } from '@screens/ArchiveScreen';
@@ -86,6 +87,8 @@ export function AppLayout() {
       <ChromeNav />
 
       <GameLaunchOverlay />
+
+      <NotificationHost />
     </div>
   );
 }
