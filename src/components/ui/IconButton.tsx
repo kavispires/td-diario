@@ -32,9 +32,11 @@ const SHAPE_CLASSES: Record<IconButtonShape, string> = {
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary: 'bg-primary text-white shadow-lg hover:bg-primary-hover',
-  secondary: 'bg-border text-foreground hover:bg-border-strong',
+  secondary: 'bg-secondary text-white shadow-lg hover:bg-secondary-hover',
   ghost: 'bg-transparent text-current hover:bg-current/10 active:bg-current/15',
   chrome: 'bg-chrome text-white shadow-lg hover:bg-slate-800',
+  outlined:
+    'bg-transparent border-2 border-primary text-primary shadow-none hover:bg-primary-soft',
 };
 
 /**
