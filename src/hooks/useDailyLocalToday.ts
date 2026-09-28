@@ -11,7 +11,29 @@ type WithRequiredId = { id: string };
  * @returns The composed localStorage key.
  */
 export function composeLocalTodayKey(key: string): string {
-  return `TD_DIARIO_${key}_LOCAL_TODAY`;
+  return `TD_DIARIO_V2_${key}_LOCAL_TODAY`;
+}
+
+/**
+ * Removes a game's locally-persisted "today" state entirely, e.g. to reset
+ * progress for testing.
+ *
+ * @param key - Short uppercase identifier for the game (e.g. `'ORGANIKU'`).
+ */
+export function clearLocalToday(key: string): void {
+  localStorage.removeItem(composeLocalTodayKey(key));
+}
+
+/**
+ * Derives the short uppercase identifier used by {@link composeLocalTodayKey}
+ * from a game's kebab-case `GameInfo.id` (e.g. `'ta-na-cara'` becomes
+ * `'TA_NA_CARA'`).
+ *
+ * @param gameId - Kebab-case game id, as used in `gameInfos`.
+ * @returns The uppercase local-today storage identifier.
+ */
+export function gameIdToLocalTodayKey(gameId: string): string {
+  return gameId.toUpperCase().replaceAll('-', '_');
 }
 
 /**

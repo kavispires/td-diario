@@ -15,7 +15,9 @@ import { Switch } from '@components/ui/Switch';
 import { TextInput } from '@components/ui/TextInput';
 import { Tooltip } from '@components/ui/Tooltip';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
+import { gameInfos } from '@engines/index';
 import { notification } from '@utils/notification';
+import { resetGameLocalState } from '@utils/resetGameLocalState';
 import { Bell, Flame, Heart, Info, User } from 'lucide-react';
 import { useState } from 'react';
 
@@ -438,6 +440,36 @@ export function UIShowcaseScreen() {
           >
             Loading → Success
           </Button>
+        </Flex>
+      </section>
+
+      <Divider />
+
+      <section className="flex flex-col gap-3">
+        <Text strong>Dev Tools</Text>
+        <Flex
+          wrap
+          gap="small"
+        >
+          {Object.entries(gameInfos).map(([id, info]) => (
+            <Popconfirm
+              key={id}
+              title={`Limpar o progresso de ${info.name.pt}?`}
+              description="Remove o estado salvo localmente (progresso, jogadas, status) do dia de hoje."
+              okVariant="primary"
+              onConfirm={() => {
+                resetGameLocalState(id);
+                notification.success(`Estado de ${info.name.pt} limpo`);
+              }}
+            >
+              <Button
+                variant="outlined"
+                size="small"
+              >
+                Limpar {info.name.pt}
+              </Button>
+            </Popconfirm>
+          ))}
         </Flex>
       </section>
     </div>
