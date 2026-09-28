@@ -3,9 +3,11 @@ import { IconButton } from '@components/ui/IconButton';
 import { Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
-import { Bell, Volume2 } from 'lucide-react';
+import { isDevEnv } from '@utils/helpers';
+import { Bell, LayoutGrid, Volume2 } from 'lucide-react';
 import { motion } from 'motion/react';
 // import { VolumeX } from 'lucide-react'; // Use this when sound is off
+import { useNavigate } from 'react-router-dom';
 import { TDLogoIcon } from '../TDLogoIcon';
 
 /**
@@ -17,6 +19,7 @@ import { TDLogoIcon } from '../TDLogoIcon';
 export function ChromeHeader() {
   const activeGameId = useAppRuntimeStore((state) => state.activeGameId);
   const language = useAppRuntimeStore((state) => state.language);
+  const navigate = useNavigate();
 
   const activeGameInfo = activeGameId
     ? gameInfos[activeGameId as keyof typeof gameInfos]
@@ -60,6 +63,13 @@ export function ChromeHeader() {
 
         {/* Utilities */}
         <div className="flex items-center gap-2">
+          {isDevEnv && (
+            <IconButton
+              icon={<LayoutGrid />}
+              aria-label="Componentes de UI (dev)"
+              onClick={() => navigate('/dev/showcase')}
+            />
+          )}
           <IconButton
             icon={<Bell />}
             aria-label="Notificações"

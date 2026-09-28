@@ -7,6 +7,7 @@ import { ArchiveScreen } from '@screens/ArchiveScreen';
 import { GameScreen } from '@screens/GameScreen';
 import { HubScreen } from '@screens/HubScreen';
 import { ProfileScreen } from '@screens/ProfileScreen';
+import { UIShowcaseScreen } from '@screens/UIShowcaseScreen';
 import { AnimatePresence } from 'motion/react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { MainContent } from './MainContent';
@@ -67,6 +68,14 @@ export function AppLayout() {
               element={
                 <AnimatedPage>
                   <ProfileScreen />
+                </AnimatedPage>
+              }
+            />
+            <Route
+              path="/dev/showcase"
+              element={
+                <AnimatedPage>
+                  <UIShowcaseScreen />
                 </AnimatedPage>
               }
             />
