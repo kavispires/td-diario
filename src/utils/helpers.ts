@@ -6,6 +6,27 @@ import { differenceInMilliseconds, format, startOfTomorrow } from 'date-fns';
 export const isDevEnv: boolean = import.meta.env.MODE === 'development';
 
 /**
+ * Returns a copy of an `rgb(...)`/`rgba(...)` color string with its alpha
+ * channel replaced, regardless of the alpha syntax the color originally
+ * used (`rgba(r, g, b, a)` or `rgb(r g b / a%)`). Non-rgb color strings
+ * (e.g. hex or named colors) are returned unchanged.
+ *
+ * @param color - The source `rgb(...)`/`rgba(...)` color string.
+ * @param alpha - The new alpha value, from `0` (transparent) to `1` (opaque).
+ * @returns The color string with its alpha channel updated.
+ */
+export function withAlpha(color: string, alpha: number): string {
+  const match = color.match(
+    /^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,\s/]+[\d.]+%?)?\s*\)$/,
+  );
+  if (!match) {
+    return color;
+  }
+  const [, r, g, b] = match;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+/**
  * Returns the current date in the format 'YYYY-MM-DD'.
  *
  * @returns The current date in 'YYYY-MM-DD' format.

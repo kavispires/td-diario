@@ -1,6 +1,8 @@
+import { Button } from '@components/ui/Button';
 import { Text, Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
+import { withAlpha } from '@utils/helpers';
 import { AnimatePresence, motion } from 'motion/react';
 import { GameLogos } from './hub/GameLogos';
 
@@ -18,16 +20,38 @@ const LAYOUT_TRANSITION = {
 
 /**
  * Persistent fullscreen splash that shares `layoutId`s with the originating GameCard
- * and the Header's logo slot. Expands on game entry; once the game is ready the splash
- * is cleared, so its background fades out while the logo's `layoutId` carries it into the Header.
+ * and the Header's logo slot. Expands on game entry and shows a loading state while
+ * the game chunk/data is fetched; once ready, it offers Jogar (enter the game, clearing
+ * the splash so the logo's `layoutId` carries it into the Header) and Regras (opens the
+ * rules screen without dismissing the splash).
  */
 export function GameLaunchOverlay() {
   const launchingGame = useAppRuntimeStore((state) => state.launchingGame);
   const language = useAppRuntimeStore((state) => state.language);
+  const setLaunchingGame = useAppRuntimeStore(
+    (state) => state.setLaunchingGame,
+  );
+  const setActiveGameId = useAppRuntimeStore((state) => state.setActiveGameId);
+  const openRules = useAppRuntimeStore((state) => state.openRules);
 
   const gameInfo = launchingGame
     ? gameInfos[launchingGame.id as keyof typeof gameInfos]
     : undefined;
+
+  function handlePlay() {
+    if (!launchingGame) {
+      return;
+    }
+    setActiveGameId(launchingGame.id);
+    setLaunchingGame(null);
+  }
+
+  function handleRules() {
+    if (!launchingGame) {
+      return;
+    }
+    openRules(launchingGame.id);
+  }
 
   return (
     <AnimatePresence>
@@ -37,7 +61,7 @@ export function GameLaunchOverlay() {
           layoutId={`game-card-${launchingGame.id}`}
           transition={LAYOUT_TRANSITION}
           exit={{ opacity: 0 }}
-          style={{ backgroundColor: gameInfo.color }}
+          style={{ backgroundColor: withAlpha(gameInfo.color, 0.95) }}
           className="fixed inset-0 z-100 flex flex-col items-center justify-center gap-4"
         >
           <motion.div
@@ -58,14 +82,35 @@ export function GameLaunchOverlay() {
             >
               {gameInfo.name[language] || gameInfo.name.pt}
             </Title>
-            {/* Placeholder loading indicator until a dedicated one is built */}
-            <Text
-              className="animate-pulse text-muted-foreground"
-              role="status"
-              strong
-            >
-              Carregando...
-            </Text>
+
+            {launchingGame.phase === 'loading' ? (
+              /* Placeholder loading indicator until a dedicated one is built */
+              <Text
+                className="animate-pulse text-muted-foreground"
+                role="status"
+                strong
+              >
+                Carregando...
+              </Text>
+            ) : (
+              <div className="flex w-full max-w-xs flex-col gap-3 px-6 pt-2">
+                <Button
+                  variant="chrome"
+                  block
+                  onClick={handlePlay}
+                >
+                  Jogar
+                </Button>
+                <Button
+                  variant="outlined"
+                  block
+                  className="!border-white !text-white hover:!bg-white/10"
+                  onClick={handleRules}
+                >
+                  Regras
+                </Button>
+              </div>
+            )}
           </div>
         </motion.div>
       )}

@@ -52,6 +52,12 @@ type ModalProps = {
    * Additional classes merged with the modal panel's own classes.
    */
   className?: string;
+  /**
+   * Overrides the portal wrapper's stacking order. Defaults to `40`, above
+   * the app chrome but below nothing else; raise it when the modal must sit
+   * above another fixed overlay (e.g. the game launch splash).
+   */
+  zIndex?: number;
 };
 
 /**
@@ -76,6 +82,7 @@ export function Modal({
   lockScroll = true,
   'aria-label': ariaLabel,
   className = '',
+  zIndex = 40,
 }: ModalProps) {
   const titleId = useId();
 
@@ -109,7 +116,10 @@ export function Modal({
   return createPortal(
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-40 flex items-stretch justify-center bg-foreground/50 p-4">
+        <div
+          className="fixed inset-0 flex items-stretch justify-center bg-foreground/50 p-4"
+          style={{ zIndex }}
+        >
           <motion.div
             role="dialog"
             aria-modal="true"

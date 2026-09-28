@@ -139,20 +139,22 @@ type GameReadyNotifierProps = {
 };
 
 /**
- * Clears the game launch splash once the lazy game chunk has mounted, letting its logo
- * finish traveling into the Header while the splash background fades away.
+ * Flips the game launch splash from `loading` to `ready` once the lazy game
+ * chunk has mounted, so the splash can offer Jogar/Regras instead of
+ * disappearing immediately. Entering a game from elsewhere (not a direct
+ * landing) is the only case with a `loading` splash to flip.
  */
 function GameReadyNotifier({ gameId }: GameReadyNotifierProps) {
+  const launchingGame = useAppRuntimeStore((state) => state.launchingGame);
   const setLaunchingGame = useAppRuntimeStore(
     (state) => state.setLaunchingGame,
   );
-  const setActiveGameId = useAppRuntimeStore((state) => state.setActiveGameId);
 
   useEffect(() => {
-    // Header must render the matching layoutId in this same commit so the logo has somewhere to travel to.
-    setActiveGameId(gameId);
-    setLaunchingGame(null);
-  }, [gameId, setLaunchingGame, setActiveGameId]);
+    if (launchingGame?.id === gameId && launchingGame.phase === 'loading') {
+      setLaunchingGame({ id: gameId, phase: 'ready' });
+    }
+  }, [gameId, launchingGame, setLaunchingGame]);
 
   return null;
 }

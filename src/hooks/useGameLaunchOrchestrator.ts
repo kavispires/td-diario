@@ -32,7 +32,7 @@ export function useGameLaunchOrchestrator() {
         setActiveGameId(currentGameMatch[1]);
       }
     } else if (currentGameMatch && !previousGameMatch) {
-      setLaunchingGame({ id: currentGameMatch[1] });
+      setLaunchingGame({ id: currentGameMatch[1], phase: 'loading' });
     } else if (!currentGameMatch && previousGameMatch) {
       setActiveGameId(null);
     }

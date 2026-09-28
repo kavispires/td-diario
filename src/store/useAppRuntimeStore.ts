@@ -6,6 +6,11 @@ import { create } from 'zustand';
 type LaunchingGame = {
   /** The id of the game whose card/logo is animating. */
   id: string;
+  /**
+   * `'loading'` while the game chunk/data is being fetched, `'ready'` once
+   * the game has mounted and is waiting for the player to press Jogar.
+   */
+  phase: 'loading' | 'ready';
 };
 
 /**
@@ -52,6 +57,19 @@ type AppRuntimeState = {
    * Sets or clears the id of the game whose logo occupies the Header.
    */
   setActiveGameId: (gameId: string | null) => void;
+  /**
+   * The id of the game whose rules screen is currently open, or null when
+   * closed.
+   */
+  rulesGameId: string | null;
+  /**
+   * Opens the rules screen for the given game.
+   */
+  openRules: (gameId: string) => void;
+  /**
+   * Closes the rules screen.
+   */
+  closeRules: () => void;
 };
 
 export const useAppRuntimeStore = create<AppRuntimeState>((set) => ({
@@ -65,4 +83,7 @@ export const useAppRuntimeStore = create<AppRuntimeState>((set) => ({
   setLaunchingGame: (launchingGame) => set({ launchingGame }),
   activeGameId: null,
   setActiveGameId: (gameId) => set({ activeGameId: gameId }),
+  rulesGameId: null,
+  openRules: (gameId) => set({ rulesGameId: gameId }),
+  closeRules: () => set({ rulesGameId: null }),
 }));

@@ -3,6 +3,7 @@ import { ChromeHeader } from '@components/chrome/Header';
 import { ChromeNav } from '@components/chrome/Nav';
 import { NotificationHost } from '@components/chrome/NotificationHost';
 import { GameLaunchOverlay } from '@components/GameLaunchOverlay';
+import { RulesOverlay } from '@components/RulesOverlay';
 import { useGameLaunchOrchestrator } from '@hooks/useGameLaunchOrchestrator';
 import { ArchiveScreen } from '@screens/ArchiveScreen';
 import { GameScreen } from '@screens/GameScreen';
@@ -87,6 +88,8 @@ export function AppLayout() {
       <ChromeNav />
 
       <GameLaunchOverlay />
+
+      <RulesOverlay />
 
       <NotificationHost />
     </div>
