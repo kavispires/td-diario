@@ -1,9 +1,12 @@
-import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
+import {
+  gameIdToLocalTodayKey,
+  useDailyLocalToday,
+} from '@hooks/useDailyLocalToday';
 import { playSFX } from '@utils/soundEffects';
 import { vibrate } from '@utils/vibrate';
 import { useEffect, useMemo, useState } from 'react';
 import type { DailyOrganikuEntry } from '../../../../types/games';
-import { ORGANIKU_STORAGE_KEY } from './helpers';
+import { gameInfo } from '../info';
 import type { GameState, OrganikuTracker, SessionState } from './types';
 
 const INITIAL_SESSION: SessionState = {
@@ -31,7 +34,7 @@ export function useOrganikuEngine(
   const [showResults, setShowResults] = useState(false);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: ORGANIKU_STORAGE_KEY,
+    key: gameIdToLocalTodayKey(gameInfo.id),
     dateId: data.id,
     defaultValue: initialState,
   });

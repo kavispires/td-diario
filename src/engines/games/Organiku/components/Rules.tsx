@@ -1,6 +1,5 @@
 import { Text } from '@components/ui/Typography';
 import { Heart } from 'lucide-react';
-import { ORGANIKU_HEARTS } from '../utils/helpers';
 
 /**
  * Renders Organiku's rules, shown inside the shared `RulesOverlay`.
@@ -35,12 +34,12 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Você tem {ORGANIKU_HEARTS}{' '}
+          Você começa com um{' '}
           <Heart
             className="inline h-4 w-4 fill-destructive text-destructive"
             aria-hidden="true"
-          />
-          . Boa sorte!
+          />{' '}
+          para cada item do dia. Perca todos e o jogo acaba. Boa sorte!
         </Text>
       </li>
     </ul>

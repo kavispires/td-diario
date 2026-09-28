@@ -6,7 +6,6 @@ import { Text, Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { withAlpha } from '@utils/helpers';
 import { useNavigate } from 'react-router-dom';
-import { ORGANIKU_HEARTS } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -100,7 +99,7 @@ export function ResultsSplash({
 
       <Hearts
         remaining={hearts}
-        total={ORGANIKU_HEARTS}
+        total={itemsIds.length}
       />
 
       <div className="flex items-center justify-center gap-2">

@@ -29,10 +29,11 @@ export function useGetDailyChallenges() {
       if (USE_MOCK_DATA) {
         // biome-ignore lint/suspicious/noConsole: debug purposes
         console.warn(
-          'User not authenticated, skipping daily challenges fetch.',
+          'Using mock data during dev, skipping daily challenges fetch.',
         );
         // Delay of 3 seconds to simulate async behavior
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Ensure async context
+        print({ diario: MOCK_DAILY_RESPONSE }, 'table');
         return MOCK_DAILY_RESPONSE;
       }
 

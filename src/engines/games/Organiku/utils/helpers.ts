@@ -1,20 +1,15 @@
-import { loadLocalToday } from '@hooks/useDailyLocalToday';
+import {
+  gameIdToLocalTodayKey,
+  loadLocalToday,
+} from '@hooks/useDailyLocalToday';
 import type { DailyOrganikuEntry } from '../../../../types/games';
+import { gameInfo } from '../info';
 import type { GameState } from './types';
 
 /**
- * Short uppercase key used to namespace Organiku's local storage entry.
- */
-export const ORGANIKU_STORAGE_KEY = 'ORGANIKU';
-
-/**
- * Total hearts (lives) a player starts each day's Organiku with.
- */
-export const ORGANIKU_HEARTS = 5;
-
-/**
  * Builds the default `GameState` for a fresh day, treating any
- * `defaultRevealedIndexes` as already found.
+ * `defaultRevealedIndexes` as already found. Hearts start equal to the
+ * number of distinct items in today's grid.
  *
  * @param data - Today's Organiku challenge payload.
  * @returns A fresh `GameState`.
@@ -32,7 +27,7 @@ function getDefaultState(data: DailyOrganikuEntry): GameState {
   return {
     id: data.id,
     status: 'in-progress',
-    hearts: ORGANIKU_HEARTS,
+    hearts: data.itemsIds.length,
     revealed,
     foundCount,
     flips: 0,
@@ -48,7 +43,7 @@ function getDefaultState(data: DailyOrganikuEntry): GameState {
  */
 export function getInitialState(data: DailyOrganikuEntry): GameState {
   return loadLocalToday<GameState>({
-    key: ORGANIKU_STORAGE_KEY,
+    key: gameIdToLocalTodayKey(gameInfo.id),
     dateId: data.id,
     defaultValue: getDefaultState(data),
   });
