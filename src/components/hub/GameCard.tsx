@@ -1,4 +1,4 @@
-import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
+import { DualTranslate } from '@components/ui/DualTranslate';
 import { cn } from '@utils/cn';
 import { Check } from 'lucide-react';
 import type { HTMLMotionProps } from 'motion/react';
@@ -53,7 +53,6 @@ export function GameCard({
   ...props
 }: GameCardProps) {
   const navigate = useNavigate();
-  const language = useAppRuntimeStore((state) => state.language);
 
   // --- 1. SIZING (CSS Grid Spans) ---
   const sizeClasses = {
@@ -180,19 +179,18 @@ export function GameCard({
       </motion.div>
 
       {/* Text Area */}
-      {/* Note: Assuming 'pt' is the default for DualLanguageValue for now */}
       <h3
         className={cn(
           'text-center font-bold leading-tight text-foreground',
           size === 'large' ? 'text-lg' : 'text-xs',
         )}
       >
-        {gameInfo.name[language] || gameInfo.name.pt}
+        <DualTranslate>{gameInfo.name}</DualTranslate>
       </h3>
 
-      {size === 'large' && gameInfo.tagline?.[language] && (
+      {size === 'large' && gameInfo.tagline && (
         <p className="text-xs text-foreground text-center mt-1 leading-snug px-2">
-          {gameInfo.tagline[language] || gameInfo.tagline.pt}
+          <DualTranslate>{gameInfo.tagline}</DualTranslate>
         </p>
       )}
 

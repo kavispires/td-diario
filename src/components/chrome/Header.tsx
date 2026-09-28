@@ -1,4 +1,5 @@
 import { GameLogos } from '@components/hub/GameLogos';
+import { DualTranslate } from '@components/ui/DualTranslate';
 import { IconButton } from '@components/ui/IconButton';
 import { Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
@@ -22,16 +23,17 @@ export function ChromeHeader() {
   const activeGameNumber = useAppRuntimeStore(
     (state) => state.activeGameNumber,
   );
-  const language = useAppRuntimeStore((state) => state.language);
   const openRules = useAppRuntimeStore((state) => state.openRules);
   const navigate = useNavigate();
 
   const activeGameInfo = activeGameId
     ? gameInfos[activeGameId as keyof typeof gameInfos]
     : undefined;
-  const headerTitle = activeGameInfo
-    ? activeGameInfo.name[language] || activeGameInfo.name.pt
-    : 'TD Diário';
+  const headerTitle = activeGameInfo ? (
+    <DualTranslate>{activeGameInfo.name}</DualTranslate>
+  ) : (
+    'TD Diário'
+  );
 
   return (
     <header className="sticky top-0 z-50 w-full bg-chrome text-slate-50 shadow-md">

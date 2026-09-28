@@ -2,6 +2,7 @@ import { Modal } from '@components/ui/Modal';
 import { Text } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { rulesComponents } from '@engines/rulesComponents';
+import { useDualTranslate } from '@hooks/useDualTranslate';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import { withAlpha } from '@utils/helpers';
 import { Suspense } from 'react';
@@ -15,7 +16,7 @@ import { Suspense } from 'react';
 export function RulesOverlay() {
   const rulesGameId = useAppRuntimeStore((state) => state.rulesGameId);
   const closeRules = useAppRuntimeStore((state) => state.closeRules);
-  const language = useAppRuntimeStore((state) => state.language);
+  const translate = useDualTranslate();
 
   const gameInfo = rulesGameId
     ? gameInfos[rulesGameId as keyof typeof gameInfos]
@@ -34,7 +35,7 @@ export function RulesOverlay() {
       <Modal
         open
         onClose={closeRules}
-        title={`Regras — ${gameInfo.name[language] || gameInfo.name.pt}`}
+        title={`Regras — ${translate(gameInfo.name)}`}
         zIndex={110}
       >
         <Suspense

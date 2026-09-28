@@ -5,6 +5,7 @@ import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import { withAlpha } from '@utils/helpers';
 import { AnimatePresence, motion } from 'motion/react';
 import { GameLogos } from './hub/GameLogos';
+import { DualTranslate } from './ui/DualTranslate';
 
 const LAYOUT_TRANSITION = {
   layout: {
@@ -27,7 +28,6 @@ const LAYOUT_TRANSITION = {
  */
 export function GameLaunchOverlay() {
   const launchingGame = useAppRuntimeStore((state) => state.launchingGame);
-  const language = useAppRuntimeStore((state) => state.language);
   const setLaunchingGame = useAppRuntimeStore(
     (state) => state.setLaunchingGame,
   );
@@ -80,8 +80,15 @@ export function GameLaunchOverlay() {
               level={2}
               className="text-foreground text-center"
             >
-              {gameInfo.name[language] || gameInfo.name.pt}
+              <DualTranslate>{gameInfo.name}</DualTranslate>
             </Title>
+
+            <Text
+              type="secondary"
+              strong
+            >
+              <DualTranslate>{gameInfo.tagline}</DualTranslate>
+            </Text>
 
             {launchingGame.phase === 'loading' ? (
               /* Placeholder loading indicator until a dedicated one is built */
@@ -104,7 +111,7 @@ export function GameLaunchOverlay() {
                 <Button
                   variant="outlined"
                   block
-                  className="!border-white !text-white hover:!bg-white/10"
+                  className="border-white text-white hover:bg-white/10"
                   onClick={handleRules}
                 >
                   Regras

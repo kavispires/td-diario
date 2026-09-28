@@ -25,3 +25,7 @@ dist-ssr
 *.sw?
 
 .yarn/install-state.gz
+
+# Throwaway dev harness files (never committed)
+/harness.html
+/src/dev-harness.tsx
