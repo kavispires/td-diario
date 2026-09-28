@@ -49,6 +49,11 @@
 - Meaningful images need descriptive alt text.
 - Ensure interactive elements have accessible names and visible focus states.
 
+## Game UI conventions
+
+- Buttons inside games are always `size="small"`. Use `variant="primary"` for the primary action (e.g. "Ver Resultado") and `variant="outlined"` for secondary actions.
+- A game's success/completion state always uses `--color-gold` and its variants (e.g. `bg-gold`, `bg-gold-soft`) — never a different color for "solved"/"won" styling.
+
 ## State and data ownership
 
 - Keep persistent user preferences in `useUserPreferencesStore` (persisted to `localStorage` under the key in `LOCAL_STORAGE_KEYS.PREFERENCES`).

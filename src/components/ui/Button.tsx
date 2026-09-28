@@ -88,7 +88,7 @@ export function Button({
 }: ButtonProps) {
   const widthClass = block ? 'w-full' : 'w-auto inline-flex';
   const baseStyles =
-    'font-semibold active:scale-95 transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100';
+    'font-semibold active:scale-95 transition-all duration-200 flex items-center justify-center border-2 border-transparent disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100';
 
   const variants = {
     primary: 'bg-primary text-white shadow-lg hover:bg-primary-hover',
@@ -97,7 +97,7 @@ export function Button({
       'bg-transparent text-muted-foreground shadow-none hover:bg-border active:bg-border-strong',
     chrome: 'bg-chrome text-white shadow-lg hover:bg-slate-800',
     outlined:
-      'bg-transparent border-2 border-primary text-primary shadow-none hover:bg-primary-soft',
+      'bg-transparent border-primary text-primary shadow-none hover:bg-primary-soft',
   };
 
   const renderIcon = loading ? (

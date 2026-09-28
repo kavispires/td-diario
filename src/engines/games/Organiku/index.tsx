@@ -115,7 +115,8 @@ export function DailyOrganikuGame({ data }: DailyOrganikuGameProps) {
 
       {isComplete && !showResults && (
         <Button
-          variant="secondary"
+          variant="primary"
+          size="small"
           onClick={() => setShowResults(true)}
         >
           Ver resultado

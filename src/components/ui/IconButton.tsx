@@ -37,7 +37,7 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   ghost: 'bg-transparent text-current hover:bg-current/10 active:bg-current/15',
   chrome: 'bg-chrome text-white shadow-lg hover:bg-slate-800',
   outlined:
-    'bg-transparent border-2 border-primary text-primary shadow-none hover:bg-primary-soft',
+    'bg-transparent border-primary text-primary shadow-none hover:bg-primary-soft',
 };
 
 /**
@@ -103,7 +103,7 @@ export function IconButton({
   ...props
 }: IconButtonProps) {
   const baseStyles =
-    'relative inline-flex items-center justify-center active:scale-90 transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100';
+    'relative inline-flex items-center justify-center border-2 border-transparent active:scale-90 transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100';
 
   return (
     <button
