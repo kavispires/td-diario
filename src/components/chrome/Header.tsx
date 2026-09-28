@@ -4,10 +4,10 @@ import { IconButton } from '@components/ui/IconButton';
 import { Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
+import { useUserPreferencesStore } from '@store/useUserPreferencesStore';
 import { isDevEnv } from '@utils/helpers';
-import { Bell, BookOpen, CodeXml, Volume2 } from 'lucide-react';
+import { Bell, BookOpen, CodeXml, Volume2, VolumeX } from 'lucide-react';
 import { motion } from 'motion/react';
-// import { VolumeX } from 'lucide-react'; // Use this when sound is off
 import { useNavigate } from 'react-router-dom';
 import { TDLogoIcon } from '../TDLogoIcon';
 
@@ -24,6 +24,10 @@ export function ChromeHeader() {
     (state) => state.activeGameNumber,
   );
   const openRules = useAppRuntimeStore((state) => state.openRules);
+  const soundEnabled = useUserPreferencesStore((state) => state.soundEnabled);
+  const setSoundEnabled = useUserPreferencesStore(
+    (state) => state.setSoundEnabled,
+  );
   const navigate = useNavigate();
 
   const activeGameInfo = activeGameId
@@ -96,8 +100,9 @@ export function ChromeHeader() {
             />
           )}
           <IconButton
-            icon={<Volume2 />}
-            aria-label="Alternar som"
+            icon={soundEnabled ? <Volume2 /> : <VolumeX />}
+            aria-label={soundEnabled ? 'Desativar som' : 'Ativar som'}
+            onClick={() => setSoundEnabled(!soundEnabled)}
           />
         </div>
       </div>

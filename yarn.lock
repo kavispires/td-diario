@@ -2614,6 +2614,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/howler@npm:^2":
+  version: 2.2.13
+  resolution: "@types/howler@npm:2.2.13"
+  checksum: 10c0/dd3773d2cc8d48f41480a991bc05f9f4e9b74b130b7c674434553c46dae6cae3398935dc1156cc36aece72d00f098c10204c0eb20ee444563a9758c49cd78ad5
+  languageName: node
+  linkType: hard
+
 "@types/lodash@npm:^4":
   version: 4.17.25
   resolution: "@types/lodash@npm:4.17.25"
@@ -3848,6 +3855,13 @@ __metadata:
   dependencies:
     function-bind: "npm:^1.1.2"
   checksum: 10c0/2d8de939e270b70618f8cebb69746620db10617dbb495bc66ddad326955ea24d3ca4af133aff3eb7c1853e0218f867bc2b050ec26fe02e3aea58f880ffc5e506
+  languageName: node
+  linkType: hard
+
+"howler@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "howler@npm:2.2.4"
+  checksum: 10c0/74a295f56fd9b2abce122b27ed12c33fa195fb8a76832803e92d8e462a1eca803b55f44c14db052211d0cfab85c7c5249664c68d95bbbc16c775fac73866c6ef
   languageName: node
   linkType: hard
 
@@ -5714,6 +5728,7 @@ __metadata:
     "@tailwindcss/vite": "npm:^4.3.3"
     "@tanstack/react-query": "npm:^5.102.8"
     "@types/gh-pages": "npm:^6"
+    "@types/howler": "npm:^2"
     "@types/lodash": "npm:^4"
     "@types/node": "npm:^26.4.1"
     "@types/react": "npm:^19.2.18"
@@ -5723,6 +5738,7 @@ __metadata:
     date-fns: "npm:^4.4.0"
     firebase: "npm:^12.18.0"
     gh-pages: "npm:^6.3.0"
+    howler: "npm:^2.2.4"
     husky: "npm:^9.1.7"
     lint-staged: "npm:^17.5.0"
     lodash: "npm:^4.18.1"
