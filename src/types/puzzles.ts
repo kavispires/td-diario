@@ -1,11 +1,20 @@
 import type { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type {
+  DailyAlienadoEntry,
   DailyArteRuimEntry,
+  DailyConjuntosEntry,
+  DailyEstoquistaEntry,
+  DailyFilmacoEntry,
   DailyMapeamentoEntry,
   DailyOrganikuEntry,
+  DailyPalavreadoEntry,
   DailyPicacoEntry,
+  DailyPirralhosEntry,
+  DailyPortaisEntry,
   DailyQuartetosEntry,
+  DailyTaNaCaraEntry,
   DailyVitraisInfinitosEntry,
+  DailyVitralEntry,
 } from './games';
 
 /**
@@ -28,22 +37,27 @@ export type PlaceholderGameData = {
 type GamesEntries = {
   'arte-ruim'?: DailyArteRuimEntry;
   'aqui-o'?: PlaceholderGameData;
-  alienado?: PlaceholderGameData;
+  alienado?: DailyAlienadoEntry;
+  /**
+   * Special games still arrive in the main `challenges` payload bucket, so
+   * Estoquista belongs here instead of `contributions`.
+   */
+  estoquista?: DailyEstoquistaEntry;
   investigacao?: PlaceholderGameData;
-  filmaco?: PlaceholderGameData;
+  filmaco?: DailyFilmacoEntry;
   mapeamento?: DailyMapeamentoEntry;
   organiku?: DailyOrganikuEntry;
-  palavreado?: PlaceholderGameData;
-  portais?: PlaceholderGameData;
+  palavreado?: DailyPalavreadoEntry;
+  portais?: DailyPortaisEntry;
   quartetos?: DailyQuartetosEntry;
-  conjuntos?: PlaceholderGameData;
-  vitral?: PlaceholderGameData;
+  conjuntos?: DailyConjuntosEntry;
+  vitral?: DailyVitralEntry;
   /**
    * Special games still arrive in the main `challenges` payload bucket, so
    * Vitrais Infinitos belongs here instead of `contributions`.
    */
   'vitrais-infinitos'?: DailyVitraisInfinitosEntry;
-  pirralhos?: PlaceholderGameData;
+  pirralhos?: DailyPirralhosEntry;
 };
 
 /**
@@ -51,7 +65,7 @@ type GamesEntries = {
  */
 type ContributionsEntries = {
   picaco?: DailyPicacoEntry;
-  'ta-na-cara'?: PlaceholderGameData;
+  'ta-na-cara'?: DailyTaNaCaraEntry;
 };
 
 /**

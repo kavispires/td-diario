@@ -64,6 +64,10 @@ export type DailyConjuntosEntry = {
    */
   type: 'conjuntos';
   /**
+   * Dataset identifier forwarded by the backend for today's rule set.
+   */
+  setId: string;
+  /**
    * Title hinting at the grammar category used by today's hidden rules.
    */
   title: string;
@@ -125,6 +129,246 @@ export type DailyOrganikuEntry = {
 };
 
 /**
+ * One statement card shown for a kid in today's Pirralhos mystery.
+ */
+export type DailyPirralhosKidEntry = {
+  /**
+   * Id of the kid whose portrait, name, and profile should be shown.
+   */
+  kidId: string;
+  /**
+   * Statement spoken by that kid during today's mystery.
+   */
+  statement: DualLanguageValue<string>;
+};
+
+/**
+ * Today's Pirralhos challenge payload.
+ */
+export type DailyPirralhosEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Pirralhos payloads.
+   */
+  type: 'pirralhos';
+  /**
+   * Ordered list of kids around the accusation circle and their statements.
+   */
+  kids: DailyPirralhosKidEntry[];
+  /**
+   * Id of the kid who actually took the toy.
+   */
+  culpritId: string;
+  /**
+   * Ids of the kids whose statements are lies in today's mystery.
+   */
+  liarsIds: string[];
+  /**
+   * Public liar-count hint shown to the player, which may be exact or a
+   * one-off range endpoint depending on the puzzle.
+   */
+  possibleLiars: number;
+};
+
+/**
+ * One corridor within today's Portais run.
+ */
+export type DailyPortaisCorridor = {
+  /**
+   * Target word the player must discover for this corridor.
+   */
+  passcode: string;
+  /**
+   * Ids of the image cards previewed by this corridor's portals.
+   */
+  imagesIds: string[];
+  /**
+   * Rotating three-letter words that each contribute one letter to the
+   * passcode.
+   */
+  words: string[];
+  /**
+   * Optional move target returned by the payload for this corridor.
+   */
+  goal?: number;
+};
+
+/**
+ * Today's Portais challenge payload.
+ */
+export type DailyPortaisEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Portais payloads.
+   */
+  type: 'portais';
+  /**
+   * Optional opaque set identifier returned alongside the corridor bundle.
+   */
+  setId?: string;
+  /**
+   * Suggested move target for the whole run.
+   */
+  goal: number;
+  /**
+   * Corridors the player must clear, in order.
+   */
+  corridors: DailyPortaisCorridor[];
+};
+
+/**
+ * Today's Vitral challenge payload.
+ */
+export type DailyVitralEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Vitral payloads.
+   */
+  type: 'vitral';
+  /**
+   * Title of the artwork being reassembled.
+   */
+  title: string;
+  /**
+   * Image card id used to build the source artwork URL.
+   */
+  cardId: string;
+  /**
+   * Piece ids shuffled into the starting board order.
+   */
+  pieces: number[];
+};
+
+/**
+ * One alien-language attribute shown in Alienado's dictionary.
+ */
+export type DailyAlienadoAttribute = {
+  /**
+   * Stable identifier for the attribute entry.
+   */
+  id: string;
+  /**
+   * Human-readable name revealed after the round.
+   */
+  name: string;
+  /**
+   * Short explanation of the concept shared by the example items.
+   */
+  description: string;
+  /**
+   * Alien symbol id representing this attribute.
+   */
+  spriteId: string;
+  /**
+   * Example item ids that demonstrate the attribute.
+   */
+  itemsIds: string[];
+};
+
+/**
+ * One requested delivery the player must decode in Alienado.
+ */
+export type DailyAlienadoRequest = {
+  /**
+   * Ordered alien symbol ids describing the requested item.
+   */
+  spritesIds: string[];
+  /**
+   * Correct item id that matches the requested symbol combination.
+   */
+  itemId: string;
+};
+
+/**
+ * Today's Alienado challenge payload.
+ */
+export type DailyAlienadoEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Alienado payloads.
+   */
+  type: 'alienado';
+  /**
+   * Stable identifier for the attribute set used to generate the puzzle.
+   */
+  setId: string;
+  /**
+   * Alien-language dictionary entries shown before and after the round.
+   */
+  attributes: DailyAlienadoAttribute[];
+  /**
+   * Ordered list of requested symbol combinations the player must satisfy.
+   */
+  requests: DailyAlienadoRequest[];
+  /**
+   * Correct answer encoded as `item-item-item-item`.
+   */
+  solution: string;
+  /**
+   * Available item ids that can be placed into the request slots.
+   */
+  itemsIds: string[];
+};
+
+/**
+ * Today's Estoquista challenge payload.
+ */
+export type DailyEstoquistaEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Estoquista payloads.
+   */
+  type: 'estoquista';
+  /**
+   * Title displayed above the warehouse for today's theme.
+   */
+  title: string;
+  /**
+   * Ordered list of goods the player must stock onto the shelves.
+   */
+  goods: string[];
+  /**
+   * Five customer orders to resolve, with exactly one item missing from stock.
+   */
+  orders: string[];
+};
+
+/**
  * Today's Arte Ruim challenge payload.
  */
 export type DailyArteRuimEntry = {
@@ -179,6 +423,10 @@ export type DailyMapeamentoEntry = {
    */
   type: 'mapeamento';
   /**
+   * Dataset identifier forwarded by the backend for the chosen location pool.
+   */
+  setId: string;
+  /**
    * Correct location answer the player is trying to identify.
    */
   location: string;
@@ -187,6 +435,10 @@ export type DailyMapeamentoEntry = {
    * mistake reveals one more clue.
    */
   clues: string[];
+  /**
+   * Original language tag carried by the daily payload.
+   */
+  language: 'pt' | 'en';
 };
 
 /**
@@ -228,13 +480,56 @@ export type DailyQuartetosEntry = {
    */
   type: 'quartetos';
   /**
+   * Dataset identifier forwarded by the backend for today's quartet pool.
+   */
+  setId: string;
+  /**
    * Flattened 4x4 board of item ids the player must regroup into quartets.
    */
   grid: string[];
   /**
+   * Difficulty rating forwarded by the daily payload.
+   */
+  difficulty: number;
+  /**
    * The four hidden quartets that partition the board.
    */
   sets: DailyQuartetosSet[];
+};
+
+/**
+ * Today's Filmaco challenge payload.
+ */
+export type DailyFilmacoEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Filmaco payloads.
+   */
+  type: 'filmaco';
+  /**
+   * Secret movie title the player must guess letter by letter.
+   */
+  title: string;
+  /**
+   * Ids of the item clues shown for today's movie.
+   */
+  itemsIds: string[];
+  /**
+   * Release year shown alongside the visual clues.
+   */
+  year: number | string;
+  /**
+   * Whether today's puzzle references a double feature instead of a single
+   * movie release.
+   */
+  isDoubleFeature?: boolean;
 };
 
 /**
@@ -275,6 +570,40 @@ export type DailyPicacoEntry = {
    * Pool of prompt cards from which today's timed drawings are selected.
    */
   cards: DailyPicacoCard[];
+};
+
+/**
+ * Today's Palavreado challenge payload.
+ */
+export type DailyPalavreadoEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Palavreado payloads.
+   */
+  type: 'palavreado';
+  /**
+   * Diagonal keyword that anchors the square board's fixed letters.
+   */
+  keyword: string;
+  /**
+   * Flattened `size x size` board letters, including the fixed diagonal.
+   */
+  letters: string[];
+  /**
+   * Correct horizontal words the player must reconstruct, one per row.
+   */
+  words: string[];
+  /**
+   * Bonus-valid words that award extra points when formed in any row.
+   */
+  scoringWords: string[];
 };
 
 /**
