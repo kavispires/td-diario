@@ -96,6 +96,11 @@ export const rulesComponents: Record<string, RulesComponent> = {
       default: Rules,
     })),
   ),
+  conexoes: lazy(() =>
+    import('./contributions/Conexoes/components/Rules').then(({ Rules }) => ({
+      default: Rules,
+    })),
+  ),
   picaco: lazy(() =>
     import('./contributions/Picaco/components/Rules').then(({ Rules }) => ({
       default: Rules,

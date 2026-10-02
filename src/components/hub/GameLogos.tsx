@@ -1,3 +1,4 @@
+import { Logo as ConexoesLogo } from '@engines/contributions/Conexoes/info';
 import { Logo as PicacoLogo } from '@engines/contributions/Picaco/info';
 import { Logo as TaNaCaraLogo } from '@engines/contributions/TaNaCara/info';
 import { Logo as AlienadoLogo } from '@engines/games/Alienado/info';
@@ -61,6 +62,8 @@ export function GameLogos({ gameId, ...props }: GameLogosProps) {
       return <VitraisInfinitosLogo {...props} />;
     case 'ta-na-cara':
       return <TaNaCaraLogo {...props} />;
+    case 'conexoes':
+      return <ConexoesLogo {...props} />;
     case 'picaco':
       return <PicacoLogo {...props} />;
     default:

@@ -1,3 +1,4 @@
+import { gameInfo as conexoes } from './contributions/Conexoes/info';
 import { gameInfo as picaco } from './contributions/Picaco/info';
 import { gameInfo as taNaCara } from './contributions/TaNaCara/info';
 import { gameInfo as alienado } from './games/Alienado/info';
@@ -34,6 +35,7 @@ export const gameInfos = {
   'aqui-o': aquiO,
   estoquista,
   'vitrais-infinitos': vitraisInfinitos,
+  conexoes,
   'ta-na-cara': taNaCara,
   picaco,
 } as const;

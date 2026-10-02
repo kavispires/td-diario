@@ -117,6 +117,11 @@ const gameComponents: Record<string, GameComponent> = {
       default: DailyTaNaCaraGame,
     })),
   ),
+  conexoes: lazy(() =>
+    import('@engines/contributions/Conexoes').then(({ DailyConexoesGame }) => ({
+      default: DailyConexoesGame,
+    })),
+  ),
   picaco: lazy(() =>
     import('@engines/contributions/Picaco').then(({ DailyPicacoGame }) => ({
       default: DailyPicacoGame as ComponentType<{

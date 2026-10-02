@@ -3,6 +3,7 @@ import type {
   DailyAlienadoEntry,
   DailyAquiOEntry,
   DailyArteRuimEntry,
+  DailyConexoesEntry,
   DailyConjuntosEntry,
   DailyEstoquistaEntry,
   DailyFilmacoEntry,
@@ -68,6 +69,7 @@ type GamesEntries = {
  * Daily payload entries for community-contributed games, keyed by game id.
  */
 type ContributionsEntries = {
+  conexoes?: DailyConexoesEntry;
   picaco?: DailyPicacoEntry;
   'ta-na-cara'?: DailyTaNaCaraEntry;
 };

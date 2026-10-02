@@ -688,6 +688,28 @@ export type DailyPicacoCard = {
 };
 
 /**
+ * Today's Conexões challenge payload.
+ */
+export type DailyConexoesEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Conexões payloads.
+   */
+  type: 'conexoes';
+  /**
+   * Image ids available for today's relationship evaluations.
+   */
+  imageIds: string[];
+};
+
+/**
  * Today's Picaco challenge payload.
  */
 export type DailyPicacoEntry = {
