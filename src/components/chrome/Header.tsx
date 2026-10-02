@@ -45,7 +45,8 @@ export function ChromeHeader() {
         {/* Brand / Logo */}
         <div className="flex items-center gap-2">
           {activeGameId ? (
-            <motion.div
+            <motion.button
+              type="button"
               layoutId={`game-logo-${activeGameId}`}
               transition={{
                 layout: {
@@ -55,12 +56,14 @@ export function ChromeHeader() {
                 },
               }}
               className="w-6 h-6 shrink-0"
+              aria-label="Voltar para o hub"
+              onClick={() => navigate('/')}
             >
               <GameLogos
                 gameId={activeGameId}
                 className="w-full h-full"
               />
-            </motion.div>
+            </motion.button>
           ) : (
             <TDLogoIcon className="w-6 h-6 shrink-0" />
           )}

@@ -3,7 +3,7 @@ import { GameCard } from '@components/hub/GameCard';
 import { Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
-import { orderBy, random, sample } from 'lodash';
+import { orderBy } from 'lodash';
 import { LayoutGroup } from 'motion/react';
 
 /**
@@ -33,28 +33,13 @@ export function HubScreen() {
   const orderedChallenges = orderBy(
     Object.values(data?.challenges ?? {})
       .map((challenge) => {
-        const progress = Math.random() < 0.2 ? random(15, 85) : 0;
-        const state =
-          progress === 0
-            ? sample([
-                'available',
-                'available',
-                'available',
-                'available',
-                'completed',
-                'completed',
-                'completed',
-                'disabled',
-              ])
-            : 'in-progress';
-
         return {
           key: challenge.type,
           challenge: challenge,
           info: gameInfos[challenge.type as GameId],
           size: 'small',
-          state: state,
-          progressPercent: progress,
+          state: 'available',
+          progressPercent: 0,
         };
       })
       .filter((entry) => entry.info.type === 'game'),
