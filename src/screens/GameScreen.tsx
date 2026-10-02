@@ -111,7 +111,9 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   picaco: lazy(() =>
     import('@engines/contributions/Picaco').then(({ DailyPicacoGame }) => ({
-      default: DailyPicacoGame,
+      default: DailyPicacoGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
 };

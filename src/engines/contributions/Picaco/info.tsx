@@ -1,4 +1,4 @@
-import type { GameInfo } from '../../../types/puzzles';
+import type { GameInfo } from 'types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'picaco',
@@ -7,11 +7,11 @@ export const gameInfo: GameInfo = {
   emoji: '🎨',
   name: { pt: 'Picaço!', en: 'Big Artist' },
   tagline: {
-    pt: 'Já mostrou seus dons artísticos hoje?',
-    en: 'Have you shown your artistic skills today?',
+    pt: 'Já desenhou hoje? Novas frases todos os dias!',
+    en: 'Already drawn today? New phrases every day!',
   },
   releaseDate: '2024-04-30',
-  version: 'unreleased',
+  version: 'stable',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

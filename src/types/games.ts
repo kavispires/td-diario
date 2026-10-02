@@ -39,3 +39,43 @@ export type DailyOrganikuEntry = {
    */
   defaultRevealedIndexes: number[];
 };
+
+/**
+ * One prompt card that Picaco can ask the player to draw.
+ */
+export type DailyPicacoCard = {
+  /**
+   * Unique identifier for the prompt card.
+   */
+  id: string;
+  /**
+   * Prompt text shown to the player during the timed round.
+   */
+  text: string;
+  /**
+   * Difficulty level forwarded when the finished drawing is saved.
+   */
+  level: number;
+};
+
+/**
+ * Today's Picaco challenge payload.
+ */
+export type DailyPicacoEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Picaco payloads.
+   */
+  type: 'picaco';
+  /**
+   * Pool of prompt cards from which today's timed drawings are selected.
+   */
+  cards: DailyPicacoCard[];
+};

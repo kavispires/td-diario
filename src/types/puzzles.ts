@@ -1,5 +1,5 @@
 import type { GAME_LIFECYCLE_STATUS } from '@utils/constants';
-import type { DailyOrganikuEntry } from './games';
+import type { DailyOrganikuEntry, DailyPicacoEntry } from './games';
 
 /**
  * Placeholder shape for a game's daily payload before its final data model
@@ -38,7 +38,7 @@ type GamesEntries = {
  * Daily payload entries for community-contributed games, keyed by game id.
  */
 type ContributionsEntries = {
-  picaco?: PlaceholderGameData;
+  picaco?: DailyPicacoEntry;
   'ta-na-cara'?: PlaceholderGameData;
 };
 
