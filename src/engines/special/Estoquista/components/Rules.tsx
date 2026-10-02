@@ -1,3 +1,51 @@
+import { Text } from '@components/ui/Typography';
+import { Heart } from 'lucide-react';
+
+/**
+ * Renders Estoquista's rules inside the shared `RulesOverlay`.
+ */
 export function Rules() {
-  return <p>As regras de Estoquista estarão disponíveis em breve.</p>;
+  return (
+    <ul className="list-disc space-y-3 pl-5 text-foreground">
+      <li>
+        <Text>
+          Primeiro, organize os 16 produtos nas prateleiras vazias do jeito que
+          fizer mais sentido para a sua memória.
+        </Text>
+      </li>
+      <li>
+        <Text>
+          Depois disso, os itens somem de vista e chegam 5 pedidos. Só 4 deles
+          estão realmente no estoque.
+        </Text>
+      </li>
+      <li>
+        <Text>
+          Posicione cada pedido na prateleira certa e mande para{' '}
+          <strong>Fora de estoque</strong> o item que não aparece em nenhuma
+          delas.
+        </Text>
+      </li>
+      <li>
+        <Text>
+          Cada envio errado custa um{' '}
+          <Heart
+            className="inline h-4 w-4 fill-destructive text-destructive"
+            aria-hidden="true"
+          />
+          , e recomeçar a arrumação também consome um.
+        </Text>
+      </li>
+      <li>
+        <Text>
+          Você começa com 4{' '}
+          <Heart
+            className="inline h-4 w-4 fill-destructive text-destructive"
+            aria-hidden="true"
+          />{' '}
+          e vence quando despacha todos os pedidos corretamente.
+        </Text>
+      </li>
+    </ul>
+  );
 }

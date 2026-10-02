@@ -514,6 +514,10 @@ export type DailyFilmacoEntry = {
    */
   type: 'filmaco';
   /**
+   * Dataset identifier forwarded by the backend for today's movie clue set.
+   */
+  setId: string;
+  /**
    * Secret movie title the player must guess letter by letter.
    */
   title: string;

@@ -1,3 +1,262 @@
-export function DailyEstoquistaGame() {
-  return <div>Estoquista</div>;
+import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { Hearts } from '@components/games/Hearts';
+import { Button } from '@components/ui/Button';
+import { Pill } from '@components/ui/Pill';
+import { Paragraph, Text, Title } from '@components/ui/Typography';
+import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
+import { ArchiveRestore, ClipboardCheck, Coins, Package2 } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useState } from 'react';
+import type { DailyEstoquistaEntry } from 'types/games';
+import { FulfillmentBoard } from './components/FulfillmentBoard';
+import { Orders } from './components/Orders';
+import { ResultsSplash } from './components/ResultsSplash';
+import { StockingBoard } from './components/StockingBoard';
+import { WarehouseGoodCard } from './components/WarehouseGoodCard';
+import { getInitialState } from './utils/helpers';
+import { ESTOQUISTA_PHASE } from './utils/types';
+import { useEstoquistaEngine } from './utils/useEstoquistaEngine';
+
+/**
+ * Props accepted by the {@link DailyEstoquistaGame} component.
+ */
+type DailyEstoquistaGameProps = {
+  /**
+   * Today's Estoquista payload, as resolved by `GameScreen`.
+   */
+  data: DailyEstoquistaEntry;
+};
+
+/**
+ * Renders a full day of Estoquista: stock the warehouse, resolve today's
+ * orders, and open a fullscreen results splash once the run ends.
+ *
+ * @param props Today's Estoquista payload.
+ * @returns The rendered Estoquista game.
+ */
+export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
+  const [initialState] = useState(() => getInitialState(data));
+  const {
+    hearts,
+    totalHearts,
+    phase,
+    warehouse,
+    fulfillments,
+    lastPlacedGoodId,
+    activeOrder,
+    evaluations,
+    currentGood,
+    showResults,
+    setShowResults,
+    progress,
+    score,
+    isWin,
+    isComplete,
+    onPlaceGood,
+    onSelectOrder,
+    onFulfill,
+    onTakeBack,
+    onSubmit,
+    reset,
+  } = useEstoquistaEngine(data, initialState);
+  const [itemWidth, containerRef] = useCardWidthByContainerRef(4, {
+    margin: 48,
+    gap: 12,
+    maxWidth: 80,
+    minWidth: 56,
+  });
+
+  return (
+    <div
+      ref={containerRef}
+      className="mx-auto flex w-full max-w-md flex-col items-center gap-4"
+    >
+      <div className="flex flex-col items-center gap-2 text-center">
+        <Text strong>{data.title}</Text>
+        <GameStatsRow>
+          <GameStat
+            icon={Package2}
+            value={`${warehouse.filter(Boolean).length}/${data.goods.length}`}
+            label="Prateleiras organizadas"
+          />
+
+          <div className="flex items-center justify-center">
+            <Hearts
+              remaining={hearts}
+              total={totalHearts}
+              size={16}
+            />
+          </div>
+
+          <GameStat
+            icon={Coins}
+            value={score}
+            label="Pontuação"
+            align="end"
+          />
+        </GameStatsRow>
+      </div>
+
+      {!isWin && (
+        <div className="h-2 w-full overflow-hidden rounded-full bg-border">
+          <motion.div
+            className="h-full rounded-full bg-gold"
+            animate={{ width: `${progress * 100}%` }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          />
+        </div>
+      )}
+
+      <Pill>
+        {phase === ESTOQUISTA_PHASE.STOCKING
+          ? 'Fase 1 · Arrumando o estoque'
+          : 'Fase 2 · Separando os pedidos'}
+      </Pill>
+
+      {phase === ESTOQUISTA_PHASE.STOCKING ? (
+        <>
+          <Paragraph className="mb-0 text-center">
+            Escolha uma lógica e memorize onde cada caixa ficou. Depois disso,
+            você vai precisar achar tudo no escuro.
+          </Paragraph>
+
+          <StockingBoard
+            warehouse={warehouse}
+            onPlaceGood={onPlaceGood}
+            width={itemWidth}
+            lastPlacedGoodId={lastPlacedGoodId}
+          />
+
+          <div className="flex w-full flex-col items-center gap-3 rounded-[2rem] bg-card px-5 py-6 text-center shadow-sm">
+            <Text type="secondary">Produto atual</Text>
+            {currentGood ? (
+              <WarehouseGoodCard
+                itemId={currentGood}
+                width={Math.min(itemWidth * 1.35, 100)}
+                highlighted
+              />
+            ) : (
+              <Title level={4}>Prateleiras prontas!</Title>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <Paragraph className="mb-0 text-center">
+            Ative um pedido, coloque-o na prateleira certa e mande para fora de
+            estoque o item que não aparece no galpão.
+          </Paragraph>
+
+          <Orders
+            orders={data.orders}
+            fulfillments={fulfillments}
+            activeOrder={activeOrder}
+            onSelectOrder={onSelectOrder}
+            shelfWidth={itemWidth}
+          />
+
+          <FulfillmentBoard
+            warehouse={warehouse}
+            fulfillments={fulfillments}
+            activeOrder={activeOrder}
+            onFulfill={onFulfill}
+            onTakeBack={onTakeBack}
+            width={itemWidth}
+            reveal={isComplete}
+          />
+
+          <div className="flex w-full items-center gap-3">
+            <Button
+              variant="outlined"
+              size="small"
+              icon={<ArchiveRestore />}
+              disabled={hearts <= 1 || isComplete}
+              onClick={reset}
+              className="flex-1"
+            >
+              Recomeçar (-1 coração)
+            </Button>
+
+            <Button
+              variant="primary"
+              size="small"
+              icon={<ClipboardCheck />}
+              disabled={
+                fulfillments.length !== data.orders.length || isComplete
+              }
+              onClick={onSubmit}
+              className="flex-1"
+            >
+              Enviar pedidos
+            </Button>
+          </div>
+        </>
+      )}
+
+      {evaluations.length > 0 && (
+        <div className="flex w-full flex-col gap-2 rounded-[2rem] bg-card px-4 py-4 shadow-sm">
+          <Text
+            strong
+            className="text-center"
+          >
+            Tentativas
+          </Text>
+          <div className="flex flex-wrap justify-center gap-2">
+            {evaluations.map((attempt, index) => (
+              <div
+                key={`${attempt.join('-')}-${index}`}
+                role="img"
+                className="flex items-center gap-1 rounded-full bg-surface px-3 py-2"
+                aria-label={`Tentativa ${index + 1}: ${attempt.filter(Boolean).length} de ${attempt.length} pedidos corretos`}
+              >
+                {attempt.map((isCorrect, itemIndex) => (
+                  <span
+                    key={`${index}-${itemIndex}`}
+                    className={`h-3 w-3 rounded-full ${
+                      isCorrect ? 'bg-gold' : 'bg-destructive'
+                    }`}
+                    aria-hidden="true"
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {phase === ESTOQUISTA_PHASE.STOCKING && (
+        <Button
+          variant="outlined"
+          size="small"
+          icon={<ArchiveRestore />}
+          disabled={hearts <= 1 || isComplete}
+          onClick={reset}
+        >
+          Recomeçar (-1 coração)
+        </Button>
+      )}
+
+      {isComplete && !showResults && (
+        <Button
+          variant="primary"
+          size="small"
+          onClick={() => setShowResults(true)}
+        >
+          Ver resultado
+        </Button>
+      )}
+
+      {isComplete && showResults && (
+        <ResultsSplash
+          win={isWin}
+          title={data.title}
+          hearts={hearts}
+          totalHearts={totalHearts}
+          evaluations={evaluations}
+          score={score}
+          onClose={() => setShowResults(false)}
+        />
+      )}
+    </div>
+  );
 }
