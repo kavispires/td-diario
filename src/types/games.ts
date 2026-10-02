@@ -64,10 +64,6 @@ export type DailyConjuntosEntry = {
    */
   type: 'conjuntos';
   /**
-   * Dataset identifier forwarded by the backend for today's rule set.
-   */
-  setId: string;
-  /**
    * Title hinting at the grammar category used by today's hidden rules.
    */
   title: string;
@@ -159,6 +155,10 @@ export type DailyPirralhosEntry = {
    */
   type: 'pirralhos';
   /**
+   * Stable encoded identifier for today's suspect/statement combination.
+   */
+  hashId: string;
+  /**
    * Ordered list of kids around the accusation circle and their statements.
    */
   kids: DailyPirralhosKidEntry[];
@@ -175,6 +175,10 @@ export type DailyPirralhosEntry = {
    * one-off range endpoint depending on the puzzle.
    */
   possibleLiars: number;
+  /**
+   * Difficulty score forwarded by the backend for today's mystery.
+   */
+  difficulty: number;
 };
 
 /**
@@ -530,6 +534,88 @@ export type DailyFilmacoEntry = {
    * movie release.
    */
   isDoubleFeature?: boolean;
+};
+
+/**
+ * One clue shown in Investigação to eliminate suspects.
+ */
+export type DailyInvestigacaoStatement = {
+  /**
+   * Stable identifier for the statement within today's puzzle payload.
+   */
+  key: string;
+  /**
+   * Portuguese text shown to the player.
+   */
+  text: string;
+  /**
+   * Suspect ids that this clue rules out.
+   */
+  excludes: string[];
+  /**
+   * Visual category used to decorate the clue card.
+   */
+  type: 'testimony' | 'feature' | 'grid';
+};
+
+/**
+ * One suspect card shown in Investigação's grid.
+ */
+export type DailyInvestigacaoSuspect = {
+  /**
+   * Unique suspect id, also used to resolve the portrait image.
+   */
+  id: string;
+  /**
+   * Suspect name in both supported languages.
+   */
+  name: DualLanguageValue<string>;
+  /**
+   * Grammatical gender marker used to inflect feature descriptions.
+   */
+  gender: string;
+  /**
+   * Raw feature ids describing the suspect's appearance.
+   */
+  features: string[];
+};
+
+/**
+ * Today's Investigação challenge payload.
+ */
+export type DailyInvestigacaoEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Investigação payloads.
+   */
+  type: 'investigacao' | 'espionagem';
+  /**
+   * Id of the suspect who must remain unreleased.
+   */
+  culpritId: string;
+  /**
+   * Main clue list progressively revealed as suspects are released.
+   */
+  statements: DailyInvestigacaoStatement[];
+  /**
+   * Optional extra clue list unlocked by spending hearts.
+   */
+  additionalStatements: DailyInvestigacaoStatement[];
+  /**
+   * Suspects available in today's 4x3 lineup.
+   */
+  suspects: DailyInvestigacaoSuspect[];
+  /**
+   * Crime summary shown in the final results screen.
+   */
+  reason: DualLanguageValue<string>;
 };
 
 /**

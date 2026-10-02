@@ -5,6 +5,7 @@ import type {
   DailyConjuntosEntry,
   DailyEstoquistaEntry,
   DailyFilmacoEntry,
+  DailyInvestigacaoEntry,
   DailyMapeamentoEntry,
   DailyOrganikuEntry,
   DailyPalavreadoEntry,
@@ -43,7 +44,7 @@ type GamesEntries = {
    * Estoquista belongs here instead of `contributions`.
    */
   estoquista?: DailyEstoquistaEntry;
-  investigacao?: PlaceholderGameData;
+  investigacao?: DailyInvestigacaoEntry;
   filmaco?: DailyFilmacoEntry;
   mapeamento?: DailyMapeamentoEntry;
   organiku?: DailyOrganikuEntry;
