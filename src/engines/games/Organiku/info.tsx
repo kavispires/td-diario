@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'organiku',
+  key: 'ORGANIKU',
   type: 'game',
-  color: 'rgba(211, 232, 124, 0.85)',
+  color: 'rgb(211, 232, 124)',
   emoji: '🧸',
   name: { pt: 'Organiku', en: 'Organiku' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     pt: 'Consegue organizar a mesa?',
   },
   releaseDate: '2025-06-07',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

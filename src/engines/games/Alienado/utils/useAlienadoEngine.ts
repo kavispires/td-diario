@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -46,7 +43,7 @@ export function useAlienadoEngine(
   );
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -138,14 +135,14 @@ export function useAlienadoEngine(
 
     if (isCorrect) {
       playSFX('alienYay');
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
     } else {
       notification.warning('Combinação incorreta. Tente novamente!');
       playSFX('alienBoo');
       vibrate(isLose ? 'lose' : 'wrong');
 
       if (isLose) {
-        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
       }
     }
 

@@ -1,8 +1,6 @@
-import {
-  clearLocalToday,
-  gameIdToLocalTodayKey,
-} from '@hooks/useDailyLocalToday';
+import { clearLocalToday } from '@hooks/useDailyLocalToday';
 import { useUserPreferencesStore } from '@store/useUserPreferencesStore';
+import type { GameInfo } from 'types/puzzles';
 
 /**
  * Dev-only utility that clears a game's locally-persisted "today" state
@@ -10,13 +8,13 @@ import { useUserPreferencesStore } from '@store/useUserPreferencesStore';
  * clears `useUserPreferencesStore`'s `ongoingGame` if it currently points
  * at that game, so a stale redirect doesn't immediately reopen it.
  *
- * @param gameId - Kebab-case game id, matching a `GameInfo.id` from `gameInfos`.
+ * @param gameInfo - The game's `GameInfo`, as found in `gameInfos`.
  */
-export function resetGameLocalState(gameId: string): void {
-  clearLocalToday(gameIdToLocalTodayKey(gameId));
+export function resetGameLocalState(gameInfo: GameInfo): void {
+  clearLocalToday(gameInfo.key);
 
   const { ongoingGame, setOngoingGame } = useUserPreferencesStore.getState();
-  if (ongoingGame === gameId) {
+  if (ongoingGame === gameInfo.id) {
     setOngoingGame(null);
   }
 }

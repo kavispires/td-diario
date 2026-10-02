@@ -70,7 +70,7 @@ export function ResultsSplash({
   return (
     <div
       className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.96) }}
+      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
     >
       <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center gap-4">
         <div className="h-16 w-16">

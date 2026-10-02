@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -39,7 +36,7 @@ export function useArteRuimEngine(
   const [showResults, setShowResults] = useState(false);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -78,12 +75,12 @@ export function useArteRuimEngine(
       if (isCorrect) {
         playSFX(isWin ? 'win' : 'addCorrect');
         if (isWin) {
-          logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+          logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
         }
       } else {
         playSFX(isLose ? 'lose' : 'addWrong');
         if (isLose) {
-          logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+          logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
         }
       }
 

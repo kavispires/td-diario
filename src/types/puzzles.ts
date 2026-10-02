@@ -105,11 +105,20 @@ export type GameInfo = {
    */
   id: string;
   /**
+   * SCREAMING_SNAKE_CASE form of `id`, used as the local storage key prefix
+   * (see `gameIdToLocalTodayKey`).
+   */
+  key: string;
+  /**
    * Game type
    */
   type: 'game' | 'contribution' | 'special';
   /**
-   * Game box hub color
+   * Game's solid theme color, as an opaque `rgb(r, g, b)` string. Use it
+   * directly wherever a solid fill is wanted (e.g. progress bars, borders),
+   * or pass it through `withAlpha()` (see `@utils/helpers`) to derive a
+   * translucent variant for a specific use case instead of baking any
+   * alpha into this value.
    */
   color: string;
   /**
@@ -129,9 +138,9 @@ export type GameInfo = {
    */
   releaseDate: DateKey;
   /**
-   * Whether the game is in demo mode
+   * The game's release/rollout stage.
    */
-  version:
+  release:
     | 'stable'
     | 'beta'
     | 'demo'
@@ -139,6 +148,10 @@ export type GameInfo = {
     | 'disabled'
     | 'soon'
     | 'unreleased';
+  /**
+   * The game's semantic version (e.g. `'0.0.1'`).
+   */
+  version: string;
 };
 
 /**

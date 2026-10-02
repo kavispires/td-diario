@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -62,7 +59,7 @@ export function usePalavreadoEngine(
   const size = data.keyword.length;
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -241,11 +238,11 @@ export function usePalavreadoEngine(
     if (isWin) {
       swapPenalty -= state.swaps;
       playSFX('win');
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
     } else {
       if (isLose) {
         swapPenalty -= state.swaps;
-        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
       }
       playSFX(isLose ? 'lose' : 'wrong');
       vibrate(isLose ? 'lose' : 'wrong');

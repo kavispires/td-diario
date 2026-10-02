@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import { DAILY_API, DAILY_API_ACTIONS } from '@services/adapters';
 import {
   getGameAnalyticsEventName,
@@ -56,7 +53,7 @@ export function usePicacoEngine(
   );
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -88,7 +85,7 @@ export function usePicacoEngine(
         status: GAME_LIFECYCLE_STATUS.WIN,
       }));
       setShowResults(true);
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
       notification.success('Desenhos salvos com sucesso!');
     },
     onError: () => {

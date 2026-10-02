@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -38,7 +35,7 @@ export function usePirralhosEngine(
   const [showResults, setShowResults] = useState(false);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -120,7 +117,7 @@ export function usePirralhosEngine(
     if (isCulprit) {
       playSFX('win');
       if (!isWin) {
-        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
       }
 
       setState((previousState) => ({
@@ -141,7 +138,7 @@ export function usePirralhosEngine(
     vibrate(didLose ? 'lose' : 'wrong');
 
     if (didLose && !isLose) {
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
     }
 
     setState((previousState) => ({

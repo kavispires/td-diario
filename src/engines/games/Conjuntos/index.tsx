@@ -77,6 +77,29 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
+      <GameStatsRow>
+        <GameStat
+          icon={Check}
+          value={`${placedThingsCount}/${totalThings}`}
+          label="Coisas colocadas"
+        />
+
+        <div className="flex items-center justify-center">
+          <Hearts
+            remaining={hearts}
+            total={maxHearts}
+            size={16}
+          />
+        </div>
+
+        <GameStat
+          icon={Coins}
+          value={score}
+          label="Pontuação"
+          align="end"
+        />
+      </GameStatsRow>
+
       <div className="flex flex-col items-center gap-2 text-center">
         <Pill>Desafio #{conjuntosData.number}</Pill>
 
@@ -109,29 +132,6 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
           certa do diagrama.
         </Text>
       </div>
-
-      <GameStatsRow>
-        <GameStat
-          icon={Check}
-          value={`${placedThingsCount}/${totalThings}`}
-          label="Coisas colocadas"
-        />
-
-        <div className="flex items-center justify-center">
-          <Hearts
-            remaining={hearts}
-            total={maxHearts}
-            size={16}
-          />
-        </div>
-
-        <GameStat
-          icon={Coins}
-          value={score}
-          label="Pontuação"
-          align="end"
-        />
-      </GameStatsRow>
 
       {!isComplete && (
         <div className="h-2 w-full overflow-hidden rounded-full bg-border">

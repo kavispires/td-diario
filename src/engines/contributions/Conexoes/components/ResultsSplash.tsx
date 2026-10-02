@@ -60,7 +60,7 @@ export function ResultsSplash({
         win ? 'bg-gold-soft' : '',
       )}
       style={
-        win ? undefined : { backgroundColor: withAlpha(gameInfo.color, 0.96) }
+        win ? undefined : { backgroundColor: withAlpha(gameInfo.color, 0.85) }
       }
     >
       <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center gap-4">

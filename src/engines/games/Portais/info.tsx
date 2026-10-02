@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'portais',
+  key: 'PORTAIS',
   type: 'game',
-  color: 'rgba(222, 141, 93, 0.85)',
+  color: 'rgb(222, 141, 93)',
   emoji: '🚪',
   name: { pt: 'Portais', en: 'Portals' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Discover what lies beyond these doors!',
   },
   releaseDate: '2025-04-12',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -42,7 +39,7 @@ export function useVitraisInfinitosEngine(
   const [showResults, setShowResults] = useState(false);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -85,7 +82,7 @@ export function useVitraisInfinitosEngine(
     playSFX(nextStatus === GAME_LIFECYCLE_STATUS.WIN ? 'win' : 'swap');
 
     if (nextStatus === GAME_LIFECYCLE_STATUS.WIN && !isWin) {
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
     }
 
     setSelectedAnchorIndex(null);

@@ -129,13 +129,6 @@ function DailyInvestigacaoGameContent({
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Title level={3}>Investigação</Title>
-        <Text type="secondary">
-          Cruze as pistas, descarte inocentes e deixe o culpado por último.
-        </Text>
-      </div>
-
       <GameStatsRow>
         <GameStat
           icon={UserRoundCheck}
@@ -155,6 +148,13 @@ function DailyInvestigacaoGameContent({
           align="end"
         />
       </GameStatsRow>
+
+      <div className="flex flex-col items-center gap-2 text-center">
+        <Title level={3}>Investigação</Title>
+        <Text type="secondary">
+          Cruze as pistas, descarte inocentes e deixe o culpado por último.
+        </Text>
+      </div>
 
       <div className="w-full rounded-[2rem] bg-card px-5 py-5 text-center shadow-sm">
         {!isComplete ? (

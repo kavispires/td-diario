@@ -80,8 +80,6 @@ export function DailyAquiOGame({ data }: DailyAquiOGameProps) {
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 px-4 pb-8 pt-2"
     >
       <div className="flex w-full flex-col items-center gap-2 text-center">
-        <Text strong>{translate(data.title)}</Text>
-
         <GameStatsRow>
           <GameStat
             icon={Disc3}
@@ -104,6 +102,8 @@ export function DailyAquiOGame({ data }: DailyAquiOGameProps) {
             align="end"
           />
         </GameStatsRow>
+
+        <Text strong>{translate(data.title)}</Text>
 
         <div className="grid w-full grid-cols-[1fr_auto] items-center gap-3 rounded-2xl bg-white/70 px-4 py-3 shadow-sm">
           <div className="h-3 overflow-hidden rounded-full bg-border">

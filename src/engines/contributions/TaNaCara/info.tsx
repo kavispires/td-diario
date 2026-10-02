@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'ta-na-cara',
+  key: 'TA_NA_CARA',
   type: 'contribution',
-  color: 'rgba(242, 233, 236, 0.85)',
+  color: 'rgb(242, 233, 236)',
   emoji: '👤',
   name: { pt: 'Tá Na Cara', en: 'In Your Face' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Judge the book by its cover! The guy by his face!',
   },
   releaseDate: '2025-02-21',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

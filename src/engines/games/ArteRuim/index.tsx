@@ -99,13 +99,6 @@ function ArteRuimGameContent({ data }: ArteRuimGameContentProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Title level={3}>Adivinhe a expressão</Title>
-        <Text type="secondary">
-          Observe os desenhos e descubra a resposta, letra por letra.
-        </Text>
-      </div>
-
       <GameStatsRow>
         <GameStat
           icon={Search}
@@ -128,6 +121,13 @@ function ArteRuimGameContent({ data }: ArteRuimGameContentProps) {
           align="end"
         />
       </GameStatsRow>
+
+      <div className="flex flex-col items-center gap-2 text-center">
+        <Title level={3}>Adivinhe a expressão</Title>
+        <Text type="secondary">
+          Observe os desenhos e descubra a resposta, letra por letra.
+        </Text>
+      </div>
 
       <DrawingCarousel drawings={data.drawings} />
 

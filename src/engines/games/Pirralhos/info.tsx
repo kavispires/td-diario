@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'pirralhos',
+  key: 'PIRRALHOS',
   type: 'game',
-  color: 'rgba(251, 232, 124, 0.85)',
+  color: 'rgb(251, 232, 124)',
   emoji: '🧒',
   name: { pt: 'Pirralhos', en: 'Rascals' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Uncover who took the toy!',
   },
   releaseDate: '2026-05-24',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

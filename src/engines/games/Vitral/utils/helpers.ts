@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  loadLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type { DailyVitralEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -111,7 +108,7 @@ function getDefaultState(data: DailyVitralEntry): GameState {
 export function getInitialState(data: DailyVitralEntry): GameState {
   const defaultValue = getDefaultState(data);
   const storedState = loadLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue,
   });

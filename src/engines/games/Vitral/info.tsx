@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'vitral',
+  key: 'VITRAL',
   type: 'game',
-  color: 'rgba(253, 176, 76, 0.85)',
+  color: 'rgb(253, 176, 76)',
   emoji: '🪟',
   name: { pt: 'Vitral', en: 'Stained Glass' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     pt: 'Já quebrou a cabeça hoje?',
   },
   releaseDate: '2025-12-24',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

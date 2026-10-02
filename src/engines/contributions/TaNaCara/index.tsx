@@ -130,14 +130,6 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Title level={3}>{gameInfo.name.pt}</Title>
-        <Text type="secondary">
-          Julgue pela cara, marque quem combina com cada depoimento e ajude a
-          treinar o banco do TD.
-        </Text>
-      </div>
-
       <GameStatsRow>
         <GameStat
           icon={FileText}
@@ -157,6 +149,14 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
           align="end"
         />
       </GameStatsRow>
+
+      <div className="flex flex-col items-center gap-2 text-center">
+        <Title level={3}>{gameInfo.name.pt}</Title>
+        <Text type="secondary">
+          Julgue pela cara, marque quem combina com cada depoimento e ajude a
+          treinar o banco do TD.
+        </Text>
+      </div>
 
       {!isWin && (
         <div className="h-2 w-full overflow-hidden rounded-full bg-border">

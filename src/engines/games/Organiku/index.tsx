@@ -61,10 +61,6 @@ export function DailyOrganikuGame({ data }: DailyOrganikuGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4"
     >
-      <div className="flex w-full items-center justify-center">
-        <Text strong>{data.title}</Text>
-      </div>
-
       <GameStatsRow>
         <GameStat
           icon={Repeat}
@@ -87,6 +83,10 @@ export function DailyOrganikuGame({ data }: DailyOrganikuGameProps) {
           align="end"
         />
       </GameStatsRow>
+
+      <div className="flex w-full items-center justify-center">
+        <Text strong>{data.title}</Text>
+      </div>
 
       <Text
         type="secondary"

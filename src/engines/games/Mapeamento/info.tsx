@@ -2,8 +2,9 @@ import type { GameInfo } from 'types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'mapeamento',
+  key: 'MAPEAMENTO',
   type: 'game',
-  color: 'rgba(166, 201, 233, 0.85)',
+  color: 'rgb(166, 201, 233)',
   emoji: '🗺️',
   name: { pt: 'Mapeamento', en: 'Mapping' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Where am I? Who am I? Where am I going?',
   },
   releaseDate: '2026-05-17',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

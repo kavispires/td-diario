@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'quartetos',
+  key: 'QUARTETOS',
   type: 'game',
-  color: 'rgba(231, 157, 179, 0.85)',
+  color: 'rgb(231, 157, 179)',
   emoji: '🗂',
   name: { pt: 'Quartetos', en: 'Quartets' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Connect four related words!',
   },
   releaseDate: '2025-03-01',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

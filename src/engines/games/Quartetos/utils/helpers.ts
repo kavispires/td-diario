@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  loadLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type { DailyQuartetosEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
@@ -39,7 +36,7 @@ function getDefaultState(data: DailyQuartetosEntry): GameState {
  */
 export function getInitialState(data: DailyQuartetosEntry): GameState {
   return loadLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: getDefaultState(data),
   });

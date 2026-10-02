@@ -2,15 +2,12 @@ import { DailyStatusBoard } from '@components/DailyStatusBoard';
 import { GameCard } from '@components/hub/GameCard';
 import { Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
-import {
-  gameIdToLocalTodayKey,
-  loadLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { orderBy } from 'lodash';
 import { LayoutGroup } from 'motion/react';
-import type { DefaultGameState } from 'types/puzzles';
+import type { DefaultGameState, GameInfo } from 'types/puzzles';
 
 /**
  * Union of valid game ids, derived from the registered game engines.
@@ -18,16 +15,39 @@ import type { DefaultGameState } from 'types/puzzles';
 type GameId = keyof typeof gameInfos;
 
 /**
- * Derives the hub card's display `state` from a game's persisted lifecycle
- * status.
- *
- * @param status - The game's current `DefaultGameState['status']`.
- * @returns `'completed'` for a finished game (won or lost), `'in-progress'`
- *   while it's ongoing, or `'available'` if it hasn't been started yet.
+ * Card display states, in the exact priority order they should appear on
+ * the hub (lower rank sorts first): ongoing games, then not-yet-started
+ * ones, then finished ones, then locked/unavailable ones.
  */
-function statusToCardState(
+const CARD_STATE_ORDER = {
+  'in-progress': 0,
+  available: 1,
+  completed: 2,
+  disabled: 3,
+} as const;
+
+/**
+ * Derives the hub card's display `state` from a game's release stage and
+ * its persisted lifecycle status.
+ *
+ * @param release - The game's `GameInfo['release']`.
+ * @param status - The game's current `DefaultGameState['status']`.
+ * @returns `'disabled'` when the game isn't available to play yet,
+ *   `'completed'` for a finished game (won or lost), `'in-progress'` while
+ *   it's ongoing, or `'available'` if it hasn't been started yet.
+ */
+function getCardState(
+  release: GameInfo['release'],
   status: DefaultGameState['status'],
-): 'available' | 'in-progress' | 'completed' {
+): keyof typeof CARD_STATE_ORDER {
+  if (
+    release === 'disabled' ||
+    release === 'soon' ||
+    release === 'maintenance' ||
+    release === 'unreleased'
+  ) {
+    return 'disabled';
+  }
   if (
     status === GAME_LIFECYCLE_STATUS.WIN ||
     status === GAME_LIFECYCLE_STATUS.LOSE
@@ -49,21 +69,19 @@ function statusToCardState(
 export function HubScreen() {
   const { data } = useGetDailyChallenges();
 
-  // Ordered of cards (resolve ties by alphabetical order)
-  // 1. Available and in progress and order by progress percentage
-  // 2. Available yet to be started
-  // 2a. New available games first
-  // 2b. Other available games
-  // 3. Completed
-  // 4. Disabled
+  // Order the cards:
+  // 1. In-progress games, ordered by progress percentage (highest first)
+  // 2. Available (not yet started) games
+  // 3. Completed games
+  // 4. Disabled/unavailable games
+  // Ties within a group are resolved alphabetically by name.
 
-  // Order the challenge data. First separate contributions from daily games
-  // Then sort the games by name, then sort by ongoing, undone and completed. (there is no logic for this yet)
   const orderedChallenges = orderBy(
     Object.values(data?.challenges ?? {})
       .map((challenge) => {
+        const info = gameInfos[challenge.type as GameId];
         const localState = loadLocalToday<DefaultGameState>({
-          key: gameIdToLocalTodayKey(challenge.type),
+          key: info.key,
           dateId: challenge.id,
           defaultValue: {
             id: challenge.id,
@@ -72,24 +90,24 @@ export function HubScreen() {
             score: 0,
           },
         });
+        const state = getCardState(info.release, localState.status);
 
         return {
           key: challenge.type,
           challenge: challenge,
-          info: gameInfos[challenge.type as GameId],
+          info,
           size: 'small',
-          state: statusToCardState(localState.status),
+          state,
           progressPercent: Math.round(localState.progress * 100),
         };
       })
       .filter((entry) => entry.info.type === 'game'),
     [
+      (o) => CARD_STATE_ORDER[o.state],
       (o) => o.progressPercent,
-      (o) => o.state === 'available',
-      (o) => o.state === 'completed',
       'info.name.pt',
-    ], // Order by the game's name
-    ['desc', 'desc', 'desc', 'asc'], // Ascending order
+    ],
+    ['asc', 'desc', 'asc'],
   );
 
   return (

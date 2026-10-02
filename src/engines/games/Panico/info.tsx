@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'panico',
+  key: 'PANICO',
   type: 'game',
-  color: 'rgba(126, 133, 147, 0.85)',
+  color: 'rgb(126, 133, 147)',
   emoji: '🔘',
   name: { pt: 'Pânico!', en: 'Panic!' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     pt: 'Você apertaria o botão?',
   },
   releaseDate: '2026-05-10',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

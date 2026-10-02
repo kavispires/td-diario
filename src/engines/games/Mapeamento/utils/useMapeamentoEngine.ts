@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -40,7 +37,7 @@ export function useMapeamentoEngine(
   const [showResults, setShowResults] = useState(false);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -109,7 +106,7 @@ export function useMapeamentoEngine(
         progress: 1,
         score: previousState.hearts * 25,
       }));
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
       playSFX('win');
       return true;
     }
@@ -119,7 +116,7 @@ export function useMapeamentoEngine(
       const isLose = hearts <= 0;
 
       if (isLose) {
-        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
         playSFX('lose');
       } else {
         playSFX('no');

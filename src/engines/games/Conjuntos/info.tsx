@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'conjuntos',
+  key: 'CONJUNTOS',
   type: 'game',
-  color: 'rgba(195, 135, 202, 0.85)',
+  color: 'rgb(195, 135, 202)',
   emoji: '⭕️',
   name: { pt: 'Conjuntos', en: 'Diagrams' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Can you solve this set challenge?',
   },
   releaseDate: '2024-08-31',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

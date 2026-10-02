@@ -2,8 +2,9 @@ import type { GameInfo } from 'types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'conexoes',
+  key: 'CONEXOES',
   type: 'contribution',
-  color: 'rgba(232, 244, 248, 0.85)',
+  color: 'rgb(232, 244, 248)',
   emoji: '🔗',
   name: { pt: 'Conexões', en: 'Connections' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Help connect related image pairs.',
   },
   releaseDate: '2026-04-04',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

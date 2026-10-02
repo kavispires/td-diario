@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'palavreado',
+  key: 'PALAVREADO',
   type: 'game',
-  color: 'rgba(237, 101, 80, 0.85)',
+  color: 'rgb(237, 101, 80)',
   emoji: '🔤',
   name: { pt: 'Palavreado', en: 'Rewording' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'What if the word search was all scrambled?',
   },
   releaseDate: '2024-05-10',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

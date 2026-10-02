@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'estoquista',
+  key: 'ESTOQUISTA',
   type: 'special',
-  color: 'rgba(249, 205, 84, 0.85)',
+  color: 'rgb(249, 205, 84)',
   emoji: '📦',
   name: { pt: 'Estoquista', en: 'Warehouser' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Come apply some feng-shui to this shelf!',
   },
   releaseDate: '2024-08-04',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

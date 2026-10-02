@@ -2,8 +2,8 @@ import { Button } from '@components/ui/Button';
 import { Text, Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
-import { withAlpha } from '@utils/helpers';
 import { AnimatePresence, motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import { GameLogos } from './hub/GameLogos';
 import { DualTranslate } from './ui/DualTranslate';
 
@@ -23,8 +23,9 @@ const LAYOUT_TRANSITION = {
  * Persistent fullscreen splash that shares `layoutId`s with the originating GameCard
  * and the Header's logo slot. Expands on game entry and shows a loading state while
  * the game chunk/data is fetched; once ready, it offers Jogar (enter the game, clearing
- * the splash so the logo's `layoutId` carries it into the Header) and Regras (opens the
- * rules screen without dismissing the splash).
+ * the splash so the logo's `layoutId` carries it into the Header), Regras (opens the
+ * rules screen without dismissing the splash), and Voltar (dismisses the splash
+ * and navigates back to the hub).
  */
 export function GameLaunchOverlay() {
   const launchingGame = useAppRuntimeStore((state) => state.launchingGame);
@@ -33,6 +34,7 @@ export function GameLaunchOverlay() {
   );
   const setActiveGameId = useAppRuntimeStore((state) => state.setActiveGameId);
   const openRules = useAppRuntimeStore((state) => state.openRules);
+  const navigate = useNavigate();
 
   const gameInfo = launchingGame
     ? gameInfos[launchingGame.id as keyof typeof gameInfos]
@@ -53,6 +55,11 @@ export function GameLaunchOverlay() {
     openRules(launchingGame.id);
   }
 
+  function handleClose() {
+    setLaunchingGame(null);
+    navigate('/');
+  }
+
   return (
     <AnimatePresence>
       {launchingGame && gameInfo && (
@@ -61,7 +68,7 @@ export function GameLaunchOverlay() {
           layoutId={`game-card-${launchingGame.id}`}
           transition={LAYOUT_TRANSITION}
           exit={{ opacity: 0 }}
-          style={{ backgroundColor: withAlpha(gameInfo.color, 0.95) }}
+          style={{ backgroundColor: gameInfo.color }}
           className="fixed inset-0 z-100 flex flex-col items-center justify-center gap-4"
         >
           <motion.div
@@ -83,10 +90,7 @@ export function GameLaunchOverlay() {
               <DualTranslate>{gameInfo.name}</DualTranslate>
             </Title>
 
-            <Text
-              type="secondary"
-              strong
-            >
+            <Text strong>
               <DualTranslate>{gameInfo.tagline}</DualTranslate>
             </Text>
 
@@ -115,6 +119,14 @@ export function GameLaunchOverlay() {
                   onClick={handleRules}
                 >
                   Regras
+                </Button>
+                <Button
+                  variant="ghost"
+                  block
+                  className="text-white hover:bg-white/10"
+                  onClick={handleClose}
+                >
+                  Voltar
                 </Button>
               </div>
             )}

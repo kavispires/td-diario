@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import { DAILY_API, DAILY_API_ACTIONS } from '@services/adapters';
 import {
   getGameAnalyticsEventName,
@@ -53,7 +50,7 @@ export function useConexoesEngine(
   const [session, setSession] = useState<SessionState>(INITIAL_SESSION_STATE);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -81,7 +78,7 @@ export function useConexoesEngine(
         ...previousSession,
         saveFailed: false,
       }));
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
       notification.success('Conexões salvas com sucesso!');
     },
     onError: () => {
@@ -241,7 +238,7 @@ export function useConexoesEngine(
       status: GAME_LIFECYCLE_STATUS.LOSE,
       progress: 1,
     }));
-    logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+    logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
   }
 
   return {

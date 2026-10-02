@@ -79,11 +79,16 @@ type GameStatsRowProps = {
 
 /**
  * Lays out a single-line, three-column row of game stats (e.g. flips,
- * hearts, and score) under a game's title.
+ * hearts, and score) as a highlighted bar at the top of a game's content,
+ * above its title.
  *
  * @param props The row's three columns.
  * @returns The rendered stats row.
  */
 export function GameStatsRow({ children }: GameStatsRowProps) {
-  return <div className="grid w-full grid-cols-3 items-center">{children}</div>;
+  return (
+    <div className="grid w-full grid-cols-3 items-center rounded-2xl bg-border/60 px-4 py-2 shadow-sm">
+      {children}
+    </div>
+  );
 }

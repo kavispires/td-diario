@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  loadLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type { DailyPortaisCorridor, DailyPortaisEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -128,7 +125,7 @@ export function getCurrentGuess(
  */
 export function getInitialState(data: DailyPortaisEntry): GameState {
   const storedState = loadLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: getDefaultState(data),
   });

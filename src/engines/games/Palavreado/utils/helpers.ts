@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  loadLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type { DailyPalavreadoEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -106,7 +103,7 @@ function getDefaultState(data: DailyPalavreadoEntry): GameState {
  */
 export function getInitialState(data: DailyPalavreadoEntry): GameState {
   return loadLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: getDefaultState(data),
   });

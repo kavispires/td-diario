@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'alienado',
+  key: 'ALIENADO',
   type: 'game',
-  color: 'rgba(145, 203, 196, 0.85)',
+  color: 'rgb(145, 203, 196)',
   emoji: '🛸',
   name: { pt: 'Alienado', en: 'Alienate' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Communication with the aliens is hard',
   },
   releaseDate: '2024-11-08',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

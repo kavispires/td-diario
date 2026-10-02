@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'investigacao',
+  key: 'INVESTIGACAO',
   type: 'game',
-  color: 'rgba(125, 192, 121, 0.85)',
+  color: 'rgb(125, 192, 121)',
   emoji: '🕵️‍♂️',
   name: { pt: 'Investigação', en: 'Investigation' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     pt: 'Consegue descobrir quem é o culpado?',
   },
   releaseDate: '2025-07-05',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

@@ -73,10 +73,6 @@ export function DailyVitralGame({ data }: DailyVitralGameProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 px-4 pb-4">
-      <div className="flex w-full items-center justify-center">
-        <Text strong>{data.title}</Text>
-      </div>
-
       <GameStatsRow>
         <GameStat
           icon={Puzzle}
@@ -110,6 +106,10 @@ export function DailyVitralGame({ data }: DailyVitralGameProps) {
         />
         <div />
       </GameStatsRow>
+
+      <div className="flex w-full items-center justify-center">
+        <Text strong>{data.title}</Text>
+      </div>
 
       <Text
         type="secondary"

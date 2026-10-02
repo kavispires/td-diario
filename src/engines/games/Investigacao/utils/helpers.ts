@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  loadLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type {
   DailyInvestigacaoEntry,
@@ -272,7 +269,7 @@ function isValidState(state: GameState, data: DailyInvestigacaoEntry): boolean {
 export function getInitialState(data: DailyInvestigacaoEntry): GameState {
   const defaultState = getDefaultState(data);
   const restoredState = loadLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: defaultState,
   });

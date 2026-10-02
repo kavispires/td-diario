@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -37,7 +34,7 @@ export function useInvestigacaoEngine(
   const [showResults, setShowResults] = useState(false);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -100,7 +97,7 @@ export function useInvestigacaoEngine(
 
     if (suspectId === data.culpritId) {
       playSFX('drama');
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
       setState((previousState) => ({
         ...previousState,
         hearts: 0,
@@ -117,7 +114,7 @@ export function useInvestigacaoEngine(
 
       if (isWin) {
         playSFX('win');
-        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
       } else {
         playSFX('wee');
       }

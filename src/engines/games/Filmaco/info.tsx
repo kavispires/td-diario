@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'filmaco',
+  key: 'FILMACO',
   type: 'game',
-  color: 'rgba(118, 151, 226, 0.85)',
+  color: 'rgb(118, 151, 226)',
   emoji: '🎬',
   name: { pt: 'Filmaço', en: 'Movicon' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Grab the popcorn and come find out about this movie!',
   },
   releaseDate: '2024-05-30',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

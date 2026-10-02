@@ -120,13 +120,6 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Title level={3}>{gameInfo.name.pt}</Title>
-        <Text type="secondary">
-          Faça quatro grupos de quatro e revele os temas escondidos.
-        </Text>
-      </div>
-
       <GameStatsRow>
         <GameStat
           icon={Sparkles}
@@ -149,6 +142,13 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
           align="end"
         />
       </GameStatsRow>
+
+      <div className="flex flex-col items-center gap-2 text-center">
+        <Title level={3}>{gameInfo.name.pt}</Title>
+        <Text type="secondary">
+          Faça quatro grupos de quatro e revele os temas escondidos.
+        </Text>
+      </div>
 
       {!isComplete && (
         <div className="h-2 w-full overflow-hidden rounded-full bg-border">

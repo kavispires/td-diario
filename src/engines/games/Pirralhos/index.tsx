@@ -83,15 +83,6 @@ export function DailyPirralhosGame({ data }: DailyPirralhosGameProps) {
         ref={containerRef}
         className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
       >
-        <div className="flex flex-col items-center gap-2 text-center">
-          <Pill>Desafio #{data.number}</Pill>
-          <Title level={3}>{gameInfo.name.pt}</Title>
-          <Text type="secondary">
-            Escute cada pirralho, marque suas suspeitas e descubra quem pegou o
-            brinquedo.
-          </Text>
-        </div>
-
         <GameStatsRow>
           <GameStat
             icon={Crosshair}
@@ -114,6 +105,15 @@ export function DailyPirralhosGame({ data }: DailyPirralhosGameProps) {
             align="end"
           />
         </GameStatsRow>
+
+        <div className="flex flex-col items-center gap-2 text-center">
+          <Pill>Desafio #{data.number}</Pill>
+          <Title level={3}>{gameInfo.name.pt}</Title>
+          <Text type="secondary">
+            Escute cada pirralho, marque suas suspeitas e descubra quem pegou o
+            brinquedo.
+          </Text>
+        </div>
 
         {!isComplete && (
           <div className="h-2 w-full overflow-hidden rounded-full bg-border">

@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -63,7 +60,7 @@ export function useAquiOEngine(
   const endAtRef = useRef<number | null>(null);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -191,7 +188,7 @@ export function useAquiOEngine(
 
       if (isWin) {
         stopRound('win');
-        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
       }
 
       return;
@@ -206,7 +203,7 @@ export function useAquiOEngine(
       playSFX('lose');
       vibrate('lose');
       stopRound('lose');
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
       return;
     }
 

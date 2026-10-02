@@ -91,7 +91,7 @@ export function ResultsSplash({
   return (
     <div
       className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.96) }}
+      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
       role="dialog"
       aria-modal="true"
       aria-label="Resultado de Conjuntos"

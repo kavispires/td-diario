@@ -66,9 +66,10 @@ body {
   --color-surface-raised: #ffffff;
 
   /* Typography */
-  --color-foreground: #403b46;
-  --color-muted-foreground: #746d79;
-  --color-subtle-foreground: #9b929d;
+  --color-foreground: rgba(44, 44, 44, 0.85);
+  --color-muted-foreground: rgba(44, 44, 44, 0.45);
+  /* 85% of --color-foreground blended over white, instead of a flat gray */
+  --color-subtle-foreground: rgba(44, 44, 44, 0.45);
 
   /* Structure */
   --color-border: #e7deda;

@@ -140,16 +140,6 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4"
     >
-      <div className="flex flex-col items-center gap-1 text-center">
-        <Text type="secondary">Palavra-chave</Text>
-        <Title
-          level={3}
-          className="tracking-[0.35em] uppercase"
-        >
-          {keyword}
-        </Title>
-      </div>
-
       <GameStatsRow>
         <GameStat
           icon={Repeat}
@@ -172,6 +162,16 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
           align="end"
         />
       </GameStatsRow>
+
+      <div className="flex flex-col items-center gap-1 text-center">
+        <Text type="secondary">Palavra-chave</Text>
+        <Title
+          level={3}
+          className="tracking-[0.35em] uppercase"
+        >
+          {keyword}
+        </Title>
+      </div>
 
       <Text
         type="secondary"

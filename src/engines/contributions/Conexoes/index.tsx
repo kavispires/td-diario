@@ -125,13 +125,6 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Title level={3}>{gameInfo.name.pt}</Title>
-        <Text type="secondary">
-          Compare pares de imagens e ajude o TD a descobrir novas relações.
-        </Text>
-      </div>
-
       <GameStatsRow>
         <GameStat
           icon={GitCompareArrows}
@@ -151,6 +144,13 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
           align="end"
         />
       </GameStatsRow>
+
+      <div className="flex flex-col items-center gap-2 text-center">
+        <Title level={3}>{gameInfo.name.pt}</Title>
+        <Text type="secondary">
+          Compare pares de imagens e ajude o TD a descobrir novas relações.
+        </Text>
+      </div>
 
       {!isComplete && (
         <div className="h-2 w-full overflow-hidden rounded-full bg-border">

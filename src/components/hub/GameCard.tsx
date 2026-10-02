@@ -1,5 +1,6 @@
 import { DualTranslate } from '@components/ui/DualTranslate';
 import { cn } from '@utils/cn';
+import { withAlpha } from '@utils/helpers';
 import { Check } from 'lucide-react';
 import type { HTMLMotionProps } from 'motion/react';
 import { motion } from 'motion/react';
@@ -12,7 +13,7 @@ import { GameLogos } from './GameLogos';
  */
 type GameCardProps = HTMLMotionProps<'button'> & {
   /**
-   * Game metadata (id, name, tagline, color, version) rendered on the card.
+   * Game metadata (id, name, tagline, color, release) rendered on the card.
    */
   gameInfo: GameInfo;
   /**
@@ -71,9 +72,9 @@ export function GameCard({
   const isInProgress = state === 'in-progress';
   const isDisabled =
     state === 'disabled' ||
-    gameInfo.version === 'disabled' ||
-    gameInfo.version === 'soon' ||
-    gameInfo.version === 'unreleased';
+    gameInfo.release === 'disabled' ||
+    gameInfo.release === 'soon' ||
+    gameInfo.release === 'unreleased';
 
   // Determine dynamic styles based on state
   const dynamicStyles = {
@@ -81,7 +82,7 @@ export function GameCard({
       ? 'var(--color-surface-raised)'
       : isDisabled
         ? 'var(--color-border)'
-        : gameInfo.color,
+        : withAlpha(gameInfo.color, 0.85),
     borderColor: isInProgress ? gameInfo.color : 'transparent',
   };
 
@@ -94,7 +95,7 @@ export function GameCard({
   // --- 3. BADGES (Novo / Breve) ---
   const renderBadge = () => {
     // Priority 1: If it's coming soon
-    if (gameInfo.version === 'soon' || gameInfo.version === 'unreleased') {
+    if (gameInfo.release === 'soon' || gameInfo.release === 'unreleased') {
       return (
         <div className="absolute -top-2 -right-2 bg-foreground text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
           BREVE
@@ -102,7 +103,7 @@ export function GameCard({
       );
     }
     // Priority 2: If it's new (and not completed, to avoid clutter)
-    if (gameInfo.version === 'demo' || gameInfo.version === 'beta') {
+    if (gameInfo.release === 'demo' || gameInfo.release === 'beta') {
       return (
         <div className="absolute -top-2 -right-2 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
           NOVO
@@ -149,7 +150,7 @@ export function GameCard({
 
       {/* Completed Checkmark */}
       {isCompleted && (
-        <div className="absolute top-2 right-2 bg-success text-white p-1 rounded-full shadow-sm">
+        <div className="absolute top-2 right-2 bg-white text-success p-1 rounded-full shadow-sm">
           <Check
             size={12}
             strokeWidth={4}

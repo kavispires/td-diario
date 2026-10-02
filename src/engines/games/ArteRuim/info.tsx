@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'arte-ruim',
+  key: 'ARTE_RUIM',
   type: 'game',
-  color: 'rgba(174, 169, 223, 0.85)',
+  color: 'rgb(174, 169, 223)',
   emoji: '🖼️',
   name: { pt: 'Arte Ruim', en: 'Is It Art?' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Guess the title of the artworks!',
   },
   releaseDate: '2023-11-04',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

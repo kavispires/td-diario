@@ -104,14 +104,6 @@ export function DailyVitraisInfinitosGame({
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Title level={3}>{data.title}</Title>
-        <Text type="secondary">
-          Reúna os pedaços que já combinam e deslize os blocos até revelar o
-          vitral inteiro.
-        </Text>
-      </div>
-
       <GameStatsRow>
         <GameStat
           icon={Check}
@@ -131,6 +123,14 @@ export function DailyVitraisInfinitosGame({
           align="end"
         />
       </GameStatsRow>
+
+      <div className="flex flex-col items-center gap-2 text-center">
+        <Title level={3}>{data.title}</Title>
+        <Text type="secondary">
+          Reúna os pedaços que já combinam e deslize os blocos até revelar o
+          vitral inteiro.
+        </Text>
+      </div>
 
       {!isWin && (
         <div className="h-2 w-full overflow-hidden rounded-full bg-border">

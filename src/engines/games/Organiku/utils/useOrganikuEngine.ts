@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -44,7 +41,7 @@ export function useOrganikuEngine(
   const tilesToReveal = data.grid.length - data.defaultRevealedIndexes.length;
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -99,7 +96,7 @@ export function useOrganikuEngine(
             : 1;
         playSFX(isWin ? 'win' : 'wee');
         if (isWin) {
-          logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+          logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
         }
 
         setState((prev) => ({
@@ -127,7 +124,7 @@ export function useOrganikuEngine(
       playSFX(isLose ? 'lose' : 'wrong');
       vibrate(isLose ? 'lose' : 'wrong');
       if (isLose) {
-        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
       }
 
       setState((prev) => ({

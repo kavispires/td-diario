@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'aqui-o',
+  key: 'AQUI_O',
   type: 'game',
-  color: 'rgba(237, 202, 158, 0.85)',
+  color: 'rgb(237, 202, 158)',
   emoji: '🔍',
   name: { pt: 'Aqui Ó', en: 'Find This' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Have you found the matching thing?',
   },
   releaseDate: '2024-04-30',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -53,7 +50,7 @@ export function useEstoquistaEngine(
   const totalHearts = getTotalHearts(data);
   const totalProgressSteps = getTotalProgressSteps(data);
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -210,12 +207,12 @@ export function useEstoquistaEngine(
 
     if (allCorrect) {
       playSFX('win');
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
     } else if (hearts === 0) {
       playSFX('lose');
       vibrate('lose');
       notification.error('Esse foi o último coração. Tente de novo amanhã!');
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
     } else {
       playSFX('wrong');
       vibrate('wrong');

@@ -2,8 +2,9 @@ import type { GameInfo } from 'types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'picaco',
+  key: 'PICACO',
   type: 'contribution',
-  color: 'rgba(234, 236, 241, 0.85)',
+  color: 'rgb(234, 236, 241)',
   emoji: '🎨',
   name: { pt: 'Picaço!', en: 'Big Artist' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Already drawn today? New phrases every day!',
   },
   releaseDate: '2024-04-30',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

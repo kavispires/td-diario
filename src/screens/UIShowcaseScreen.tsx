@@ -458,7 +458,7 @@ export function UIShowcaseScreen() {
               description="Remove o estado salvo localmente (progresso, jogadas, status) do dia de hoje."
               okVariant="primary"
               onConfirm={() => {
-                resetGameLocalState(id);
+                resetGameLocalState(info);
                 notification.success(`Estado de ${info.name.pt} limpo`);
               }}
             >

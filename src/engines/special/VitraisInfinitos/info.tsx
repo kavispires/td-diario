@@ -2,8 +2,9 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'vitrais-infinitos',
+  key: 'VITRAIS_INFINITOS',
   type: 'special',
-  color: 'rgb(38 196 174 / 85%)',
+  color: 'rgb(38, 196, 174)',
   emoji: '🧩',
   name: { pt: 'Vitrais∞', en: 'Vitrais∞' },
   tagline: {
@@ -11,7 +12,8 @@ export const gameInfo: GameInfo = {
     pt: 'Já quebrou a cabeça hoje?',
   },
   releaseDate: '2026-02-08',
-  version: 'stable',
+  release: 'stable',
+  version: '0.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  loadLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type { DailyOrganikuEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -46,7 +43,7 @@ function getDefaultState(data: DailyOrganikuEntry): GameState {
  */
 export function getInitialState(data: DailyOrganikuEntry): GameState {
   return loadLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: getDefaultState(data),
   });

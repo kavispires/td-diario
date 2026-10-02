@@ -102,22 +102,6 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Pill>Desafio #{data.number}</Pill>
-        <Text strong>Descubra a palavra que liga cada portal.</Text>
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          Trave as letras certas e atravesse todos os corredores antes que os
-          corações acabem.
-        </Text>
-      </div>
-
-      <Pill className="bg-white/80 text-chrome shadow-none">
-        {corridorLabel}
-      </Pill>
-
       <GameStatsRow>
         <GameStat
           icon={Repeat}
@@ -140,6 +124,22 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
           align="end"
         />
       </GameStatsRow>
+
+      <div className="flex flex-col items-center gap-2 text-center">
+        <Pill>Desafio #{data.number}</Pill>
+        <Text strong>Descubra a palavra que liga cada portal.</Text>
+        <Text
+          type="secondary"
+          className="text-center"
+        >
+          Trave as letras certas e atravesse todos os corredores antes que os
+          corações acabem.
+        </Text>
+      </div>
+
+      <Pill className="bg-white/80 text-chrome shadow-none">
+        {corridorLabel}
+      </Pill>
 
       {currentCorridor && !isComplete && (
         <div className="flex w-full flex-col gap-4 rounded-[2rem] bg-card px-5 py-6 shadow-sm">

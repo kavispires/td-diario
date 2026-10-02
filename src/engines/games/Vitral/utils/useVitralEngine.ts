@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import { useTDImageCardUrl } from '@hooks/useTDImageCardUrl';
 import {
   getGameAnalyticsEventName,
@@ -77,7 +74,7 @@ export function useVitralEngine(
   const measuresRef = useRef(measures);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -151,7 +148,7 @@ export function useVitralEngine(
     if (isNowLose) {
       playSFX('lose');
       vibrate('lose');
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'lose'));
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
     }
 
     setState((previousState) => ({
@@ -268,7 +265,7 @@ export function useVitralEngine(
 
       playSFX(nextStatus === GAME_LIFECYCLE_STATUS.WIN ? 'win' : 'swap');
       if (nextStatus === GAME_LIFECYCLE_STATUS.WIN) {
-        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.id, 'win'));
+        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
       }
 
       setSession((previousSession) => ({

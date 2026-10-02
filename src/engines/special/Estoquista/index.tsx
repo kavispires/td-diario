@@ -71,31 +71,35 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4"
     >
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Text strong>{data.title}</Text>
-        <GameStatsRow>
-          <GameStat
-            icon={Package2}
-            value={`${warehouse.filter(Boolean).length}/${data.goods.length}`}
-            label="Prateleiras organizadas"
-          />
+      <GameStatsRow>
+        <GameStat
+          icon={Package2}
+          value={`${warehouse.filter(Boolean).length}/${data.goods.length}`}
+          label="Prateleiras organizadas"
+        />
 
-          <div className="flex items-center justify-center">
-            <Hearts
-              remaining={hearts}
-              total={totalHearts}
-              size={16}
-            />
-          </div>
-
-          <GameStat
-            icon={Coins}
-            value={score}
-            label="Pontuação"
-            align="end"
+        <div className="flex items-center justify-center">
+          <Hearts
+            remaining={hearts}
+            total={totalHearts}
+            size={16}
           />
-        </GameStatsRow>
-      </div>
+        </div>
+
+        <GameStat
+          icon={Coins}
+          value={score}
+          label="Pontuação"
+          align="end"
+        />
+      </GameStatsRow>
+
+      <Text
+        strong
+        className="text-center"
+      >
+        {data.title}
+      </Text>
 
       {!isWin && (
         <div className="h-2 w-full overflow-hidden rounded-full bg-border">

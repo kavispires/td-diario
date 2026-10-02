@@ -1,7 +1,4 @@
-import {
-  gameIdToLocalTodayKey,
-  useDailyLocalToday,
-} from '@hooks/useDailyLocalToday';
+import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -35,7 +32,7 @@ export function usePortaisEngine(
   const [showResults, setShowResults] = useState(false);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
-    key: gameIdToLocalTodayKey(gameInfo.id),
+    key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
@@ -202,7 +199,7 @@ export function usePortaisEngine(
 
     if (shouldLogOutcome) {
       logAnalyticsEvent(
-        getGameAnalyticsEventName(gameInfo.id, shouldLogOutcome),
+        getGameAnalyticsEventName(gameInfo.key, shouldLogOutcome),
       );
     }
   }
