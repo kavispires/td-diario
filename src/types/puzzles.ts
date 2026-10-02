@@ -1,6 +1,7 @@
 import type { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type {
   DailyAlienadoEntry,
+  DailyAquiOEntry,
   DailyArteRuimEntry,
   DailyConjuntosEntry,
   DailyEstoquistaEntry,
@@ -9,6 +10,7 @@ import type {
   DailyMapeamentoEntry,
   DailyOrganikuEntry,
   DailyPalavreadoEntry,
+  DailyPanicoEntry,
   DailyPicacoEntry,
   DailyPirralhosEntry,
   DailyPortaisEntry,
@@ -37,7 +39,7 @@ export type PlaceholderGameData = {
  */
 type GamesEntries = {
   'arte-ruim'?: DailyArteRuimEntry;
-  'aqui-o'?: PlaceholderGameData;
+  'aqui-o'?: DailyAquiOEntry;
   alienado?: DailyAlienadoEntry;
   /**
    * Special games still arrive in the main `challenges` payload bucket, so
@@ -49,6 +51,7 @@ type GamesEntries = {
   mapeamento?: DailyMapeamentoEntry;
   organiku?: DailyOrganikuEntry;
   palavreado?: DailyPalavreadoEntry;
+  panico?: DailyPanicoEntry;
   portais?: DailyPortaisEntry;
   quartetos?: DailyQuartetosEntry;
   conjuntos?: DailyConjuntosEntry;

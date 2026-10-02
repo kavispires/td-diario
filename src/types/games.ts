@@ -129,6 +129,36 @@ export type DailyOrganikuEntry = {
 };
 
 /**
+ * Today's Aqui O challenge payload.
+ */
+export type DailyAquiOEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Aqui O payloads.
+   */
+  type: 'aqui-o';
+  /**
+   * Identifier of the themed item set used to assemble today's discs.
+   */
+  setId: string;
+  /**
+   * Dual-language title describing today's item theme.
+   */
+  title: DualLanguageValue<string>;
+  /**
+   * Full pool of item ids from which each disc is generated.
+   */
+  itemsIds: string[];
+};
+
+/**
  * One statement card shown for a kid in today's Pirralhos mystery.
  */
 export type DailyPirralhosKidEntry = {
@@ -159,6 +189,10 @@ export type DailyPirralhosEntry = {
    */
   type: 'pirralhos';
   /**
+   * Stable encoded identifier for today's suspect/statement combination.
+   */
+  hashId: string;
+  /**
    * Ordered list of kids around the accusation circle and their statements.
    */
   kids: DailyPirralhosKidEntry[];
@@ -175,6 +209,10 @@ export type DailyPirralhosEntry = {
    * one-off range endpoint depending on the puzzle.
    */
   possibleLiars: number;
+  /**
+   * Difficulty score forwarded by the backend for today's mystery.
+   */
+  difficulty: number;
 };
 
 /**
@@ -597,6 +635,19 @@ export type DailyInvestigacaoEntry = {
    */
   type: 'investigacao' | 'espionagem';
   /**
+   * Whether today's case was marked as not safe for work by the backend.
+   */
+  isNsfw: boolean;
+  /**
+   * Dataset identifier forwarded by the backend for today's suspect deck and
+   * clue set.
+   */
+  setId: string;
+  /**
+   * Difficulty rating shown in the game header.
+   */
+  level: number;
+  /**
    * Id of the suspect who must remain unreleased.
    */
   culpritId: string;
@@ -656,6 +707,29 @@ export type DailyPicacoEntry = {
    * Pool of prompt cards from which today's timed drawings are selected.
    */
   cards: DailyPicacoCard[];
+};
+
+/**
+ * Today's Panico challenge payload.
+ */
+export type DailyPanicoEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Panico payloads.
+   */
+  type: 'panico';
+  /**
+   * Encoded button sequence for the day. Each entry resolves to one timed
+   * button instruction plus its pool selection.
+   */
+  buttons: string[];
 };
 
 /**
