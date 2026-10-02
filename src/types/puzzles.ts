@@ -1,5 +1,12 @@
 import type { GAME_LIFECYCLE_STATUS } from '@utils/constants';
-import type { DailyOrganikuEntry, DailyPicacoEntry } from './games';
+import type {
+  DailyArteRuimEntry,
+  DailyMapeamentoEntry,
+  DailyOrganikuEntry,
+  DailyPicacoEntry,
+  DailyQuartetosEntry,
+  DailyVitraisInfinitosEntry,
+} from './games';
 
 /**
  * Placeholder shape for a game's daily payload before its final data model
@@ -19,18 +26,23 @@ export type PlaceholderGameData = {
  * Daily payload entries for each core game, keyed by game id.
  */
 type GamesEntries = {
-  'arte-ruim'?: PlaceholderGameData;
+  'arte-ruim'?: DailyArteRuimEntry;
   'aqui-o'?: PlaceholderGameData;
   alienado?: PlaceholderGameData;
   investigacao?: PlaceholderGameData;
   filmaco?: PlaceholderGameData;
-  mapeamento?: PlaceholderGameData;
+  mapeamento?: DailyMapeamentoEntry;
   organiku?: DailyOrganikuEntry;
   palavreado?: PlaceholderGameData;
   portais?: PlaceholderGameData;
-  quartetos?: PlaceholderGameData;
+  quartetos?: DailyQuartetosEntry;
   conjuntos?: PlaceholderGameData;
   vitral?: PlaceholderGameData;
+  /**
+   * Special games still arrive in the main `challenges` payload bucket, so
+   * Vitrais Infinitos belongs here instead of `contributions`.
+   */
+  'vitrais-infinitos'?: DailyVitraisInfinitosEntry;
   pirralhos?: PlaceholderGameData;
 };
 
