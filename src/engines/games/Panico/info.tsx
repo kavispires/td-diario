@@ -11,7 +11,7 @@ export const gameInfo: GameInfo = {
     pt: 'Você apertaria o botão?',
   },
   releaseDate: '2026-05-10',
-  version: 'unreleased',
+  version: 'stable',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {
