@@ -1,4 +1,4 @@
-import type { GameInfo } from '../../../types/puzzles';
+import type { GameInfo } from 'types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'mapeamento',
