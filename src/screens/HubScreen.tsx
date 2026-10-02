@@ -2,14 +2,43 @@ import { DailyStatusBoard } from '@components/DailyStatusBoard';
 import { GameCard } from '@components/hub/GameCard';
 import { Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
+import {
+  gameIdToLocalTodayKey,
+  loadLocalToday,
+} from '@hooks/useDailyLocalToday';
 import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
+import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { orderBy } from 'lodash';
 import { LayoutGroup } from 'motion/react';
+import type { DefaultGameState } from 'types/puzzles';
 
 /**
  * Union of valid game ids, derived from the registered game engines.
  */
 type GameId = keyof typeof gameInfos;
+
+/**
+ * Derives the hub card's display `state` from a game's persisted lifecycle
+ * status.
+ *
+ * @param status - The game's current `DefaultGameState['status']`.
+ * @returns `'completed'` for a finished game (won or lost), `'in-progress'`
+ *   while it's ongoing, or `'available'` if it hasn't been started yet.
+ */
+function statusToCardState(
+  status: DefaultGameState['status'],
+): 'available' | 'in-progress' | 'completed' {
+  if (
+    status === GAME_LIFECYCLE_STATUS.WIN ||
+    status === GAME_LIFECYCLE_STATUS.LOSE
+  ) {
+    return 'completed';
+  }
+  if (status === GAME_LIFECYCLE_STATUS.IN_PROGRESS) {
+    return 'in-progress';
+  }
+  return 'available';
+}
 
 /**
  * Renders the hub screen: the daily status board and the grid of playable
@@ -33,13 +62,24 @@ export function HubScreen() {
   const orderedChallenges = orderBy(
     Object.values(data?.challenges ?? {})
       .map((challenge) => {
+        const localState = loadLocalToday<DefaultGameState>({
+          key: gameIdToLocalTodayKey(challenge.type),
+          dateId: challenge.id,
+          defaultValue: {
+            id: challenge.id,
+            status: GAME_LIFECYCLE_STATUS.IDLE,
+            progress: 0,
+            score: 0,
+          },
+        });
+
         return {
           key: challenge.type,
           challenge: challenge,
           info: gameInfos[challenge.type as GameId],
           size: 'small',
-          state: 'available',
-          progressPercent: 0,
+          state: statusToCardState(localState.status),
+          progressPercent: Math.round(localState.progress * 100),
         };
       })
       .filter((entry) => entry.info.type === 'game'),
