@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'aqui-o',
-  type: 'special',
+  type: 'game',
   color: 'rgba(237, 202, 158, 0.85)',
   emoji: '🔍',
   name: { pt: 'Aqui Ó', en: 'Find This' },

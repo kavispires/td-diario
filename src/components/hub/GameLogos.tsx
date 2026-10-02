@@ -1,6 +1,7 @@
 import { Logo as PicacoLogo } from '@engines/contributions/Picaco/info';
 import { Logo as TaNaCaraLogo } from '@engines/contributions/TaNaCara/info';
 import { Logo as AlienadoLogo } from '@engines/games/Alienado/info';
+import { Logo as AquiOLogo } from '@engines/games/AquiO/info';
 import { Logo as ArteRuimLogo } from '@engines/games/ArteRuim/info';
 import { Logo as ConjuntosLogo } from '@engines/games/Conjuntos/info';
 import { Logo as FilmacoLogo } from '@engines/games/Filmaco/info';
@@ -13,7 +14,6 @@ import { Logo as PirralhosLogo } from '@engines/games/Pirralhos/info';
 import { Logo as PortaisLogo } from '@engines/games/Portais/info';
 import { Logo as QuartetosLogo } from '@engines/games/Quartetos/info';
 import { Logo as VitralLogo } from '@engines/games/Vitral/info';
-import { Logo as AquiOLogo } from '@engines/special/AquiO/info';
 import { Logo as EstoquistaLogo } from '@engines/special/Estoquista/info';
 import { Logo as VitraisInfinitosLogo } from '@engines/special/VitraisInfinitos/info';
 import type { SVGProps } from 'react';

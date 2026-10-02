@@ -1,6 +1,7 @@
 import { gameInfo as picaco } from './contributions/Picaco/info';
 import { gameInfo as taNaCara } from './contributions/TaNaCara/info';
 import { gameInfo as alienado } from './games/Alienado/info';
+import { gameInfo as aquiO } from './games/AquiO/info';
 import { gameInfo as arteRuim } from './games/ArteRuim/info';
 import { gameInfo as conjuntos } from './games/Conjuntos/info';
 import { gameInfo as filmaco } from './games/Filmaco/info';
@@ -13,7 +14,6 @@ import { gameInfo as pirralhos } from './games/Pirralhos/info';
 import { gameInfo as portais } from './games/Portais/info';
 import { gameInfo as quartetos } from './games/Quartetos/info';
 import { gameInfo as vitral } from './games/Vitral/info';
-import { gameInfo as aquiO } from './special/AquiO/info';
 import { gameInfo as estoquista } from './special/Estoquista/info';
 import { gameInfo as vitraisInfinitos } from './special/VitraisInfinitos/info';
 

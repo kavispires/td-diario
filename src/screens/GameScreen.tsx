@@ -64,12 +64,16 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   panico: lazy(() =>
     import('@engines/games/Panico').then(({ DailyPanicoGame }) => ({
-      default: DailyPanicoGame,
+      default: DailyPanicoGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   pirralhos: lazy(() =>
     import('@engines/games/Pirralhos').then(({ DailyPirralhosGame }) => ({
-      default: DailyPirralhosGame,
+      default: DailyPirralhosGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   portais: lazy(() =>
@@ -88,13 +92,17 @@ const gameComponents: Record<string, GameComponent> = {
     })),
   ),
   'aqui-o': lazy(() =>
-    import('@engines/special/AquiO').then(({ DailyAquiOGame }) => ({
-      default: DailyAquiOGame,
+    import('@engines/games/AquiO').then(({ DailyAquiOGame }) => ({
+      default: DailyAquiOGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   estoquista: lazy(() =>
     import('@engines/special/Estoquista').then(({ DailyEstoquistaGame }) => ({
-      default: DailyEstoquistaGame,
+      default: DailyEstoquistaGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   'vitrais-infinitos': lazy(() =>

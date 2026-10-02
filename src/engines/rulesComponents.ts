@@ -77,7 +77,7 @@ export const rulesComponents: Record<string, RulesComponent> = {
     })),
   ),
   'aqui-o': lazy(() =>
-    import('./special/AquiO/components/Rules').then(({ Rules }) => ({
+    import('./games/AquiO/components/Rules').then(({ Rules }) => ({
       default: Rules,
     })),
   ),
