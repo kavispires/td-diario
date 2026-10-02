@@ -64,6 +64,10 @@ export type DailyConjuntosEntry = {
    */
   type: 'conjuntos';
   /**
+   * Dataset identifier forwarded by the backend for today's diagram setup.
+   */
+  setId: string;
+  /**
    * Title hinting at the grammar category used by today's hidden rules.
    */
   title: string;
@@ -155,10 +159,6 @@ export type DailyPirralhosEntry = {
    */
   type: 'pirralhos';
   /**
-   * Stable encoded identifier for today's suspect/statement combination.
-   */
-  hashId: string;
-  /**
    * Ordered list of kids around the accusation circle and their statements.
    */
   kids: DailyPirralhosKidEntry[];
@@ -175,10 +175,6 @@ export type DailyPirralhosEntry = {
    * one-off range endpoint depending on the puzzle.
    */
   possibleLiars: number;
-  /**
-   * Difficulty score forwarded by the backend for today's mystery.
-   */
-  difficulty: number;
 };
 
 /**
