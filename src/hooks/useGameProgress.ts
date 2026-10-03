@@ -132,7 +132,10 @@ export function useGameProgress(): {
           progressPercent: Math.round(localState.progress * 100),
         };
       })
-      .filter((entry) => entry.info.type === 'game');
+      .filter(
+        (entry) =>
+          entry.info.type === 'game' && entry.info.release !== 'unreleased',
+      );
 
     const completedCount = entries.filter(
       (entry) => entry.state === 'completed',

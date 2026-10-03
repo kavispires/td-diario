@@ -1,6 +1,6 @@
 import { DualTranslate } from '@components/ui/DualTranslate';
 import { cn } from '@utils/cn';
-import { withAlpha } from '@utils/helpers';
+import { isRecentRelease, withAlpha } from '@utils/helpers';
 import { Check } from 'lucide-react';
 import type { HTMLMotionProps } from 'motion/react';
 import { motion } from 'motion/react';
@@ -70,11 +70,14 @@ export function GameCard({
   // --- 2. STATES (Colors & Interactions) ---
   const isCompleted = state === 'completed';
   const isInProgress = state === 'in-progress';
+  const isSoon = gameInfo.release === 'soon';
+  const isMaintenance = gameInfo.release === 'maintenance';
   const isDisabled =
     state === 'disabled' ||
     gameInfo.release === 'disabled' ||
-    gameInfo.release === 'soon' ||
-    gameInfo.release === 'unreleased';
+    isMaintenance ||
+    gameInfo.release === 'unreleased' ||
+    isSoon;
 
   // Determine dynamic styles based on state
   const dynamicStyles = {
@@ -86,26 +89,47 @@ export function GameCard({
     borderColor: isInProgress ? gameInfo.color : 'transparent',
   };
 
-  const stateClasses = isDisabled
-    ? 'grayscale opacity-60 cursor-not-allowed shadow-none'
-    : 'active:scale-95 hover:shadow-md cursor-pointer shadow-sm';
+  const stateClasses = isSoon
+    ? 'opacity-[0.85] cursor-not-allowed shadow-none'
+    : isDisabled
+      ? 'grayscale opacity-60 cursor-not-allowed shadow-none'
+      : 'active:scale-95 hover:shadow-md cursor-pointer shadow-sm';
 
   const borderClasses = isInProgress ? 'border-2' : 'border-0';
 
-  // --- 3. BADGES (Novo / Breve) ---
+  // --- 3. BADGES (Teste / Breve / Novo / Manutenção) ---
   const renderBadge = () => {
     // Priority 1: If it's coming soon
-    if (gameInfo.release === 'soon' || gameInfo.release === 'unreleased') {
+    if (isSoon) {
       return (
-        <div className="absolute -top-2 -right-2 bg-foreground text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
+        <div
+          className="absolute -top-2 -left-2 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10"
+          style={{ backgroundColor: gameInfo.color }}
+        >
           BREVE
         </div>
       );
     }
-    // Priority 2: If it's new (and not completed, to avoid clutter)
-    if (gameInfo.release === 'demo' || gameInfo.release === 'beta') {
+    // Priority 2: If it's under maintenance
+    if (isMaintenance) {
       return (
-        <div className="absolute -top-2 -right-2 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
+        <div className="absolute -top-2 -left-2 bg-warning text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
+          MANUTENÇÃO
+        </div>
+      );
+    }
+    // Priority 3: If it's a test/demo release
+    if (gameInfo.release === 'demo') {
+      return (
+        <div className="absolute -top-2 -left-2 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
+          TESTE
+        </div>
+      );
+    }
+    // Priority 4: If it's new (beta, or released within the last 21 days)
+    if (gameInfo.release === 'beta' || isRecentRelease(gameInfo.releaseDate)) {
+      return (
+        <div className="absolute -top-2 -left-2 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
           NOVO
         </div>
       );

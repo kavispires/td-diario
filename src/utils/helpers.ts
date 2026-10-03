@@ -1,5 +1,10 @@
 import { USE_FIRESTORE_EMULATOR } from '@dev-config';
-import { differenceInMilliseconds, format, startOfTomorrow } from 'date-fns';
+import {
+  differenceInCalendarDays,
+  differenceInMilliseconds,
+  format,
+  startOfTomorrow,
+} from 'date-fns';
 import { GAME_LIFECYCLE_STATUS } from './constants';
 /**
  * Flag indicating if the environment is for development
@@ -43,6 +48,25 @@ export function getToday(): string {
 export function getMillisecondsUntilTomorrow(): number {
   const now = new Date();
   return differenceInMilliseconds(startOfTomorrow(), now);
+}
+
+/**
+ * Checks whether a `'YYYY-MM-DD'` release date falls within the last
+ * `maxDays` days (inclusive), used to flag recently-released games as new
+ * regardless of their `GameInfo.release` stage.
+ *
+ * @param releaseDate - The game's `GameInfo.releaseDate`.
+ * @param maxDays - How many days a release stays "recent" for. Defaults to
+ *   `21`.
+ * @returns `true` when `releaseDate` is today or within the past `maxDays`
+ *   days.
+ */
+export function isRecentRelease(releaseDate: string, maxDays = 21): boolean {
+  const daysSinceRelease = differenceInCalendarDays(
+    new Date(),
+    new Date(releaseDate),
+  );
+  return daysSinceRelease >= 0 && daysSinceRelease <= maxDays;
 }
 
 const methods = {
