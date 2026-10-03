@@ -1,11 +1,14 @@
 import { cn } from '@utils/cn';
+import { getLetterPoints } from '@utils/letterPoints';
 import { useEffect } from 'react';
+import { gameInfo } from '../info';
 import type { LettersDictionary } from '../utils/types';
 
 const NUMBER_ROW = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'] as const;
 const FIRST_ROW = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'] as const;
 const SECOND_ROW = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'] as const;
 const THIRD_ROW = ['z', 'x', 'c', 'v', 'b', 'n', 'm'] as const;
+const ROWS = [NUMBER_ROW, FIRST_ROW, SECOND_ROW, THIRD_ROW] as const;
 
 /**
  * Props accepted by the {@link Keyboard} component.
@@ -57,113 +60,53 @@ export function Keyboard({
   }, [disabled, lettersState, onLetterClick]);
 
   return (
-    <div className="grid w-full gap-2 rounded-[2rem] bg-card px-3 py-4 shadow-sm">
-      <KeyboardRow
-        keys={NUMBER_ROW}
-        lettersState={lettersState}
-        onLetterClick={onLetterClick}
-        disabled={disabled}
-        columns={10}
-      />
-      <KeyboardRow
-        keys={FIRST_ROW}
-        lettersState={lettersState}
-        onLetterClick={onLetterClick}
-        disabled={disabled}
-        columns={10}
-      />
-      <KeyboardRow
-        keys={SECOND_ROW}
-        lettersState={lettersState}
-        onLetterClick={onLetterClick}
-        disabled={disabled}
-        columns={9}
-      />
-      <KeyboardRow
-        keys={THIRD_ROW}
-        lettersState={lettersState}
-        onLetterClick={onLetterClick}
-        disabled={disabled}
-        columns={7}
-      />
-    </div>
-  );
-}
+    <div className="flex w-full flex-col items-center gap-1.5">
+      {ROWS.map((row) => (
+        <div
+          key={row.join('')}
+          className="flex justify-center gap-1.5"
+        >
+          {row.map((key) => {
+            const keyState = lettersState[key]?.state;
+            const isKeyDisabled = disabled || lettersState[key]?.disabled;
+            const points = getLetterPoints(key);
 
-/**
- * Props accepted by the internal {@link KeyboardRow} helper.
- */
-type KeyboardRowProps = {
-  /**
-   * Characters rendered in this keyboard row.
-   */
-  keys: readonly string[];
-  /**
-   * Visual state of every guessed keyboard key.
-   */
-  lettersState: LettersDictionary;
-  /**
-   * Handles one guessed key press.
-   */
-  onLetterClick: (letter: string) => void;
-  /**
-   * Whether the row should stop accepting guesses.
-   */
-  disabled: boolean;
-  /**
-   * Number of equal-width columns this row should use.
-   */
-  columns: number;
-};
-
-/**
- * Renders one row of Filmaco keyboard keys.
- *
- * @param props Row keys, state, click handler, and layout information.
- * @returns One keyboard row.
- */
-function KeyboardRow({
-  keys,
-  lettersState,
-  onLetterClick,
-  disabled,
-  columns,
-}: KeyboardRowProps) {
-  return (
-    <div
-      className={cn('grid gap-2', {
-        'grid-cols-10': columns === 10,
-        'grid-cols-9': columns === 9,
-        'grid-cols-7': columns === 7,
-      })}
-    >
-      {keys.map((key) => {
-        const keyState = lettersState[key]?.state;
-        const isKeyDisabled = disabled || lettersState[key]?.disabled;
-
-        return (
-          <button
-            key={key}
-            type="button"
-            className={cn(
-              'aspect-square rounded-2xl border text-sm font-semibold uppercase transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card',
-              keyState === 'correct' &&
-                'border-gold bg-gold text-chrome shadow-sm',
-              keyState === 'incorrect' &&
-                'border-destructive bg-destructive text-white shadow-sm',
-              !keyState &&
-                'border-border bg-surface-raised text-foreground hover:bg-primary-soft',
-              isKeyDisabled && 'cursor-not-allowed',
-            )}
-            aria-label={`Palpite ${key.toUpperCase()}`}
-            aria-pressed={!!keyState}
-            disabled={isKeyDisabled}
-            onClick={() => onLetterClick(key)}
-          >
-            {key}
-          </button>
-        );
-      })}
+            return (
+              <button
+                key={key}
+                type="button"
+                aria-label={`Palpite ${key.toUpperCase()}, vale ${points} ponto${points > 1 ? 's' : ''}`}
+                aria-pressed={!!keyState}
+                disabled={isKeyDisabled}
+                onClick={() => onLetterClick(key)}
+                style={
+                  keyState ? undefined : { backgroundColor: gameInfo.color }
+                }
+                className={cn(
+                  'flex h-10 w-7 shrink-0 flex-col items-center justify-center gap-0.5 rounded-md text-sm font-bold uppercase text-white shadow-[0_3px_0_rgba(0,0,0,0.35)] transition-transform duration-100 active:translate-y-[2px] active:shadow-[0_1px_0_rgba(0,0,0,0.35)] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2',
+                  keyState === 'correct' &&
+                    'bg-success shadow-[0_3px_0_rgba(0,0,0,0.35)]',
+                  keyState === 'incorrect' &&
+                    'bg-destructive shadow-[0_3px_0_rgba(0,0,0,0.35)]',
+                )}
+              >
+                <span>{key}</span>
+                <span
+                  className="flex gap-0.5"
+                  aria-hidden="true"
+                >
+                  {Array.from({ length: points }, (_, index) => (
+                    <span
+                      key={`${key}-dot-${index}`}
+                      className="h-0.5 w-0.5 rounded-full bg-white/80"
+                    />
+                  ))}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }
