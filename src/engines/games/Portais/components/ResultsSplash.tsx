@@ -1,10 +1,7 @@
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { withAlpha } from '@utils/helpers';
-import { useNavigate } from 'react-router-dom';
+import { Text } from '@components/ui/Typography';
 import type { DailyPortaisCorridor } from 'types/games';
-import { gameInfo, Logo } from '../info';
 import { getTotalMoves } from '../utils/helpers';
 
 /**
@@ -63,117 +60,86 @@ export function ResultsSplash({
   score,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
   const totalMoves = getTotalMoves(moves);
   const solvedCorridors = win ? corridors.length : currentCorridorIndex;
 
   return (
-    <div
-      className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
+    <GameResultsSplash
+      gameId="portais"
+      title={win ? 'Parabéns!' : 'Que pena!'}
+      onClose={onClose}
     >
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center gap-4">
-        <div className="h-16 w-16">
-          <Logo className="h-full w-full drop-shadow-sm" />
-        </div>
+      <Text
+        strong
+        className="text-center"
+      >
+        {win
+          ? 'Você atravessou todos os portais do dia.'
+          : 'Os portais se fecharam antes da última palavra-chave.'}
+      </Text>
 
-        <Title
-          level={2}
-          className="text-center"
-        >
-          {win ? 'Parabéns!' : 'Que pena!'}
-        </Title>
+      <Hearts
+        remaining={hearts}
+        total={4}
+        emptyClassName="text-black"
+      />
 
-        <Text
-          strong
-          className="text-center"
-        >
-          {win
-            ? 'Você atravessou todos os portais do dia.'
-            : 'Os portais se fecharam antes da última palavra-chave.'}
-        </Text>
+      <div className="grid w-full gap-3">
+        {corridors.map((corridor, index) => {
+          const solved = index < solvedCorridors;
 
-        <Hearts
-          remaining={hearts}
-          total={4}
-        />
-
-        <div className="grid w-full gap-3">
-          {corridors.map((corridor, index) => {
-            const solved = index < solvedCorridors;
-
-            return (
-              <div
-                key={corridor.passcode}
-                className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[1.75rem] bg-white/75 px-4 py-3 shadow-sm"
-              >
-                <div className="min-w-0">
-                  <Text
-                    strong
-                    className="block text-sm text-subtle-foreground"
-                  >
-                    Corredor {index + 1}
-                  </Text>
-                  <span
-                    className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold uppercase ${
-                      solved
-                        ? 'bg-gold-soft text-foreground'
-                        : 'bg-surface-raised text-subtle-foreground'
-                    }`}
-                  >
-                    {corridor.passcode}
-                  </span>
-                </div>
-
-                <div className="text-right">
-                  <Text
-                    strong
-                    className="block"
-                  >
-                    {moves[index] ?? 0} mov.
-                  </Text>
-                  <Text
-                    type="secondary"
-                    className="text-xs"
-                  >
-                    {solved ? 'Acertou' : 'Não concluiu'}
-                  </Text>
-                </div>
+          return (
+            <div
+              key={corridor.passcode}
+              className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[1.75rem] bg-white/75 px-4 py-3 shadow-sm"
+            >
+              <div className="min-w-0">
+                <Text
+                  strong
+                  className="block text-sm text-subtle-foreground"
+                >
+                  Corredor {index + 1}
+                </Text>
+                <span
+                  className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold uppercase ${
+                    solved
+                      ? 'bg-gold-soft text-foreground'
+                      : 'bg-surface-raised text-subtle-foreground'
+                  }`}
+                >
+                  {corridor.passcode}
+                </span>
               </div>
-            );
-          })}
-        </div>
 
-        <div
-          className={`flex w-full flex-col items-center gap-2 rounded-[2rem] px-5 py-4 text-center shadow-sm ${
-            win ? 'bg-gold-soft' : 'bg-white/70'
-          }`}
-        >
-          <Text strong>Pontuação final: {score}</Text>
-          <Text type="secondary">
-            {totalMoves} de {goal} movimentos projetados
-          </Text>
-        </div>
-
-        <div className="flex w-full flex-col gap-3 pt-2">
-          <Button
-            variant="primary"
-            size="small"
-            block
-            onClick={() => navigate('/')}
-          >
-            Voltar ao Hub
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            block
-            onClick={onClose}
-          >
-            Fechar
-          </Button>
-        </div>
+              <div className="text-right">
+                <Text
+                  strong
+                  className="block"
+                >
+                  {moves[index] ?? 0} mov.
+                </Text>
+                <Text
+                  type="secondary"
+                  className="text-xs"
+                >
+                  {solved ? 'Acertou' : 'Não concluiu'}
+                </Text>
+              </div>
+            </div>
+          );
+        })}
       </div>
-    </div>
+
+      <div
+        className={`flex w-full flex-col items-center gap-2 rounded-[2rem] px-5 py-4 text-center shadow-sm ${
+          win ? 'bg-gold-soft' : 'bg-white/70'
+        }`}
+      >
+        <Text strong>Pontuação final: {score}</Text>
+        <Text type="secondary">
+          {totalMoves} de {goal} movimentos projetados
+        </Text>
+      </div>
+    </GameResultsSplash>
   );
 }

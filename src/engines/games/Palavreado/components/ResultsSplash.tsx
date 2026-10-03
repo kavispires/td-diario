@@ -1,9 +1,5 @@
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
-import { withAlpha } from '@utils/helpers';
-import { useNavigate } from 'react-router-dom';
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Text } from '@components/ui/Typography';
 
 const WORD_TONE_CLASSES = [
   'bg-red-500 text-white',
@@ -63,28 +59,12 @@ export function ResultsSplash({
   usedSmartShuffle,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const gameInfo = gameInfos.palavreado;
-
   return (
-    <div
-      className="fixed inset-0 z-100 flex flex-col items-center justify-center gap-5 px-6"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
+    <GameResultsSplash
+      gameId="palavreado"
+      title={win ? 'Parabéns!' : 'Que pena!'}
+      onClose={onClose}
     >
-      <div className="h-16 w-16">
-        <GameLogos
-          gameId="palavreado"
-          className="h-full w-full drop-shadow-sm"
-        />
-      </div>
-
-      <Title
-        level={2}
-        className="text-center text-foreground"
-      >
-        {win ? 'Parabéns!' : 'Que pena!'}
-      </Title>
-
       <div
         className={`flex w-full max-w-xs flex-col gap-4 rounded-[2rem] px-5 py-6 text-center shadow-sm ${
           win ? 'bg-gold-soft' : 'bg-surface-raised/90'
@@ -117,25 +97,6 @@ export function ResultsSplash({
           <p>{usedSmartShuffle ? 'Dica usada: sim' : 'Dica usada: não'}</p>
         </div>
       </div>
-
-      <div className="flex w-full max-w-xs flex-col gap-3">
-        <Button
-          variant="chrome"
-          size="small"
-          block
-          onClick={() => navigate('/')}
-        >
-          Voltar ao Hub
-        </Button>
-        <Button
-          variant="ghost"
-          size="small"
-          block
-          onClick={onClose}
-        >
-          Fechar
-        </Button>
-      </div>
-    </div>
+    </GameResultsSplash>
   );
 }

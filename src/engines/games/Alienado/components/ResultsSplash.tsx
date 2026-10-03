@@ -1,10 +1,6 @@
 import { DailyItem } from '@components/games/DailyItem';
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
-import { withAlpha } from '@utils/helpers';
-import { useNavigate } from 'react-router-dom';
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Text } from '@components/ui/Typography';
 import type { DailyAlienadoAttribute, DailyAlienadoRequest } from 'types/games';
 import { AlienSign } from './AlienSign';
 
@@ -59,146 +55,109 @@ export function ResultsSplash({
   score,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const info = gameInfos.alienado;
-
   return (
-    <div
-      className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-      style={{ backgroundColor: withAlpha(info.color, 0.85) }}
+    <GameResultsSplash
+      gameId="alienado"
+      title={win ? 'Parabéns!' : 'Que pena!'}
+      onClose={onClose}
     >
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center gap-4">
-        <div className="h-16 w-16">
-          <GameLogos
-            gameId="alienado"
-            className="h-full w-full drop-shadow-sm"
-          />
-        </div>
+      <Text
+        strong
+        className="text-center"
+      >
+        {win
+          ? 'O alienígena levou exatamente o que queria.'
+          : 'O alienígena foi embora decepcionado com as entregas.'}
+      </Text>
 
-        <Title
-          level={2}
-          className="text-center"
-        >
-          {win ? 'Parabéns!' : 'Que pena!'}
-        </Title>
+      <Text
+        type="secondary"
+        className="text-center"
+      >
+        {hearts} de {requests.length} corações restantes • {guesses.length}{' '}
+        tentativas • {score} pontos
+      </Text>
 
-        <Text
-          strong
-          className="text-center"
-        >
-          {win
-            ? 'O alienígena levou exatamente o que queria.'
-            : 'O alienígena foi embora decepcionado com as entregas.'}
-        </Text>
+      <div className="grid w-full grid-cols-2 gap-3">
+        {requests.map((request, index) => (
+          <div
+            key={request.itemId}
+            className="flex flex-col items-center gap-3 rounded-3xl bg-white/70 p-3 shadow-sm"
+          >
+            <Text strong>Pedido {index + 1}</Text>
 
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          {hearts} de {requests.length} corações restantes • {guesses.length}{' '}
-          tentativas • {score} pontos
-        </Text>
-
-        <div className="grid w-full grid-cols-2 gap-3">
-          {requests.map((request, index) => (
-            <div
-              key={request.itemId}
-              className="flex flex-col items-center gap-3 rounded-3xl bg-white/70 p-3 shadow-sm"
-            >
-              <Text strong>Pedido {index + 1}</Text>
-
-              <div className="flex items-center gap-2">
-                {request.spritesIds.map((spriteId) => (
-                  <AlienSign
-                    key={`${request.itemId}-${spriteId}`}
-                    signId={spriteId}
-                    width={46}
-                  />
-                ))}
-              </div>
-
-              <div className="rounded-2xl bg-gold-soft p-1">
-                <DailyItem
-                  itemId={request.itemId}
-                  width={60}
-                  padding={4}
+            <div className="flex items-center gap-2">
+              {request.spritesIds.map((spriteId) => (
+                <AlienSign
+                  key={`${request.itemId}-${spriteId}`}
+                  signId={spriteId}
+                  width={46}
                 />
+              ))}
+            </div>
+
+            <div className="rounded-2xl bg-gold-soft p-1">
+              <DailyItem
+                itemId={request.itemId}
+                width={60}
+                padding={4}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="w-full space-y-3 rounded-[2rem] bg-white/70 p-4 shadow-sm">
+        <Text strong>Dicionário alienígena</Text>
+
+        <div className="space-y-3">
+          {attributes.map((attribute) => (
+            <div
+              key={attribute.id}
+              className="flex items-start gap-3 rounded-2xl bg-white/60 p-3"
+            >
+              <AlienSign
+                signId={attribute.spriteId}
+                width={44}
+              />
+
+              <div className="min-w-0 space-y-1">
+                <Text strong>{attribute.name}</Text>
+                <Text
+                  type="secondary"
+                  className="block text-sm"
+                >
+                  {attribute.description}
+                </Text>
               </div>
             </div>
           ))}
         </div>
+      </div>
 
+      {guesses.length > 0 && (
         <div className="w-full space-y-3 rounded-[2rem] bg-white/70 p-4 shadow-sm">
-          <Text strong>Dicionário alienígena</Text>
+          <Text strong>Tentativas enviadas</Text>
 
-          <div className="space-y-3">
-            {attributes.map((attribute) => (
+          <div className="space-y-2">
+            {guesses.map((guess, guessIndex) => (
               <div
-                key={attribute.id}
-                className="flex items-start gap-3 rounded-2xl bg-white/60 p-3"
+                key={`${guess.join('-')}-${guessIndex}`}
+                className="flex flex-wrap items-center justify-center gap-2 rounded-2xl bg-white/60 p-3"
               >
-                <AlienSign
-                  signId={attribute.spriteId}
-                  width={44}
-                />
-
-                <div className="min-w-0 space-y-1">
-                  <Text strong>{attribute.name}</Text>
-                  <Text
-                    type="secondary"
-                    className="block text-sm"
-                  >
-                    {attribute.description}
-                  </Text>
-                </div>
+                {guess.map((itemId, itemIndex) => (
+                  <DailyItem
+                    key={`${itemId}-${itemIndex}`}
+                    itemId={itemId}
+                    width={38}
+                    padding={3}
+                  />
+                ))}
               </div>
             ))}
           </div>
         </div>
-
-        {guesses.length > 0 && (
-          <div className="w-full space-y-3 rounded-[2rem] bg-white/70 p-4 shadow-sm">
-            <Text strong>Tentativas enviadas</Text>
-
-            <div className="space-y-2">
-              {guesses.map((guess, guessIndex) => (
-                <div
-                  key={`${guess.join('-')}-${guessIndex}`}
-                  className="flex flex-wrap items-center justify-center gap-2 rounded-2xl bg-white/60 p-3"
-                >
-                  {guess.map((itemId, itemIndex) => (
-                    <DailyItem
-                      key={`${itemId}-${itemIndex}`}
-                      itemId={itemId}
-                      width={38}
-                      padding={3}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="flex w-full flex-col gap-3 pt-2">
-          <Button
-            variant="primary"
-            size="small"
-            block
-            onClick={() => navigate('/')}
-          >
-            Voltar ao Hub
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            block
-            onClick={onClose}
-          >
-            Fechar
-          </Button>
-        </div>
-      </div>
-    </div>
+      )}
+    </GameResultsSplash>
   );
 }

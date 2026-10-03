@@ -1,10 +1,6 @@
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
-import { withAlpha } from '@utils/helpers';
-import { useNavigate } from 'react-router-dom';
 import { createPairId } from '../utils/helpers';
 import type { RelatedPair } from '../utils/types';
 import { PairImageCard } from './PairImageCard';
@@ -50,114 +46,72 @@ export function ResultsSplash({
   score,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const gameInfo = gameInfos.conexoes;
-
   return (
-    <div
-      className={cn(
-        'fixed inset-0 z-100 overflow-y-auto px-6 py-8',
-        win ? 'bg-gold-soft' : '',
-      )}
-      style={
-        win ? undefined : { backgroundColor: withAlpha(gameInfo.color, 0.85) }
-      }
+    <GameResultsSplash
+      gameId="conexoes"
+      title={win ? 'Conexões enviadas!' : 'Sessão encerrada'}
+      onClose={onClose}
     >
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center gap-4">
-        <div className="h-16 w-16">
-          <GameLogos
-            gameId="conexoes"
-            className="h-full w-full drop-shadow-sm"
-          />
-        </div>
-
-        <Title
-          level={2}
-          className="text-center"
-        >
-          {win ? 'Conexões enviadas!' : 'Sessão encerrada'}
-        </Title>
-
-        <div
-          className={cn(
-            'rounded-full px-4 py-2 text-center text-sm font-semibold',
-            win ? 'bg-gold text-chrome' : 'bg-white/70 text-foreground',
-          )}
-        >
-          {win
-            ? `${relatedPairs.length} relações salvas em ${evaluatedCount} pares avaliados`
-            : `${evaluatedCount} pares avaliados e nenhuma relação salva`}
-        </div>
-
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          {win
-            ? 'Valeu pela curadoria — essas conexões ajudam o TD a montar desafios futuros.'
-            : 'Nem todo dia rende boas conexões. Amanhã chegam novos pares para avaliar.'}
-        </Text>
-
-        {win && relatedPairs.length > 0 && (
-          <div className="grid w-full gap-3">
-            {relatedPairs.map((pair, index) => (
-              <div
-                key={createPairId(pair.imageId1, pair.imageId2)}
-                className="rounded-[2rem] bg-white/75 p-4 shadow-sm"
-              >
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <Text strong>Ligação #{index + 1}</Text>
-                  <Text
-                    type="secondary"
-                    className="text-sm"
-                  >
-                    Par salvo
-                  </Text>
-                </div>
-
-                <div className="grid grid-cols-2 justify-items-center gap-3">
-                  <PairImageCard
-                    imageId={pair.imageId1}
-                    label={`Primeira imagem da ligação ${index + 1}`}
-                    width={120}
-                  />
-                  <PairImageCard
-                    imageId={pair.imageId2}
-                    label={`Segunda imagem da ligação ${index + 1}`}
-                    width={120}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+      <div
+        className={cn(
+          'rounded-full px-4 py-2 text-center text-sm font-semibold',
+          win ? 'bg-gold text-chrome' : 'bg-white/70 text-foreground',
         )}
-
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          Pontuação final: {score}
-        </Text>
-
-        <div className="flex w-full flex-col gap-3 pt-2">
-          <Button
-            variant="primary"
-            size="small"
-            block
-            onClick={() => navigate('/')}
-          >
-            Voltar ao Hub
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            block
-            onClick={onClose}
-          >
-            Fechar
-          </Button>
-        </div>
+      >
+        {win
+          ? `${relatedPairs.length} relações salvas em ${evaluatedCount} pares avaliados`
+          : `${evaluatedCount} pares avaliados e nenhuma relação salva`}
       </div>
-    </div>
+
+      <Text
+        type="secondary"
+        className="text-center"
+      >
+        {win
+          ? 'Valeu pela curadoria — essas conexões ajudam o TD a montar desafios futuros.'
+          : 'Nem todo dia rende boas conexões. Amanhã chegam novos pares para avaliar.'}
+      </Text>
+
+      {win && relatedPairs.length > 0 && (
+        <div className="grid w-full gap-3">
+          {relatedPairs.map((pair, index) => (
+            <div
+              key={createPairId(pair.imageId1, pair.imageId2)}
+              className="rounded-[2rem] bg-white/75 p-4 shadow-sm"
+            >
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <Text strong>Ligação #{index + 1}</Text>
+                <Text
+                  type="secondary"
+                  className="text-sm"
+                >
+                  Par salvo
+                </Text>
+              </div>
+
+              <div className="grid grid-cols-2 justify-items-center gap-3">
+                <PairImageCard
+                  imageId={pair.imageId1}
+                  label={`Primeira imagem da ligação ${index + 1}`}
+                  width={120}
+                />
+                <PairImageCard
+                  imageId={pair.imageId2}
+                  label={`Segunda imagem da ligação ${index + 1}`}
+                  width={120}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <Text
+        type="secondary"
+        className="text-center"
+      >
+        Pontuação final: {score}
+      </Text>
+    </GameResultsSplash>
   );
 }

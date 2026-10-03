@@ -1,11 +1,7 @@
 import { DailyItem } from '@components/games/DailyItem';
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
-import { withAlpha } from '@utils/helpers';
-import { useNavigate } from 'react-router-dom';
+import { Text } from '@components/ui/Typography';
 import { FILMACO_HEARTS } from '../utils/helpers';
 
 /**
@@ -75,91 +71,55 @@ export function ResultsSplash({
   score,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const gameInfo = gameInfos.filmaco;
-
   return (
-    <div
-      className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
+    <GameResultsSplash
+      gameId="filmaco"
+      title={win ? 'Parabéns!' : 'Que pena!'}
+      onClose={onClose}
     >
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center gap-4">
-        <div className="h-16 w-16">
-          <GameLogos
-            gameId="filmaco"
-            className="h-full w-full drop-shadow-sm"
+      <Text
+        strong
+        className="text-center text-lg"
+      >
+        {title}
+      </Text>
+
+      <Text
+        type="secondary"
+        className="text-center"
+      >
+        {isDoubleFeature ? `Sessão Dupla · ${year}` : `Lançamento · ${year}`}
+      </Text>
+
+      <Hearts
+        remaining={hearts}
+        total={FILMACO_HEARTS}
+        emptyClassName="text-black"
+      />
+
+      <div className="flex w-full flex-wrap justify-center gap-3 rounded-[2rem] bg-white/70 px-4 py-4 shadow-sm">
+        {itemsIds.map((itemId, index) => (
+          <DailyItem
+            key={`${itemId}-${index}`}
+            itemId={itemId}
+            width={56}
           />
-        </div>
-
-        <Title
-          level={2}
-          className="text-center"
-        >
-          {win ? 'Parabéns!' : 'Que pena!'}
-        </Title>
-
-        <Text
-          strong
-          className="text-center text-lg"
-        >
-          {title}
-        </Text>
-
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          {isDoubleFeature ? `Sessão Dupla · ${year}` : `Lançamento · ${year}`}
-        </Text>
-
-        <Hearts
-          remaining={hearts}
-          total={FILMACO_HEARTS}
-        />
-
-        <div className="flex w-full flex-wrap justify-center gap-3 rounded-[2rem] bg-white/70 px-4 py-4 shadow-sm">
-          {itemsIds.map((itemId, index) => (
-            <DailyItem
-              key={`${itemId}-${index}`}
-              itemId={itemId}
-              width={56}
-            />
-          ))}
-        </div>
-
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          {solvedLetters} de {totalLetters} letras e números descobertos
-        </Text>
-
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          Pontuação final: {score}
-        </Text>
-
-        <div className="flex w-full flex-col gap-3 pt-2">
-          <Button
-            variant="primary"
-            size="small"
-            block
-            onClick={() => navigate('/')}
-          >
-            Voltar ao Hub
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            block
-            onClick={onClose}
-          >
-            Fechar
-          </Button>
-        </div>
+        ))}
       </div>
-    </div>
+
+      <Text
+        type="secondary"
+        className="text-center"
+      >
+        {solvedLetters} de {totalLetters} letras e números descobertos
+      </Text>
+
+      <Text
+        type="secondary"
+        className="text-center"
+      >
+        Pontuação final: {score}
+      </Text>
+    </GameResultsSplash>
   );
 }

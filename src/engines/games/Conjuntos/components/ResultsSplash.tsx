@@ -1,11 +1,7 @@
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
-import { withAlpha } from '@utils/helpers';
+import { Text } from '@components/ui/Typography';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import type { DailyConjuntosEntry } from 'types/games';
 import { ThingCard } from './ThingCard';
 
@@ -69,9 +65,6 @@ export function ResultsSplash({
   guesses,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const gameInfo = gameInfos.conjuntos;
-
   const thingNamesById = useMemo(
     () =>
       Object.fromEntries(
@@ -89,147 +82,111 @@ export function ResultsSplash({
   ).length;
 
   return (
-    <div
-      className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Resultado de Conjuntos"
+    <GameResultsSplash
+      gameId="conjuntos"
+      title={win ? 'Parabéns!' : 'Que pena!'}
+      onClose={onClose}
     >
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center gap-4">
-        <div className="h-16 w-16">
-          <GameLogos
-            gameId="conjuntos"
-            className="h-full w-full drop-shadow-sm"
-          />
+      <Text
+        strong
+        className="text-center uppercase tracking-wide"
+      >
+        {data.title}
+      </Text>
+
+      <Hearts
+        remaining={hearts}
+        total={maxHearts}
+        emptyClassName="text-black"
+      />
+
+      <div
+        className={`grid w-full gap-3 rounded-[2rem] px-4 py-4 shadow-sm ${
+          win ? 'bg-gold-soft' : 'bg-white/75'
+        }`}
+      >
+        <div className="grid grid-cols-3 gap-3 text-center">
+          <div className="rounded-2xl bg-white/60 px-3 py-3">
+            <Text strong>{correctGuesses}</Text>
+            <br />
+            <Text
+              type="secondary"
+              className="text-sm"
+            >
+              acertos
+            </Text>
+          </div>
+          <div className="rounded-2xl bg-white/60 px-3 py-3">
+            <Text strong>{guesses.length}</Text>
+            <br />
+            <Text
+              type="secondary"
+              className="text-sm"
+            >
+              tentativas
+            </Text>
+          </div>
+          <div className="rounded-2xl bg-white/60 px-3 py-3">
+            <Text strong>{score}</Text>
+            <br />
+            <Text
+              type="secondary"
+              className="text-sm"
+            >
+              pontos
+            </Text>
+          </div>
         </div>
 
-        <Title
-          level={2}
-          className="text-center"
-        >
-          {win ? 'Parabéns!' : 'Que pena!'}
-        </Title>
-
-        <Text
-          strong
-          className="text-center uppercase tracking-wide"
-        >
-          {data.title}
-        </Text>
-
-        <Hearts
-          remaining={hearts}
-          total={maxHearts}
-        />
-
-        <div
-          className={`grid w-full gap-3 rounded-[2rem] px-4 py-4 shadow-sm ${
-            win ? 'bg-gold-soft' : 'bg-white/75'
-          }`}
-        >
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="rounded-2xl bg-white/60 px-3 py-3">
-              <Text strong>{correctGuesses}</Text>
-              <br />
-              <Text
-                type="secondary"
-                className="text-sm"
-              >
-                acertos
-              </Text>
-            </div>
-            <div className="rounded-2xl bg-white/60 px-3 py-3">
-              <Text strong>{guesses.length}</Text>
-              <br />
-              <Text
-                type="secondary"
-                className="text-sm"
-              >
-                tentativas
-              </Text>
-            </div>
-            <div className="rounded-2xl bg-white/60 px-3 py-3">
-              <Text strong>{score}</Text>
-              <br />
-              <Text
-                type="secondary"
-                className="text-sm"
-              >
-                pontos
-              </Text>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="rounded-3xl bg-[#fbb03b]/25 px-4 py-4">
+            <Text strong>Círculo amarelo</Text>
+            <Text className="mt-1 block">{data.rule1.text}</Text>
+            <div className="mt-3">
+              <ThingCard
+                itemId={data.rule1.thing.id}
+                name={data.rule1.thing.name}
+                width={58}
+              />
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-3xl bg-[#fbb03b]/25 px-4 py-4">
-              <Text strong>Círculo amarelo</Text>
-              <Text className="mt-1 block">{data.rule1.text}</Text>
-              <div className="mt-3">
-                <ThingCard
-                  itemId={data.rule1.thing.id}
-                  name={data.rule1.thing.name}
-                  width={58}
-                />
-              </div>
-            </div>
-
-            <div className="rounded-3xl bg-[#f15a24]/20 px-4 py-4">
-              <Text strong>Círculo vermelho</Text>
-              <Text className="mt-1 block">{data.rule2.text}</Text>
-              <div className="mt-3">
-                <ThingCard
-                  itemId={data.rule2.thing.id}
-                  name={data.rule2.thing.name}
-                  width={58}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-3xl bg-white/60 px-4 py-4">
-            <Text strong>Resumo das jogadas</Text>
-
-            <div className="mt-3 flex flex-wrap justify-center gap-2">
-              {guesses.map((guess, index) => (
-                <span
-                  key={`${guess.thingId}-${index}`}
-                  className={`rounded-full px-3 py-1.5 text-sm font-semibold ${
-                    guess.result === false
-                      ? 'bg-destructive/15 text-destructive'
-                      : guess.result === 0
-                        ? 'bg-orange-200 text-orange-900'
-                        : guess.result === 1
-                          ? 'bg-[#fbb03b]/35 text-orange-950'
-                          : 'bg-[#f15a24]/25 text-orange-950'
-                  }`}
-                >
-                  {thingNamesById[guess.thingId] ?? `Jogada ${index + 1}`}
-                </span>
-              ))}
+          <div className="rounded-3xl bg-[#f15a24]/20 px-4 py-4">
+            <Text strong>Círculo vermelho</Text>
+            <Text className="mt-1 block">{data.rule2.text}</Text>
+            <div className="mt-3">
+              <ThingCard
+                itemId={data.rule2.thing.id}
+                name={data.rule2.thing.name}
+                width={58}
+              />
             </div>
           </div>
         </div>
 
-        <div className="flex w-full flex-col gap-3 pt-2">
-          <Button
-            variant="primary"
-            size="small"
-            block
-            onClick={() => navigate('/')}
-          >
-            Voltar ao Hub
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            block
-            onClick={onClose}
-          >
-            Fechar
-          </Button>
+        <div className="rounded-3xl bg-white/60 px-4 py-4">
+          <Text strong>Resumo das jogadas</Text>
+
+          <div className="mt-3 flex flex-wrap justify-center gap-2">
+            {guesses.map((guess, index) => (
+              <span
+                key={`${guess.thingId}-${index}`}
+                className={`rounded-full px-3 py-1.5 text-sm font-semibold ${
+                  guess.result === false
+                    ? 'bg-destructive/15 text-destructive'
+                    : guess.result === 0
+                      ? 'bg-orange-200 text-orange-900'
+                      : guess.result === 1
+                        ? 'bg-[#fbb03b]/35 text-orange-950'
+                        : 'bg-[#f15a24]/25 text-orange-950'
+                }`}
+              >
+                {thingNamesById[guess.thingId] ?? `Jogada ${index + 1}`}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </GameResultsSplash>
   );
 }

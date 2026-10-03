@@ -1,9 +1,5 @@
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
-import { withAlpha } from '@utils/helpers';
-import { useNavigate } from 'react-router-dom';
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Text } from '@components/ui/Typography';
 import { getCompletionPercentage, PANICO_TOTAL_HEARTS } from '../utils/helpers';
 
 /**
@@ -50,32 +46,17 @@ export function ResultsSplash({
   score,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const game = gameInfos.panico;
   const completionPercentage = getCompletionPercentage(
     farthestButtonIndex,
     totalButtons,
   );
 
   return (
-    <div
-      className="fixed inset-0 z-100 flex flex-col items-center justify-center gap-4 px-6"
-      style={{ backgroundColor: withAlpha(game.color, 0.96) }}
+    <GameResultsSplash
+      gameId="panico"
+      title={win ? 'Parabéns!' : 'Cabum!'}
+      onClose={onClose}
     >
-      <div className="h-16 w-16">
-        <GameLogos
-          gameId="panico"
-          className="h-full w-full drop-shadow-sm"
-        />
-      </div>
-
-      <Title
-        level={2}
-        className="text-center"
-      >
-        {win ? 'Parabéns!' : 'Cabum!'}
-      </Title>
-
       <Text
         strong
         className="text-center text-lg"
@@ -94,25 +75,6 @@ export function ResultsSplash({
           Corações restantes: <strong>{hearts}</strong> de {PANICO_TOTAL_HEARTS}
         </Text>
       </div>
-
-      <div className="flex w-full max-w-xs flex-col gap-3 pt-2">
-        <Button
-          variant="chrome"
-          size="small"
-          block
-          onClick={() => navigate('/')}
-        >
-          Voltar ao Hub
-        </Button>
-        <Button
-          variant="ghost"
-          size="small"
-          block
-          onClick={onClose}
-        >
-          Fechar
-        </Button>
-      </div>
-    </div>
+    </GameResultsSplash>
   );
 }

@@ -1,9 +1,5 @@
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
-import { withAlpha } from '@utils/helpers';
-import { useNavigate } from 'react-router-dom';
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Text } from '@components/ui/Typography';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -56,118 +52,81 @@ export function ResultsSplash({
   imageUrl,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const gameInfo = gameInfos['vitrais-infinitos'];
-
   return (
-    <div
-      className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
+    <GameResultsSplash
+      gameId="vitrais-infinitos"
+      title="Vitral montado!"
+      onClose={onClose}
     >
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center gap-4">
-        <div className="h-16 w-16">
-          <GameLogos
-            gameId="vitrais-infinitos"
-            className="h-full w-full drop-shadow-sm"
-          />
-        </div>
+      <Text
+        strong
+        className="text-center"
+      >
+        {title}
+      </Text>
 
-        <Title
-          level={2}
-          className="text-center"
-        >
-          Vitral montado!
-        </Title>
+      <div className="w-full overflow-hidden rounded-[2rem] bg-black/20 p-2 shadow-sm">
+        <img
+          src={imageUrl}
+          alt={`Prévia completa do vitral "${title}"`}
+          className="h-auto w-full rounded-[1.5rem] object-cover"
+        />
+      </div>
 
-        <Text
-          strong
-          className="text-center"
-        >
-          {title}
-        </Text>
-
-        <div className="w-full overflow-hidden rounded-[2rem] bg-black/20 p-2 shadow-sm">
-          <img
-            src={imageUrl}
-            alt={`Prévia completa do vitral "${title}"`}
-            className="h-auto w-full rounded-[1.5rem] object-cover"
-          />
-        </div>
-
-        <div className="grid w-full grid-cols-3 gap-3 rounded-[2rem] bg-white/70 px-4 py-4 text-center shadow-sm">
-          <div className="flex flex-col gap-1">
-            <Text
-              strong
-              className="text-lg"
-            >
-              {solvedPieces}/{pieceCount}
-            </Text>
-            <Text
-              type="secondary"
-              className="text-xs"
-            >
-              Peças certas
-            </Text>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <Text
-              strong
-              className="text-lg"
-            >
-              {moveCount}
-            </Text>
-            <Text
-              type="secondary"
-              className="text-xs"
-            >
-              Movimentos
-            </Text>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <Text
-              strong
-              className="text-lg"
-            >
-              {score}
-            </Text>
-            <Text
-              type="secondary"
-              className="text-xs"
-            >
-              Pontos
-            </Text>
-          </div>
-        </div>
-
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          As peças conectadas ficaram juntas até o fim. Agora é só admirar o
-          vitral de hoje.
-        </Text>
-
-        <div className="flex w-full flex-col gap-3 pt-2">
-          <Button
-            variant="primary"
-            size="small"
-            block
-            onClick={() => navigate('/')}
+      <div className="grid w-full grid-cols-3 gap-3 rounded-[2rem] bg-white/70 px-4 py-4 text-center shadow-sm">
+        <div className="flex flex-col gap-1">
+          <Text
+            strong
+            className="text-lg"
           >
-            Voltar ao Hub
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            block
-            onClick={onClose}
+            {solvedPieces}/{pieceCount}
+          </Text>
+          <Text
+            type="secondary"
+            className="text-xs"
           >
-            Fechar
-          </Button>
+            Peças certas
+          </Text>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <Text
+            strong
+            className="text-lg"
+          >
+            {moveCount}
+          </Text>
+          <Text
+            type="secondary"
+            className="text-xs"
+          >
+            Movimentos
+          </Text>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <Text
+            strong
+            className="text-lg"
+          >
+            {score}
+          </Text>
+          <Text
+            type="secondary"
+            className="text-xs"
+          >
+            Pontos
+          </Text>
         </div>
       </div>
-    </div>
+
+      <Text
+        type="secondary"
+        className="text-center"
+      >
+        As peças conectadas ficaram juntas até o fim. Agora é só admirar o
+        vitral de hoje.
+      </Text>
+    </GameResultsSplash>
   );
 }

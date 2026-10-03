@@ -1,11 +1,7 @@
 import { DailyItem } from '@components/games/DailyItem';
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
-import { withAlpha } from '@utils/helpers';
-import { useNavigate } from 'react-router-dom';
+import { Text } from '@components/ui/Typography';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -68,28 +64,12 @@ export function ResultsSplash({
   swapLimit,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const gameInfo = gameInfos.organiku;
-
   return (
-    <div
-      className="fixed inset-0 z-100 flex flex-col items-center justify-center gap-4 px-6"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
+    <GameResultsSplash
+      gameId="organiku"
+      title={win ? 'Parabéns!' : 'Que pena!'}
+      onClose={onClose}
     >
-      <div className="w-16 h-16">
-        <GameLogos
-          gameId="organiku"
-          className="w-full h-full drop-shadow-sm"
-        />
-      </div>
-
-      <Title
-        level={2}
-        className="text-center text-foreground"
-      >
-        {win ? 'Parabéns!' : 'Que pena!'}
-      </Title>
-
       <Text
         strong
         className="text-center"
@@ -100,6 +80,7 @@ export function ResultsSplash({
       <Hearts
         remaining={hearts}
         total={itemsIds.length}
+        emptyClassName="text-black"
       />
 
       <div className="flex items-center justify-center gap-2">
@@ -122,23 +103,6 @@ export function ResultsSplash({
       >
         {flips} de {swapLimit} viradas projetadas
       </Text>
-
-      <div className="flex w-full max-w-xs flex-col gap-3 pt-2">
-        <Button
-          variant="chrome"
-          block
-          onClick={() => navigate('/')}
-        >
-          Voltar ao Hub
-        </Button>
-        <Button
-          variant="ghost"
-          block
-          onClick={onClose}
-        >
-          Fechar
-        </Button>
-      </div>
-    </div>
+    </GameResultsSplash>
   );
 }

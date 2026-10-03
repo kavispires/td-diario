@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     pt: 'Consegue organizar a mesa?',
   },
   releaseDate: '2025-06-07',
-  release: 'stable',
+  release: 'maintenance',
   version: '1.0.0',
 };
 

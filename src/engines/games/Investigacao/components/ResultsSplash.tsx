@@ -1,13 +1,9 @@
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Pill } from '@components/ui/Pill';
 import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
 import { cn } from '@utils/cn';
-import { withAlpha } from '@utils/helpers';
 import { Heart, Search, UserRoundCheck } from 'lucide-react';
 import type { ComponentType, SVGProps } from 'react';
-import { useNavigate } from 'react-router-dom';
 import type { DailyInvestigacaoSuspect } from 'types/games';
 import { getFeatureLabel } from '../utils/helpers';
 import { SuspectPortrait } from './SuspectPortrait';
@@ -68,114 +64,77 @@ export function ResultsSplash({
   totalSuspects,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const gameInfo = gameInfos.investigacao;
-
   return (
-    <div
-      className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
+    <GameResultsSplash
+      gameId="investigacao"
+      title={win ? 'Parabéns!' : 'Que pena!'}
+      onClose={onClose}
     >
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center gap-4">
-        <div className="h-16 w-16">
-          <GameLogos
-            gameId="investigacao"
-            className="h-full w-full drop-shadow-sm"
-          />
+      <Pill
+        className={cn(
+          'px-4 py-2 text-sm shadow-sm',
+          win ? 'bg-gold text-chrome' : 'bg-white/85 text-foreground',
+        )}
+      >
+        {win ? 'Caso encerrado' : 'Culpado solto'}
+      </Pill>
+
+      <Text
+        type="secondary"
+        className="text-center"
+      >
+        {win
+          ? 'Você identificou corretamente quem deveria ficar por último.'
+          : 'O suspeito errado foi liberado e o criminoso escapou.'}
+      </Text>
+
+      <div
+        className={cn(
+          'flex w-full flex-col items-center gap-4 rounded-[2rem] px-5 py-5 shadow-sm',
+          win ? 'bg-gold-soft' : 'bg-white/75',
+        )}
+      >
+        <SuspectPortrait
+          suspectId={culprit.id}
+          alt={`Retrato de ${culprit.name.pt}`}
+          className="w-40"
+        />
+
+        <div className="flex flex-col items-center gap-1 text-center">
+          <Title level={4}>{culprit.name.pt}</Title>
+          <Text strong>Crime: {reason}</Text>
         </div>
 
-        <Pill
-          className={cn(
-            'px-4 py-2 text-sm shadow-sm',
-            win ? 'bg-gold text-chrome' : 'bg-white/85 text-foreground',
-          )}
-        >
-          {win ? 'Caso encerrado' : 'Culpado solto'}
-        </Pill>
-
-        <Title
-          level={2}
-          className="text-center"
-        >
-          {win ? 'Parabéns!' : 'Que pena!'}
-        </Title>
-
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          {win
-            ? 'Você identificou corretamente quem deveria ficar por último.'
-            : 'O suspeito errado foi liberado e o criminoso escapou.'}
-        </Text>
-
-        <div
-          className={cn(
-            'flex w-full flex-col items-center gap-4 rounded-[2rem] px-5 py-5 shadow-sm',
-            win ? 'bg-gold-soft' : 'bg-white/75',
-          )}
-        >
-          <SuspectPortrait
-            suspectId={culprit.id}
-            alt={`Retrato de ${culprit.name.pt}`}
-            className="w-40"
-          />
-
-          <div className="flex flex-col items-center gap-1 text-center">
-            <Title level={4}>{culprit.name.pt}</Title>
-            <Text strong>Crime: {reason}</Text>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-2">
-            {culprit.features.map((feature) => (
-              <span
-                key={feature}
-                className="rounded-full bg-white/85 px-3 py-1 text-xs font-medium text-foreground shadow-sm"
-              >
-                {getFeatureLabel(feature, culprit.gender)}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid w-full grid-cols-3 gap-3">
-          <ResultStat
-            icon={UserRoundCheck}
-            label="Inocentes"
-            value={`${releasedCount}/${Math.max(totalSuspects - 1, 0)}`}
-          />
-          <ResultStat
-            icon={Heart}
-            label="Dicas"
-            value={`${hearts}/${totalHearts}`}
-          />
-          <ResultStat
-            icon={Search}
-            label="Suspeitos"
-            value={`${totalSuspects}`}
-          />
-        </div>
-
-        <div className="flex w-full flex-col gap-3 pt-2">
-          <Button
-            variant="primary"
-            size="small"
-            block
-            onClick={() => navigate('/')}
-          >
-            Voltar ao Hub
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            block
-            onClick={onClose}
-          >
-            Fechar
-          </Button>
+        <div className="flex flex-wrap justify-center gap-2">
+          {culprit.features.map((feature) => (
+            <span
+              key={feature}
+              className="rounded-full bg-white/85 px-3 py-1 text-xs font-medium text-foreground shadow-sm"
+            >
+              {getFeatureLabel(feature, culprit.gender)}
+            </span>
+          ))}
         </div>
       </div>
-    </div>
+
+      <div className="grid w-full grid-cols-3 gap-3">
+        <ResultStat
+          icon={UserRoundCheck}
+          label="Inocentes"
+          value={`${releasedCount}/${Math.max(totalSuspects - 1, 0)}`}
+        />
+        <ResultStat
+          icon={Heart}
+          label="Dicas"
+          value={`${hearts}/${totalHearts}`}
+        />
+        <ResultStat
+          icon={Search}
+          label="Suspeitos"
+          value={`${totalSuspects}`}
+        />
+      </div>
+    </GameResultsSplash>
   );
 }
 

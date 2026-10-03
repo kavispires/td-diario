@@ -1,9 +1,5 @@
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
-import { withAlpha } from '@utils/helpers';
-import { useNavigate } from 'react-router-dom';
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Text } from '@components/ui/Typography';
 import type { DailyPirralhosKidEntry } from 'types/games';
 import type { KidProfile } from '../utils/constants';
 import { KIDS_LIBRARY, PIRRALHOS_TOTAL_HEARTS } from '../utils/constants';
@@ -60,8 +56,6 @@ export function ResultsSplash({
   kids,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const gameInfo = gameInfos.pirralhos;
   const culprit = KIDS_LIBRARY[culpritId];
   const liars = kids
     .filter((kidEntry) => liarsIds.includes(kidEntry.kidId))
@@ -69,105 +63,70 @@ export function ResultsSplash({
     .filter((kid): kid is KidProfile => !!kid);
 
   return (
-    <div
-      className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
+    <GameResultsSplash
+      gameId="pirralhos"
+      title={win ? 'Parabéns!' : 'Que pena!'}
+      onClose={onClose}
     >
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center gap-4">
-        <div className="h-16 w-16">
-          <GameLogos
-            gameId="pirralhos"
-            className="h-full w-full drop-shadow-sm"
+      <Text
+        strong
+        className="text-center"
+      >
+        {win
+          ? 'Você descobriu quem pegou o brinquedo.'
+          : 'Faltou um palpite para pegar o pirralho certo.'}
+      </Text>
+
+      <Text
+        type="secondary"
+        className="text-center"
+      >
+        {hearts} de {PIRRALHOS_TOTAL_HEARTS} acusações sobraram · {score} pontos
+      </Text>
+
+      {culprit && (
+        <div className="flex w-full flex-col items-center gap-3 rounded-[2rem] bg-white/70 px-5 py-5 text-center shadow-sm">
+          <Text strong>Quem pegou o brinquedo</Text>
+          <KidPortrait
+            kid={culprit}
+            width={132}
+            showName
           />
         </div>
+      )}
 
-        <Title
-          level={2}
-          className="text-center"
-        >
-          {win ? 'Parabéns!' : 'Que pena!'}
-        </Title>
-
+      <div className="flex w-full flex-col gap-3 rounded-[2rem] bg-white/70 px-5 py-5 shadow-sm">
         <Text
           strong
           className="text-center"
         >
-          {win
-            ? 'Você descobriu quem pegou o brinquedo.'
-            : 'Faltou um palpite para pegar o pirralho certo.'}
+          Quem estava mentindo
         </Text>
 
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          {hearts} de {PIRRALHOS_TOTAL_HEARTS} acusações sobraram · {score}{' '}
-          pontos
-        </Text>
-
-        {culprit && (
-          <div className="flex w-full flex-col items-center gap-3 rounded-[2rem] bg-white/70 px-5 py-5 text-center shadow-sm">
-            <Text strong>Quem pegou o brinquedo</Text>
-            <KidPortrait
-              kid={culprit}
-              width={132}
-              showName
-            />
-          </div>
-        )}
-
-        <div className="flex w-full flex-col gap-3 rounded-[2rem] bg-white/70 px-5 py-5 shadow-sm">
+        {liars.length === 0 ? (
           <Text
-            strong
+            type="secondary"
             className="text-center"
           >
-            Quem estava mentindo
+            Ninguém mentiu hoje.
           </Text>
-
-          {liars.length === 0 ? (
-            <Text
-              type="secondary"
-              className="text-center"
-            >
-              Ninguém mentiu hoje.
-            </Text>
-          ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {liars.map((kid) => (
-                <div
-                  key={kid.id}
-                  className="flex flex-col items-center rounded-[1.5rem] bg-card px-3 py-3 text-center shadow-sm"
-                >
-                  <KidPortrait
-                    kid={kid}
-                    width={96}
-                    showName
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="flex w-full flex-col gap-3 pt-2">
-          <Button
-            variant="primary"
-            size="small"
-            block
-            onClick={() => navigate('/')}
-          >
-            Voltar ao Hub
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            block
-            onClick={onClose}
-          >
-            Fechar
-          </Button>
-        </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            {liars.map((kid) => (
+              <div
+                key={kid.id}
+                className="flex flex-col items-center rounded-[1.5rem] bg-card px-3 py-3 text-center shadow-sm"
+              >
+                <KidPortrait
+                  kid={kid}
+                  width={96}
+                  showName
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-    </div>
+    </GameResultsSplash>
   );
 }

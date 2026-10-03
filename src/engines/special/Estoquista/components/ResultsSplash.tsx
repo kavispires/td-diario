@@ -1,9 +1,5 @@
-import { GameLogos } from '@components/hub/GameLogos';
-import { Button } from '@components/ui/Button';
-import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
-import { withAlpha } from '@utils/helpers';
-import { useNavigate } from 'react-router-dom';
+import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Text } from '@components/ui/Typography';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -56,28 +52,12 @@ export function ResultsSplash({
   score,
   onClose,
 }: ResultsSplashProps) {
-  const navigate = useNavigate();
-  const gameInfo = gameInfos.estoquista;
-
   return (
-    <div
-      className="fixed inset-0 z-100 flex flex-col items-center justify-center gap-4 px-6"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.85) }}
+    <GameResultsSplash
+      gameId="estoquista"
+      title={win ? 'Expedição perfeita!' : 'O estoque te venceu hoje'}
+      onClose={onClose}
     >
-      <div className="h-16 w-16">
-        <GameLogos
-          gameId="estoquista"
-          className="h-full w-full drop-shadow-sm"
-        />
-      </div>
-
-      <Title
-        level={2}
-        className="text-center text-foreground"
-      >
-        {win ? 'Expedição perfeita!' : 'O estoque te venceu hoje'}
-      </Title>
-
       <Text
         strong
         className="text-center"
@@ -117,25 +97,6 @@ export function ResultsSplash({
           ))}
         </div>
       </div>
-
-      <div className="flex w-full max-w-xs flex-col gap-3 pt-2">
-        <Button
-          variant="chrome"
-          size="small"
-          block
-          onClick={() => navigate('/')}
-        >
-          Voltar ao Hub
-        </Button>
-        <Button
-          variant="ghost"
-          size="small"
-          block
-          onClick={onClose}
-        >
-          Fechar
-        </Button>
-      </div>
-    </div>
+    </GameResultsSplash>
   );
 }
