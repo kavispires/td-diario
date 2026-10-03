@@ -4,6 +4,7 @@ import { Text, Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { withAlpha } from '@utils/helpers';
 import { Puzzle, Share2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import { type ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -82,64 +83,69 @@ export function GameResultsSplash({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-      style={{ backgroundColor: withAlpha(gameInfo.color, 0.95) }}
-    >
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center justify-center gap-4">
-        <div className="h-16 w-16">
-          <GameLogos
-            gameId={gameId}
-            className="h-full w-full drop-shadow-sm"
-          />
-        </div>
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.65 }}
+        animate={{ opacity: 1, scale: 1, transition: { duration: 0.2 } }}
+        exit={{ opacity: 0, scale: 0.5 }}
+        className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
+        style={{ backgroundColor: withAlpha(gameInfo.color, 0.95) }}
+      >
+        <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center justify-center gap-4">
+          <div className="h-16 w-16">
+            <GameLogos
+              gameId={gameId}
+              className="h-full w-full drop-shadow-sm"
+            />
+          </div>
 
-        <Title
-          level={2}
-          className="text-center text-foreground"
-        >
-          {title}
-        </Title>
+          <Title
+            level={2}
+            className="text-center text-foreground"
+          >
+            {title}
+          </Title>
 
-        {children}
+          {children}
 
-        <div className="flex w-full flex-col gap-2 pt-4">
-          <Button
-            variant="primary"
-            size="small"
-            icon={<Share2 />}
-            block
-            onClick={handleShare}
-          >
-            Compartilhar Resultados
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            icon={<Puzzle />}
-            block
-            onClick={() => navigate('/')}
-          >
-            Voltar ao Hub
-          </Button>
-          <Button
-            variant="ghost"
-            size="small"
-            block
-            onClick={onClose}
-          >
-            Ver jogo
-          </Button>
-          {copied && (
-            <Text
-              type="secondary"
-              className="text-center"
+          <div className="flex w-full flex-col gap-2 pt-4">
+            <Button
+              variant="primary"
+              size="small"
+              icon={<Share2 />}
+              block
+              onClick={handleShare}
             >
-              Copiado para a área de transferência!
-            </Text>
-          )}
+              Compartilhar Resultados
+            </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              icon={<Puzzle />}
+              block
+              onClick={() => navigate('/')}
+            >
+              Voltar ao Hub
+            </Button>
+            <Button
+              variant="ghost"
+              size="small"
+              block
+              onClick={onClose}
+            >
+              Ver jogo
+            </Button>
+            {copied && (
+              <Text
+                type="secondary"
+                className="text-center"
+              >
+                Copiado para a área de transferência!
+              </Text>
+            )}
+          </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
