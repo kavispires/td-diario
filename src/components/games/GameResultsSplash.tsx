@@ -89,7 +89,7 @@ export function GameResultsSplash({
         animate={{ opacity: 1, scale: 1, transition: { duration: 0.2 } }}
         exit={{ opacity: 0, scale: 0.5 }}
         className="fixed inset-0 z-100 overflow-y-auto px-6 py-8"
-        style={{ backgroundColor: withAlpha(gameInfo.color, 0.95) }}
+        style={{ backgroundColor: withAlpha(gameInfo.color, 0.97) }}
       >
         <div className="mx-auto flex min-h-full w-full max-w-md flex-col items-center justify-center gap-4">
           <div className="h-16 w-16">

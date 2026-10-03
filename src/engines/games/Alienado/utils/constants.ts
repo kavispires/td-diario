@@ -14,8 +14,8 @@ export const ALIENADO_REQUEST_COUNT = 4;
 export const ALIENADO_CARD_WIDTH_CONFIG = {
   margin: 36,
   gap: 10,
-  maxWidth: 78,
-  minWidth: 54,
+  maxWidth: 64,
+  minWidth: 48,
 } as const;
 
 /**
@@ -65,6 +65,11 @@ export const ALIENADO_SHARE_PRESENT_EMOJI = '❌';
  * Emoji shown in the share result when an item never appears in today's solution.
  */
 export const ALIENADO_SHARE_ABSENT_EMOJI = '👽';
+
+/**
+ * Minimum number of sprites each request must contain.
+ */
+export const MINIMUM_SPRITES_PER_REQUEST = 3;
 
 /**
  * Suggested attribute categories shown in Alienado's rules overlay.

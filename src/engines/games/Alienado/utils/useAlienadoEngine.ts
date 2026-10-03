@@ -115,6 +115,41 @@ export function useAlienadoEngine(
     playSFX('bubbleIn');
   }
 
+  function onDropItem(
+    itemId: string,
+    source: 'pool' | 'slot',
+    sourceIndex: number | undefined,
+    targetIndex: number,
+  ) {
+    if (source === 'slot' && sourceIndex === targetIndex) {
+      return;
+    }
+
+    setSession((prev) => {
+      const nextSelection = [...prev.selection];
+
+      if (source === 'pool') {
+        // Guard against a pool item that was somehow already placed.
+        const existingIndex = nextSelection.indexOf(itemId);
+        if (existingIndex !== -1) {
+          nextSelection[existingIndex] = null;
+        }
+        nextSelection[targetIndex] = itemId;
+      } else if (sourceIndex !== undefined) {
+        const targetItemId = nextSelection[targetIndex];
+        nextSelection[targetIndex] = itemId;
+        nextSelection[sourceIndex] = targetItemId;
+      }
+
+      return {
+        ...prev,
+        selection: nextSelection,
+        slotIndex: null,
+      };
+    });
+    playSFX('bubbleIn');
+  }
+
   function submitGuess() {
     if (!session.selection.every(Boolean)) {
       return;
@@ -197,6 +232,7 @@ export function useAlienadoEngine(
     onSelectSlot,
     onSelectItem,
     onClearSlot,
+    onDropItem,
     submitGuess,
   };
 }

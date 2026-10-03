@@ -104,6 +104,17 @@ export type AlienadoEngineState = {
    */
   onClearSlot: (index: number) => void;
   /**
+   * Places a dragged item into a slot: moves a pool item into an empty or
+   * occupied slot (freeing its previous slot, if any), or swaps two slots
+   * when the drag originates from another slot.
+   */
+  onDropItem: (
+    itemId: string,
+    source: 'pool' | 'slot',
+    sourceIndex: number | undefined,
+    targetIndex: number,
+  ) => void;
+  /**
    * Submits the current four-item guess.
    */
   submitGuess: () => void;

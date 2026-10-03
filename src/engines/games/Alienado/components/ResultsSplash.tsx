@@ -1,13 +1,11 @@
-import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyAlienadoAttribute, DailyAlienadoRequest } from 'types/games';
-import {
-  ALIENADO_GAME_ID,
-  ALIENADO_GUESS_DELIMITER,
-  ALIENADO_RESULTS_LAYOUT,
-} from '../utils/constants';
+import { ALIENADO_GAME_ID, ALIENADO_RESULTS_LAYOUT } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 import { AlienSign } from './AlienSign';
 
@@ -95,64 +93,38 @@ export function ResultsSplash({
           : 'O alienígena foi embora decepcionado com as entregas.'}
       </Text>
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        {hearts} de {requests.length} corações restantes • {guesses.length}{' '}
-        tentativas • {score} pontos
-      </Text>
-
-      <div className="grid w-full grid-cols-2 gap-3">
-        {requests.map((request, index) => (
-          <div
-            key={request.itemId}
-            className="flex flex-col items-center gap-3 rounded-3xl bg-white/70 p-3 shadow-sm"
-          >
-            <Text strong>Pedido {index + 1}</Text>
-
-            <div className="flex items-center gap-2">
-              {request.spritesIds.map((spriteId) => (
-                <AlienSign
-                  key={`${request.itemId}-${spriteId}`}
-                  signId={spriteId}
-                  width={ALIENADO_RESULTS_LAYOUT.requestSignWidth}
-                />
-              ))}
-            </div>
-
-            <div className="rounded-2xl bg-gold-soft p-1">
-              <DailyItem
-                itemId={request.itemId}
-                width={ALIENADO_RESULTS_LAYOUT.requestItemWidth}
-                padding={ALIENADO_RESULTS_LAYOUT.requestItemPadding}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+      <Hearts
+        remaining={hearts}
+        total={requests.length}
+        emptyClassName="text-black"
+      />
 
       <Surface className="w-full space-y-3 bg-white/70 p-4">
-        <Text strong>Dicionário alienígena</Text>
+        <Text
+          strong
+          className="block text-center"
+        >
+          Dicionário alienígena-português
+        </Text>
 
         <div className="space-y-3">
           {attributes.map((attribute) => (
             <div
               key={attribute.id}
-              className="flex items-start gap-3 rounded-2xl bg-white/60 p-3"
+              className="flex items-center gap-3 rounded-2xl bg-white/60 p-3"
             >
               <AlienSign
                 signId={attribute.spriteId}
                 width={ALIENADO_RESULTS_LAYOUT.attributeSignWidth}
               />
 
-              <div className="min-w-0 space-y-1">
+              <div className="min-w-0">
                 <Text strong>{attribute.name}</Text>
                 <Text
                   type="secondary"
-                  className="block text-sm"
+                  className="text-sm"
                 >
-                  {attribute.description}
+                  , {attribute.description}
                 </Text>
               </div>
             </div>
@@ -160,29 +132,17 @@ export function ResultsSplash({
         </div>
       </Surface>
 
-      {guesses.length > 0 && (
-        <Surface className="w-full space-y-3 bg-white/70 p-4">
-          <Text strong>Tentativas enviadas</Text>
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center"
+        >
+          {guesses.length} tentativas
+        </Text>
 
-          <div className="space-y-2">
-            {guesses.map((guess, guessIndex) => (
-              <div
-                key={`${guess.join(ALIENADO_GUESS_DELIMITER)}-${guessIndex}`}
-                className="flex flex-wrap items-center justify-center gap-2 rounded-2xl bg-white/60 p-3"
-              >
-                {guess.map((itemId, itemIndex) => (
-                  <DailyItem
-                    key={`${itemId}-${itemIndex}`}
-                    itemId={itemId}
-                    width={ALIENADO_RESULTS_LAYOUT.guessItemWidth}
-                    padding={ALIENADO_RESULTS_LAYOUT.guessItemPadding}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
-        </Surface>
-      )}
+        <Divider orientation="vertical" />
+        <Score value={score} />
+      </div>
     </GameResultsSplash>
   );
 }

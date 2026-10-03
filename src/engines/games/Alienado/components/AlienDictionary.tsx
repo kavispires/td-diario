@@ -31,46 +31,49 @@ export function AlienDictionary({
   itemWidth,
 }: AlienDictionaryProps) {
   return (
-    <section className="space-y-3 rounded-[2rem] bg-surface/85 p-4 shadow-sm">
-      <Text strong>O alienígena entende que isso é aquilo:</Text>
+    <section className="space-y-2 rounded-[2rem] bg-surface/85 p-4 shadow-sm">
+      <Text
+        strong
+        className="block text-center"
+      >
+        O alienígena entende que isso é aquilo:
+      </Text>
 
-      <div className="space-y-3">
-        {attributes.map((attribute) => (
-          <div
-            key={attribute.id}
-            className="rounded-2xl bg-surface-raised p-3"
-          >
-            <div className="flex items-center gap-3">
-              <AlienSign
-                signId={attribute.spriteId}
-                width={itemWidth}
-              />
+      {attributes.map((attribute) => (
+        <div
+          key={attribute.id}
+          className="rounded-2xl"
+        >
+          <div className="flex items-center justify-center gap-3">
+            <AlienSign
+              signId={attribute.spriteId}
+              width={itemWidth}
+            />
 
-              <ArrowRight
-                className="h-4 w-4 shrink-0 text-subtle-foreground"
-                aria-hidden="true"
-              />
+            <ArrowRight
+              className="h-4 w-4 shrink-0 text-subtle-foreground"
+              aria-hidden="true"
+            />
 
-              <div className="flex min-w-0 flex-1 flex-wrap gap-2">
-                {attribute.itemsIds.map((itemId) => (
-                  <div
-                    key={itemId}
-                    className="rounded-2xl bg-surface p-1"
-                  >
-                    <DailyItem
-                      itemId={itemId}
-                      width={
-                        itemWidth - ALIENADO_DICTIONARY_ITEM_FRAME.widthOffset
-                      }
-                      padding={ALIENADO_DICTIONARY_ITEM_FRAME.padding}
-                    />
-                  </div>
-                ))}
-              </div>
+            <div className="flex flex-wrap justify-center gap-2">
+              {attribute.itemsIds.map((itemId) => (
+                <div
+                  key={itemId}
+                  className="rounded-2xl bg-surface p-1"
+                >
+                  <DailyItem
+                    itemId={itemId}
+                    width={
+                      itemWidth - ALIENADO_DICTIONARY_ITEM_FRAME.widthOffset
+                    }
+                    padding={ALIENADO_DICTIONARY_ITEM_FRAME.padding}
+                  />
+                </div>
+              ))}
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </section>
   );
 }

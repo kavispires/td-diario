@@ -1,13 +1,19 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
-import { Button } from '@components/ui/Button';
-import { Surface } from '@components/ui/Surface';
-import { Text } from '@components/ui/Typography';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
+import {
+  DndContext,
+  type DragEndEvent,
+  PointerSensor,
+  pointerWithin,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
-import { Coins, SendHorizontal } from 'lucide-react';
+import { Coins, Gift } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { DailyAlienadoEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import { AlienDictionary } from './components/AlienDictionary';
 import { Board } from './components/Board';
 import { ResultsSplash } from './components/ResultsSplash';
@@ -27,21 +33,10 @@ type DailyAlienadoGameProps = {
   /**
    * Today's Alienado payload, as resolved by `GameScreen`.
    */
-  data: PlaceholderGameData;
+  data: DailyAlienadoEntry;
 };
 
-function isDailyAlienadoEntry(
-  data: PlaceholderGameData,
-): data is DailyAlienadoEntry {
-  return (
-    Array.isArray((data as DailyAlienadoEntry).attributes) &&
-    Array.isArray((data as DailyAlienadoEntry).requests) &&
-    Array.isArray((data as DailyAlienadoEntry).itemsIds) &&
-    typeof (data as DailyAlienadoEntry).solution === 'string'
-  );
-}
-
-function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
+export function DailyAlienadoGame({ data }: DailyAlienadoGameProps) {
   const [initialState] = useState(() => getInitialState(data));
   const {
     hearts,
@@ -58,13 +53,38 @@ function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
     onSelectSlot,
     onSelectItem,
     onClearSlot,
+    onDropItem,
     submitGuess,
   } = useAlienadoEngine(data, initialState);
   const previousGuesses = useMemo(() => guesses.map(splitGuess), [guesses]);
   const [itemWidth, containerRef] = useCardWidthByContainerRef(
-    ALIENADO_REQUEST_COUNT,
+    ALIENADO_REQUEST_COUNT * 2,
     ALIENADO_CARD_WIDTH_CONFIG,
   );
+
+  // A short drag distance threshold lets regular taps fire instantly while
+  // still recognizing an intentional drag gesture.
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    const itemId = active.data.current?.itemId as string | undefined;
+    const source = active.data.current?.source as 'pool' | 'slot' | undefined;
+    const sourceIndex = active.data.current?.index as number | undefined;
+    const targetIndex = over?.data.current?.index as number | undefined;
+
+    if (!itemId || !source || targetIndex === undefined) {
+      return;
+    }
+
+    onDropItem(itemId, source, sourceIndex, targetIndex);
+  }
 
   return (
     <div
@@ -76,8 +96,8 @@ function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
         color={gameInfo.color}
       >
         <GameStat
-          icon={SendHorizontal}
-          value={`${guesses.length}/${data.requests.length}`}
+          icon={Gift}
+          value={'?'}
           label="Tentativas"
         />
 
@@ -97,46 +117,45 @@ function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
         />
       </GameStatsRow>
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        {`Decifre os símbolos do alienígena, monte as ${ALIENADO_REQUEST_COUNT} entregas na ordem certa e envie tudo de uma vez.`}
-      </Text>
+      <GameTitle
+        title="Eu venho em paz"
+        description={`Decifre os símbolos do alienígena, monte as ${ALIENADO_REQUEST_COUNT} entregas na ordem certa e envie tudo de uma vez.`}
+      />
 
       <AlienDictionary
         attributes={data.attributes}
         itemWidth={itemWidth}
       />
 
-      <Board
-        latestAttempt={latestAttempt}
-        requests={data.requests}
-        itemsIds={data.itemsIds}
-        selection={selection}
-        slotIndex={slotIndex}
-        previousGuesses={previousGuesses}
-        itemWidth={itemWidth}
-        isReady={isReady}
-        isComplete={isComplete}
-        isWin={isWin}
-        onSelectSlot={onSelectSlot}
-        onSelectItem={onSelectItem}
-        onClearSlot={onClearSlot}
-        onSubmitGuess={submitGuess}
-      />
+      <div className="flex flex-col items-center gap-4">
+        <SeeResultsButton
+          isComplete={isComplete}
+          setShowResults={setShowResults}
+        />
+      </div>
 
-      {isComplete && !showResults && (
-        <div className="flex justify-center">
-          <Button
-            variant="primary"
-            size="small"
-            onClick={() => setShowResults(true)}
-          >
-            Ver resultado
-          </Button>
-        </div>
-      )}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={pointerWithin}
+        onDragEnd={handleDragEnd}
+      >
+        <Board
+          latestAttempt={latestAttempt}
+          requests={data.requests}
+          itemsIds={data.itemsIds}
+          selection={selection}
+          slotIndex={slotIndex}
+          previousGuesses={previousGuesses}
+          itemWidth={itemWidth}
+          isReady={isReady}
+          isComplete={isComplete}
+          isWin={isWin}
+          onSelectSlot={onSelectSlot}
+          onSelectItem={onSelectItem}
+          onClearSlot={onClearSlot}
+          onSubmitGuess={submitGuess}
+        />
+      </DndContext>
 
       {isComplete && showResults && (
         <ResultsSplash
@@ -153,23 +172,4 @@ function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
       )}
     </div>
   );
-}
-
-/**
- * Renders a full day of Alienado: the alien dictionary, the request board,
- * the available item pool, and a results splash once the round ends.
- *
- * @param props Today's Alienado payload.
- * @returns The rendered Alienado game.
- */
-export function DailyAlienadoGame({ data }: DailyAlienadoGameProps) {
-  if (!isDailyAlienadoEntry(data)) {
-    return (
-      <Surface className="mx-auto w-full max-w-md bg-surface/85 p-5 text-center">
-        <Text>Os dados de Alienado não vieram no formato esperado.</Text>
-      </Surface>
-    );
-  }
-
-  return <AlienadoGameContent data={data} />;
 }

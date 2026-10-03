@@ -8,12 +8,12 @@ export const gameInfo: GameInfo = {
   emoji: '🛸',
   name: { pt: 'Alienado', en: 'Alienate' },
   tagline: {
-    pt: 'Não sabe se comunicar com seu cônjuge?',
+    pt: 'Não sabe se comunicar? Aprenda com o alienígena!',
     en: 'Communication with the aliens is hard',
   },
   releaseDate: '2024-11-08',
-  release: 'maintenance',
-  version: '0.0.1',
+  release: 'stable',
+  version: '1.0.0',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

@@ -1,6 +1,7 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { Button } from '@components/ui/Button';
 import { Text } from '@components/ui/Typography';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import type { DailyAlienadoRequest } from 'types/games';
@@ -9,6 +10,7 @@ import {
   ALIENADO_BOARD_SHAKE_DURATION_SECONDS,
   ALIENADO_BOARD_SHAKE_X,
   ALIENADO_GUESS_DELIMITER,
+  MINIMUM_SPRITES_PER_REQUEST,
 } from '../utils/constants';
 import { AlienSign } from './AlienSign';
 
@@ -112,89 +114,30 @@ export function Board({
           ease: 'easeInOut',
         }}
       >
-        <Text strong>O alienígena quer isso:</Text>
+        <Text
+          strong
+          className="block text-center"
+        >
+          O alienígena quer essas {requests.length} coisas:
+        </Text>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-4 items-start gap-2">
           {requests.map((request, index) => {
             const selectedItemId = selection[index];
 
             return (
-              <div
+              <RequestSlot
                 key={request.itemId}
-                className={cn(
-                  'flex min-h-[190px] flex-col items-center gap-3 rounded-3xl border-2 border-transparent bg-surface-raised p-3',
-                  isComplete &&
-                    isWin &&
-                    'border-gold bg-gold-soft shadow-[0_0_0_1px_var(--color-gold)]',
-                )}
-              >
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-secondary-soft text-sm font-semibold text-foreground">
-                  {index + 1}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {request.spritesIds.map((spriteId) => (
-                    <AlienSign
-                      key={`${request.itemId}-${spriteId}`}
-                      signId={spriteId}
-                      width={Math.max(
-                        itemWidth -
-                          ALIENADO_BOARD_ITEM_FRAME.requestSignWidthOffset,
-                        ALIENADO_BOARD_ITEM_FRAME.requestSignMinWidth,
-                      )}
-                    />
-                  ))}
-                </div>
-
-                {selectedItemId ? (
-                  <button
-                    type="button"
-                    onClick={() => onClearSlot(index)}
-                    disabled={isComplete}
-                    className={cn(
-                      'rounded-2xl border-2 border-transparent bg-surface p-1 transition focus:outline-none focus:ring-2 focus:ring-primary/50',
-                      !isComplete && 'hover:border-primary/40',
-                      isComplete &&
-                        'cursor-default border-primary/30 bg-white/80',
-                    )}
-                    aria-label={`Remover item da posição ${index + 1}`}
-                  >
-                    <DailyItem
-                      itemId={selectedItemId}
-                      width={itemWidth}
-                      padding={ALIENADO_BOARD_ITEM_FRAME.padding}
-                    />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => onSelectSlot(index)}
-                    disabled={isComplete}
-                    className={cn(
-                      'flex items-center justify-center rounded-2xl border-2 border-dashed border-border-strong bg-surface text-2xl font-semibold text-subtle-foreground transition focus:outline-none focus:ring-2 focus:ring-primary/50',
-                      slotIndex === index &&
-                        'border-primary bg-primary-soft text-primary',
-                    )}
-                    style={{
-                      width: ALIENADO_BOARD_ITEM_FRAME.emptySlotSize,
-                      height: ALIENADO_BOARD_ITEM_FRAME.emptySlotSize,
-                    }}
-                    aria-label={`Selecionar a posição ${index + 1}`}
-                  >
-                    ?
-                  </button>
-                )}
-
-                {isComplete && (
-                  <div className="rounded-2xl bg-white/80 p-1">
-                    <DailyItem
-                      itemId={request.itemId}
-                      width={itemWidth}
-                      padding={ALIENADO_BOARD_ITEM_FRAME.padding}
-                    />
-                  </div>
-                )}
-              </div>
+                index={index}
+                request={request}
+                selectedItemId={selectedItemId}
+                slotIndex={slotIndex}
+                itemWidth={itemWidth}
+                isComplete={isComplete}
+                isWin={isWin}
+                onSelectSlot={onSelectSlot}
+                onClearSlot={onClearSlot}
+              />
             );
           })}
         </div>
@@ -214,31 +157,26 @@ export function Board({
       </motion.section>
 
       <section className="space-y-3 rounded-[2rem] bg-surface/85 p-4 shadow-sm">
-        <Text strong>E essas são as coisas disponíveis:</Text>
+        <Text
+          strong
+          className="block text-center"
+        >
+          Essas são as coisas disponíveis:
+        </Text>
 
         <div className="flex flex-wrap justify-center gap-2">
           {itemsIds.map((itemId) => {
             const isSelected = selection.includes(itemId);
 
             return (
-              <button
+              <PoolItem
                 key={itemId}
-                type="button"
-                onClick={() => onSelectItem(itemId)}
+                itemId={itemId}
+                itemWidth={itemWidth}
                 disabled={isSelected || isComplete}
-                className={cn(
-                  'rounded-2xl border-2 border-transparent bg-surface-raised p-1 transition focus:outline-none focus:ring-2 focus:ring-primary/50',
-                  !isSelected && !isComplete && 'hover:border-primary/40',
-                  isSelected && 'cursor-not-allowed opacity-40 grayscale',
-                )}
-                aria-label={`Escolher item ${itemId}`}
-              >
-                <DailyItem
-                  itemId={itemId}
-                  width={itemWidth}
-                  padding={ALIENADO_BOARD_ITEM_FRAME.padding}
-                />
-              </button>
+                isSelected={isSelected}
+                onSelectItem={onSelectItem}
+              />
             );
           })}
         </div>
@@ -246,7 +184,10 @@ export function Board({
 
       {previousGuesses.length > 0 && (
         <section className="space-y-3 rounded-[2rem] bg-surface/85 p-4 shadow-sm">
-          <Text strong>
+          <Text
+            strong
+            className="block text-center"
+          >
             {isComplete ? 'Tentativas da rodada' : 'Tentativas anteriores'}
           </Text>
 
@@ -273,5 +214,279 @@ export function Board({
         </section>
       )}
     </div>
+  );
+}
+
+/**
+ * Props accepted by the {@link RequestSlot} component.
+ */
+type RequestSlotProps = {
+  /**
+   * The slot's position among the four requests.
+   */
+  index: number;
+  /**
+   * The requested symbol combination this slot must satisfy.
+   */
+  request: DailyAlienadoRequest;
+  /**
+   * The item id currently placed in this slot, or `null`.
+   */
+  selectedItemId: string | null;
+  /**
+   * Index of the slot currently focused for the next placement.
+   */
+  slotIndex: number | null;
+  /**
+   * Pixel width/height used for items and symbols.
+   */
+  itemWidth: number;
+  /**
+   * Whether the game ended in either a win or a loss.
+   */
+  isComplete: boolean;
+  /**
+   * Whether the finished game was a win.
+   */
+  isWin: boolean;
+  /**
+   * Focuses this slot.
+   */
+  onSelectSlot: (index: number) => void;
+  /**
+   * Clears this slot.
+   */
+  onClearSlot: (index: number) => void;
+};
+
+/**
+ * Renders one of Alienado's four request slots: a droppable target that
+ * also doubles as a draggable item once filled, so the player can drag it
+ * into another slot to swap, or tap to clear it.
+ *
+ * @param props Slot data, sizing, and interaction handlers.
+ * @returns The rendered request slot.
+ */
+function RequestSlot({
+  index,
+  request,
+  selectedItemId,
+  slotIndex,
+  itemWidth,
+  isComplete,
+  isWin,
+  onSelectSlot,
+  onClearSlot,
+}: RequestSlotProps) {
+  const { setNodeRef: setDroppableRef, isOver } = useDroppable({
+    id: `slot-${index}`,
+    data: { index },
+    disabled: isComplete,
+  });
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDraggableRef,
+    transform,
+    isDragging,
+  } = useDraggable({
+    id: `slot-drag-${index}`,
+    data: { itemId: selectedItemId, source: 'slot' as const, index },
+    disabled: isComplete || !selectedItemId,
+  });
+
+  const isReceiving = isOver && !isDragging && !isComplete;
+
+  return (
+    <div
+      ref={setDroppableRef}
+      className={cn(
+        'flex flex-col items-center gap-2 rounded-2xl border-2 border-transparent bg-surface-raised p-2',
+        isComplete &&
+          isWin &&
+          'border-gold bg-gold-soft shadow-[0_0_0_1px_var(--color-gold)]',
+        isReceiving && 'border-primary/50 bg-primary-soft',
+      )}
+    >
+      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary-soft text-xs font-semibold text-foreground">
+        {index + 1}
+      </div>
+
+      <div className="flex flex-col items-center gap-1">
+        {Array(MINIMUM_SPRITES_PER_REQUEST - request.spritesIds.length)
+          .fill(null)
+          .map((_, idx) => (
+            <div
+              key={`placeholder-${idx}`}
+              className="rounded-full"
+              style={{
+                width: ALIENADO_BOARD_ITEM_FRAME.requestSignMinWidth,
+                height: ALIENADO_BOARD_ITEM_FRAME.requestSignMinWidth,
+              }}
+            />
+          ))}
+
+        {request.spritesIds.map((spriteId) => (
+          <AlienSign
+            key={`${request.itemId}-${spriteId}`}
+            signId={spriteId}
+            width={Math.max(
+              itemWidth - ALIENADO_BOARD_ITEM_FRAME.requestSignWidthOffset,
+              ALIENADO_BOARD_ITEM_FRAME.requestSignMinWidth,
+            )}
+          />
+        ))}
+      </div>
+
+      {selectedItemId && !isComplete && (
+        <motion.button
+          ref={setDraggableRef}
+          type="button"
+          {...listeners}
+          {...attributes}
+          onClick={() => onClearSlot(index)}
+          disabled={isComplete}
+          animate={{
+            x: transform ? transform.x : 0,
+            y: transform ? transform.y : 0,
+            opacity: isDragging ? 0.85 : 1,
+          }}
+          transition={
+            isDragging ? { type: 'tween', duration: 0 } : { duration: 0.15 }
+          }
+          className={cn(
+            'rounded-2xl border-2 border-transparent bg-surface p-1 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50',
+            !isComplete && 'cursor-grab hover:border-primary/40',
+            isComplete && 'cursor-default border-primary/30 bg-white/80',
+          )}
+          style={{
+            touchAction: 'none',
+            zIndex: isDragging ? 50 : 1,
+          }}
+          aria-label={`Remover item da posição ${index + 1}`}
+        >
+          <DailyItem
+            itemId={selectedItemId}
+            width={itemWidth}
+            padding={ALIENADO_BOARD_ITEM_FRAME.padding}
+          />
+        </motion.button>
+      )}
+
+      {!selectedItemId && !isComplete && (
+        <button
+          type="button"
+          onClick={() => onSelectSlot(index)}
+          disabled={isComplete}
+          className={cn(
+            'flex items-center justify-center rounded-2xl border-2 border-dashed border-border-strong bg-surface text-2xl font-semibold text-subtle-foreground transition focus:outline-none focus:ring-2 focus:ring-primary/50',
+            slotIndex === index &&
+              'border-primary bg-primary-soft text-primary',
+          )}
+          style={{
+            width: itemWidth,
+            height: itemWidth,
+          }}
+          aria-label={`Selecionar a posição ${index + 1}`}
+        >
+          ?
+        </button>
+      )}
+
+      {isComplete && (
+        <div className="rounded-2xl bg-white/80 p-1">
+          <DailyItem
+            itemId={request.itemId}
+            width={itemWidth}
+            padding={ALIENADO_BOARD_ITEM_FRAME.padding}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Props accepted by the {@link PoolItem} component.
+ */
+type PoolItemProps = {
+  /**
+   * The pool item's id.
+   */
+  itemId: string;
+  /**
+   * Pixel width/height used for the item.
+   */
+  itemWidth: number;
+  /**
+   * Whether the item can't currently be picked up.
+   */
+  disabled: boolean;
+  /**
+   * Whether the item is already placed into a slot.
+   */
+  isSelected: boolean;
+  /**
+   * Places the item into the focused or first empty slot.
+   */
+  onSelectItem: (itemId: string) => void;
+};
+
+/**
+ * Renders one of Alienado's available pool items as both a tap target and
+ * a draggable source: dragging it over a request slot places it there,
+ * while a plain tap falls back to the existing select-a-slot-first flow.
+ *
+ * @param props Item data, sizing, and interaction handler.
+ * @returns The rendered pool item.
+ */
+function PoolItem({
+  itemId,
+  itemWidth,
+  disabled,
+  isSelected,
+  onSelectItem,
+}: PoolItemProps) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: `pool-${itemId}`,
+      data: { itemId, source: 'pool' as const },
+      disabled,
+    });
+
+  return (
+    <motion.button
+      ref={setNodeRef}
+      type="button"
+      {...listeners}
+      {...attributes}
+      onClick={() => onSelectItem(itemId)}
+      disabled={disabled}
+      animate={{
+        x: transform ? transform.x : 0,
+        y: transform ? transform.y : 0,
+        opacity: isDragging ? 0.85 : 1,
+      }}
+      transition={
+        isDragging ? { type: 'tween', duration: 0 } : { duration: 0.15 }
+      }
+      className={cn(
+        'rounded-2xl border-2 border-transparent bg-surface-raised p-1 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50',
+        !isSelected && !disabled && 'cursor-grab hover:border-primary/40',
+        isSelected && 'cursor-not-allowed opacity-40 grayscale',
+      )}
+      style={{
+        touchAction: 'none',
+        zIndex: isDragging ? 50 : 1,
+      }}
+      aria-label={`Escolher item ${itemId}`}
+    >
+      <DailyItem
+        itemId={itemId}
+        width={itemWidth}
+        padding={ALIENADO_BOARD_ITEM_FRAME.padding}
+      />
+    </motion.button>
   );
 }
