@@ -12,8 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Connect four related words!',
   },
   releaseDate: '2025-03-01',
-  release: 'maintenance',
-  version: '0.0.1',
+  release: 'stable',
+  version: '1.0.0',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

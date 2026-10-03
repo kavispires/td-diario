@@ -146,9 +146,8 @@ export function useQuartetosEngine(
           grid: prev.grid.filter((itemId) => !selectedItems.has(itemId)),
           score:
             prev.score +
-            (isWin
-              ? prev.hearts * WIN_BONUS_SCORE
-              : prev.hearts * CORRECT_GUESS_SCORE),
+            prev.hearts * CORRECT_GUESS_SCORE +
+            (isWin ? WIN_BONUS_SCORE : 0),
           progress: nextMatches.length / data.sets.length,
         };
       });

@@ -2,7 +2,6 @@ import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyQuartetosEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import { gameInfo } from '../info';
 import {
   QUARTETOS_SHARE_LEVEL_EMOJIS,
@@ -78,22 +77,6 @@ export function shuffleItems<TItem>(items: TItem[]): TItem[] {
   }
 
   return nextItems;
-}
-
-/**
- * Narrows the shared `GameScreen` payload to a real Quartetos daily payload.
- *
- * @param data - Dynamic game payload resolved by `GameScreen`.
- * @returns Whether `data` has the fields required by Quartetos.
- */
-export function isDailyQuartetosEntry(
-  data: PlaceholderGameData,
-): data is DailyQuartetosEntry {
-  return (
-    data.type === 'quartetos' &&
-    Array.isArray(data.grid) &&
-    Array.isArray(data.sets)
-  );
 }
 
 /**

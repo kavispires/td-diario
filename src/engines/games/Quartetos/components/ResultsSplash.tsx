@@ -1,12 +1,11 @@
-import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
+import { cn } from '@utils/cn';
 import type { DailyQuartetosSet } from 'types/games';
-import {
-  QUARTETOS_GROUP_SIZE,
-  QUARTETOS_RESULTS_ITEM_WIDTH,
-} from '../utils/constants';
+import { QUARTETOS_LEVEL_COLOR_CLASSES } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 
 /**
@@ -79,87 +78,44 @@ export function ResultsSplash({
       shareText={shareText}
       onClose={onClose}
     >
-      <Text
-        strong
-        className="text-center"
-      >
-        Desafio #{challengeNumber}
-      </Text>
-
-      <div className="grid w-full grid-cols-3 gap-3">
-        <div className="rounded-3xl bg-white/70 px-4 py-3 text-center shadow-sm">
-          <Text
-            strong
-            className="block text-sm"
-          >
-            Corações
-          </Text>
-          <Text className="text-sm">{hearts}</Text>
-        </div>
-
-        <div className="rounded-3xl bg-gold-soft px-4 py-3 text-center shadow-sm">
-          <Text
-            strong
-            className="block text-sm"
-          >
-            Pontos
-          </Text>
-          <Text className="text-sm">{score}</Text>
-        </div>
-
-        <div className="rounded-3xl bg-white/70 px-4 py-3 text-center shadow-sm">
-          <Text
-            strong
-            className="block text-sm"
-          >
-            Tentativas
-          </Text>
-          <Text className="text-sm">{guessesCount}</Text>
-        </div>
-      </div>
-
-      <Text
-        type="secondary"
-        className="text-center"
-      >
+      <Text className="text-center">
         {win
           ? 'Você encontrou todos os quartetos de hoje.'
           : 'Estes eram os quartetos escondidos no desafio de hoje. Amanhã tem outra rodada.'}
       </Text>
 
-      <div className="grid w-full gap-3">
-        {sets.map((quartetSet) => (
-          <Surface
-            key={quartetSet.id}
-            className="border border-gold/40 bg-gold-soft px-4 py-4"
-          >
-            <Title
-              level={5}
-              className="text-center"
-            >
-              {quartetSet.title}
-            </Title>
+      <div className="grid w-full gap-2">
+        {sets.map((quartetSet) => {
+          const levelColors =
+            QUARTETOS_LEVEL_COLOR_CLASSES[quartetSet.level] ??
+            QUARTETOS_LEVEL_COLOR_CLASSES[0];
 
-            <div
-              className="mt-3 grid justify-items-center gap-2"
-              style={{
-                gridTemplateColumns: `repeat(${QUARTETOS_GROUP_SIZE}, minmax(0, 1fr))`,
-              }}
+          return (
+            <Surface
+              key={quartetSet.id}
+              className={cn('border px-2 py-2', levelColors.surface)}
             >
-              {quartetSet.itemsIds.map((itemId) => (
-                <div
-                  key={itemId}
-                  className="flex items-center justify-center rounded-2xl bg-white/55 p-1"
-                >
-                  <DailyItem
-                    itemId={itemId}
-                    width={QUARTETOS_RESULTS_ITEM_WIDTH}
-                  />
-                </div>
-              ))}
-            </div>
-          </Surface>
-        ))}
+              <Title
+                level={5}
+                className="text-center"
+              >
+                {quartetSet.title}
+              </Title>
+            </Surface>
+          );
+        })}
+      </div>
+
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center"
+        >
+          {guessesCount} de {sets.length} caracteres descobertos
+        </Text>
+
+        <Divider orientation="vertical" />
+        <Score value={score} />
       </div>
     </GameResultsSplash>
   );

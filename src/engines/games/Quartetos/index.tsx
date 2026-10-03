@@ -1,18 +1,18 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Alert } from '@components/ui/Alert';
 import { Button } from '@components/ui/Button';
-import { Pill } from '@components/ui/Pill';
 import { Surface } from '@components/ui/Surface';
-import { Text, Title } from '@components/ui/Typography';
+import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { cn } from '@utils/cn';
-import { Coins, SendHorizontal, Shuffle, Sparkles } from 'lucide-react';
+import { Coins, Grid2x2, SendHorizontal, Shuffle } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { DailyQuartetosEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
 import {
@@ -21,9 +21,11 @@ import {
   QUARTETOS_GRID_SHAKE_KEYFRAMES,
   QUARTETOS_GROUP_SIZE,
   QUARTETOS_HEART_ICON_SIZE,
+  QUARTETOS_ITEM_LAYOUT_TRANSITION,
+  QUARTETOS_LEVEL_COLOR_CLASSES,
   QUARTETOS_QUARTETS_PER_PUZZLE,
 } from './utils/constants';
-import { getInitialState, isDailyQuartetosEntry } from './utils/helpers';
+import { getInitialState } from './utils/helpers';
 import { useQuartetosEngine } from './utils/useQuartetosEngine';
 
 /**
@@ -32,57 +34,6 @@ import { useQuartetosEngine } from './utils/useQuartetosEngine';
 type DailyQuartetosGameProps = {
   /**
    * Dynamic payload resolved by `GameScreen` for today's Quartetos route.
-   */
-  data: PlaceholderGameData;
-};
-
-/**
- * Returns the Tailwind classes used to style a revealed quartet card.
- *
- * @param isComplete - Whether the whole puzzle is already finished.
- * @returns The classes applied to the card container.
- */
-function getMatchedCardClasses(isComplete: boolean): string {
-  return cn(
-    'border px-4 py-4 transition-colors',
-    isComplete ? 'border-gold/50 bg-gold-soft' : 'border-secondary/20 bg-card',
-  );
-}
-
-/**
- * Renders a full day of Quartetos: hidden quartets already found, the
- * remaining 4x4 grid, selection controls, and a fullscreen results splash
- * once the puzzle ends in a win or loss.
- *
- * @param props Today's Quartetos payload, as resolved by `GameScreen`.
- * @returns The rendered Quartetos game.
- */
-export function DailyQuartetosGame({ data }: DailyQuartetosGameProps) {
-  const quartetosData = useMemo(
-    () => (isDailyQuartetosEntry(data) ? data : null),
-    [data],
-  );
-
-  if (!quartetosData) {
-    return (
-      <Alert
-        type="error"
-        message="Os dados de Quartetos vieram em um formato inesperado."
-        description="Tente voltar ao Hub e abrir o desafio novamente."
-      />
-    );
-  }
-
-  return <DailyQuartetosGameContent data={quartetosData} />;
-}
-
-/**
- * Props accepted by the internal {@link DailyQuartetosGameContent}
- * component, once the payload has been narrowed to the real Quartetos type.
- */
-type DailyQuartetosGameContentProps = {
-  /**
-   * Today's Quartetos payload.
    */
   data: DailyQuartetosEntry;
 };
@@ -93,7 +44,7 @@ type DailyQuartetosGameContentProps = {
  * @param props Today's Quartetos payload.
  * @returns The rendered game UI.
  */
-function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
+export function DailyQuartetosGame({ data }: DailyQuartetosGameProps) {
   const [initialState] = useState(() => getInitialState(data));
   const {
     hearts,
@@ -132,7 +83,7 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
         color={gameInfo.color}
       >
         <GameStat
-          icon={Sparkles}
+          icon={Grid2x2}
           value={`${solvedCount}/${data.sets.length}`}
           label="Quartetos encontrados"
         />
@@ -153,61 +104,58 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
         />
       </GameStatsRow>
 
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Title level={3}>{gameInfo.name.pt}</Title>
-        <Text type="secondary">
-          Faça {QUARTETOS_QUARTETS_PER_PUZZLE} grupos de {QUARTETOS_GROUP_SIZE}{' '}
-          e revele os temas escondidos.
-        </Text>
-      </div>
+      <GameTitle
+        title="4x4"
+        description={`
+              Faça ${QUARTETOS_QUARTETS_PER_PUZZLE} grupos de ${QUARTETOS_GROUP_SIZE} itens
+              e revele os temas escondidos.
+              `}
+      />
 
-      <Pill className="bg-secondary text-white">
-        {selection.length === 0
-          ? `Selecione ${QUARTETOS_GROUP_SIZE} itens`
-          : `${selection.length} de ${QUARTETOS_GROUP_SIZE} itens selecionados`}
-      </Pill>
+      <div className="flex w-full flex-col gap-3 items-center">
+        {matches.map((quartetSet) => {
+          const levelColors =
+            QUARTETOS_LEVEL_COLOR_CLASSES[quartetSet.level] ??
+            QUARTETOS_LEVEL_COLOR_CLASSES[0];
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        Você pode segurar o dedo no ícone para ter uma pista visual do item, mas
-        o tema do quarteto nem sempre usa exatamente esse nome.
-      </Text>
-
-      <div className="flex w-full flex-col gap-3">
-        {matches.map((quartetSet) => (
-          <Surface
-            key={quartetSet.id}
-            className={getMatchedCardClasses(isComplete)}
-          >
-            <Title
-              level={5}
-              className="text-center"
+          return (
+            <Surface
+              key={quartetSet.id}
+              className={cn('border transition-colors', levelColors.surface)}
             >
-              {quartetSet.title}
-            </Title>
-
-            <div
-              className="mt-3 grid justify-items-center gap-2"
-              style={{
-                gridTemplateColumns: `repeat(${QUARTETOS_GROUP_SIZE}, minmax(0, 1fr))`,
-              }}
-            >
-              {quartetSet.itemsIds.map((itemId) => (
-                <div
-                  key={itemId}
-                  className="flex items-center justify-center rounded-2xl bg-white/50 p-1"
-                >
-                  <DailyItem
-                    itemId={itemId}
-                    width={itemWidth}
-                  />
-                </div>
-              ))}
-            </div>
-          </Surface>
-        ))}
+              <Text
+                strong
+                className="text-center block"
+              >
+                {quartetSet.title}
+              </Text>
+              <div
+                className="grid gap-2 rounded-[2rem] bg-card p-3 pt-0 shadow-sm"
+                style={{
+                  gridTemplateColumns: `repeat(${QUARTETOS_GROUP_SIZE}, ${itemWidth}px)`,
+                }}
+              >
+                {quartetSet.itemsIds.map((itemId) => (
+                  <motion.div
+                    key={itemId}
+                    layout="position"
+                    layoutId={itemId}
+                    transition={QUARTETOS_ITEM_LAYOUT_TRANSITION}
+                    className={cn(
+                      'flex items-center justify-center rounded-2xl p-1',
+                      isComplete ? 'bg-white/50' : levelColors.item,
+                    )}
+                  >
+                    <DailyItem
+                      itemId={itemId}
+                      width={itemWidth}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </Surface>
+          );
+        })}
 
         {grid.length > 0 && (
           <motion.div
@@ -229,14 +177,17 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
               const isSelected = selection.includes(itemId);
 
               return (
-                <button
+                <motion.button
                   key={itemId}
+                  layout="position"
+                  layoutId={itemId}
+                  transition={QUARTETOS_ITEM_LAYOUT_TRANSITION}
                   type="button"
                   onClick={() => onSelectItem(itemId)}
                   aria-pressed={isSelected}
                   aria-label={`${isSelected ? 'Desmarcar' : 'Selecionar'} item ${index + 1}`}
                   className={cn(
-                    'flex items-center justify-center rounded-2xl border-2 bg-white/95 transition-all focus:outline-none focus:ring-2 focus:ring-primary-soft',
+                    'flex items-center justify-center rounded-2xl border-2 bg-white/95 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-soft',
                     isSelected
                       ? 'border-secondary bg-secondary-soft shadow-sm'
                       : 'border-transparent hover:border-primary/30',
@@ -247,7 +198,7 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
                     itemId={itemId}
                     width={itemWidth}
                   />
-                </button>
+                </motion.button>
               );
             })}
           </motion.div>
@@ -307,32 +258,18 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
         </div>
       )}
 
-      {isComplete && !showResults && (
-        <Surface
-          className={cn(
-            'flex w-full flex-col items-center gap-4 px-5 py-6 text-center',
-            isWin ? 'bg-gold-soft' : 'bg-card',
-          )}
-        >
-          <Title level={4}>
-            {isWin
-              ? 'Você concluiu o Quartetos de hoje!'
-              : 'Seu jogo já acabou'}
-          </Title>
-          <Text type="secondary">
-            {isWin
-              ? 'Abra o resumo para rever os quartetos e sua pontuação.'
-              : 'Abra o resumo para conferir todos os quartetos revelados.'}
-          </Text>
-          <Button
-            variant="primary"
-            size="small"
-            onClick={() => setShowResults(true)}
-          >
-            Ver resultado
-          </Button>
-        </Surface>
-      )}
+      <Text
+        type="secondary"
+        className="text-center"
+      >
+        Você pode segurar o dedo no ícone para ter uma pista visual do item, mas
+        o tema do quarteto nem sempre usa exatamente esse nome.
+      </Text>
+
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       {showResults && (
         <ResultsSplash
