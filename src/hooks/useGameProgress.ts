@@ -100,7 +100,8 @@ export function getCardState(
  * they get sorted).
  *
  * @returns Today's game progress entries, plus how many are completed out
- *   of the total playable (`type: 'game'`) count.
+ *   of the total count of games currently playable (`type: 'game'`, and
+ *   not `'maintenance'`, `'disabled'`, `'soon'`, or `'unreleased'`).
  */
 export function useGameProgress(): {
   entries: GameProgressEntry[];
@@ -137,10 +138,22 @@ export function useGameProgress(): {
           entry.info.type === 'game' && entry.info.release !== 'unreleased',
       );
 
-    const completedCount = entries.filter(
+    // Only games currently playable (i.e. not in a non-playable release
+    // stage) count toward the hub's "X of Y completed" progress summary;
+    // disabled/soon/maintenance/unreleased cards still render, but are
+    // excluded here since the player can't actually complete them.
+    const countableEntries = entries.filter(
+      (entry) =>
+        entry.info.release !== 'maintenance' &&
+        entry.info.release !== 'disabled' &&
+        entry.info.release !== 'soon' &&
+        entry.info.release !== 'unreleased',
+    );
+
+    const completedCount = countableEntries.filter(
       (entry) => entry.state === 'completed',
     ).length;
 
-    return { entries, completedCount, totalCount: entries.length };
+    return { entries, completedCount, totalCount: countableEntries.length };
   }, [data?.challenges]);
 }
