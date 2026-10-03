@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     pt: 'Já quebrou a cabeça hoje?',
   },
   releaseDate: '2025-12-24',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

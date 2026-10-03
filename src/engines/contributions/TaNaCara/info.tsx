@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Judge the book by its cover! The guy by his face!',
   },
   releaseDate: '2025-02-21',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

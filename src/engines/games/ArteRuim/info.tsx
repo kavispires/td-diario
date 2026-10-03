@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Guess the title of the artworks!',
   },
   releaseDate: '2023-11-04',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Connect four related words!',
   },
   releaseDate: '2025-03-01',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

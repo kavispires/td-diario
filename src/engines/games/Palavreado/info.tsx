@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'What if the word search was all scrambled?',
   },
   releaseDate: '2024-05-10',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

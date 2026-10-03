@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Have you found the matching thing?',
   },
   releaseDate: '2024-04-30',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Can you solve this set challenge?',
   },
   releaseDate: '2024-08-31',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

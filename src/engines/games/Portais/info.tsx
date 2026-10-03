@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Discover what lies beyond these doors!',
   },
   releaseDate: '2025-04-12',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

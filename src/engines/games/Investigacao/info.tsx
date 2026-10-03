@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     pt: 'Consegue descobrir quem é o culpado?',
   },
   releaseDate: '2025-07-05',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Uncover who took the toy!',
   },
   releaseDate: '2026-05-24',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

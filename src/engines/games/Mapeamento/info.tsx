@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Where am I? Who am I? Where am I going?',
   },
   releaseDate: '2026-05-17',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

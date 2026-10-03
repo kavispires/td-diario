@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Communication with the aliens is hard',
   },
   releaseDate: '2024-11-08',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

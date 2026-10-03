@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Already drawn today? New phrases every day!',
   },
   releaseDate: '2024-04-30',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 

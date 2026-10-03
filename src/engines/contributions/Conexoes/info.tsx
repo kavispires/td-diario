@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Help connect related image pairs.',
   },
   releaseDate: '2026-04-04',
-  release: 'stable',
+  release: 'maintenance',
   version: '0.0.1',
 };
 
