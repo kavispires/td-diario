@@ -18,12 +18,16 @@ type GameComponent = LazyExoticComponent<
 const gameComponents: Record<string, GameComponent> = {
   alienado: lazy(() =>
     import('@engines/games/Alienado').then(({ DailyAlienadoGame }) => ({
-      default: DailyAlienadoGame,
+      default: DailyAlienadoGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   'arte-ruim': lazy(() =>
     import('@engines/games/ArteRuim').then(({ DailyArteRuimGame }) => ({
-      default: DailyArteRuimGame,
+      default: DailyArteRuimGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   conjuntos: lazy(() =>
@@ -33,7 +37,9 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   filmaco: lazy(() =>
     import('@engines/games/Filmaco').then(({ DailyFilmacoGame }) => ({
-      default: DailyFilmacoGame,
+      default: DailyFilmacoGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   investigacao: lazy(() =>
@@ -43,7 +49,9 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   mapeamento: lazy(() =>
     import('@engines/games/Mapeamento').then(({ DailyMapeamentoGame }) => ({
-      default: DailyMapeamentoGame,
+      default: DailyMapeamentoGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   organiku: lazy(() =>
@@ -83,7 +91,9 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   quartetos: lazy(() =>
     import('@engines/games/Quartetos').then(({ DailyQuartetosGame }) => ({
-      default: DailyQuartetosGame,
+      default: DailyQuartetosGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   vitral: lazy(() =>
