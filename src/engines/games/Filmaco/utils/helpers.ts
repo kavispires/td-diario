@@ -1,11 +1,61 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
-import { getLettersInWord } from '@utils/prompts';
+import {
+  getLettersInWord,
+  isGuessableCharacter,
+  normalizeCharacter,
+} from '@utils/prompts';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyFilmacoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import { FILMACO_HEARTS } from './constants';
 import type { GameState, LetterGuess, LettersDictionary } from './types';
+
+/**
+ * Counts every guessable character occurrence in today's movie title,
+ * including repeats (e.g. a title with three `"a"`s counts as three, not
+ * one), used to compute Filmaco's letter-by-letter progress.
+ *
+ * @param title - Today's movie title (or double-feature titles).
+ * @returns Total number of guessable character occurrences in `title`.
+ */
+export function countTotalLetterOccurrences(title: string): number {
+  let total = 0;
+
+  for (const character of title) {
+    if (isGuessableCharacter(character, true)) {
+      total += 1;
+    }
+  }
+
+  return total;
+}
+
+/**
+ * Counts how many guessable character occurrences in today's movie title
+ * have already been solved, including repeats of the same letter/digit.
+ *
+ * @param title - Today's movie title (or double-feature titles).
+ * @param solution - Normalized solution map for today's prompt.
+ * @returns Number of solved character occurrences in `title`.
+ */
+export function countSolvedLetterOccurrences(
+  title: string,
+  solution: Dictionary<boolean>,
+): number {
+  let solved = 0;
+
+  for (const character of title) {
+    if (
+      isGuessableCharacter(character, true) &&
+      solution[normalizeCharacter(character)]
+    ) {
+      solved += 1;
+    }
+  }
+
+  return solved;
+}
 
 /**
  * Builds the default `GameState` for a fresh Filmaco day.

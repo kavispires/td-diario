@@ -72,7 +72,8 @@ export type FilmacoEngineState = {
    */
   setShowResults: (value: boolean) => void;
   /**
-   * Fraction of unique letters/digits already discovered, from `0` to `1`.
+   * Fraction of all guessable letter/digit occurrences already discovered
+   * (counting repeats), from `0` to `1`.
    */
   progress: number;
   /**

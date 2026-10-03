@@ -7,8 +7,7 @@ import {
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
 import {
-  countSolvedLetters,
-  countTotalLetters,
+  getLetterPoints,
   isGuessableCharacter,
   normalizeCharacter,
 } from '@utils/prompts';
@@ -16,7 +15,11 @@ import { playSFX } from '@utils/soundEffects';
 import { useEffect, useState } from 'react';
 import type { DailyFilmacoEntry } from 'types/games';
 import { gameInfo } from '../info';
-import { CORRECT_GUESS_SCORE, WIN_BONUS_SCORE } from './constants';
+import { WIN_BONUS_SCORE } from './constants';
+import {
+  countSolvedLetterOccurrences,
+  countTotalLetterOccurrences,
+} from './helpers';
 import type { FilmacoEngineState, GameState, LetterState } from './types';
 
 /**
@@ -76,10 +79,11 @@ export function useFilmacoEngine(
       isCorrect && Object.values(nextSolution).every((value) => value);
     const isLose = !isCorrect && state.hearts === 1;
     const nextLetterState: LetterState = isCorrect ? 'correct' : 'incorrect';
-    const solvedLetters = isCorrect
-      ? countSolvedLetters(nextSolution)
-      : countSolvedLetters(state.solution);
-    const totalLetters = countTotalLetters(state.solution);
+    const totalLetterOccurrences = countTotalLetterOccurrences(data.title);
+    const solvedLetterOccurrences = countSolvedLetterOccurrences(
+      data.title,
+      nextSolution,
+    );
 
     if (isCorrect) {
       playSFX(isWin ? 'win' : 'addCorrect');
@@ -111,12 +115,13 @@ export function useFilmacoEngine(
           ? GAME_LIFECYCLE_STATUS.LOSE
           : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
       progress:
-        totalLetters > 0
-          ? solvedLetters / totalLetters
+        totalLetterOccurrences > 0
+          ? solvedLetterOccurrences / totalLetterOccurrences
           : previousState.progress,
       score: isCorrect
         ? previousState.score +
-          previousState.hearts * (isWin ? WIN_BONUS_SCORE : CORRECT_GUESS_SCORE)
+          getLetterPoints(normalizedLetter) * previousState.hearts +
+          (isWin ? WIN_BONUS_SCORE : 0)
         : previousState.score,
     }));
   }

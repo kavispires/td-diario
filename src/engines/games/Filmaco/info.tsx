@@ -12,8 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Grab the popcorn and come find out about this movie!',
   },
   releaseDate: '2024-05-30',
-  release: 'beta',
-  version: '0.0.1',
+  release: 'stable',
+  version: '1.0.0',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

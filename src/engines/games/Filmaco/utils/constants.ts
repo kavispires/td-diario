@@ -4,11 +4,12 @@
 export const FILMACO_HEARTS = 3;
 
 /**
- * Points awarded for a correct guess.
+ * Bonus points awarded on top of the final letter's score for winning the
+ * puzzle.
  */
-export const CORRECT_GUESS_SCORE = 5;
+export const WIN_BONUS_SCORE = 50;
 
 /**
- * Bonus points awarded for winning the puzzle.
+ * Character that separates the two movies in a double feature.
  */
-export const WIN_BONUS_SCORE = 10;
+export const DOUBLE_FEATURE_CHARACTER = '×';

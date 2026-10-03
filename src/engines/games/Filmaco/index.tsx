@@ -3,14 +3,13 @@ import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
 import { Keyboard } from '@components/games/Keyboard';
-import { Button } from '@components/ui/Button';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Surface } from '@components/ui/Surface';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { countSolvedLetters, countTotalLetters } from '@utils/prompts';
 import { Coins, Type } from 'lucide-react';
 import { useState } from 'react';
 import type { DailyFilmacoEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import { Prompt } from './components/Prompt';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
@@ -29,36 +28,13 @@ type FilmacoGameContentProps = {
 };
 
 /**
- * Checks whether the generic `GameScreen` payload has Filmaco's required
- * shape before the engine starts rendering.
- *
- * @param data - Dynamic payload provided by `GameScreen`.
- * @returns Whether `data` matches {@link DailyFilmacoEntry}.
- */
-function isDailyFilmacoEntry(
-  data: PlaceholderGameData,
-): data is DailyFilmacoEntry {
-  return (
-    data.type === 'filmaco' &&
-    typeof data.id === 'string' &&
-    typeof data.number === 'number' &&
-    typeof data.title === 'string' &&
-    Array.isArray(data.itemsIds) &&
-    data.itemsIds.every((itemId) => typeof itemId === 'string') &&
-    (typeof data.year === 'number' || typeof data.year === 'string') &&
-    (data.isDoubleFeature === undefined ||
-      typeof data.isDoubleFeature === 'boolean')
-  );
-}
-
-/**
  * Renders the playable Filmaco experience once today's payload has been
  * validated.
  *
  * @param props Today's Filmaco payload.
  * @returns The rendered Filmaco game.
  */
-function FilmacoGameContent({ data }: FilmacoGameContentProps) {
+export function DailyFilmacoGame({ data }: FilmacoGameContentProps) {
   const [initialState] = useState(() => getInitialState(data));
   const {
     hearts,
@@ -67,6 +43,7 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
     showResults,
     setShowResults,
     score,
+    progress,
     isWin,
     isComplete,
     guessLetter,
@@ -87,12 +64,12 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
       <GameStatsRow
-        progress={isComplete ? 1 : solvedLetters / totalLetters}
+        progress={isComplete ? 1 : progress}
         color={gameInfo.color}
       >
         <GameStat
           icon={Type}
-          value={`${solvedLetters}/${totalLetters}`}
+          value={`${solvedLetters}`}
           label="Letras descobertas"
         />
 
@@ -136,15 +113,10 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
         solution={solution}
       />
 
-      {isComplete && !showResults && (
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setShowResults(true)}
-        >
-          Ver resultado
-        </Button>
-      )}
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       <Keyboard
         keysState={guesses}
@@ -175,20 +147,4 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
       )}
     </div>
   );
-}
-
-/**
- * Entry point used by `GameScreen` for today's Filmaco route.
- *
- * @param props Dynamic payload for the `filmaco` game id.
- * @returns The playable Filmaco game after payload validation.
- * @throws When the fetched daily payload does not match Filmaco's expected
- *   shape.
- */
-export function DailyFilmacoGame({ data }: { data: PlaceholderGameData }) {
-  if (!isDailyFilmacoEntry(data)) {
-    throw new Error('Invalid Filmaco daily payload.');
-  }
-
-  return <FilmacoGameContent data={data} />;
 }
