@@ -1,10 +1,10 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
-import { Surface } from '@components/ui/Surface';
-import { Text, Title } from '@components/ui/Typography';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
+import { Text } from '@components/ui/Typography';
 import { ARTE_RUIM_HEARTS } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
-import { DrawingPreview } from './DrawingPreview';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -26,10 +26,6 @@ type ResultsSplashProps = {
    * Final answer text for today's phrase.
    */
   answer: string;
-  /**
-   * Serialized drawing clues shown during the round.
-   */
-  drawings: string[];
   /**
    * Number of unique letters the player revealed.
    */
@@ -61,7 +57,6 @@ export function ResultsSplash({
   hearts,
   score,
   answer,
-  drawings,
   revealedLetters,
   totalLetters,
   challengeNumber,
@@ -81,22 +76,12 @@ export function ResultsSplash({
       shareText={shareText}
       onClose={onClose}
     >
-      <Surface
-        className={`w-full px-5 py-4 text-center ${win ? 'bg-gold-soft' : 'bg-white/75'}`}
+      <Text
+        strong
+        className="text-center text-lg"
       >
-        <Text
-          strong
-          className="text-sm uppercase tracking-[0.2em]"
-        >
-          Resposta de hoje
-        </Text>
-        <Title
-          level={4}
-          className="mt-2 text-center"
-        >
-          {answer}
-        </Title>
-      </Surface>
+        "{answer}"
+      </Text>
 
       <Hearts
         remaining={hearts}
@@ -104,23 +89,15 @@ export function ResultsSplash({
         emptyClassName="text-black"
       />
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        Você revelou {revealedLetters} de {totalLetters} letras únicas e fez{' '}
-        {score} pontos.
-      </Text>
-
-      <div className="grid w-full grid-cols-2 gap-3">
-        {drawings.map((drawing, index) => (
-          <DrawingPreview
-            key={`${drawing}-${index}`}
-            drawing={drawing}
-            label={`Resumo do desenho ${index + 1}`}
-            className="rounded-3xl"
-          />
-        ))}
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center"
+        >
+          {revealedLetters} de {totalLetters} caracteres descobertos
+        </Text>
+        <Divider orientation="vertical" />
+        <Score value={score} />
       </div>
     </GameResultsSplash>
   );

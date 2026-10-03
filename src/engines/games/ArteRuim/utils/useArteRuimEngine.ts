@@ -7,17 +7,20 @@ import {
 
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
+import {
+  countSolvedLetterOccurrences,
+  countSolvedLetters,
+  countTotalLetterOccurrences,
+  countTotalLetters,
+  getLetterPoints,
+  isGuessableCharacter,
+  normalizeCharacter,
+} from '@utils/prompts';
 import { playSFX } from '@utils/soundEffects';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { DailyArteRuimEntry } from 'types/games';
 import { gameInfo } from '../info';
-import { ARTE_RUIM_HEARTS } from './constants';
-import {
-  countLetterOccurrences,
-  countRevealedLetters,
-  getProgress,
-  normalizeLetter,
-} from './helpers';
+import { ARTE_RUIM_HEARTS, WIN_BONUS_SCORE } from './constants';
 import type { ArteRuimEngineState, GameState, LetterGuess } from './types';
 
 /**
@@ -50,9 +53,14 @@ export function useArteRuimEngine(
 
   const guessLetter = useCallback(
     (rawLetter: string) => {
-      const letter = normalizeLetter(rawLetter);
+      const letter = normalizeCharacter(rawLetter);
 
-      if (!/^[a-z]$/.test(letter) || state.guesses[letter]) {
+      if (
+        !isGuessableCharacter(letter) ||
+        state.guesses[letter] ||
+        state.status === GAME_LIFECYCLE_STATUS.WIN ||
+        state.status === GAME_LIFECYCLE_STATUS.LOSE
+      ) {
         return;
       }
 
@@ -73,6 +81,11 @@ export function useArteRuimEngine(
         state: isCorrect ? 'correct' : 'incorrect',
         disabled: true,
       };
+      const totalLetterOccurrences = countTotalLetterOccurrences(data.text);
+      const solvedLetterOccurrences = countSolvedLetterOccurrences(
+        data.text,
+        nextSolution,
+      );
 
       if (isCorrect) {
         playSFX(isWin ? 'win' : 'addCorrect');
@@ -86,31 +99,27 @@ export function useArteRuimEngine(
         }
       }
 
-      setState((previousState) => {
-        const revealedOccurrences = isCorrect
-          ? countLetterOccurrences(data.text, letter)
-          : 0;
-        const score = isCorrect
-          ? previousState.score + revealedOccurrences * previousState.hearts
-          : previousState.score;
-
-        return {
-          ...previousState,
-          guesses: {
-            ...previousState.guesses,
-            [letter]: guess,
-          },
-          solution: nextSolution,
-          hearts: nextHearts,
-          status,
-          score,
-          progress: isCorrect
-            ? getProgress(nextSolution)
+      setState((previousState) => ({
+        ...previousState,
+        guesses: {
+          ...previousState.guesses,
+          [letter]: guess,
+        },
+        solution: nextSolution,
+        hearts: nextHearts,
+        status,
+        score: isCorrect
+          ? previousState.score +
+            getLetterPoints(letter) * previousState.hearts +
+            (isWin ? WIN_BONUS_SCORE : 0)
+          : previousState.score,
+        progress:
+          totalLetterOccurrences > 0
+            ? solvedLetterOccurrences / totalLetterOccurrences
             : previousState.progress,
-        };
-      });
+      }));
     },
-    [data.text, state.guesses, state.hearts, state.solution],
+    [data.text, state.guesses, state.hearts, state.solution, state.status],
   );
 
   const { isWin, isLose, isComplete } = getGameStatuses(state.status);
@@ -118,11 +127,11 @@ export function useArteRuimEngine(
   useAutoShowResults(isComplete, setShowResults);
 
   const totalLetters = useMemo(
-    () => Object.keys(state.solution).length,
+    () => countTotalLetters(state.solution),
     [state.solution],
   );
   const revealedLetters = useMemo(
-    () => countRevealedLetters(state.solution),
+    () => countSolvedLetters(state.solution),
     [state.solution],
   );
 

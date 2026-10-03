@@ -3,6 +3,7 @@ import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
 import { Keyboard } from '@components/games/Keyboard';
+import { LetterPrompt } from '@components/games/LetterPrompt';
 import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Surface } from '@components/ui/Surface';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
@@ -10,10 +11,9 @@ import { countSolvedLetters, countTotalLetters } from '@utils/prompts';
 import { Coins, Type } from 'lucide-react';
 import { useState } from 'react';
 import type { DailyFilmacoEntry } from 'types/games';
-import { Prompt } from './components/Prompt';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
-import { FILMACO_HEARTS } from './utils/constants';
+import { DOUBLE_FEATURE_CHARACTER, FILMACO_HEARTS } from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useFilmacoEngine } from './utils/useFilmacoEngine';
 
@@ -108,9 +108,11 @@ export function DailyFilmacoGame({ data }: FilmacoGameContentProps) {
         ))}
       </Surface>
 
-      <Prompt
+      <LetterPrompt
         text={data.title}
         solution={solution}
+        allowNumbers
+        separatorWord={DOUBLE_FEATURE_CHARACTER}
       />
 
       <SeeResultsButton

@@ -7,6 +7,8 @@ import {
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
 import {
+  countSolvedLetterOccurrences,
+  countTotalLetterOccurrences,
   getLetterPoints,
   isGuessableCharacter,
   normalizeCharacter,
@@ -16,10 +18,6 @@ import { useEffect, useState } from 'react';
 import type { DailyFilmacoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import { WIN_BONUS_SCORE } from './constants';
-import {
-  countSolvedLetterOccurrences,
-  countTotalLetterOccurrences,
-} from './helpers';
 import type { FilmacoEngineState, GameState, LetterState } from './types';
 
 /**
@@ -79,10 +77,14 @@ export function useFilmacoEngine(
       isCorrect && Object.values(nextSolution).every((value) => value);
     const isLose = !isCorrect && state.hearts === 1;
     const nextLetterState: LetterState = isCorrect ? 'correct' : 'incorrect';
-    const totalLetterOccurrences = countTotalLetterOccurrences(data.title);
+    const totalLetterOccurrences = countTotalLetterOccurrences(
+      data.title,
+      true,
+    );
     const solvedLetterOccurrences = countSolvedLetterOccurrences(
       data.title,
       nextSolution,
+      true,
     );
 
     if (isCorrect) {

@@ -1,99 +1,12 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { getLettersInWord } from '@utils/prompts';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyArteRuimEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { gameInfo } from '../info';
 import { ARTE_RUIM_HEARTS } from './constants';
 import type { GameState } from './types';
-
-/**
- * Normalizes a character for answer matching, removing accents and forcing
- * lowercase.
- *
- * @param value - Raw character from the answer or from player input.
- * @returns The normalized letter used for comparisons.
- */
-export function normalizeLetter(value: string): string {
-  return value
-    .normalize('NFD')
-    .replaceAll(/[\u0300-\u036f]/g, '')
-    .toLowerCase();
-}
-
-/**
- * Determines whether a normalized character should be guessable from the
- * keyboard.
- *
- * @param value - Normalized character to inspect.
- * @returns Whether the character is an ASCII letter.
- */
-export function isPlayableLetter(value: string): boolean {
-  return /^[a-z]$/.test(value);
-}
-
-/**
- * Extracts the unique, guessable letters present in the answer text.
- *
- * @param text - Secret expression for today's puzzle.
- * @returns A dictionary keyed by unique letters, initially all hidden.
- */
-export function getLettersInText(text: string): Dictionary<boolean> {
-  const lettersInText: Dictionary<boolean> = {};
-
-  for (const rawCharacter of text) {
-    const letter = normalizeLetter(rawCharacter);
-    if (isPlayableLetter(letter)) {
-      lettersInText[letter] = false;
-    }
-  }
-
-  return lettersInText;
-}
-
-/**
- * Counts how many times a guessed letter appears in the full answer.
- *
- * @param text - Secret expression for today's puzzle.
- * @param letter - Normalized letter to count.
- * @returns The number of visible characters that guess would reveal.
- */
-export function countLetterOccurrences(text: string, letter: string): number {
-  let count = 0;
-
-  for (const rawCharacter of text) {
-    if (normalizeLetter(rawCharacter) === letter) {
-      count += 1;
-    }
-  }
-
-  return count;
-}
-
-/**
- * Counts how many unique letters in the solution have already been found.
- *
- * @param solution - Dictionary keyed by solution letters.
- * @returns The number of entries currently marked as found.
- */
-export function countRevealedLetters(solution: Dictionary<boolean>): number {
-  return Object.values(solution).filter(Boolean).length;
-}
-
-/**
- * Calculates the persisted progress value for Arte Ruim, from `0` to `1`.
- *
- * @param solution - Dictionary keyed by solution letters.
- * @returns Fraction of unique letters already discovered.
- */
-export function getProgress(solution: Dictionary<boolean>): number {
-  const totalLetters = Object.keys(solution).length;
-  if (totalLetters === 0) {
-    return 1;
-  }
-
-  return countRevealedLetters(solution) / totalLetters;
-}
 
 /**
  * Builds the default `GameState` for a fresh Arte Ruim day.
@@ -106,7 +19,7 @@ function getDefaultState(data: DailyArteRuimEntry): GameState {
     id: data.id,
     status: GAME_LIFECYCLE_STATUS.IDLE,
     hearts: ARTE_RUIM_HEARTS,
-    solution: getLettersInText(data.text),
+    solution: getLettersInWord(data.text),
     guesses: {},
     progress: 0,
     score: 0,
@@ -122,7 +35,7 @@ function getDefaultState(data: DailyArteRuimEntry): GameState {
  * @returns Whether the restored state is safe to reuse.
  */
 function isValidState(state: GameState, data: DailyArteRuimEntry): boolean {
-  const expectedLetters = Object.keys(getLettersInText(data.text)).sort();
+  const expectedLetters = Object.keys(getLettersInWord(data.text)).sort();
   const currentLetters = Object.keys(state.solution).sort();
 
   return (

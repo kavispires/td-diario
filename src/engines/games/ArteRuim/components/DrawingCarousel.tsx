@@ -1,4 +1,3 @@
-import { Pill } from '@components/ui/Pill';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { AUTOPLAY_DELAY_MS } from '../utils/constants';
@@ -41,24 +40,6 @@ export function DrawingCarousel({ drawings }: DrawingCarouselProps) {
 
   return (
     <div className="flex w-full flex-col items-center gap-3">
-      <Pill>Desenho {activeIndex + 1}</Pill>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`${activeIndex}-${activeDrawing}`}
-          className="w-full"
-          initial={prefersReducedMotion ? undefined : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={prefersReducedMotion ? undefined : { opacity: 0 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
-        >
-          <DrawingPreview
-            drawing={activeDrawing}
-            label={`Pista desenhada ${activeIndex + 1}`}
-          />
-        </motion.div>
-      </AnimatePresence>
-
       {drawings.length > 1 && (
         <div className="flex items-center gap-2">
           {drawings.map((drawing, index) => {
@@ -81,6 +62,22 @@ export function DrawingCarousel({ drawings }: DrawingCarouselProps) {
           })}
         </div>
       )}
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`${activeIndex}-${activeDrawing}`}
+          className="mx-auto w-[70%]"
+          initial={prefersReducedMotion ? undefined : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={prefersReducedMotion ? undefined : { opacity: 0 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
+        >
+          <DrawingPreview
+            drawing={activeDrawing}
+            label={`Pista desenhada ${activeIndex + 1}`}
+          />
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

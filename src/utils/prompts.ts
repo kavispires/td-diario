@@ -76,6 +76,58 @@ export function countTotalLetters(solution: Dictionary<boolean>): number {
 }
 
 /**
+ * Counts every guessable character occurrence in a prompt's text, including
+ * repeats (e.g. a title with three `"a"`s counts as three, not one), used
+ * to compute letter-guessing games' letter-by-letter progress.
+ *
+ * @param text - Prompt text shown in today's challenge.
+ * @param allowNumbers - Whether digits should count as guessable too.
+ * @returns Total number of guessable character occurrences in `text`.
+ */
+export function countTotalLetterOccurrences(
+  text: string,
+  allowNumbers = false,
+): number {
+  let total = 0;
+
+  for (const character of text) {
+    if (isGuessableCharacter(character, allowNumbers)) {
+      total += 1;
+    }
+  }
+
+  return total;
+}
+
+/**
+ * Counts how many guessable character occurrences in a prompt's text have
+ * already been solved, including repeats of the same letter/digit.
+ *
+ * @param text - Prompt text shown in today's challenge.
+ * @param solution - Normalized solution map for today's prompt.
+ * @param allowNumbers - Whether digits should count as guessable too.
+ * @returns Number of solved character occurrences in `text`.
+ */
+export function countSolvedLetterOccurrences(
+  text: string,
+  solution: Dictionary<boolean>,
+  allowNumbers = false,
+): number {
+  let solved = 0;
+
+  for (const character of text) {
+    if (
+      isGuessableCharacter(character, allowNumbers) &&
+      solution[normalizeCharacter(character)]
+    ) {
+      solved += 1;
+    }
+  }
+
+  return solved;
+}
+
+/**
  * Point value awarded for guessing a given keyboard letter or digit,
  * shared by letter-guessing games (e.g. Filmaco, Arte Ruim) for both
  * scoring and the point-indicator dots rendered on their keyboards.

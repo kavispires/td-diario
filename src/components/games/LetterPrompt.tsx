@@ -2,38 +2,52 @@ import { Surface } from '@components/ui/Surface';
 import { cn } from '@utils/cn';
 import { isGuessableCharacter, normalizeCharacter } from '@utils/prompts';
 import { useMemo } from 'react';
-import { DOUBLE_FEATURE_CHARACTER } from '../utils/constants';
 
 /**
- * Props accepted by the {@link Prompt} component.
+ * Props accepted by the {@link LetterPrompt} component.
  */
-type PromptProps = {
+type LetterPromptProps = {
   /**
-   * Movie title the player is trying to discover.
+   * Secret text the player is trying to discover.
    */
   text: string;
   /**
    * Normalized solution characters already discovered by the player.
    */
   solution: Dictionary<boolean>;
+  /**
+   * Whether digits should count as guessable characters too. Defaults to
+   * `false`.
+   */
+  allowNumbers?: boolean;
+  /**
+   * Standalone word that, when present, is rendered on its own row instead
+   * of as guessable characters, used to visually separate two halves of a
+   * prompt (e.g. Filmaco's double-feature divider).
+   */
+  separatorWord?: string;
 };
 
 /**
- * Renders Filmaco's masked movie title, revealing letters and numbers only
- * after the corresponding normalized guess has been found.
+ * Renders a masked word-guessing prompt, revealing letters and (optionally)
+ * digits only after the corresponding normalized guess has been found,
+ * shared by letter-guessing games (e.g. Filmaco, Arte Ruim).
  *
- * @param props Movie title and discovered-solution map.
- * @returns The rendered Filmaco prompt.
+ * @param props Prompt text, discovered-solution map, and display options.
+ * @returns The rendered letter-guessing prompt.
  */
-export function Prompt({ text, solution }: PromptProps) {
+export function LetterPrompt({
+  text,
+  solution,
+  allowNumbers = false,
+  separatorWord,
+}: LetterPromptProps) {
   const words = useMemo(() => text.split(' '), [text]);
 
   return (
     <Surface className="flex w-full flex-wrap justify-center gap-x-5 gap-y-4 bg-primary-soft p-2 uppercase">
       {words.map((word, wordIndex) => {
-        const isDoubleFeatureSeparator = word === DOUBLE_FEATURE_CHARACTER;
-
-        if (isDoubleFeatureSeparator) {
+        if (separatorWord && word === separatorWord) {
           return (
             <div
               key={`${word}-${wordIndex}`}
@@ -50,7 +64,7 @@ export function Prompt({ text, solution }: PromptProps) {
             className="flex flex-wrap justify-center gap-0.5"
           >
             {Array.from(word).map((character, characterIndex) => {
-              const isGuessable = isGuessableCharacter(character, true);
+              const isGuessable = isGuessableCharacter(character, allowNumbers);
               const isRevealed =
                 isGuessable && Boolean(solution[normalizeCharacter(character)]);
 

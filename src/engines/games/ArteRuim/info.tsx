@@ -12,8 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Guess the title of the artworks!',
   },
   releaseDate: '2023-11-04',
-  release: 'maintenance',
-  version: '0.0.1',
+  release: 'stable',
+  version: '1.0.0',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {
