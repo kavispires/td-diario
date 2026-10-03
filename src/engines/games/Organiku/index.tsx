@@ -1,7 +1,7 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
 import { Button } from '@components/ui/Button';
-import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Coins, Repeat } from 'lucide-react';
 import { useState } from 'react';
@@ -84,18 +84,16 @@ export function DailyOrganikuGame({ data }: DailyOrganikuGameProps) {
         />
       </GameStatsRow>
 
-      <div className="flex w-full items-center justify-center">
-        <Text strong>{data.title}</Text>
-      </div>
-
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        Revele itens de par em par.
-        <br />
-        Há apenas um tipo de símbolo por linha e coluna.
-      </Text>
+      <GameTitle
+        title={data.title}
+        description={
+          <>
+            Revele itens de par em par.
+            <br />
+            Há apenas um tipo de símbolo por linha e coluna.
+          </>
+        }
+      />
 
       <TableGrid
         grid={data.grid}
