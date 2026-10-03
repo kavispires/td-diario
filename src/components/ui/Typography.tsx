@@ -127,7 +127,7 @@ export function Text({
 }: TextProps) {
   const colors = {
     default: 'text-foreground',
-    secondary: 'text-subtle-foreground',
+    secondary: 'text-subtle-foreground text-sm',
     danger: 'text-destructive',
     success: 'text-success',
   };
