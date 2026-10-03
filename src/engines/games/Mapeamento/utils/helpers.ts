@@ -1,3 +1,4 @@
+import type { KeyboardKeyState } from '@components/games/Keyboard';
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { generateShareableResult } from '@utils/shareResults';
@@ -133,6 +134,42 @@ export function hasFoundAllLocationLetters(
  */
 export function getAvailableClues(clues: string[], hearts: number): string[] {
   return clues.slice(0, MAPEAMENTO_HEARTS - hearts + 1);
+}
+
+/**
+ * Builds the on-screen keyboard's per-key visual feedback from every
+ * letter/digit typed across previous guesses: `correct` when it's part of
+ * an already-revealed fragment, `incorrect` otherwise. Keys are never
+ * marked `disabled`, since the same character can be retyped across
+ * multiple location guesses.
+ *
+ * @param guesses - Wrong guesses submitted so far.
+ * @param locationFragments - Revealed letter fragments built from those
+ *   guesses.
+ * @returns The keyboard state keyed by lowercase character.
+ */
+export function buildKeyboardKeysState(
+  guesses: string[],
+  locationFragments: string[],
+): Dictionary<KeyboardKeyState> {
+  const keysState: Dictionary<KeyboardKeyState> = {};
+  const revealedCharacters = new Set(
+    normalizeComparableLocationText(locationFragments.join('')).split(''),
+  );
+
+  for (const guess of guesses) {
+    for (const character of normalizeComparableLocationText(guess)) {
+      if (keysState[character] || !/[a-z0-9]/.test(character)) {
+        continue;
+      }
+
+      keysState[character] = {
+        state: revealedCharacters.has(character) ? 'correct' : 'incorrect',
+      };
+    }
+  }
+
+  return keysState;
 }
 
 /**

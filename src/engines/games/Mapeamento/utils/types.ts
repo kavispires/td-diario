@@ -1,3 +1,4 @@
+import type { KeyboardKeyState } from '@components/games/Keyboard';
 import type { DefaultGameState } from 'types/puzzles';
 
 /**
@@ -39,6 +40,11 @@ export type MapeamentoEngineState = {
    * Revealed letter fragments built from previous wrong guesses.
    */
   locationFragments: string[];
+  /**
+   * On-screen keyboard feedback built from every character typed across
+   * previous guesses.
+   */
+  keysState: Dictionary<KeyboardKeyState>;
   /**
    * Whether every distinct answer letter has already appeared across the
    * player's wrong guesses.

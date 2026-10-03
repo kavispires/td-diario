@@ -1,7 +1,8 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
+import { Keyboard } from '@components/games/Keyboard';
 import { Button } from '@components/ui/Button';
-import { TextInput } from '@components/ui/TextInput';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { Lightbulb, Repeat } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -58,6 +59,7 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
     allClues,
     availableClues,
     locationFragments,
+    keysState,
     showResults,
     setShowResults,
     score,
@@ -67,6 +69,22 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
     hasFoundAllLetters,
     submitLocation,
   } = useMapeamentoEngine(data, initialState);
+
+  function handleTypeLetter(letter: string) {
+    if (isComplete) {
+      return;
+    }
+
+    setTypedLocation((previous) => previous + letter);
+  }
+
+  function handleBackspace() {
+    if (isComplete) {
+      return;
+    }
+
+    setTypedLocation((previous) => previous.slice(0, -1));
+  }
 
   function handleSubmit() {
     if (isComplete) {
@@ -119,7 +137,7 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
         </div>
       )}
 
-      <div className="rounded-[2rem] bg-card px-5 py-5 shadow-sm">
+      <Surface className="bg-card px-5 py-5">
         <ul className="grid gap-3">
           {allClues.map((clue, index) => {
             const isAvailable = availableClues.includes(clue);
@@ -143,7 +161,7 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
             );
           })}
         </ul>
-      </div>
+      </Surface>
 
       {!isWin && <LocationFragments fragments={locationFragments} />}
 
@@ -157,61 +175,36 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
       )}
 
       {isComplete && (
-        <div
-          className={`rounded-[2rem] px-5 py-5 text-center shadow-sm ${
-            isWin ? 'bg-gold-soft' : 'bg-card'
-          }`}
+        <Surface
+          className={`px-5 py-5 text-center ${isWin ? 'bg-gold-soft' : 'bg-card'}`}
         >
           <Text type="secondary">O lugar é:</Text>
           <div className="mt-2">
             <Title level={4}>{data.location}</Title>
           </div>
-        </div>
+        </Surface>
       )}
 
       {!isComplete && (
-        <div className="flex flex-col gap-3 rounded-[2rem] bg-card px-5 py-5 shadow-sm">
+        <Surface className="flex flex-col gap-3 bg-card px-5 py-5">
           <GuessedLocation
             typedLocation={typedLocation}
             fragments={locationFragments}
           />
 
-          <TextInput
-            value={typedLocation}
-            onChange={(event) => setTypedLocation(event.target.value)}
-            placeholder="Digite seu palpite"
-            aria-label="Digite seu palpite para o lugar"
-            autoComplete="off"
-            autoCorrect="off"
-            spellCheck={false}
-            enterKeyHint="go"
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.preventDefault();
-                handleSubmit();
-              }
-            }}
+          <Keyboard
+            keysState={keysState}
+            onKeyPress={handleTypeLetter}
+            onEnterClick={handleSubmit}
+            onBackspaceClick={handleBackspace}
+            disabled={isComplete}
+            color={gameInfo.color}
+            withNumbers
+            withSpaceBar
+            withScoreDots={false}
+            getAriaLabel={(key) => `Digitar ${key.toUpperCase()}`}
           />
-
-          <div className="flex gap-3">
-            <Button
-              variant="primary"
-              size="small"
-              onClick={handleSubmit}
-              disabled={!typedLocation.trim()}
-            >
-              Tentar
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => setTypedLocation('')}
-              disabled={!typedLocation}
-            >
-              Limpar
-            </Button>
-          </div>
-        </div>
+        </Surface>
       )}
 
       {locationFragments.includes('_') && !isComplete && (
@@ -225,7 +218,7 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
       )}
 
       {guesses.length > 0 && (
-        <div className="rounded-[2rem] bg-card px-5 py-5 shadow-sm">
+        <Surface className="bg-card px-5 py-5">
           <Title
             level={5}
             className="mb-3"
@@ -243,7 +236,7 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
               </span>
             ))}
           </div>
-        </div>
+        </Surface>
       )}
 
       {isComplete && !showResults && (

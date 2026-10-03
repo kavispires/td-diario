@@ -1,17 +1,18 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
+import { Keyboard } from '@components/games/Keyboard';
 import { Button } from '@components/ui/Button';
-import { Pill } from '@components/ui/Pill';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Coins, Type } from 'lucide-react';
 import { useState } from 'react';
 import type { DailyFilmacoEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
-import { Keyboard } from './components/Keyboard';
 import { Prompt } from './components/Prompt';
 import { ResultsSplash } from './components/ResultsSplash';
+import { gameInfo } from './info';
 import {
   countSolvedLetters,
   countTotalLetters,
@@ -68,17 +69,16 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
     solution,
     showResults,
     setShowResults,
-    progress,
     score,
     isWin,
     isComplete,
     guessLetter,
   } = useFilmacoEngine(data, initialState);
-  const [itemWidth, containerRef] = useCardWidthByContainerRef(5, {
+  const [itemWidth, containerRef] = useCardWidthByContainerRef(7, {
     margin: 48,
     gap: 12,
     maxWidth: 88,
-    minWidth: 56,
+    minWidth: 48,
   });
 
   const solvedLetters = countSolvedLetters(solution);
@@ -89,12 +89,6 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <Pill>
-        {data.isDoubleFeature
-          ? `Sessão Dupla · ${data.year}`
-          : `Lançamento · ${data.year}`}
-      </Pill>
-
       <GameStatsRow>
         <GameStat
           icon={Type}
@@ -118,11 +112,10 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
         />
       </GameStatsRow>
 
-      <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-        <div
-          className="h-full rounded-full bg-gold transition-[width] duration-200 ease-out"
-          style={{ width: `${progress * 100}%` }}
-        />
+      <div className="flex w-full items-center justify-center">
+        {data.isDoubleFeature
+          ? `Sessão Dupla · ${data.year}`
+          : `Lançamento · ${data.year}`}
       </div>
 
       <Text
@@ -132,7 +125,7 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
         Use as pistas visuais e o ano para descobrir o nome exato do filme.
       </Text>
 
-      <div className="flex w-full flex-wrap justify-center gap-3 rounded-[2rem] bg-card px-4 py-4 shadow-sm">
+      <Surface className="flex w-full flex-wrap justify-center gap-3 bg-card px-4 py-4">
         {data.itemsIds.map((itemId, index) => (
           <DailyItem
             key={`${itemId}-${index}`}
@@ -140,7 +133,7 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
             width={itemWidth}
           />
         ))}
-      </div>
+      </Surface>
 
       <Prompt
         text={data.title}
@@ -158,9 +151,14 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
       )}
 
       <Keyboard
-        lettersState={guesses}
-        onLetterClick={guessLetter}
+        keysState={guesses}
+        onKeyPress={guessLetter}
         disabled={isComplete}
+        color={gameInfo.color}
+        withNumbers
+        getAriaLabel={(key, points) =>
+          `Palpite ${key.toUpperCase()}, vale ${points} ponto${points > 1 ? 's' : ''}`
+        }
       />
 
       {isComplete && showResults && (

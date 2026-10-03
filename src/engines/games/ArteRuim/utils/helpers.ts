@@ -12,11 +12,6 @@ import type { GameState } from './types';
 export const ARTE_RUIM_HEARTS = 3;
 
 /**
- * Shared keyboard row layout shown under the puzzle.
- */
-export const KEYBOARD_ROWS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'] as const;
-
-/**
  * Normalizes a character for answer matching, removing accents and forcing
  * lowercase.
  *

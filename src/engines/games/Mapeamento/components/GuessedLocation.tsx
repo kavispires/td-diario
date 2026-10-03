@@ -1,3 +1,4 @@
+import { Surface } from '@components/ui/Surface';
 import { Tooltip } from '@components/ui/Tooltip';
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
@@ -122,7 +123,7 @@ export function LocationFragments({ fragments }: LocationFragmentsProps) {
 
   return (
     <Tooltip title="Partes do nome que você já revelou; os blocos cinza ainda podem ser letras ou espaços.">
-      <div className="flex flex-wrap items-center justify-center gap-2 rounded-[2rem] bg-card px-5 py-4 text-center shadow-sm">
+      <Surface className="flex flex-wrap items-center justify-center gap-2 bg-card px-5 py-4 text-center">
         {fragments.map((fragment, index) => (
           <span
             key={`${fragment}-${index}`}
@@ -136,7 +137,7 @@ export function LocationFragments({ fragments }: LocationFragmentsProps) {
             {fragment}
           </span>
         ))}
-      </div>
+      </Surface>
     </Tooltip>
   );
 }

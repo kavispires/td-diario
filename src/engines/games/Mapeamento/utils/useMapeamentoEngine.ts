@@ -1,8 +1,10 @@
+import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
 } from '@services/firebase';
+
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
 import { notification } from '@utils/notification';
@@ -11,6 +13,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { DailyMapeamentoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
+  buildKeyboardKeysState,
   getAvailableClues,
   getLocationFragments,
   hasFoundAllLocationLetters,
@@ -60,6 +63,11 @@ export function useMapeamentoEngine(
   const availableClues = useMemo(
     () => getAvailableClues(data.clues, state.hearts),
     [data.clues, state.hearts],
+  );
+
+  const keysState = useMemo(
+    () => buildKeyboardKeysState(state.guesses, locationFragments),
+    [state.guesses, locationFragments],
   );
 
   /**
@@ -140,11 +148,7 @@ export function useMapeamentoEngine(
 
   const { isWin, isLose, isComplete } = getGameStatuses(state.status);
 
-  useEffect(() => {
-    if (isComplete) {
-      setShowResults(true);
-    }
-  }, [isComplete]);
+  useAutoShowResults(isComplete, setShowResults);
 
   return {
     hearts: state.hearts,
@@ -152,6 +156,7 @@ export function useMapeamentoEngine(
     allClues: data.clues,
     availableClues,
     locationFragments,
+    keysState,
     hasFoundAllLetters,
     showResults,
     setShowResults,

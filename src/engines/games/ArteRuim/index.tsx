@@ -1,15 +1,17 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
+import { Keyboard } from '@components/games/Keyboard';
 import { Button } from '@components/ui/Button';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { Coins, Search } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { DailyArteRuimEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { DrawingCarousel } from './components/DrawingCarousel';
-import { Keyboard } from './components/Keyboard';
 import { Prompt } from './components/Prompt';
 import { ResultsSplash } from './components/ResultsSplash';
+import { gameInfo } from './info';
 import { getInitialState, isDailyArteRuimEntry } from './utils/helpers';
 import { useArteRuimEngine } from './utils/useArteRuimEngine';
 
@@ -34,13 +36,13 @@ type DailyArteRuimGameProps = {
 export function DailyArteRuimGame({ data }: DailyArteRuimGameProps) {
   if (!isDailyArteRuimEntry(data)) {
     return (
-      <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 rounded-[2rem] bg-card px-5 py-8 text-center shadow-sm">
+      <Surface className="mx-auto flex w-full max-w-md flex-col items-center gap-4 bg-card px-5 py-8 text-center">
         <Title level={4}>Não foi possível abrir o desafio de hoje</Title>
         <Text type="secondary">
           Os dados de Arte Ruim vieram incompletos. Tente voltar ao hub e abrir
           de novo.
         </Text>
-      </div>
+      </Surface>
     );
   }
 
@@ -79,23 +81,6 @@ function ArteRuimGameContent({ data }: ArteRuimGameContentProps) {
     isComplete,
     guessLetter,
   } = useArteRuimEngine(data, initialState);
-
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.metaKey || event.ctrlKey || event.altKey) {
-        return;
-      }
-
-      if (event.key.length !== 1) {
-        return;
-      }
-
-      guessLetter(event.key);
-    }
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [guessLetter]);
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8">
@@ -154,9 +139,13 @@ function ArteRuimGameContent({ data }: ArteRuimGameContentProps) {
       )}
 
       <Keyboard
-        guesses={guesses}
+        keysState={guesses}
+        onKeyPress={guessLetter}
         disabled={isComplete}
-        onGuess={guessLetter}
+        color={gameInfo.color}
+        getAriaLabel={(key, points) =>
+          `Escolher a letra ${key.toUpperCase()}, vale ${points} ponto${points > 1 ? 's' : ''}`
+        }
       />
 
       {isComplete && showResults && (
