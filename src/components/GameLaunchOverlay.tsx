@@ -1,11 +1,27 @@
 import { Button } from '@components/ui/Button';
 import { Text, Title } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
+import { loadLocalToday } from '@hooks/useDailyLocalToday';
+import { getCardState } from '@hooks/useGameProgress';
+import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
+import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { AnimatePresence, motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
+import type { DefaultGameState, PlaceholderGameData } from 'types/puzzles';
 import { GameLogos } from './hub/GameLogos';
 import { DualTranslate } from './ui/DualTranslate';
+
+/**
+ * Labels for the primary action button, keyed by the launching game's
+ * current card state (completed, in-progress, or not yet started).
+ */
+const PLAY_BUTTON_LABELS = {
+  completed: 'Ver Resultado',
+  'in-progress': 'Continuar',
+  available: 'Jogar',
+  disabled: 'Jogar',
+} as const;
 
 const LAYOUT_TRANSITION = {
   layout: {
@@ -22,10 +38,11 @@ const LAYOUT_TRANSITION = {
 /**
  * Persistent fullscreen splash that shares `layoutId`s with the originating GameCard
  * and the Header's logo slot. Expands on game entry and shows a loading state while
- * the game chunk/data is fetched; once ready, it offers Jogar (enter the game, clearing
- * the splash so the logo's `layoutId` carries it into the Header), Regras (opens the
- * rules screen without dismissing the splash), and Voltar (dismisses the splash
- * and navigates back to the hub).
+ * the game chunk/data is fetched; once ready, it offers the primary action (Jogar,
+ * Continuar, or Ver Resultado, depending on today's locally-persisted progress for
+ * that game, which enters the game and clears the splash so the logo's `layoutId`
+ * carries it into the Header), Regras (opens the rules screen without dismissing the
+ * splash), and Voltar (dismisses the splash and navigates back to the hub).
  */
 export function GameLaunchOverlay() {
   const launchingGame = useAppRuntimeStore((state) => state.launchingGame);
@@ -39,6 +56,38 @@ export function GameLaunchOverlay() {
   const gameInfo = launchingGame
     ? gameInfos[launchingGame.id as keyof typeof gameInfos]
     : undefined;
+
+  const dailyChallenges = useGetDailyChallenges();
+  // `challenges`/`contributions` only declare known game ids as optional
+  // fields (no string index signature), so a dynamic lookup by id needs
+  // this cast; the underlying value is still `PlaceholderGameData`.
+  const gamesById = dailyChallenges.data?.challenges as
+    | Record<string, PlaceholderGameData | undefined>
+    | undefined;
+  const contributionsById = dailyChallenges.data?.contributions as
+    | Record<string, PlaceholderGameData | undefined>
+    | undefined;
+  const challenge = launchingGame
+    ? (gamesById?.[launchingGame.id] ?? contributionsById?.[launchingGame.id])
+    : undefined;
+
+  const cardState =
+    gameInfo && challenge
+      ? getCardState(
+          gameInfo.release,
+          loadLocalToday<DefaultGameState>({
+            key: gameInfo.key,
+            dateId: challenge.id,
+            defaultValue: {
+              id: challenge.id,
+              status: GAME_LIFECYCLE_STATUS.IDLE,
+              progress: 0,
+              score: 0,
+            },
+          }).status,
+        )
+      : undefined;
+  const playLabel = PLAY_BUTTON_LABELS[cardState ?? 'available'];
 
   function handlePlay() {
     if (!launchingGame) {
@@ -110,7 +159,7 @@ export function GameLaunchOverlay() {
                   block
                   onClick={handlePlay}
                 >
-                  Jogar
+                  {playLabel}
                 </Button>
                 <Button
                   variant="outlined"
