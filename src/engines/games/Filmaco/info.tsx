@@ -13,7 +13,7 @@ export const gameInfo: GameInfo = {
   },
   releaseDate: '2024-05-30',
   release: 'stable',
-  version: '1.0.0',
+  version: '1.0.1',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

@@ -1,6 +1,8 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import { ORGANIKU_PLACEHOLDER_ITEM_ID } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
@@ -46,6 +48,10 @@ type ResultsSplashProps = {
    */
   challengeNumber: number;
   /**
+   * Player's final score.
+   */
+  score: number;
+  /**
    * Called to dismiss the splash and return to viewing the completed grid.
    */
   onClose: () => void;
@@ -70,6 +76,7 @@ export function ResultsSplash({
   swapLimit,
   challengeNumber,
   onClose,
+  score,
 }: ResultsSplashProps) {
   const shareText = buildShareText({
     challengeNumber,
@@ -115,12 +122,16 @@ export function ResultsSplash({
         })}
       </div>
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        {flips} de {swapLimit} viradas projetadas
-      </Text>
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center"
+        >
+          {flips} de {swapLimit} viradas projetadas
+        </Text>
+        <Divider orientation="vertical" />
+        <Score value={score} />
+      </div>
     </GameResultsSplash>
   );
 }

@@ -135,9 +135,6 @@ export function DailyFilmacoGame({ data }: FilmacoGameContentProps) {
           win={isWin}
           hearts={hearts}
           title={data.title}
-          year={data.year}
-          isDoubleFeature={data.isDoubleFeature}
-          itemsIds={data.itemsIds}
           solvedLetters={solvedLetters}
           totalLetters={totalLetters}
           score={score}

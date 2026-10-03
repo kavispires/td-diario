@@ -1,7 +1,7 @@
-import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
-import { Surface } from '@components/ui/Surface';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import { FILMACO_HEARTS } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
@@ -22,19 +22,6 @@ type ResultsSplashProps = {
    * Secret movie title revealed in the results splash.
    */
   title: string;
-  /**
-   * Release year shown alongside the clue summary.
-   */
-  year: number | string;
-  /**
-   * Whether today's puzzle references a double feature instead of a single
-   * movie release.
-   */
-  isDoubleFeature?: boolean;
-  /**
-   * Ids of the item clues shown during the puzzle.
-   */
-  itemsIds: string[];
   /**
    * Number of unique letters/digits the player discovered.
    */
@@ -69,9 +56,6 @@ export function ResultsSplash({
   win,
   hearts,
   title,
-  year,
-  isDoubleFeature,
-  itemsIds,
   solvedLetters,
   totalLetters,
   score,
@@ -99,42 +83,23 @@ export function ResultsSplash({
         {title}
       </Text>
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        {isDoubleFeature ? `Sessão Dupla · ${year}` : `Lançamento · ${year}`}
-      </Text>
-
       <Hearts
         remaining={hearts}
         total={FILMACO_HEARTS}
         emptyClassName="text-black"
       />
 
-      <Surface className="flex w-full flex-wrap justify-center gap-3 bg-white/70 px-4 py-4">
-        {itemsIds.map((itemId, index) => (
-          <DailyItem
-            key={`${itemId}-${index}`}
-            itemId={itemId}
-            width={56}
-          />
-        ))}
-      </Surface>
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center"
+        >
+          {solvedLetters} de {totalLetters} caracteres descobertos
+        </Text>
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        {solvedLetters} de {totalLetters} letras e números descobertos
-      </Text>
-
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        Pontuação final: {score}
-      </Text>
+        <Divider orientation="vertical" />
+        <Score value={score} />
+      </div>
     </GameResultsSplash>
   );
 }
