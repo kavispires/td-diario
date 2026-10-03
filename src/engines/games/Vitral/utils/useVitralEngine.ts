@@ -1,9 +1,11 @@
+import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import { useTDImageCardUrl } from '@hooks/useTDImageCardUrl';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
 } from '@services/firebase';
+
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
@@ -102,13 +104,7 @@ export function useVitralEngine(
 
   const { isWin, isLose, isComplete } = getGameStatuses(state.status);
 
-  useEffect(() => {
-    if (!isComplete) {
-      return;
-    }
-
-    setShowResults(true);
-  }, [isComplete]);
+  useAutoShowResults(isComplete, setShowResults);
 
   useEffect(() => {
     if (isComplete || isRulesOpen) {

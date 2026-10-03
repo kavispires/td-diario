@@ -1,8 +1,10 @@
+import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
 } from '@services/firebase';
+
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
 import { playSFX } from '@utils/soundEffects';
@@ -281,12 +283,7 @@ export function usePalavreadoEngine(
 
   const { isWin, isLose, isComplete } = getGameStatuses(state.status);
 
-  // Auto-open the results splash once the game reaches a final state.
-  useEffect(() => {
-    if (isComplete) {
-      setShowResults(true);
-    }
-  }, [isComplete]);
+  useAutoShowResults(isComplete, setShowResults);
 
   return {
     hearts: state.hearts,

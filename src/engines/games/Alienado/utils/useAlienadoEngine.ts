@@ -1,8 +1,10 @@
+import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
 } from '@services/firebase';
+
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
 import { notification } from '@utils/notification';
@@ -168,11 +170,7 @@ export function useAlienadoEngine(
   const isReady = session.selection.every(Boolean);
   const { isWin, isLose, isComplete } = getGameStatuses(state.status);
 
-  useEffect(() => {
-    if (isComplete) {
-      setShowResults(true);
-    }
-  }, [isComplete]);
+  useAutoShowResults(isComplete, setShowResults);
 
   return {
     hearts: state.hearts,

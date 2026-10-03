@@ -1,3 +1,4 @@
+import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import {
   getGameAnalyticsEventName,
@@ -124,11 +125,7 @@ export function useFilmacoEngine(
 
   const { isWin, isLose, isComplete } = getGameStatuses(state.status);
 
-  useEffect(() => {
-    if (isComplete) {
-      setShowResults(true);
-    }
-  }, [isComplete]);
+  useAutoShowResults(isComplete, setShowResults);
 
   return {
     hearts: state.hearts,
