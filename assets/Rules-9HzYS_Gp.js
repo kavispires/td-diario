@@ -1,1 +1,0 @@
-import{O as e}from"./index-tRoPEk5T.js";var t=e();function n(){return(0,t.jsx)(`p`,{children:`As regras de VitraisInfinitos estarão disponíveis em breve.`})}export{n as Rules};

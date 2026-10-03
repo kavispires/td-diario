@@ -1,0 +1,1 @@
+import{s as e}from"./Typography-9B3VJ8jh.js";import{n as t}from"./createLucideIcon-Bke7SVvU.js";import{I as n,L as r,R as i}from"./Tooltip-DWEp_Rok.js";var a=e(t(),1);function o(){!r.current&&n();let[e]=(0,a.useState)(i.current);return e}export{o as t};

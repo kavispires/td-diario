@@ -1,0 +1,1 @@
+var e={lose:[200,100,200,100,200],wrong:[100]};function t(t){if(!navigator.vibrate)return;let n=e[t]??[];n.length!==0&&navigator.vibrate(n)}export{t};
