@@ -1,5 +1,14 @@
 import { cn } from '@utils/cn';
 import type { ReactNode, SVGProps } from 'react';
+import {
+  CONJUNTOS_DIAGRAM_VIEW_BOX,
+  CONJUNTOS_INTERSECTION_AREA,
+  CONJUNTOS_INTERSECTION_AREA_FRAME,
+  CONJUNTOS_LEFT_AREA_FRAME,
+  CONJUNTOS_RIGHT_AREA_FRAME,
+  CONJUNTOS_RULE1_AREA,
+  CONJUNTOS_RULE2_AREA,
+} from '../utils/constants';
 import type { DiagramArea } from '../utils/types';
 
 /**
@@ -52,7 +61,7 @@ export function Diagram({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 760 500"
+      viewBox={CONJUNTOS_DIAGRAM_VIEW_BOX}
       className={className}
       {...props}
     >
@@ -80,21 +89,21 @@ export function Diagram({
         d="M258.72 250.5c0-66.64 25.95-129.3 73.08-176.42a253.125 253.125 0 0134.1-28.57c-33.98-18.65-72.29-28.57-112.13-28.57-62.39 0-121.04 24.29-165.16 68.41C44.5 129.46 20.2 188.11 20.2 250.5s24.29 121.04 68.41 165.16c44.11 44.12 102.77 68.41 165.16 68.41 39.84 0 78.15-9.92 112.13-28.57a252.507 252.507 0 01-34.1-28.57c-47.12-47.12-73.08-109.78-73.08-176.42zM674.37 85.34C630.25 41.22 571.6 16.93 509.21 16.93c-40.27 0-78.98 10.14-113.24 29.18 11.74 8.26 22.86 17.6 33.22 27.96 47.12 47.12 73.08 109.78 73.08 176.42s-25.95 129.3-73.08 176.42a252.312 252.312 0 01-33.22 27.96c34.25 19.04 72.96 29.18 113.24 29.18 62.39 0 121.04-24.29 165.16-68.41 44.12-44.11 68.41-102.77 68.41-165.16s-24.29-121.04-68.41-165.16z"
       />
       <foreignObject
-        x="30"
-        y="25"
-        width="250"
-        height="450"
+        x={CONJUNTOS_LEFT_AREA_FRAME.x}
+        y={CONJUNTOS_LEFT_AREA_FRAME.y}
+        width={CONJUNTOS_LEFT_AREA_FRAME.width}
+        height={CONJUNTOS_LEFT_AREA_FRAME.height}
       >
         <button
           type="button"
           aria-label="Escolher círculo amarelo"
-          aria-pressed={activeArea === 1}
+          aria-pressed={activeArea === CONJUNTOS_RULE1_AREA}
           disabled={disabled}
-          onClick={() => onSelectArea(1)}
+          onClick={() => onSelectArea(CONJUNTOS_RULE1_AREA)}
           className={cn(
             'grid h-full w-full place-items-center rounded-tl-[80%] rounded-bl-[70%] bg-transparent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-default',
             !disabled && 'cursor-pointer hover:bg-white/15',
-            activeArea === 1 &&
+            activeArea === CONJUNTOS_RULE1_AREA &&
               'bg-white/25 outline outline-4 outline-secondary',
           )}
         >
@@ -102,21 +111,21 @@ export function Diagram({
         </button>
       </foreignObject>
       <foreignObject
-        x="480"
-        y="25"
-        width="250"
-        height="450"
+        x={CONJUNTOS_RIGHT_AREA_FRAME.x}
+        y={CONJUNTOS_RIGHT_AREA_FRAME.y}
+        width={CONJUNTOS_RIGHT_AREA_FRAME.width}
+        height={CONJUNTOS_RIGHT_AREA_FRAME.height}
       >
         <button
           type="button"
           aria-label="Escolher círculo vermelho"
-          aria-pressed={activeArea === 2}
+          aria-pressed={activeArea === CONJUNTOS_RULE2_AREA}
           disabled={disabled}
-          onClick={() => onSelectArea(2)}
+          onClick={() => onSelectArea(CONJUNTOS_RULE2_AREA)}
           className={cn(
             'grid h-full w-full place-items-center rounded-tr-[80%] rounded-br-[70%] bg-transparent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-default',
             !disabled && 'cursor-pointer hover:bg-white/15',
-            activeArea === 2 &&
+            activeArea === CONJUNTOS_RULE2_AREA &&
               'bg-white/25 outline outline-4 outline-secondary',
           )}
         >
@@ -124,21 +133,21 @@ export function Diagram({
         </button>
       </foreignObject>
       <foreignObject
-        x="290"
-        y="65"
-        width="182"
-        height="370"
+        x={CONJUNTOS_INTERSECTION_AREA_FRAME.x}
+        y={CONJUNTOS_INTERSECTION_AREA_FRAME.y}
+        width={CONJUNTOS_INTERSECTION_AREA_FRAME.width}
+        height={CONJUNTOS_INTERSECTION_AREA_FRAME.height}
       >
         <button
           type="button"
           aria-label="Escolher interseção"
-          aria-pressed={activeArea === 0}
+          aria-pressed={activeArea === CONJUNTOS_INTERSECTION_AREA}
           disabled={disabled}
-          onClick={() => onSelectArea(0)}
+          onClick={() => onSelectArea(CONJUNTOS_INTERSECTION_AREA)}
           className={cn(
             'grid h-full w-full place-items-center rounded-full bg-transparent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-default',
             !disabled && 'cursor-pointer hover:bg-white/15',
-            activeArea === 0 &&
+            activeArea === CONJUNTOS_INTERSECTION_AREA &&
               'bg-white/25 outline outline-4 outline-secondary',
           )}
         >

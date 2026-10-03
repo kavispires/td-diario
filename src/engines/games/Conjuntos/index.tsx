@@ -15,6 +15,17 @@ import { InDiagramThings } from './components/InDiagramThings';
 import { PlacementReview } from './components/PlacementReview';
 import { ResultsSplash } from './components/ResultsSplash';
 import { ThingCard } from './components/ThingCard';
+import {
+  CONJUNTOS_HAND_CARD_COLUMNS,
+  CONJUNTOS_HAND_CARD_GAP,
+  CONJUNTOS_HAND_CARD_MARGIN,
+  CONJUNTOS_HAND_CARD_MAX_WIDTH,
+  CONJUNTOS_HAND_CARD_MIN_WIDTH,
+  CONJUNTOS_INTERSECTION_THING_WIDTH_MULTIPLIER,
+  CONJUNTOS_MAX_DIFFICULTY_LEVEL,
+  CONJUNTOS_MIN_DIFFICULTY_LEVEL,
+  CONJUNTOS_PROGRESS_ANIMATION_DURATION,
+} from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useConjuntosEngine } from './utils/useConjuntosEngine';
 
@@ -63,14 +74,17 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
     onConfirmPlacement,
     onCancelPlacement,
   } = useConjuntosEngine(conjuntosData, initialState);
-  const [thingWidth, containerRef] = useCardWidthByContainerRef(5, {
-    margin: 48,
-    gap: 12,
-    maxWidth: 82,
-    minWidth: 54,
-  });
+  const [thingWidth, containerRef] = useCardWidthByContainerRef(
+    CONJUNTOS_HAND_CARD_COLUMNS,
+    {
+      margin: CONJUNTOS_HAND_CARD_MARGIN,
+      gap: CONJUNTOS_HAND_CARD_GAP,
+      maxWidth: CONJUNTOS_HAND_CARD_MAX_WIDTH,
+      minWidth: CONJUNTOS_HAND_CARD_MIN_WIDTH,
+    },
+  );
   const difficultyStars = Array.from({
-    length: Math.max(conjuntosData.level, 1),
+    length: Math.max(conjuntosData.level, CONJUNTOS_MIN_DIFFICULTY_LEVEL),
   });
 
   return (
@@ -114,7 +128,7 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
         <div
           className="flex items-center gap-1"
           role="img"
-          aria-label={`Dificuldade ${conjuntosData.level} de 5`}
+          aria-label={`Dificuldade ${conjuntosData.level} de ${CONJUNTOS_MAX_DIFFICULTY_LEVEL}`}
         >
           {difficultyStars.map((_, index) => (
             <Star
@@ -139,7 +153,10 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
           <motion.div
             className="h-full rounded-full bg-gold"
             animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={{
+              duration: CONJUNTOS_PROGRESS_ANIMATION_DURATION,
+              ease: 'easeOut',
+            }}
           />
         </div>
       )}
@@ -164,7 +181,7 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
         intersectionChildren={
           <InDiagramThings
             things={intersectingThings}
-            width={thingWidth * 0.95}
+            width={thingWidth * CONJUNTOS_INTERSECTION_THING_WIDTH_MULTIPLIER}
           />
         }
       />

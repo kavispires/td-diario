@@ -8,8 +8,11 @@ import type { DailyVitralEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { PuzzleBoard } from './components/PuzzleBoard';
 import { ResultsSplash } from './components/ResultsSplash';
+import {
+  HEART_LOSS_INTERVAL_SECONDS,
+  VITRAL_TOTAL_HEARTS,
+} from './utils/constants';
 import { getInitialState } from './utils/helpers';
-import { VITRAL_TOTAL_HEARTS } from './utils/puzzleUtils';
 import { useVitralEngine } from './utils/useVitralEngine';
 
 /**
@@ -117,7 +120,8 @@ export function DailyVitralGame({ data }: DailyVitralGameProps) {
       >
         Arraste uma peça para perto de outra que combine para grudá-las.
         <br />
-        Você perde um coração a cada {20 + data.pieces.length} segundos.
+        Você perde um coração a cada{' '}
+        {HEART_LOSS_INTERVAL_SECONDS + data.pieces.length} segundos.
       </Text>
 
       <PuzzleBoard

@@ -19,7 +19,18 @@ import type { PlaceholderGameData } from 'types/puzzles';
 import { ResultsSplash } from './components/ResultsSplash';
 import { SwipeablePair } from './components/SwipeablePair';
 import { gameInfo } from './info';
-import { getInitialState, MIN_REQUIRED_PAIRS } from './utils/helpers';
+import {
+  MIN_ENTRY_IMAGE_IDS,
+  MIN_REQUIRED_PAIRS,
+  PAIR_CARD_COUNT,
+  PAIR_CARD_GAP,
+  PAIR_CARD_MARGIN,
+  PAIR_CARD_MAX_WIDTH,
+  PAIR_CARD_MIN_WIDTH,
+  PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
+  PROGRESS_PERCENT_MULTIPLIER,
+} from './utils/constants';
+import { getInitialState } from './utils/helpers';
 import { useConexoesEngine } from './utils/useConexoesEngine';
 
 /**
@@ -45,7 +56,7 @@ function isDailyConexoesEntry(
   return (
     data.type === 'conexoes' &&
     Array.isArray(data.imageIds) &&
-    data.imageIds.length >= 2 &&
+    data.imageIds.length >= MIN_ENTRY_IMAGE_IDS &&
     data.imageIds.every((imageId) => typeof imageId === 'string')
   );
 }
@@ -93,12 +104,15 @@ type ConexoesGameContentProps = {
  */
 function ConexoesGameContent({ data }: ConexoesGameContentProps) {
   const [initialState] = useState(() => getInitialState(data));
-  const [cardWidth, pairContainerRef] = useCardWidthByContainerRef(2, {
-    gap: 20,
-    margin: 24,
-    maxWidth: 160,
-    minWidth: 112,
-  });
+  const [cardWidth, pairContainerRef] = useCardWidthByContainerRef(
+    PAIR_CARD_COUNT,
+    {
+      gap: PAIR_CARD_GAP,
+      margin: PAIR_CARD_MARGIN,
+      maxWidth: PAIR_CARD_MAX_WIDTH,
+      minWidth: PAIR_CARD_MIN_WIDTH,
+    },
+  );
   const {
     currentPair,
     relatedPairs,
@@ -157,8 +171,11 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
         <div className="h-2 w-full overflow-hidden rounded-full bg-border">
           <motion.div
             className="h-full rounded-full bg-gold"
-            animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            animate={{ width: `${progress * PROGRESS_PERCENT_MULTIPLIER}%` }}
+            transition={{
+              duration: PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
+              ease: 'easeOut',
+            }}
           />
         </div>
       )}
@@ -187,7 +204,7 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
           <div className="grid w-full gap-3 rounded-3xl bg-primary-soft px-4 py-4 text-left">
             <Text>1. Olhe as duas imagens.</Text>
             <Text>2. Marque Sim se elas combinam, Não se não combinam.</Text>
-            <Text>3. Avalie pelo menos 10 pares.</Text>
+            <Text>3. Avalie pelo menos {MIN_REQUIRED_PAIRS} pares.</Text>
             <Text>4. Salve quando achar relações úteis.</Text>
           </div>
 

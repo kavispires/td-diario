@@ -15,6 +15,15 @@ import type { DailyQuartetosEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
+import {
+  QUARTETOS_CARD_WIDTH_SETTINGS,
+  QUARTETOS_GRID_SHAKE_ANIMATION_DURATION_SECONDS,
+  QUARTETOS_GRID_SHAKE_KEYFRAMES,
+  QUARTETOS_GROUP_SIZE,
+  QUARTETOS_HEART_ICON_SIZE,
+  QUARTETOS_PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
+  QUARTETOS_QUARTETS_PER_PUZZLE,
+} from './utils/constants';
 import { getInitialState, isDailyQuartetosEntry } from './utils/helpers';
 import { useQuartetosEngine } from './utils/useQuartetosEngine';
 
@@ -107,12 +116,10 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
     onSubmit,
     clearFeedback,
   } = useQuartetosEngine(data, initialState);
-  const [itemWidth, containerRef] = useCardWidthByContainerRef(4, {
-    margin: 48,
-    gap: 12,
-    maxWidth: 96,
-    minWidth: 55,
-  });
+  const [itemWidth, containerRef] = useCardWidthByContainerRef(
+    QUARTETOS_GROUP_SIZE,
+    QUARTETOS_CARD_WIDTH_SETTINGS,
+  );
 
   const solvedCount = Math.round(progress * data.sets.length);
 
@@ -132,7 +139,7 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
           <Hearts
             remaining={hearts}
             total={data.sets.length}
-            size={16}
+            size={QUARTETOS_HEART_ICON_SIZE}
           />
         </div>
 
@@ -147,7 +154,8 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
       <div className="flex flex-col items-center gap-2 text-center">
         <Title level={3}>{gameInfo.name.pt}</Title>
         <Text type="secondary">
-          Faça quatro grupos de quatro e revele os temas escondidos.
+          Faça {QUARTETOS_QUARTETS_PER_PUZZLE} grupos de {QUARTETOS_GROUP_SIZE}{' '}
+          e revele os temas escondidos.
         </Text>
       </div>
 
@@ -156,15 +164,18 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
           <motion.div
             className="h-full rounded-full bg-gold"
             animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={{
+              duration: QUARTETOS_PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
+              ease: 'easeOut',
+            }}
           />
         </div>
       )}
 
       <Pill className="bg-secondary text-white">
         {selection.length === 0
-          ? 'Selecione quatro itens'
-          : `${selection.length} de 4 itens selecionados`}
+          ? `Selecione ${QUARTETOS_GROUP_SIZE} itens`
+          : `${selection.length} de ${QUARTETOS_GROUP_SIZE} itens selecionados`}
       </Pill>
 
       <Text
@@ -188,7 +199,12 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
               {quartetSet.title}
             </Title>
 
-            <div className="mt-3 grid grid-cols-4 justify-items-center gap-2">
+            <div
+              className="mt-3 grid justify-items-center gap-2"
+              style={{
+                gridTemplateColumns: `repeat(${QUARTETOS_GROUP_SIZE}, minmax(0, 1fr))`,
+              }}
+            >
               {quartetSet.itemsIds.map((itemId) => (
                 <div
                   key={itemId}
@@ -208,10 +224,17 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
           <motion.div
             key={latestAttempt}
             className="grid gap-2 rounded-[2rem] bg-card p-3 shadow-sm"
-            style={{ gridTemplateColumns: `repeat(4, ${itemWidth}px)` }}
+            style={{
+              gridTemplateColumns: `repeat(${QUARTETOS_GROUP_SIZE}, ${itemWidth}px)`,
+            }}
             initial={false}
-            animate={{ x: latestAttempt > 0 ? [0, -8, 8, -6, 6, 0] : 0 }}
-            transition={{ duration: 0.32, ease: 'easeOut' }}
+            animate={{
+              x: latestAttempt > 0 ? QUARTETOS_GRID_SHAKE_KEYFRAMES : 0,
+            }}
+            transition={{
+              duration: QUARTETOS_GRID_SHAKE_ANIMATION_DURATION_SECONDS,
+              ease: 'easeOut',
+            }}
           >
             {grid.map((itemId, index) => {
               const isSelected = selection.includes(itemId);
@@ -287,7 +310,7 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
                 aria-hidden="true"
               />
             }
-            disabled={selection.length !== 4}
+            disabled={selection.length !== QUARTETOS_GROUP_SIZE}
             onClick={onSubmit}
           >
             Enviar

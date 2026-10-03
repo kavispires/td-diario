@@ -1,51 +1,9 @@
 import { Text } from '@components/ui/Typography';
 import { Heart } from 'lucide-react';
-
-const ATTRIBUTE_HINT_GROUPS = [
-  {
-    title: 'Mais comuns',
-    hints: [
-      'Afiado',
-      'Arma',
-      'Brinquedo',
-      'Comida',
-      'Frio',
-      'Planta',
-      'Quente',
-      'Transporte',
-      'Vestimenta',
-      'Voo',
-    ],
-  },
-  {
-    title: 'Um pouco mais traiçoeiros',
-    hints: [
-      'Brilho/Luz',
-      'Construção',
-      'Escrita',
-      'Humano',
-      'Líquido',
-      'Madeira',
-      'Máquina',
-      'Metal',
-      'Recipiente',
-      'Tecnologia',
-    ],
-  },
-  {
-    title: 'Os caóticos',
-    hints: [
-      'Acessórios',
-      'Cheiro/Fedor',
-      'Ferramenta',
-      'Fragilidade',
-      'Instrumento/Utensílio',
-      'Parte/Pedaço',
-      'Som',
-      'Tabu/Polêmico',
-    ],
-  },
-] as const;
+import {
+  ALIENADO_ATTRIBUTE_HINT_GROUPS,
+  ALIENADO_REQUEST_COUNT,
+} from '../utils/constants';
 
 /**
  * Renders Alienado's rules, shown inside the shared `RulesOverlay`.
@@ -56,8 +14,7 @@ export function Rules() {
       <ul className="list-disc space-y-3 pl-5">
         <li>
           <Text>
-            O alienígena precisa de ajuda para abduzir 4 coisas, mas só se
-            comunica com símbolos.
+            {`O alienígena precisa de ajuda para abduzir ${ALIENADO_REQUEST_COUNT} coisas, mas só se comunica com símbolos.`}
           </Text>
         </li>
         <li>
@@ -68,8 +25,7 @@ export function Rules() {
         </li>
         <li>
           <Text>
-            Monte as 4 entregas na ordem certa e envie tudo de uma vez. O
-            alienígena só diz se a combinação inteira está certa ou errada.
+            {`Monte as ${ALIENADO_REQUEST_COUNT} entregas na ordem certa e envie tudo de uma vez. O alienígena só diz se a combinação inteira está certa ou errada.`}
           </Text>
         </li>
         <li>
@@ -94,7 +50,7 @@ export function Rules() {
         <Text strong>Dicas de interpretação</Text>
 
         <div className="space-y-3">
-          {ATTRIBUTE_HINT_GROUPS.map((group) => (
+          {ALIENADO_ATTRIBUTE_HINT_GROUPS.map((group) => (
             <div
               key={group.title}
               className="space-y-1"

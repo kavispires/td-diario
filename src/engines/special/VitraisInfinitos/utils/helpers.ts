@@ -2,12 +2,8 @@ import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type { DailyVitraisInfinitosEntry } from 'types/games';
 import { gameInfo } from '../info';
+import { GRID_COLUMNS, SCORE_PER_CORRECT_PIECE } from './constants';
 import type { GameState } from './types';
-
-/**
- * Fixed number of columns used by the Vitrais Infinitos board.
- */
-export const GRID_COLUMNS = 3;
 
 /**
  * Counts how many pieces are currently sitting in their correct board slots.
@@ -47,7 +43,7 @@ export function getProgress(solvedPieces: number, totalPieces: number): number {
  * @returns The derived score.
  */
 export function getScore(solvedPieces: number): number {
-  return solvedPieces * 10;
+  return solvedPieces * SCORE_PER_CORRECT_PIECE;
 }
 
 /**

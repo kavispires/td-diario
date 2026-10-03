@@ -1,5 +1,6 @@
 import { playSFX } from '@utils/soundEffects';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { DURATION_MAP } from '../utils/constants';
 import {
   playCountdownSound,
   stopCountdownSound,
@@ -10,12 +11,6 @@ import { useCountdown } from '../utils/useCountdown';
 import { ButtonContent } from './ButtonContent';
 import { CircularTimer } from './CircularTimer';
 import { PressButton } from './PressButton';
-
-const DURATION_MAP = {
-  quick: 4,
-  normal: 6,
-  long: 9,
-} as const;
 
 /**
  * Props accepted by {@link ButtonPuzzle}.

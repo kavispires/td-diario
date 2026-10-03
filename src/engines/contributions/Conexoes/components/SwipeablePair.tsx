@@ -6,10 +6,16 @@ import {
   useTransform,
 } from 'motion/react';
 import { useState } from 'react';
+import {
+  SWIPE_BACKGROUND_COLORS,
+  SWIPE_CARD_ANIMATION_DURATION_SECONDS,
+  SWIPE_CARD_DRAG_ELASTIC,
+  SWIPE_CARD_ENTRY_OFFSET_Y,
+  SWIPE_HINT_THRESHOLD,
+  SWIPE_THRESHOLD,
+} from '../utils/constants';
 import type { PairToEvaluate } from '../utils/types';
 import { PairImageCard } from './PairImageCard';
-
-const SWIPE_THRESHOLD = 120;
 
 /**
  * Props accepted by the {@link SwipeablePair} component.
@@ -54,11 +60,7 @@ export function SwipeablePair({
   const backgroundColor = useTransform(
     x,
     [-SWIPE_THRESHOLD, 0, SWIPE_THRESHOLD],
-    [
-      'rgba(244, 63, 94, 0.18)',
-      'rgba(255, 255, 255, 0)',
-      'rgba(234, 179, 8, 0.24)',
-    ],
+    SWIPE_BACKGROUND_COLORS,
   );
 
   /**
@@ -91,14 +93,14 @@ export function SwipeablePair({
       key={pair.pairId}
       drag={disabled ? false : 'x'}
       dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.75}
+      dragElastic={SWIPE_CARD_DRAG_ELASTIC}
       onDrag={(_, info) => {
-        if (info.offset.x >= 32) {
+        if (info.offset.x >= SWIPE_HINT_THRESHOLD) {
           setDragHint('related');
           return;
         }
 
-        if (info.offset.x <= -32) {
+        if (info.offset.x <= -SWIPE_HINT_THRESHOLD) {
           setDragHint('unrelated');
           return;
         }
@@ -108,9 +110,12 @@ export function SwipeablePair({
       onDragEnd={handleDragEnd}
       style={{ x, backgroundColor }}
       className="w-full rounded-[2rem] border border-border bg-card p-4 shadow-sm"
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: SWIPE_CARD_ENTRY_OFFSET_Y }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, ease: 'easeOut' }}
+      transition={{
+        duration: SWIPE_CARD_ANIMATION_DURATION_SECONDS,
+        ease: 'easeOut',
+      }}
     >
       <div className="grid grid-cols-2 justify-items-center gap-4">
         <PairImageCard

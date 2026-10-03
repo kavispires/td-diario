@@ -11,7 +11,12 @@ import type { PlaceholderGameData } from 'types/puzzles';
 import { AlienDictionary } from './components/AlienDictionary';
 import { Board } from './components/Board';
 import { ResultsSplash } from './components/ResultsSplash';
-import { getInitialState } from './utils/helpers';
+import {
+  ALIENADO_CARD_WIDTH_CONFIG,
+  ALIENADO_REQUEST_COUNT,
+  ALIENADO_STATS_HEART_SIZE,
+} from './utils/constants';
+import { getInitialState, splitGuess } from './utils/helpers';
 import { useAlienadoEngine } from './utils/useAlienadoEngine';
 
 /**
@@ -54,16 +59,11 @@ function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
     onClearSlot,
     submitGuess,
   } = useAlienadoEngine(data, initialState);
-  const previousGuesses = useMemo(
-    () => guesses.map((guess) => guess.split('-')),
-    [guesses],
+  const previousGuesses = useMemo(() => guesses.map(splitGuess), [guesses]);
+  const [itemWidth, containerRef] = useCardWidthByContainerRef(
+    ALIENADO_REQUEST_COUNT,
+    ALIENADO_CARD_WIDTH_CONFIG,
   );
-  const [itemWidth, containerRef] = useCardWidthByContainerRef(4, {
-    margin: 36,
-    gap: 10,
-    maxWidth: 78,
-    minWidth: 54,
-  });
 
   return (
     <div
@@ -81,7 +81,7 @@ function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
           <Hearts
             remaining={hearts}
             total={data.requests.length}
-            size={16}
+            size={ALIENADO_STATS_HEART_SIZE}
           />
         </div>
 
@@ -97,8 +97,7 @@ function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
         type="secondary"
         className="text-center"
       >
-        Decifre os símbolos do alienígena, monte as 4 entregas na ordem certa e
-        envie tudo de uma vez.
+        {`Decifre os símbolos do alienígena, monte as ${ALIENADO_REQUEST_COUNT} entregas na ordem certa e envie tudo de uma vez.`}
       </Text>
 
       <AlienDictionary

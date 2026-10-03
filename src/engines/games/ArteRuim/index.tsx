@@ -12,6 +12,7 @@ import { DrawingCarousel } from './components/DrawingCarousel';
 import { Prompt } from './components/Prompt';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
+import { ARTE_RUIM_HEARTS } from './utils/constants';
 import { getInitialState, isDailyArteRuimEntry } from './utils/helpers';
 import { useArteRuimEngine } from './utils/useArteRuimEngine';
 
@@ -94,7 +95,7 @@ function ArteRuimGameContent({ data }: ArteRuimGameContentProps) {
         <div className="flex items-center justify-center">
           <Hearts
             remaining={hearts}
-            total={3}
+            total={ARTE_RUIM_HEARTS}
             size={16}
           />
         </div>
@@ -125,7 +126,7 @@ function ArteRuimGameContent({ data }: ArteRuimGameContentProps) {
         type="secondary"
         className="text-center text-sm"
       >
-        Erros: {wrongGuesses}/3
+        Erros: {wrongGuesses}/{ARTE_RUIM_HEARTS}
       </Text>
 
       {isComplete && !showResults && (

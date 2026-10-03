@@ -2,6 +2,7 @@ import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
+import { ARTE_RUIM_HEARTS } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 import { DrawingPreview } from './DrawingPreview';
 
@@ -99,7 +100,7 @@ export function ResultsSplash({
 
       <Hearts
         remaining={hearts}
-        total={3}
+        total={ARTE_RUIM_HEARTS}
         emptyClassName="text-black"
       />
 

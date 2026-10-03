@@ -1,4 +1,5 @@
 import { Text } from '@components/ui/Typography';
+import { MIN_REQUIRED_PAIRS } from '../utils/constants';
 
 /**
  * Renders Conexões' rules inside the shared `RulesOverlay`.
@@ -34,7 +35,10 @@ export function Rules() {
         </Text>
       </li>
       <li>
-        <Text>É preciso avaliar pelo menos 10 pares antes de encerrar.</Text>
+        <Text>
+          É preciso avaliar pelo menos {MIN_REQUIRED_PAIRS} pares antes de
+          encerrar.
+        </Text>
       </li>
     </ul>
   );

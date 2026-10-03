@@ -1,5 +1,6 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { motion } from 'motion/react';
+import { PRELOAD_ITEMS_LIMIT } from '../utils/constants';
 
 /**
  * Props accepted by the {@link PreloadItems} component.
@@ -30,7 +31,7 @@ export function PreloadItems({ items, itemLabels }: PreloadItemsProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
     >
-      {items.slice(0, 15).map((itemId, index) => (
+      {items.slice(0, PRELOAD_ITEMS_LIMIT).map((itemId, index) => (
         <motion.div
           key={itemId}
           className="flex items-center justify-center rounded-2xl bg-background/80 p-1 shadow-sm"

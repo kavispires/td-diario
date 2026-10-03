@@ -1,4 +1,9 @@
 import { Text } from '@components/ui/Typography';
+import {
+  MIN_REQUIRED_ANSWERS,
+  MIN_REQUIRED_QUESTIONS,
+  SUSPECTS_PER_QUESTION,
+} from '../utils/constants';
 
 /**
  * Renders Ta Na Cara's rules inside the shared `RulesOverlay`.
@@ -11,8 +16,8 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Em cada rodada, você verá um depoimento e 6 personagens para julgar só
-          pela cara.
+          Em cada rodada, você verá um depoimento e {SUSPECTS_PER_QUESTION}{' '}
+          personagens para julgar só pela cara.
         </Text>
       </li>
       <li>
@@ -22,12 +27,15 @@ export function Rules() {
         </Text>
       </li>
       <li>
-        <Text>É preciso avaliar pelo menos 4 pessoas por depoimento.</Text>
+        <Text>
+          É preciso avaliar pelo menos {MIN_REQUIRED_ANSWERS} pessoas por
+          depoimento.
+        </Text>
       </li>
       <li>
         <Text>
-          Depois de 6 depoimentos, você já pode salvar sua contribuição — ou
-          continuar respondendo mais alguns.
+          Depois de {MIN_REQUIRED_QUESTIONS} depoimentos, você já pode salvar
+          sua contribuição — ou continuar respondendo mais alguns.
         </Text>
       </li>
     </ul>

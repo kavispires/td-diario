@@ -15,7 +15,13 @@ import {
 } from './components/GuessedLocation';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
-import { getInitialState, MAPEAMENTO_HEARTS } from './utils/helpers';
+import {
+  HEADER_HEARTS_SIZE,
+  LOCATION_FRAGMENT_PLACEHOLDER,
+  MAPEAMENTO_HEARTS,
+  PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
+} from './utils/constants';
+import { getInitialState } from './utils/helpers';
 import { useMapeamentoEngine } from './utils/useMapeamentoEngine';
 
 /**
@@ -110,7 +116,7 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
           <Hearts
             remaining={hearts}
             total={MAPEAMENTO_HEARTS}
-            size={16}
+            size={HEADER_HEARTS_SIZE}
           />
         </div>
 
@@ -132,7 +138,10 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
           <motion.div
             className="h-full rounded-full bg-gold"
             animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={{
+              duration: PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
+              ease: 'easeOut',
+            }}
           />
         </div>
       )}
@@ -207,15 +216,16 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
         </Surface>
       )}
 
-      {locationFragments.includes('_') && !isComplete && (
-        <Text
-          type="secondary"
-          className="text-center text-sm"
-        >
-          O fragmento mostra letras que já apareceram nas suas tentativas. Os
-          espaços cinza ainda podem ser letras ou espaços reais.
-        </Text>
-      )}
+      {locationFragments.includes(LOCATION_FRAGMENT_PLACEHOLDER) &&
+        !isComplete && (
+          <Text
+            type="secondary"
+            className="text-center text-sm"
+          >
+            O fragmento mostra letras que já apareceram nas suas tentativas. Os
+            espaços cinza ainda podem ser letras ou espaços reais.
+          </Text>
+        )}
 
       {guesses.length > 0 && (
         <Surface className="bg-card px-5 py-5">

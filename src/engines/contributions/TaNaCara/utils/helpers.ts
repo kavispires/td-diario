@@ -6,6 +6,16 @@ import type {
   DailyTaNaCaraVariant,
 } from 'types/games';
 import { gameInfo } from '../info';
+import {
+  DEFAULT_MODE,
+  DEFAULT_VARIANT,
+  MAX_PREFERRED_SUSPECTS_PER_QUESTION,
+  MIN_REQUIRED_ANSWERS,
+  MIN_REQUIRED_QUESTIONS,
+  SCORE_PER_MARKED_ANSWER,
+  SUSPECTS_PER_QUESTION,
+  VARIANT_OPTIONS,
+} from './constants';
 import type {
   AnswerToSave,
   GameState,
@@ -13,26 +23,6 @@ import type {
   TaNaCaraMode,
   TaNaCaraResultQuestion,
 } from './types';
-
-const DEFAULT_MODE: TaNaCaraMode = 'normal';
-const DEFAULT_VARIANT: DailyTaNaCaraVariant = 'gb';
-
-/**
- * Maximum number of suspects shown for each testimony.
- */
-export const SUSPECTS_PER_QUESTION = 6;
-
-/**
- * Minimum number of marked suspects required before a testimony counts as
- * answered and the player can move on.
- */
-export const MIN_REQUIRED_ANSWERS = 4;
-
-/**
- * Minimum number of testimonies that must be answered before Ta Na Cara can
- * be submitted.
- */
-export const MIN_REQUIRED_QUESTIONS = 6;
 
 /**
  * Builds the default `GameState` for a fresh Ta Na Cara day.
@@ -166,7 +156,7 @@ export function hasMinimumAnswers(answer: PreliminaryAnswer): boolean {
  * @returns The current score.
  */
 export function getScore(answers: PreliminaryAnswer[]): number {
-  return countMarkedAnswers(answers) * 10;
+  return countMarkedAnswers(answers) * SCORE_PER_MARKED_ANSWER;
 }
 
 /**
@@ -290,7 +280,7 @@ export function getResultQuestions(
 export function normalizeVariant(
   variant?: DailyTaNaCaraVariant,
 ): DailyTaNaCaraVariant {
-  return variant && ['gb', 'rl', 'px', 'fx'].includes(variant)
+  return variant && VARIANT_OPTIONS.includes(variant)
     ? variant
     : DEFAULT_VARIANT;
 }
@@ -312,7 +302,7 @@ function pickQuestionSuspects(
   const preferredSuspects = uniqueStrings(testimony.suspectsIds ?? []);
   const pickedPreferred = sampleIds(
     preferredSuspects,
-    Math.min(5, preferredSuspects.length),
+    Math.min(MAX_PREFERRED_SUSPECTS_PER_QUESTION, preferredSuspects.length),
   );
   const fallbackPool = uniqueStrings(dailySuspectIds).filter(
     (suspectId) => !pickedPreferred.includes(suspectId),

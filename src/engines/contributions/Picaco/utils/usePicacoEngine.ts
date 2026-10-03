@@ -12,6 +12,7 @@ import { notification } from '@utils/notification';
 import { useEffect, useMemo, useState } from 'react';
 import type { DailyPicacoCard, DailyPicacoEntry } from 'types/games';
 import { gameInfo } from '../info';
+import { SCORE_PER_LEVEL } from './constants';
 import {
   buildSavePayload,
   isDrawingWorthSaving,
@@ -143,7 +144,9 @@ export function usePicacoEngine(
       ],
       score:
         state.score +
-        (isDrawingWorthSaving(serializedDrawing) ? currentCard.level * 10 : 0),
+        (isDrawingWorthSaving(serializedDrawing)
+          ? currentCard.level * SCORE_PER_LEVEL
+          : 0),
       progress:
         selectedCards.length > 0 ? nextCardIndex / selectedCards.length : 1,
     };

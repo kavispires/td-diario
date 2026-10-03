@@ -3,11 +3,15 @@ import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
 import { CircleOff, Package2, RotateCcw } from 'lucide-react';
 import {
-  type Fulfillment,
-  type GameState,
-  type GoodId,
+  ESTOQUISTA_BOARD_COLUMNS,
+  ESTOQUISTA_FULFILLMENT_CARD_MIN_WIDTH,
+  ESTOQUISTA_FULFILLMENT_CARD_WIDTH_RATIO,
+  ESTOQUISTA_OUT_OF_STOCK_CARD_MIN_WIDTH,
+  ESTOQUISTA_PACKAGE_ICON_MIN_SIZE,
+  ESTOQUISTA_PACKAGE_ICON_SIZE_RATIO,
   OUT_OF_STOCK_SHELF_INDEX,
-} from '../utils/types';
+} from '../utils/constants';
+import type { Fulfillment, GameState, GoodId } from '../utils/types';
 import { WarehouseGoodCard } from './WarehouseGoodCard';
 
 /**
@@ -69,7 +73,12 @@ export function FulfillmentBoard({
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <div className="grid grid-cols-4 gap-2 rounded-[2rem] bg-amber-900/80 p-3 shadow-inner">
+      <div
+        className="grid gap-2 rounded-[2rem] bg-amber-900/80 p-3 shadow-inner"
+        style={{
+          gridTemplateColumns: `repeat(${ESTOQUISTA_BOARD_COLUMNS}, minmax(0, 1fr))`,
+        }}
+      >
         {warehouse.map((goodId, index) => {
           const fulfillment = fulfillmentByShelf.get(index);
           const isInteractive = !reveal && !fulfillment && !!activeOrder;
@@ -125,7 +134,10 @@ export function FulfillmentBoard({
                   />
                 ) : (
                   <Package2
-                    size={Math.max(width * 0.5, 24)}
+                    size={Math.max(
+                      width * ESTOQUISTA_PACKAGE_ICON_SIZE_RATIO,
+                      ESTOQUISTA_PACKAGE_ICON_MIN_SIZE,
+                    )}
                     aria-hidden="true"
                   />
                 )}
@@ -133,7 +145,12 @@ export function FulfillmentBoard({
                 {fulfillment ? (
                   <WarehouseGoodCard
                     itemId={fulfillment.order}
-                    width={Math.max(Math.floor(width * 0.58), 34)}
+                    width={Math.max(
+                      Math.floor(
+                        width * ESTOQUISTA_FULFILLMENT_CARD_WIDTH_RATIO,
+                      ),
+                      ESTOQUISTA_FULFILLMENT_CARD_MIN_WIDTH,
+                    )}
                     highlighted
                     className="absolute -top-2 left-1/2 -translate-x-1/2 rotate-6 shadow-md"
                   />
@@ -156,7 +173,7 @@ export function FulfillmentBoard({
           <div className="flex flex-col items-center gap-3">
             <WarehouseGoodCard
               itemId={outOfStockFulfillment.order}
-              width={Math.max(width, 68)}
+              width={Math.max(width, ESTOQUISTA_OUT_OF_STOCK_CARD_MIN_WIDTH)}
               highlighted
             />
             {!reveal && (

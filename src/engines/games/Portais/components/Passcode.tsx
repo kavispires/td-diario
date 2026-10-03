@@ -1,10 +1,11 @@
 import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
-
-const COLUMN_WIDTH = 44;
-const LETTER_HEIGHT = 44;
-const VISIBLE_ROWS = 5;
-const CENTER_ROW = 2;
+import {
+  CENTER_ROW,
+  COLUMN_WIDTH,
+  LETTER_HEIGHT,
+  VISIBLE_ROWS,
+} from '../utils/constants';
 
 /**
  * Props accepted by the {@link Passcode} component.

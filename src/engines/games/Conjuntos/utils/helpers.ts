@@ -3,9 +3,21 @@ import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyConjuntosEntry, DailyConjuntosThing } from 'types/games';
 import { gameInfo } from '../info';
+import {
+  CONJUNTOS_AREA_LABELS,
+  CONJUNTOS_AREA_THINGS_KEYS,
+  CONJUNTOS_BASE_HEARTS,
+  CONJUNTOS_DIAGRAM_AREAS,
+  CONJUNTOS_GUESS_RESULT_EMOJIS,
+  CONJUNTOS_INITIAL_DIAGRAM_THINGS_COUNT,
+  CONJUNTOS_INTERSECTION_AREA,
+  CONJUNTOS_RULE1_AREA,
+  CONJUNTOS_RULE2_AREA,
+  CONJUNTOS_VOWELS,
+  CONJUNTOS_WEEKEND_DAY_INDICES,
+  CONJUNTOS_WEEKEND_EXTRA_HEARTS,
+} from './constants';
 import type { DiagramArea, GameState, Guess } from './types';
-
-const BASE_HEARTS = 4;
 
 /**
  * Removes diacritics from a word so vowel counting treats accented letters
@@ -27,7 +39,9 @@ function removeAccents(word: string): string {
  */
 export function isWeekendChallenge(dateId: string): boolean {
   const dayOfWeek = new Date(`${dateId}T00:00:00`).getDay();
-  return dayOfWeek === 0 || dayOfWeek === 6;
+  return CONJUNTOS_WEEKEND_DAY_INDICES.some(
+    (weekendDay) => weekendDay === dayOfWeek,
+  );
 }
 
 /**
@@ -37,7 +51,10 @@ export function isWeekendChallenge(dateId: string): boolean {
  * @returns `4` on weekdays and `5` on weekends.
  */
 export function getTotalHearts(dateId: string): number {
-  return BASE_HEARTS + (isWeekendChallenge(dateId) ? 1 : 0);
+  return (
+    CONJUNTOS_BASE_HEARTS +
+    (isWeekendChallenge(dateId) ? CONJUNTOS_WEEKEND_EXTRA_HEARTS : 0)
+  );
 }
 
 /**
@@ -47,7 +64,10 @@ export function getTotalHearts(dateId: string): number {
  * @returns `4` on weekdays and `5` on weekends.
  */
 export function getInitialHandSize(dateId: string): number {
-  return BASE_HEARTS + (isWeekendChallenge(dateId) ? 1 : 0);
+  return (
+    CONJUNTOS_BASE_HEARTS +
+    (isWeekendChallenge(dateId) ? CONJUNTOS_WEEKEND_EXTRA_HEARTS : 0)
+  );
 }
 
 /**
@@ -71,19 +91,19 @@ function getDefaultState(data: DailyConjuntosEntry): GameState {
     rule1Things: [
       {
         ...data.rule1.thing,
-        rule: 1,
+        rule: CONJUNTOS_RULE1_AREA,
       },
     ],
     rule2Things: [
       {
         ...data.rule2.thing,
-        rule: 2,
+        rule: CONJUNTOS_RULE2_AREA,
       },
     ],
     intersectingThings: [
       {
         ...data.intersectingThing,
-        rule: 0,
+        rule: CONJUNTOS_INTERSECTION_AREA,
       },
     ],
     guesses: [],
@@ -108,7 +128,8 @@ function isThing(value: unknown): value is DailyConjuntosThing {
   return (
     typeof candidate.id === 'string' &&
     typeof candidate.name === 'string' &&
-    (rule === undefined || rule === 0 || rule === 1 || rule === 2)
+    (rule === undefined ||
+      CONJUNTOS_DIAGRAM_AREAS.some((area) => area === rule))
   );
 }
 
@@ -127,13 +148,9 @@ function isGuess(value: unknown): value is Guess {
 
   return (
     typeof candidate.thingId === 'string' &&
-    (candidate.sectionId === 0 ||
-      candidate.sectionId === 1 ||
-      candidate.sectionId === 2) &&
+    CONJUNTOS_DIAGRAM_AREAS.some((area) => area === candidate.sectionId) &&
     (candidate.result === false ||
-      candidate.result === 0 ||
-      candidate.result === 1 ||
-      candidate.result === 2)
+      CONJUNTOS_DIAGRAM_AREAS.some((area) => area === candidate.result))
   );
 }
 
@@ -153,7 +170,8 @@ function isValidState(state: GameState, data: DailyConjuntosEntry): boolean {
     ...data.things.map((thing) => thing.id),
   ]);
   const totalHearts = getTotalHearts(data.id);
-  const totalThingsOnBoard = data.things.length + 3;
+  const totalThingsOnBoard =
+    data.things.length + CONJUNTOS_INITIAL_DIAGRAM_THINGS_COUNT;
   const currentThingsOnBoard =
     state.hand.length +
     state.deck.length +
@@ -210,7 +228,7 @@ export function countThing(word: string): string {
   const letters = word.replace(/[\s-]/g, '').length;
   const vowels = removeAccents(word.toLowerCase())
     .split('')
-    .filter((letter) => 'aeiou'.includes(letter)).length;
+    .filter((letter) => CONJUNTOS_VOWELS.includes(letter)).length;
   const consonants = letters - vowels;
 
   return `${letters} letras, ${vowels} vogais, ${consonants} consoantes`;
@@ -223,11 +241,7 @@ export function countThing(word: string): string {
  * @returns A short Portuguese label.
  */
 export function getAreaLabel(area: DiagramArea): string {
-  return {
-    0: 'interseção',
-    1: 'círculo amarelo',
-    2: 'círculo vermelho',
-  }[area];
+  return CONJUNTOS_AREA_LABELS[area];
 }
 
 /**
@@ -239,14 +253,7 @@ export function getAreaLabel(area: DiagramArea): string {
 export function getAreaThingsKey(
   area: DiagramArea,
 ): keyof Pick<GameState, 'rule1Things' | 'rule2Things' | 'intersectingThings'> {
-  switch (area) {
-    case 0:
-      return 'intersectingThings';
-    case 1:
-      return 'rule1Things';
-    case 2:
-      return 'rule2Things';
-  }
+  return CONJUNTOS_AREA_THINGS_KEYS[area];
 }
 
 /**
@@ -270,12 +277,7 @@ export function buildShareText({
   const additionalLines = [
     guesses
       .map((guess) => {
-        return {
-          1: '🟡',
-          2: '🔴',
-          0: '🟠',
-          false: '✖️',
-        }[String(guess.result)];
+        return CONJUNTOS_GUESS_RESULT_EMOJIS[String(guess.result)];
       })
       .join(' '),
   ].filter(Boolean);

@@ -9,7 +9,8 @@ import type { DailyPanicoEntry } from 'types/games';
 import { Panel } from './components/Panel';
 import { ResultsSplash } from './components/ResultsSplash';
 import { SoundSfxAlert } from './components/SoundSfxAlert';
-import { getInitialState, PANICO_TOTAL_HEARTS } from './utils/helpers';
+import { PANICO_TOTAL_HEARTS } from './utils/constants';
+import { getInitialState } from './utils/helpers';
 import { usePanicoEngine } from './utils/usePanicoEngine';
 
 /**

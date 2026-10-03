@@ -13,10 +13,12 @@ import { useEffect, useState } from 'react';
 import type { DailyPalavreadoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
-  buildWordsFromLetters,
-  calculateProgress,
   PALAVREADO_SECRET_WORD_SCORE,
   PALAVREADO_WORD_SCORE,
+} from './constants';
+import {
+  buildWordsFromLetters,
+  calculateProgress,
   smartShuffle as smartShuffleHelper,
   swapLetterPositions,
 } from './helpers';

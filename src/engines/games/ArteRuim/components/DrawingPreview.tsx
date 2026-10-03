@@ -1,7 +1,6 @@
 import { cn } from '@utils/cn';
 import { useMemo } from 'react';
-
-const DRAWING_VIEWBOX_SIZE = 500;
+import { DRAWING_VIEWBOX_SIZE } from '../utils/constants';
 
 /**
  * Props accepted by the {@link DrawingPreview} component.

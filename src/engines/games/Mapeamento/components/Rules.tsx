@@ -1,6 +1,6 @@
 import { Text } from '@components/ui/Typography';
 import { Heart } from 'lucide-react';
-import { MAPEAMENTO_HEARTS } from '../utils/helpers';
+import { MAPEAMENTO_HEARTS } from '../utils/constants';
 
 /**
  * Renders Mapeamento's rules inside the shared `RulesOverlay`.

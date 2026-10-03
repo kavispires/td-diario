@@ -13,11 +13,16 @@ import { useEffect, useMemo, useState } from 'react';
 import type { DailyMapeamentoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
+  FRAGMENT_WARNING_DURATION_MS,
+  LOCATION_FRAGMENT_PLACEHOLDER,
+  MAPEAMENTO_HEARTS,
+  WIN_SCORE_PER_REMAINING_HEART,
+} from './constants';
+import {
   buildKeyboardKeysState,
   getAvailableClues,
   getLocationFragments,
   hasFoundAllLocationLetters,
-  MAPEAMENTO_HEARTS,
   normalizeComparableLocationText,
 } from './helpers';
 import type { GameState, MapeamentoEngineState } from './types';
@@ -84,7 +89,9 @@ export function useMapeamentoEngine(
       return false;
     }
 
-    const fragmentLetters = locationFragments.join('').replaceAll('_', '');
+    const fragmentLetters = locationFragments
+      .join('')
+      .replaceAll(LOCATION_FRAGMENT_PLACEHOLDER, '');
     const fragmentLettersSet = new Set(
       normalizeComparableLocationText(fragmentLetters).toUpperCase().split(''),
     );
@@ -97,7 +104,7 @@ export function useMapeamentoEngine(
         playSFX('wrong');
         notification.warning(
           'Sua tentativa precisa incluir todas as letras já reveladas no fragmento.',
-          5000,
+          FRAGMENT_WARNING_DURATION_MS,
         );
         return false;
       }
@@ -112,7 +119,7 @@ export function useMapeamentoEngine(
         ...previousState,
         status: GAME_LIFECYCLE_STATUS.WIN,
         progress: 1,
-        score: previousState.hearts * 25,
+        score: previousState.hearts * WIN_SCORE_PER_REMAINING_HEART,
       }));
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
       playSFX('win');

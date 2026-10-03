@@ -12,6 +12,7 @@ import { playSFX } from '@utils/soundEffects';
 import { useEffect, useMemo, useState } from 'react';
 import type { DailyTaNaCaraEntry, DailyTaNaCaraVariant } from 'types/games';
 import { gameInfo } from '../info';
+import { MIN_REQUIRED_QUESTIONS } from './constants';
 import {
   buildPreparedQuestions,
   buildSavePayload,
@@ -23,7 +24,6 @@ import {
   getScore,
   getSuspectDisplayName,
   hasMinimumAnswers,
-  MIN_REQUIRED_QUESTIONS,
 } from './helpers';
 import type { GameState, TaNaCaraEngineState } from './types';
 

@@ -3,7 +3,12 @@ import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPirralhosEntry } from 'types/games';
 import { gameInfo } from '../info';
-import { PIRRALHOS_TOTAL_HEARTS } from './constants';
+import {
+  DEFAULT_ASSESSMENT,
+  HARDCODED_POSITIONS,
+  HEIGHT_EXTRA_BY_COUNT,
+  PIRRALHOS_TOTAL_HEARTS,
+} from './constants';
 import type { GameState, KidAssessment } from './types';
 
 /**
@@ -23,83 +28,6 @@ export type EllipsePosition = {
    */
   angle: number;
 };
-
-const DEFAULT_ASSESSMENT: KidAssessment = 'unknown';
-
-const HARDCODED_POSITIONS: Record<number, EllipsePosition[]> = {
-  3: [
-    { x: 50, y: 10, angle: 45 },
-    { x: 85, y: 60, angle: 0 },
-    { x: 15, y: 60, angle: -45 },
-  ],
-  4: [
-    { x: 50, y: 10, angle: 45 },
-    { x: 85, y: 40, angle: -45 },
-    { x: 50, y: 75, angle: 45 },
-    { x: 15, y: 40, angle: -45 },
-  ],
-  5: [
-    { x: 50, y: 5, angle: 45 },
-    { x: 85, y: 35, angle: -45 },
-    { x: 75, y: 75, angle: 0 },
-    { x: 25, y: 75, angle: 45 },
-    { x: 15, y: 35, angle: -45 },
-  ],
-  6: [
-    { x: 50, y: 5, angle: 45 },
-    { x: 85, y: 25, angle: 90 },
-    { x: 85, y: 60, angle: -45 },
-    { x: 50, y: 85, angle: 45 },
-    { x: 15, y: 60, angle: 90 },
-    { x: 15, y: 25, angle: -45 },
-  ],
-  7: [
-    { x: 50, y: 5, angle: 45 },
-    { x: 85, y: 25, angle: 90 },
-    { x: 85, y: 55, angle: 115 },
-    { x: 75, y: 85, angle: 0 },
-    { x: 25, y: 85, angle: 65 },
-    { x: 15, y: 55, angle: 90 },
-    { x: 15, y: 25, angle: -45 },
-  ],
-  8: [
-    { x: 50, y: 5, angle: 45 },
-    { x: 85, y: 20, angle: 90 },
-    { x: 85, y: 45, angle: 90 },
-    { x: 85, y: 70, angle: -45 },
-    { x: 50, y: 85, angle: 45 },
-    { x: 15, y: 70, angle: 90 },
-    { x: 15, y: 45, angle: 90 },
-    { x: 15, y: 20, angle: -45 },
-  ],
-  9: [
-    { x: 50, y: 5, angle: 45 },
-    { x: 85, y: 15, angle: 90 },
-    { x: 85, y: 40, angle: 90 },
-    { x: 85, y: 65, angle: -75 },
-    { x: 75, y: 88, angle: 45 },
-    { x: 25, y: 88, angle: 75 },
-    { x: 15, y: 65, angle: 90 },
-    { x: 15, y: 40, angle: 90 },
-    { x: 15, y: 15, angle: -45 },
-  ],
-  10: [
-    { x: 50, y: 5, angle: 45 },
-    { x: 85, y: 15, angle: 90 },
-    { x: 85, y: 37, angle: 90 },
-    { x: 85, y: 60, angle: 90 },
-    { x: 85, y: 83, angle: -45 },
-    { x: 50, y: 90, angle: 45 },
-    { x: 15, y: 83, angle: 90 },
-    { x: 15, y: 60, angle: 90 },
-    { x: 15, y: 37, angle: 90 },
-    { x: 15, y: 15, angle: -45 },
-  ],
-};
-
-const HEIGHT_EXTRA_BY_COUNT = [
-  0, 0, 0, 0, 0, 0.5, 0.5, 0.5, 0.4, 0.7, 0.7, 0.5,
-];
 
 /**
  * Builds the default note markers for today's visible kids.

@@ -1,60 +1,10 @@
 import { IconButton } from '@components/ui/IconButton';
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
-import { CircleHelp, ShieldAlert, ShieldCheck, Speech } from 'lucide-react';
 import type { DailyPirralhosKidEntry } from 'types/games';
-import type { KidProfile } from '../utils/constants';
+import { ASSESSMENT_META, type KidProfile } from '../utils/constants';
 import type { KidAssessment } from '../utils/types';
 import { KidPortrait } from './KidPortrait';
-
-/**
- * Static UI metadata for one assessment state.
- */
-type AssessmentMeta = {
-  /**
-   * Visible short label rendered beside the icon button.
-   */
-  label: string;
-  /**
-   * Accessible label fragment describing the current marker.
-   */
-  ariaLabel: string;
-  /**
-   * Accent classes applied to the marker badge.
-   */
-  classes: string;
-  /**
-   * Icon shown inside the cycle button.
-   */
-  icon: typeof CircleHelp;
-};
-
-const ASSESSMENT_META: Record<KidAssessment, AssessmentMeta> = {
-  unknown: {
-    label: 'Sem marca',
-    ariaLabel: 'sem marcação',
-    classes: 'bg-card text-subtle-foreground',
-    icon: CircleHelp,
-  },
-  culprit: {
-    label: 'Culpado',
-    ariaLabel: 'marcado como culpado',
-    classes: 'bg-gold-soft text-foreground',
-    icon: ShieldAlert,
-  },
-  liar: {
-    label: 'Mentiroso',
-    ariaLabel: 'marcado como mentiroso',
-    classes: 'bg-secondary/15 text-secondary',
-    icon: Speech,
-  },
-  innocent: {
-    label: 'Inocente',
-    ariaLabel: 'marcado como inocente',
-    classes: 'bg-success/15 text-success',
-    icon: ShieldCheck,
-  },
-};
 
 /**
  * Props accepted by the {@link KidCard} component.

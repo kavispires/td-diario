@@ -1,19 +1,8 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
+import { DISC_POSITION_CLASSES } from '../utils/constants';
 import type { AquiODisc } from '../utils/types';
-
-const DISC_POSITION_CLASSES: Record<number, string> = {
-  0: 'col-start-2 row-start-2',
-  1: 'col-start-3 row-start-2',
-  2: 'col-start-4 row-start-2',
-  3: 'col-start-2 row-start-3',
-  4: 'col-start-3 row-start-3',
-  5: 'col-start-4 row-start-3',
-  6: 'col-start-2 row-start-4',
-  7: 'col-start-3 row-start-4',
-  8: 'col-start-4 row-start-4',
-} as const;
 
 /**
  * Props accepted by the {@link Disc} component.

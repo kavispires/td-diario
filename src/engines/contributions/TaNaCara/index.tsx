@@ -19,6 +19,14 @@ import type { PlaceholderGameData } from 'types/puzzles';
 import { ResultsSplash } from './components/ResultsSplash';
 import { SuspectChoiceCard } from './components/SuspectChoiceCard';
 import { gameInfo } from './info';
+import {
+  MIN_REQUIRED_ANSWERS,
+  MIN_REQUIRED_QUESTIONS,
+  PROGRESS_TRANSITION_DURATION_SECONDS,
+  QUESTION_TRANSITION_DURATION_SECONDS,
+  QUESTION_TRANSITION_OFFSET_PX,
+  VARIANT_OPTIONS,
+} from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useTaNaCaraEngine } from './utils/useTaNaCaraEngine';
 
@@ -31,8 +39,6 @@ type DailyTaNaCaraGameProps = {
    */
   data: PlaceholderGameData;
 };
-
-const VARIANT_OPTIONS = ['gb', 'rl', 'px', 'fx'] as const;
 
 /**
  * Narrowly validates the shared placeholder payload before Ta Na Cara starts
@@ -164,7 +170,10 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
           <motion.div
             className="h-full rounded-full bg-gold"
             animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={{
+              duration: PROGRESS_TRANSITION_DURATION_SECONDS,
+              ease: 'easeOut',
+            }}
           />
         </div>
       )}
@@ -192,8 +201,13 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
           <div className="grid w-full gap-3 rounded-3xl bg-primary-soft px-4 py-4 text-left">
             <Text>1. Leia o depoimento.</Text>
             <Text>2. Toque em Sim ou Não para cada personagem.</Text>
-            <Text>3. Avalie pelo menos 4 pessoas por rodada.</Text>
-            <Text>4. Depois de 6 depoimentos, já dá para salvar.</Text>
+            <Text>
+              3. Avalie pelo menos {MIN_REQUIRED_ANSWERS} pessoas por rodada.
+            </Text>
+            <Text>
+              4. Depois de {MIN_REQUIRED_QUESTIONS} depoimentos, já dá para
+              salvar.
+            </Text>
           </div>
 
           <div className="flex w-full items-center justify-between gap-4 rounded-2xl bg-background px-4 py-3 text-left shadow-sm">
@@ -240,7 +254,7 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
               type="secondary"
               className="text-sm"
             >
-              Mínimo: 4 respostas
+              Mínimo: {MIN_REQUIRED_ANSWERS} respostas
             </Text>
           </div>
 
@@ -248,10 +262,13 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
             <motion.div
               key={currentQuestion.testimonyId}
               className="flex w-full flex-col gap-3 rounded-[2rem] bg-gold-soft px-5 py-6 text-center shadow-sm"
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: QUESTION_TRANSITION_OFFSET_PX }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
+              exit={{ opacity: 0, y: -QUESTION_TRANSITION_OFFSET_PX }}
+              transition={{
+                duration: QUESTION_TRANSITION_DURATION_SECONDS,
+                ease: 'easeOut',
+              }}
             >
               {currentQuestion.nsfw && (
                 <Text
@@ -287,7 +304,7 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
           {!canGoNext && !canSubmit && (
             <Alert
               type="warning"
-              message="Você precisa avaliar pelo menos 4 personagens para avançar."
+              message={`Você precisa avaliar pelo menos ${MIN_REQUIRED_ANSWERS} personagens para avançar.`}
               description="Se não souber opinar sobre alguém, deixe essa pessoa em branco e responda outras."
               showIcon
               className="w-full"
@@ -304,7 +321,7 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
             />
           )}
 
-          {questionNumber >= Math.min(6, totalQuestions) &&
+          {questionNumber >= Math.min(MIN_REQUIRED_QUESTIONS, totalQuestions) &&
             questionNumber < totalQuestions && (
               <Alert
                 type="info"
@@ -337,7 +354,8 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
             </Button>
           </div>
 
-          {questionNumber >= Math.min(6, totalQuestions) && (
+          {questionNumber >=
+            Math.min(MIN_REQUIRED_QUESTIONS, totalQuestions) && (
             <Button
               variant="primary"
               size="small"

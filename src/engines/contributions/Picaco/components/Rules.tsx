@@ -1,4 +1,5 @@
 import { Text } from '@components/ui/Typography';
+import { DRAWINGS_COUNT, ROUND_DURATION_SECONDS } from '../utils/constants';
 
 /**
  * Renders Picaco's rules inside the shared `RulesOverlay`.
@@ -11,7 +12,8 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Você receberá 6 expressões e terá 10 segundos para desenhar cada uma.
+          Você receberá {DRAWINGS_COUNT} expressões e terá{' '}
+          {ROUND_DURATION_SECONDS} segundos para desenhar cada uma.
         </Text>
       </li>
       <li>

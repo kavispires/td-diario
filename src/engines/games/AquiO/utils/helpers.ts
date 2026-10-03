@@ -4,25 +4,20 @@ import { pluralize } from '@utils/helpers';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyAquiOEntry } from 'types/games';
 import { gameInfo } from '../info';
+import {
+  DISC_POSITIONS,
+  DISC_ROTATION_MAX_EXCLUSIVE,
+  DISC_SEQUENCE_LENGTH,
+  DISC_SIZES,
+  FOLLOW_UP_DISC_NEW_ITEM_COUNT,
+  GOAL,
+  HEARTS,
+  INITIAL_DISC_ITEM_COUNT,
+  WEEKEND_FOLLOW_UP_DISC_NEW_ITEM_COUNT,
+  WEEKEND_INITIAL_DISC_ITEM_COUNT,
+  Z_INDEX_BY_SIZE,
+} from './constants';
 import type { AquiODisc, AquiOItem, GameState } from './types';
-
-export const GOAL = 15;
-export const HEARTS = 3;
-export const ROUND_DURATION_SECONDS = 60;
-
-const DISC_POSITIONS = Array.from({ length: 9 }, (_, index) => index);
-const DISC_SIZES = [100, 90, 110, 80, 105, 130, 120, 150, 115] as const;
-const Z_INDEX_BY_SIZE: Record<number, number> = {
-  80: 7,
-  90: 6,
-  100: 5,
-  105: 4,
-  110: 3,
-  115: 0,
-  120: 2,
-  130: 1,
-  150: 0,
-};
 
 function shuffle<T>(items: readonly T[]): T[] {
   const copy = [...items];
@@ -67,7 +62,7 @@ function buildDiscItem(
     itemId,
     position,
     size,
-    rotation: randomInt(361),
+    rotation: randomInt(DISC_ROTATION_MAX_EXCLUSIVE),
     zIndex: Z_INDEX_BY_SIZE[size] ?? 0,
   };
 }
@@ -83,7 +78,10 @@ function createDisc(
 
   if (!previousDisc) {
     const initialItems = shuffle(list)
-      .slice(0, nineSpots ? 9 : 8)
+      .slice(
+        0,
+        nineSpots ? WEEKEND_INITIAL_DISC_ITEM_COUNT : INITIAL_DISC_ITEM_COUNT,
+      )
       .map((itemId, index) =>
         buildDiscItem(
           itemId,
@@ -106,7 +104,12 @@ function createDisc(
   const previousItemIds = previousDisc.items.map((item) => item.itemId);
   const newCardItems = shuffle(
     list.filter((itemId) => !previousItemIds.includes(itemId)),
-  ).slice(0, nineSpots ? 8 : 7);
+  ).slice(
+    0,
+    nineSpots
+      ? WEEKEND_FOLLOW_UP_DISC_NEW_ITEM_COUNT
+      : FOLLOW_UP_DISC_NEW_ITEM_COUNT,
+  );
   const matchingCandidates = previousItemIds.filter(
     (itemId) => itemId !== previousMatchId,
   );
@@ -179,7 +182,7 @@ export function getDiscs(
   const allItems = shuffle(entry.itemsIds);
   const discs: AquiODisc[] = [];
 
-  for (let index = 0; index < 17; index += 1) {
+  for (let index = 0; index < DISC_SEQUENCE_LENGTH; index += 1) {
     const previousDisc = discs[index - 1];
     const disc = createDisc(
       allItems,

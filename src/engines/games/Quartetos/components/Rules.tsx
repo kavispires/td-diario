@@ -1,5 +1,9 @@
 import { Text } from '@components/ui/Typography';
 import { Heart } from 'lucide-react';
+import {
+  QUARTETOS_GROUP_SIZE,
+  QUARTETOS_QUARTETS_PER_PUZZLE,
+} from '../utils/constants';
 
 /**
  * Renders Quartetos' rules inside the shared `RulesOverlay`.
@@ -15,12 +19,15 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Forme um grupo de quatro itens relacionados e clique em{' '}
-          <strong>Enviar</strong>.
+          Forme um grupo de {QUARTETOS_GROUP_SIZE} itens relacionados e clique
+          em <strong>Enviar</strong>.
         </Text>
       </li>
       <li>
-        <Text>Tente descobrir os quatro quartetos, um por um.</Text>
+        <Text>
+          Tente descobrir os {QUARTETOS_QUARTETS_PER_PUZZLE} quartetos, um por
+          um.
+        </Text>
       </li>
       <li>
         <Text>
@@ -34,12 +41,13 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Você começa com quatro{' '}
+          Você começa com {QUARTETOS_QUARTETS_PER_PUZZLE}{' '}
           <Heart
             className="inline h-4 w-4 fill-destructive text-destructive"
             aria-hidden="true"
           />{' '}
-          porque o desafio sempre esconde quatro grupos. Boa sorte!
+          porque o desafio sempre esconde {QUARTETOS_QUARTETS_PER_PUZZLE}{' '}
+          grupos. Boa sorte!
         </Text>
       </li>
     </ul>

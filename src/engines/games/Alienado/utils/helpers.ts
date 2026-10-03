@@ -3,6 +3,12 @@ import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyAlienadoEntry } from 'types/games';
 import { gameInfo } from '../info';
+import {
+  ALIENADO_GUESS_DELIMITER,
+  ALIENADO_SHARE_ABSENT_EMOJI,
+  ALIENADO_SHARE_POSITION_EMOJIS,
+  ALIENADO_SHARE_PRESENT_EMOJI,
+} from './constants';
 import type { GameState } from './types';
 
 /**
@@ -48,7 +54,7 @@ export function getInitialState(data: DailyAlienadoEntry): GameState {
  * @returns The ordered item ids.
  */
 export function splitGuess(value: string): string[] {
-  return value.split('-');
+  return value.split(ALIENADO_GUESS_DELIMITER);
 }
 
 /**
@@ -86,20 +92,22 @@ export function buildShareText({
   guesses: string[][];
   solution: string;
 }): string {
-  const solutionItems = solution.split('-');
-  const indexEmojis = ['🟤', '🟡', '🔵', '🟣'];
+  const solutionItems = splitGuess(solution);
   const additionalLines = guesses.map((guessItems) =>
     guessItems
       .map((itemId, index) => {
         if (itemId === solutionItems[index]) {
-          return indexEmojis[index] ?? '❌';
+          return (
+            ALIENADO_SHARE_POSITION_EMOJIS[index] ??
+            ALIENADO_SHARE_PRESENT_EMOJI
+          );
         }
 
         if (solutionItems.includes(itemId)) {
-          return '❌';
+          return ALIENADO_SHARE_PRESENT_EMOJI;
         }
 
-        return '👽';
+        return ALIENADO_SHARE_ABSENT_EMOJI;
       })
       .join(''),
   );

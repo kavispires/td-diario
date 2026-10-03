@@ -1,5 +1,6 @@
 import { Text } from '@components/ui/Typography';
 import { Heart } from 'lucide-react';
+import { GOAL, HEARTS, ROUND_DURATION_SECONDS } from '../utils/constants';
 
 /**
  * Renders Aqui O's rules, shown inside the shared `RulesOverlay`.
@@ -21,8 +22,9 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Você tem 60 segundos para encontrar 15 pares. Nos fins de semana, os
-          discos ganham um nono item para bagunçar ainda mais a busca.
+          Você tem {ROUND_DURATION_SECONDS} segundos para encontrar {GOAL}{' '}
+          pares. Nos fins de semana, os discos ganham um nono item para bagunçar
+          ainda mais a busca.
         </Text>
       </li>
       <li>
@@ -32,7 +34,7 @@ export function Rules() {
             className="inline h-4 w-4 fill-destructive text-destructive"
             aria-hidden="true"
           />
-          . Acabaram os três? A rodada de hoje termina ali mesmo.
+          . Acabaram os {HEARTS}? A rodada de hoje termina ali mesmo.
         </Text>
       </li>
       <li>

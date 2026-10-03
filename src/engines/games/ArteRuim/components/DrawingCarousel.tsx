@@ -1,9 +1,8 @@
 import { Pill } from '@components/ui/Pill';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { AUTOPLAY_DELAY_MS } from '../utils/constants';
 import { DrawingPreview } from './DrawingPreview';
-
-const AUTOPLAY_DELAY_MS = 4000;
 
 /**
  * Props accepted by the {@link DrawingCarousel} component.

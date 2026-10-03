@@ -14,6 +14,13 @@ import { useEffect, useState } from 'react';
 import type { DailyEstoquistaEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
+  ESTOQUISTA_COMPLETE_PROGRESS,
+  ESTOQUISTA_HEART_PENALTY,
+  ESTOQUISTA_PHASE,
+  ESTOQUISTA_STOCKING_SCORE,
+  ESTOQUISTA_WIN_HEART_SCORE_MULTIPLIER,
+} from './constants';
+import {
   getGuessString,
   getPlacedGoodsCount,
   getResetState,
@@ -21,12 +28,7 @@ import {
   getTotalProgressSteps,
   validateAttempts,
 } from './helpers';
-import {
-  ESTOQUISTA_PHASE,
-  type EstoquistaEngineState,
-  type GameState,
-  type SessionState,
-} from './types';
+import type { EstoquistaEngineState, GameState, SessionState } from './types';
 
 const INITIAL_SESSION: SessionState = {
   activeOrder: null,
@@ -96,7 +98,7 @@ export function useEstoquistaEngine(
         placedGoods === data.goods.length
           ? ESTOQUISTA_PHASE.FULFILLING
           : ESTOQUISTA_PHASE.STOCKING,
-      score: state.score + 1,
+      score: state.score + ESTOQUISTA_STOCKING_SCORE,
       progress: placedGoods / totalProgressSteps,
     });
   }
@@ -205,7 +207,9 @@ export function useEstoquistaEngine(
       state.fulfillments,
     );
     const allCorrect = attemptResult.every(Boolean);
-    const hearts = allCorrect ? state.hearts : Math.max(state.hearts - 1, 0);
+    const hearts = allCorrect
+      ? state.hearts
+      : Math.max(state.hearts - ESTOQUISTA_HEART_PENALTY, 0);
 
     if (allCorrect) {
       playSFX('win');
@@ -233,19 +237,23 @@ export function useEstoquistaEngine(
           : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
       evaluations: [...state.evaluations, attemptResult],
       guesses: [...state.guesses, guessString],
-      progress: allCorrect ? 1 : state.progress,
-      score: allCorrect ? state.score + state.hearts * 25 : state.score,
+      progress: allCorrect ? ESTOQUISTA_COMPLETE_PROGRESS : state.progress,
+      score: allCorrect
+        ? state.score + state.hearts * ESTOQUISTA_WIN_HEART_SCORE_MULTIPLIER
+        : state.score,
     });
     updateSession({ activeOrder: null });
   }
 
   function reset() {
-    if (isComplete || state.hearts <= 1) {
+    if (isComplete || state.hearts <= ESTOQUISTA_HEART_PENALTY) {
       return;
     }
 
     playSFX('shuffle');
-    setState(getResetState(data, state.extraAttempts + 1));
+    setState(
+      getResetState(data, state.extraAttempts + ESTOQUISTA_HEART_PENALTY),
+    );
     setShowResults(false);
     setSession(INITIAL_SESSION);
   }

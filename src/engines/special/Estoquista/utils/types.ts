@@ -1,17 +1,5 @@
 import type { DefaultGameState } from 'types/puzzles';
-
-/**
- * Play phases used by Estoquista.
- */
-export const ESTOQUISTA_PHASE = {
-  STOCKING: 'stocking',
-  FULFILLING: 'fulfilling',
-} as const;
-
-/**
- * Sentinel shelf index used for the "fora de estoque" slot.
- */
-export const OUT_OF_STOCK_SHELF_INDEX = -1;
+import type { ESTOQUISTA_PHASE } from './constants';
 
 /**
  * Identifier of one warehouse good or order item.
@@ -28,7 +16,7 @@ export type Fulfillment = {
    */
   order: GoodId;
   /**
-   * Shelf index receiving the order, or `-1` for "fora de estoque".
+   * Shelf index receiving the order, or the dedicated out-of-stock slot.
    */
   shelfIndex: number;
 };

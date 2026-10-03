@@ -3,23 +3,8 @@ import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPanicoEntry } from 'types/games';
 import { gameInfo } from '../info';
+import { PANICO_TOTAL_HEARTS } from './constants';
 import type { GameState } from './types';
-
-/**
- * Fixed number of lives available in each Panico run.
- */
-export const PANICO_TOTAL_HEARTS = 5;
-
-/**
- * Duration, in milliseconds, of the processing interstitial shown before
- * the first button and between resolved buttons.
- */
-export const PANICO_PROCESSING_DELAY_MS = 1_000;
-
-/**
- * Longer processing delay used before the first button appears.
- */
-export const PANICO_START_DELAY_MS = 2_000;
 
 /**
  * Returns a fresh Panico state for the current day.

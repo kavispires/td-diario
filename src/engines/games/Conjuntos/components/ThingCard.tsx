@@ -1,5 +1,10 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { cn } from '@utils/cn';
+import {
+  CONJUNTOS_THING_CARD_DEFAULT_WIDTH,
+  CONJUNTOS_THING_CARD_MAX_WIDTH,
+  CONJUNTOS_THING_CARD_MIN_WIDTH,
+} from '../utils/constants';
 import { countThing } from '../utils/helpers';
 
 /**
@@ -42,12 +47,15 @@ type ThingCardProps = {
 export function ThingCard({
   itemId,
   name,
-  width = 64,
+  width = CONJUNTOS_THING_CARD_DEFAULT_WIDTH,
   className,
   minimize = false,
   emphasize = false,
 }: ThingCardProps) {
-  const boundedWidth = Math.max(Math.min(width, 100), 35);
+  const boundedWidth = Math.max(
+    Math.min(width, CONJUNTOS_THING_CARD_MAX_WIDTH),
+    CONJUNTOS_THING_CARD_MIN_WIDTH,
+  );
 
   return (
     <div

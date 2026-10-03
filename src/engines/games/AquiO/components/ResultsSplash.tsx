@@ -4,23 +4,32 @@ import { Hearts } from '@components/games/Hearts';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { motion } from 'motion/react';
+import {
+  GOAL,
+  HEARTS,
+  HIGH_RESULTS_TITLE_PROGRESS_THRESHOLD,
+  LOW_RESULTS_TITLE_PROGRESS_THRESHOLD,
+  MEDIUM_RESULTS_TITLE_PROGRESS_THRESHOLD,
+  RESULTS_PREVIEW_GROUP_SIZE,
+  RESULTS_TITLES,
+} from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 import type { RoundStopType } from '../utils/types';
 
-const TITLES = [
-  'Você é muito ruim!',
-  'Foi bem mais ou menos!',
-  'Muito bom!',
-  'Quase lá!',
-  'Incrível!',
-] as const;
-
 function getResultsTitle(progress: number, hearts: number): string {
-  if (progress <= 3 || hearts === 0) return TITLES[0];
-  if (progress <= 10) return TITLES[1];
-  if (progress <= 12) return TITLES[2];
-  if (progress < 15) return TITLES[3];
-  return TITLES[4];
+  if (progress <= LOW_RESULTS_TITLE_PROGRESS_THRESHOLD || hearts === 0) {
+    return RESULTS_TITLES[0];
+  }
+  if (progress <= MEDIUM_RESULTS_TITLE_PROGRESS_THRESHOLD) {
+    return RESULTS_TITLES[1];
+  }
+  if (progress <= HIGH_RESULTS_TITLE_PROGRESS_THRESHOLD) {
+    return RESULTS_TITLES[2];
+  }
+  if (progress < GOAL) {
+    return RESULTS_TITLES[3];
+  }
+  return RESULTS_TITLES[4];
 }
 
 function getResultsMessage(
@@ -29,7 +38,7 @@ function getResultsMessage(
   progress: number,
 ): string {
   if (stopType === 'win') {
-    return 'Você encontrou todos os 15 itens em comum de hoje. Pode guardar a lupa.';
+    return `Você encontrou todos os ${GOAL} itens em comum de hoje. Pode guardar a lupa.`;
   }
 
   if (stopType === 'lose') {
@@ -152,7 +161,10 @@ export function ResultsSplash({
   });
   const previewItems = itemsIds
     .filter((itemId) => itemId !== lastMatch)
-    .slice(0, Math.max(0, Math.floor((usedProgress - 1) / 3)));
+    .slice(
+      0,
+      Math.max(0, Math.floor((usedProgress - 1) / RESULTS_PREVIEW_GROUP_SIZE)),
+    );
 
   return (
     <GameResultsSplash
@@ -243,7 +255,7 @@ export function ResultsSplash({
 
       <Hearts
         remaining={hearts}
-        total={3}
+        total={HEARTS}
         emptyClassName="text-black"
       />
 

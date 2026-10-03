@@ -3,6 +3,7 @@ import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import { useMemo } from 'react';
 import type { DailyOrganikuEntry } from '../../../../types/games';
+import { ORGANIKU_PLACEHOLDER_ITEM_ID } from '../utils/constants';
 import { getRowAndColumnIndexes } from '../utils/helpers';
 
 /**
@@ -119,7 +120,7 @@ export function TableGrid({
               />
             ) : (
               <DailyItem
-                itemId="0"
+                itemId={ORGANIKU_PLACEHOLDER_ITEM_ID}
                 width={itemWidth / 1.75}
                 className="opacity-50 grayscale-50"
               />

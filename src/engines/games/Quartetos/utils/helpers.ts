@@ -4,6 +4,10 @@ import { generateShareableResult } from '@utils/shareResults';
 import type { DailyQuartetosEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { gameInfo } from '../info';
+import {
+  QUARTETOS_SHARE_LEVEL_EMOJIS,
+  QUARTETOS_SHARE_UNKNOWN_EMOJI,
+} from './constants';
 import type { GameState } from './types';
 
 /**
@@ -110,17 +114,18 @@ export function buildShareText({
   guesses: string[];
   sets: DailyQuartetosEntry['sets'];
 }): string {
-  const emojis = ['🟩', '🟨', '🟧', '🟪'];
   const emojisMap = sets.reduce<Dictionary<string>>((accumulator, set) => {
     set.itemsIds.forEach((itemId) => {
-      accumulator[itemId] = emojis[set.level] ?? '❓';
+      accumulator[itemId] =
+        QUARTETOS_SHARE_LEVEL_EMOJIS[set.level] ??
+        QUARTETOS_SHARE_UNKNOWN_EMOJI;
     });
     return accumulator;
   }, {});
   const additionalLines = guesses.map((guess) =>
     guess
       .split('-')
-      .map((itemId) => emojisMap[itemId] ?? '❓')
+      .map((itemId) => emojisMap[itemId] ?? QUARTETOS_SHARE_UNKNOWN_EMOJI)
       .join(' '),
   );
 

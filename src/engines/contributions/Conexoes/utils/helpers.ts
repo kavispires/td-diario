@@ -2,23 +2,18 @@ import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import type { DailyConexoesEntry } from 'types/games';
 import { gameInfo } from '../info';
+import {
+  GENERATED_PAIRS_BATCH_SIZE,
+  MIN_REQUIRED_PAIRS,
+  PAIR_ID_SEPARATOR,
+  RELATED_PAIR_SCORE,
+} from './constants';
 import type {
   GameState,
   PairToEvaluate,
   RelatedPair,
   SavePayload,
 } from './types';
-
-/**
- * Minimum number of pairs a player must evaluate before Conexões can be
- * saved or closed for the day.
- */
-export const MIN_REQUIRED_PAIRS = 10;
-
-/**
- * Number of pairs generated at a time for the current run.
- */
-export const GENERATED_PAIRS_BATCH_SIZE = 20;
 
 /**
  * Builds a stable id for an unordered pair of image ids.
@@ -28,7 +23,7 @@ export const GENERATED_PAIRS_BATCH_SIZE = 20;
  * @returns The pair id in canonical sorted order.
  */
 export function createPairId(imageId1: string, imageId2: string): string {
-  return [imageId1, imageId2].sort().join('::');
+  return [imageId1, imageId2].sort().join(PAIR_ID_SEPARATOR);
 }
 
 /**
@@ -51,7 +46,7 @@ export function buildSavePayload(pairs: RelatedPair[]): SavePayload {
  * @returns The score shown to the player.
  */
 export function getScore(relatedPairsCount: number): number {
-  return relatedPairsCount * 10;
+  return relatedPairsCount * RELATED_PAIR_SCORE;
 }
 
 /**

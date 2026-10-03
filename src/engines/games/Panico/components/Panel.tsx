@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   PANICO_PROCESSING_DELAY_MS,
   PANICO_START_DELAY_MS,
-} from '../utils/helpers';
+} from '../utils/constants';
 import type { ButtonEntry } from '../utils/types';
 import { ButtonPuzzle } from './ButtonPuzzle';
 

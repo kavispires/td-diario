@@ -12,6 +12,11 @@ import { vibrate } from '@utils/vibrate';
 import { useEffect, useState } from 'react';
 import type { DailyQuartetosEntry } from 'types/games';
 import { gameInfo } from '../info';
+import {
+  CORRECT_GUESS_SCORE,
+  QUARTETOS_GROUP_SIZE,
+  WIN_BONUS_SCORE,
+} from './constants';
 import { buildSetKey, shuffleItems } from './helpers';
 import type { GameState, QuartetosEngineState, SessionState } from './types';
 
@@ -64,7 +69,7 @@ export function useQuartetosEngine(
     }
 
     const isSelected = session.selection.includes(itemId);
-    if (!isSelected && session.selection.length === 4) {
+    if (!isSelected && session.selection.length === QUARTETOS_GROUP_SIZE) {
       updateSession({
         feedback: 'Você só pode selecionar quatro itens por vez.',
       });
@@ -106,7 +111,7 @@ export function useQuartetosEngine(
 
   function onSubmit() {
     if (
-      session.selection.length !== 4 ||
+      session.selection.length !== QUARTETOS_GROUP_SIZE ||
       getGameStatuses(state.status).isComplete
     ) {
       return;
@@ -139,7 +144,11 @@ export function useQuartetosEngine(
           guesses: [...prev.guesses, guessKey],
           matches: nextMatches,
           grid: prev.grid.filter((itemId) => !selectedItems.has(itemId)),
-          score: prev.score + (isWin ? prev.hearts * 10 : prev.hearts * 5),
+          score:
+            prev.score +
+            (isWin
+              ? prev.hearts * WIN_BONUS_SCORE
+              : prev.hearts * CORRECT_GUESS_SCORE),
           progress: nextMatches.length / data.sets.length,
         };
       });

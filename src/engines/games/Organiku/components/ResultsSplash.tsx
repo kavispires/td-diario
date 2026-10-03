@@ -2,6 +2,7 @@ import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Text } from '@components/ui/Typography';
+import { ORGANIKU_PLACEHOLDER_ITEM_ID } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 
 /**
@@ -106,7 +107,7 @@ export function ResultsSplash({
           return (
             <DailyItem
               key={itemId}
-              itemId={isFound ? itemId : '0'}
+              itemId={isFound ? itemId : ORGANIKU_PLACEHOLDER_ITEM_ID}
               width={45}
               className={isFound ? 'opacity-100' : 'opacity-30 grayscale'}
             />

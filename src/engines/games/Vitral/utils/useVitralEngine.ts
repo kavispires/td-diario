@@ -14,17 +14,19 @@ import { vibrate } from '@utils/vibrate';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { DailyVitralEntry } from 'types/games';
 import { gameInfo } from '../info';
-import { buildGridFromPiecesOrder, formatElapsedTime } from './helpers';
 import {
   COLS,
+  HEART_LOSS_INTERVAL_SECONDS,
+  VITRAL_TOTAL_HEARTS,
+} from './constants';
+import { buildGridFromPiecesOrder, formatElapsedTime } from './helpers';
+import {
   countConnections,
   countCorrectPieces,
   getConnectedGroupIndices,
   getPieceBorders,
   getTotalPossibleConnections,
-  HEART_LOSS_INTERVAL_SECONDS,
   moveConnectedGroup,
-  VITRAL_TOTAL_HEARTS,
 } from './puzzleUtils';
 import type { BoardMeasures, GameState, SessionState } from './types';
 

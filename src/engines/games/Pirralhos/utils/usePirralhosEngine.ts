@@ -13,10 +13,9 @@ import { vibrate } from '@utils/vibrate';
 import { useEffect, useState } from 'react';
 import type { DailyPirralhosEntry } from 'types/games';
 import { gameInfo } from '../info';
+import { ASSESSMENT_ORDER } from './constants';
 import { getProgress, getWinScore } from './helpers';
 import type { GameState, PirralhosEngineState } from './types';
-
-const ASSESSMENT_ORDER = ['liar', 'innocent', 'culprit', 'unknown'] as const;
 
 /**
  * Drives a single day's Pirralhos game: accusation attempts, note markers,

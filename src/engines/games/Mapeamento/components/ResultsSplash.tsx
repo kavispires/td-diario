@@ -2,7 +2,8 @@ import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
-import { buildShareText, MAPEAMENTO_HEARTS } from '../utils/helpers';
+import { MAPEAMENTO_HEARTS } from '../utils/constants';
+import { buildShareText } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.

@@ -1,6 +1,6 @@
 import { Text } from '@components/ui/Typography';
 import { Heart } from 'lucide-react';
-import { PANICO_TOTAL_HEARTS } from '../utils/helpers';
+import { PANICO_TOTAL_HEARTS } from '../utils/constants';
 
 /**
  * Renders Panico's rules for the shared rules overlay.

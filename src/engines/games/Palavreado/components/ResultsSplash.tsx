@@ -1,15 +1,8 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
+import { WORD_TONE_CLASSES } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
-
-const WORD_TONE_CLASSES = [
-  'bg-red-500 text-white',
-  'bg-blue-500 text-white',
-  'bg-purple-500 text-white',
-  'bg-amber-700 text-white',
-  'bg-orange-500 text-white',
-] as const;
 
 /**
  * Props accepted by the {@link ResultsSplash} component.

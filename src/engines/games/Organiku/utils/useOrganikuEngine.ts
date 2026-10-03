@@ -12,6 +12,10 @@ import { vibrate } from '@utils/vibrate';
 import { useEffect, useMemo, useState } from 'react';
 import type { DailyOrganikuEntry } from '../../../../types/games';
 import { gameInfo } from '../info';
+import {
+  ORGANIKU_MATCH_REVEAL_DELAY_MS,
+  ORGANIKU_WIN_SCORE_MULTIPLIER,
+} from './constants';
 import type { GameState, OrganikuTracker, SessionState } from './types';
 
 const INITIAL_SESSION: SessionState = {
@@ -115,7 +119,9 @@ export function useOrganikuEngine(
             ...prev.foundCount,
             [activeItemId]: (prev.foundCount[activeItemId] || 0) + 2,
           },
-          score: prev.score + (isWin ? 10 * prev.hearts : prev.hearts),
+          score:
+            prev.score +
+            (isWin ? ORGANIKU_WIN_SCORE_MULTIPLIER * prev.hearts : prev.hearts),
           progress,
         }));
         return;
@@ -136,7 +142,7 @@ export function useOrganikuEngine(
           : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
         hearts,
       }));
-    }, 750); // Show both tiles for 750ms before resolving the match.
+    }, ORGANIKU_MATCH_REVEAL_DELAY_MS);
   }
 
   const tracker = useMemo<OrganikuTracker>(() => {

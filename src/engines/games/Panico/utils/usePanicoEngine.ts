@@ -11,11 +11,10 @@ import { playSFX } from '@utils/soundEffects';
 import { useEffect, useMemo, useState } from 'react';
 import type { DailyPanicoEntry } from 'types/games';
 import { gameInfo } from '../info';
+import { INITIAL_ACTIVE_BUTTON_INDEX } from './constants';
 import { buildButtons } from './engine';
 import { getProgress } from './helpers';
 import type { GameState, SessionState } from './types';
-
-const INITIAL_ACTIVE_BUTTON_INDEX = -1;
 
 /**
  * Drives Panico's state machine: local persistence, sequence progression,

@@ -14,8 +14,17 @@ import { Orders } from './components/Orders';
 import { ResultsSplash } from './components/ResultsSplash';
 import { StockingBoard } from './components/StockingBoard';
 import { WarehouseGoodCard } from './components/WarehouseGoodCard';
+import {
+  ESTOQUISTA_BOARD_COLUMNS,
+  ESTOQUISTA_CARD_WIDTH_CONFIG,
+  ESTOQUISTA_CURRENT_GOOD_MAX_WIDTH,
+  ESTOQUISTA_CURRENT_GOOD_WIDTH_RATIO,
+  ESTOQUISTA_HEART_ICON_SIZE,
+  ESTOQUISTA_HEART_PENALTY,
+  ESTOQUISTA_PHASE,
+  ESTOQUISTA_TRANSITION_DURATION,
+} from './utils/constants';
 import { getInitialState } from './utils/helpers';
-import { ESTOQUISTA_PHASE } from './utils/types';
 import { useEstoquistaEngine } from './utils/useEstoquistaEngine';
 
 /**
@@ -60,12 +69,10 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
     onSubmit,
     reset,
   } = useEstoquistaEngine(data, initialState);
-  const [itemWidth, containerRef] = useCardWidthByContainerRef(4, {
-    margin: 48,
-    gap: 12,
-    maxWidth: 80,
-    minWidth: 56,
-  });
+  const [itemWidth, containerRef] = useCardWidthByContainerRef(
+    ESTOQUISTA_BOARD_COLUMNS,
+    ESTOQUISTA_CARD_WIDTH_CONFIG,
+  );
 
   return (
     <div
@@ -83,7 +90,7 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
           <Hearts
             remaining={hearts}
             total={totalHearts}
-            size={16}
+            size={ESTOQUISTA_HEART_ICON_SIZE}
           />
         </div>
 
@@ -107,7 +114,10 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
           <motion.div
             className="h-full rounded-full bg-gold"
             animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={{
+              duration: ESTOQUISTA_TRANSITION_DURATION,
+              ease: 'easeOut',
+            }}
           />
         </div>
       )}
@@ -137,7 +147,10 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
             {currentGood ? (
               <WarehouseGoodCard
                 itemId={currentGood}
-                width={Math.min(itemWidth * 1.35, 100)}
+                width={Math.min(
+                  itemWidth * ESTOQUISTA_CURRENT_GOOD_WIDTH_RATIO,
+                  ESTOQUISTA_CURRENT_GOOD_MAX_WIDTH,
+                )}
                 highlighted
               />
             ) : (
@@ -175,11 +188,11 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
               variant="outlined"
               size="small"
               icon={<ArchiveRestore />}
-              disabled={hearts <= 1 || isComplete}
+              disabled={hearts <= ESTOQUISTA_HEART_PENALTY || isComplete}
               onClick={reset}
               className="flex-1"
             >
-              Recomeçar (-1 coração)
+              {`Recomeçar (-${ESTOQUISTA_HEART_PENALTY} coração)`}
             </Button>
 
             <Button
@@ -234,10 +247,10 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
           variant="outlined"
           size="small"
           icon={<ArchiveRestore />}
-          disabled={hearts <= 1 || isComplete}
+          disabled={hearts <= ESTOQUISTA_HEART_PENALTY || isComplete}
           onClick={reset}
         >
-          Recomeçar (-1 coração)
+          {`Recomeçar (-${ESTOQUISTA_HEART_PENALTY} coração)`}
         </Button>
       )}
 

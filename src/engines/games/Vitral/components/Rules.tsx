@@ -3,7 +3,7 @@ import { Heart } from 'lucide-react';
 import {
   HEART_LOSS_INTERVAL_SECONDS,
   VITRAL_TOTAL_HEARTS,
-} from '../utils/puzzleUtils';
+} from '../utils/constants';
 
 /**
  * Renders Vitral's rules inside the shared `RulesOverlay`.

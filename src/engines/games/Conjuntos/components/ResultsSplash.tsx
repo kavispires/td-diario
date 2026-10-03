@@ -4,6 +4,11 @@ import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { useMemo } from 'react';
 import type { DailyConjuntosEntry } from 'types/games';
+import {
+  CONJUNTOS_INTERSECTION_AREA,
+  CONJUNTOS_RESULTS_RULE_THING_WIDTH,
+  CONJUNTOS_RULE1_AREA,
+} from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 import type { Guess } from '../utils/types';
 import { ThingCard } from './ThingCard';
@@ -150,7 +155,7 @@ export function ResultsSplash({
               <ThingCard
                 itemId={data.rule1.thing.id}
                 name={data.rule1.thing.name}
-                width={58}
+                width={CONJUNTOS_RESULTS_RULE_THING_WIDTH}
               />
             </div>
           </div>
@@ -162,7 +167,7 @@ export function ResultsSplash({
               <ThingCard
                 itemId={data.rule2.thing.id}
                 name={data.rule2.thing.name}
-                width={58}
+                width={CONJUNTOS_RESULTS_RULE_THING_WIDTH}
               />
             </div>
           </div>
@@ -178,9 +183,9 @@ export function ResultsSplash({
                 className={`rounded-full px-3 py-1.5 text-sm font-semibold ${
                   guess.result === false
                     ? 'bg-destructive/15 text-destructive'
-                    : guess.result === 0
+                    : guess.result === CONJUNTOS_INTERSECTION_AREA
                       ? 'bg-orange-200 text-orange-900'
-                      : guess.result === 1
+                      : guess.result === CONJUNTOS_RULE1_AREA
                         ? 'bg-[#fbb03b]/35 text-orange-950'
                         : 'bg-[#f15a24]/25 text-orange-950'
                 }`}

@@ -1,20 +1,6 @@
 import type { CSSProperties } from 'react';
+import { COLS } from './constants';
 import type { GridState, PieceBorders } from './types';
-
-/**
- * Fixed number of columns in every Vitral puzzle.
- */
-export const COLS = 3;
-
-/**
- * Base number of hearts granted at the start of each puzzle.
- */
-export const VITRAL_TOTAL_HEARTS = 5;
-
-/**
- * Base timer interval before a heart is removed.
- */
-export const HEART_LOSS_INTERVAL_SECONDS = 20;
 
 /**
  * Returns the background-image style that crops the source artwork into the

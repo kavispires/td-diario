@@ -4,6 +4,10 @@ import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import { useMemo } from 'react';
+import {
+  LOCATION_FRAGMENT_PLACEHOLDER,
+  TYPING_CURSOR_BLINK_DURATION_SECONDS,
+} from '../utils/constants';
 
 /**
  * Props accepted by the {@link GuessedLocation} component.
@@ -37,7 +41,7 @@ export function GuessedLocation({
 
     function findNextLetterFragment(startIndex: number): number {
       for (let index = startIndex; index < fragments.length; index += 1) {
-        if (fragments[index] !== '_') {
+        if (fragments[index] !== LOCATION_FRAGMENT_PLACEHOLDER) {
           return index;
         }
       }
@@ -87,7 +91,7 @@ export function GuessedLocation({
       <motion.span
         animate={{ opacity: [1, 0] }}
         transition={{
-          duration: 0.8,
+          duration: TYPING_CURSOR_BLINK_DURATION_SECONDS,
           repeat: Number.POSITIVE_INFINITY,
           repeatType: 'reverse',
         }}
@@ -129,7 +133,7 @@ export function LocationFragments({ fragments }: LocationFragmentsProps) {
             key={`${fragment}-${index}`}
             className={cn(
               'flex min-h-10 min-w-10 items-center justify-center rounded-xl px-2 py-2 text-lg font-semibold shadow-sm',
-              fragment === '_'
+              fragment === LOCATION_FRAGMENT_PLACEHOLDER
                 ? 'bg-border text-border-strong'
                 : 'bg-white text-foreground',
             )}

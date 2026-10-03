@@ -11,7 +11,17 @@ import { ReleaseModal } from './components/ReleaseModal';
 import { ResultsSplash } from './components/ResultsSplash';
 import { Statements } from './components/Statements';
 import { SuspectCard } from './components/SuspectCard';
-import { getInitialState, STARTING_HEARTS } from './utils/helpers';
+import {
+  MAIN_STATEMENT_REVEAL_INTERVAL,
+  STARTING_HEARTS,
+  SUSPECT_CARD_ANIMATION_DELAY_STEP,
+  SUSPECT_GRID_COLUMNS,
+  SUSPECT_GRID_GAP,
+  SUSPECT_GRID_MARGIN,
+  SUSPECT_GRID_MAX_WIDTH,
+  SUSPECT_GRID_MIN_WIDTH,
+} from './utils/constants';
+import { getInitialState } from './utils/helpers';
 import { useInvestigacaoEngine } from './utils/useInvestigacaoEngine';
 
 /**
@@ -109,12 +119,15 @@ function DailyInvestigacaoGameContent({
     onDeselectSuspect,
     onRelease,
   } = useInvestigacaoEngine(data, initialState);
-  const [cardWidth, containerRef] = useCardWidthByContainerRef(4, {
-    margin: 36,
-    gap: 10,
-    maxWidth: 112,
-    minWidth: 64,
-  });
+  const [cardWidth, containerRef] = useCardWidthByContainerRef(
+    SUSPECT_GRID_COLUMNS,
+    {
+      margin: SUSPECT_GRID_MARGIN,
+      gap: SUSPECT_GRID_GAP,
+      maxWidth: SUSPECT_GRID_MAX_WIDTH,
+      minWidth: SUSPECT_GRID_MIN_WIDTH,
+    },
+  );
 
   const activeSuspect = useMemo(
     () =>
@@ -179,7 +192,9 @@ function DailyInvestigacaoGameContent({
 
       <div
         className="grid w-full gap-3"
-        style={{ gridTemplateColumns: `repeat(4, minmax(0, ${cardWidth}px))` }}
+        style={{
+          gridTemplateColumns: `repeat(${SUSPECT_GRID_COLUMNS}, minmax(0, ${cardWidth}px))`,
+        }}
       >
         {data.suspects.map((suspect, index) => {
           const releaseOrder = released.indexOf(suspect.id);
@@ -195,7 +210,7 @@ function DailyInvestigacaoGameContent({
               isActive={activeSuspectId === suspect.id}
               isCulprit={isComplete && suspect.id === data.culpritId}
               disabled={isReleased || isComplete}
-              animationDelay={index * 0.04}
+              animationDelay={index * SUSPECT_CARD_ANIMATION_DELAY_STEP}
               onSelect={() => onSelectSuspect(suspect.id)}
             />
           );
@@ -206,7 +221,8 @@ function DailyInvestigacaoGameContent({
         <div className="flex flex-col gap-1">
           <Text strong>Declarações</Text>
           <Text type="secondary">
-            Você revela uma pista principal a cada dois inocentes liberados.
+            Você revela uma pista principal a cada{' '}
+            {MAIN_STATEMENT_REVEAL_INTERVAL} inocentes liberados.
           </Text>
         </div>
 

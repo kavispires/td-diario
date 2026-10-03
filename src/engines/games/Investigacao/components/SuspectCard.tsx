@@ -3,6 +3,10 @@ import { cn } from '@utils/cn';
 import { BadgeAlert, CheckCircle2, Siren } from 'lucide-react';
 import { motion } from 'motion/react';
 import type { DailyInvestigacaoSuspect } from 'types/games';
+import {
+  SUSPECT_CARD_ANIMATION_DURATION_SECONDS,
+  SUSPECT_CARD_ANIMATION_Y_OFFSET,
+} from '../utils/constants';
 import { SuspectPortrait } from './SuspectPortrait';
 
 /**
@@ -68,9 +72,13 @@ export function SuspectCard({
   return (
     <motion.button
       type="button"
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: SUSPECT_CARD_ANIMATION_Y_OFFSET }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, ease: 'easeOut', delay: animationDelay }}
+      transition={{
+        duration: SUSPECT_CARD_ANIMATION_DURATION_SECONDS,
+        ease: 'easeOut',
+        delay: animationDelay,
+      }}
       disabled={disabled}
       onClick={disabled ? undefined : onSelect}
       aria-label={

@@ -1,5 +1,9 @@
 import { Text } from '@components/ui/Typography';
 import { AudioLines, Grid2x2, Heart, Search } from 'lucide-react';
+import {
+  MAIN_STATEMENT_REVEAL_INTERVAL,
+  STARTING_HEARTS,
+} from '../utils/constants';
 
 /**
  * Renders Investigação's rules, shown inside the shared `RulesOverlay`.
@@ -16,7 +20,7 @@ export function Rules() {
       <li>
         <Text>
           Comece pelas pistas já abertas e revele uma nova declaração principal
-          a cada dois inocentes liberados.
+          a cada {MAIN_STATEMENT_REVEAL_INTERVAL} inocentes liberados.
         </Text>
       </li>
       <li>
@@ -41,7 +45,7 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Você pode gastar até três{' '}
+          Você pode gastar até {STARTING_HEARTS}{' '}
           <Heart
             className="inline h-4 w-4 fill-destructive text-destructive"
             aria-hidden="true"

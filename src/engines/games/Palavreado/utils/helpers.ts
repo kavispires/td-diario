@@ -3,36 +3,17 @@ import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPalavreadoEntry } from 'types/games';
 import { gameInfo } from '../info';
+import {
+  KEYWORD_INDEXES,
+  KEYWORD_STATES,
+  PALAVREADO_BASE_HEARTS,
+  SHARE_RESULT_COLORS,
+} from './constants';
 import type {
   GameState,
   PalavreadoLetter,
   PalavreadoLetterState,
 } from './types';
-
-/**
- * Base number of hearts used by Palavreado on regular-sized boards.
- */
-export const PALAVREADO_BASE_HEARTS = 4;
-
-/**
- * Points awarded when a whole row word becomes correct for the first time.
- */
-export const PALAVREADO_WORD_SCORE = 10;
-
-/**
- * Bonus points awarded per secret scoring word formed in a submission.
- */
-export const PALAVREADO_SECRET_WORD_SCORE = 2;
-
-const KEYWORD_INDEXES: Record<number, number[]> = {
-  4: [0, 5, 10, 15],
-  5: [0, 6, 12, 18, 24],
-};
-
-const KEYWORD_STATES: Record<number, PalavreadoLetterState[]> = {
-  4: ['0', '1', '2', '3'],
-  5: ['0', '1', '2', '3', '4'],
-};
 
 /**
  * Returns the total number of hearts for a board size, matching the
@@ -58,7 +39,7 @@ export function parseLetters(
   size: number,
 ): PalavreadoLetter[] {
   const indexes = KEYWORD_INDEXES[size] ?? [];
-  const states = KEYWORD_STATES[size] ?? [];
+  const states: readonly PalavreadoLetterState[] = KEYWORD_STATES[size] ?? [];
 
   return letters.map((letter, index) => {
     const keywordIndex = indexes.indexOf(index);
@@ -363,10 +344,11 @@ export function buildShareText({
   score: number;
 }): string {
   const size = guesses[0].length;
-  const colors = ['🟥', '🟦', '🟪', '🟫', '🟧'];
   const cleanUpAttempts = guesses.map((attempt) =>
     attempt.map((word, index) =>
-      words[index].toLowerCase() === word.toLowerCase() ? colors[index] : '⬜️',
+      words[index].toLowerCase() === word.toLowerCase()
+        ? SHARE_RESULT_COLORS[index]
+        : '⬜️',
     ),
   );
 

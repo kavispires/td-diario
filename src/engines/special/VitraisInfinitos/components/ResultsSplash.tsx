@@ -1,6 +1,7 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
+import { RESULTS_STATS_COLUMNS } from '../utils/constants';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -74,7 +75,12 @@ export function ResultsSplash({
         />
       </Surface>
 
-      <Surface className="grid w-full grid-cols-3 gap-3 bg-white/70 px-4 py-4 text-center">
+      <Surface
+        className="grid w-full gap-3 bg-white/70 px-4 py-4 text-center"
+        style={{
+          gridTemplateColumns: `repeat(${RESULTS_STATS_COLUMNS}, minmax(0, 1fr))`,
+        }}
+      >
         <div className="flex flex-col gap-1">
           <Text
             strong

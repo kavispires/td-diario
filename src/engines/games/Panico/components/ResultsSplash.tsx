@@ -1,10 +1,7 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Text } from '@components/ui/Typography';
-import {
-  buildShareText,
-  getCompletionPercentage,
-  PANICO_TOTAL_HEARTS,
-} from '../utils/helpers';
+import { PANICO_TOTAL_HEARTS } from '../utils/constants';
+import { buildShareText, getCompletionPercentage } from '../utils/helpers';
 
 /**
  * Props accepted by {@link ResultsSplash}.

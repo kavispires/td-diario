@@ -1,5 +1,6 @@
 import { Sprite } from '@components/sprites/Sprite';
 import { cn } from '@utils/cn';
+import { ALIENADO_SIGN_SPRITE_INSET } from '../utils/constants';
 
 /**
  * Props accepted by the {@link AlienSign} component.
@@ -37,7 +38,7 @@ export function AlienSign({ signId, width, className }: AlienSignProps) {
       <Sprite
         source="alien-signs"
         spriteId={`sign-${signId}`}
-        width={width - 12}
+        width={width - ALIENADO_SIGN_SPRITE_INSET}
         padding={0}
       />
     </div>

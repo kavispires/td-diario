@@ -1,5 +1,6 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { cn } from '@utils/cn';
+import { ESTOQUISTA_ITEM_CARD_PADDING } from '../utils/constants';
 
 /**
  * Props accepted by the {@link WarehouseGoodCard} component.
@@ -48,7 +49,7 @@ export function WarehouseGoodCard({
       <DailyItem
         itemId={itemId}
         width={width}
-        padding={10}
+        padding={ESTOQUISTA_ITEM_CARD_PADDING}
       />
     </div>
   );

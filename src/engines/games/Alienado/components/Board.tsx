@@ -4,6 +4,12 @@ import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import type { DailyAlienadoRequest } from 'types/games';
+import {
+  ALIENADO_BOARD_ITEM_FRAME,
+  ALIENADO_BOARD_SHAKE_DURATION_SECONDS,
+  ALIENADO_BOARD_SHAKE_X,
+  ALIENADO_GUESS_DELIMITER,
+} from '../utils/constants';
 import { AlienSign } from './AlienSign';
 
 /**
@@ -100,8 +106,11 @@ export function Board({
         key={latestAttempt ?? 'idle'}
         className="space-y-4 rounded-[2rem] bg-surface/85 p-4 shadow-sm"
         initial={shouldShake ? { x: 0 } : undefined}
-        animate={shouldShake ? { x: [0, -8, 8, -6, 6, 0] } : undefined}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        animate={shouldShake ? { x: ALIENADO_BOARD_SHAKE_X } : undefined}
+        transition={{
+          duration: ALIENADO_BOARD_SHAKE_DURATION_SECONDS,
+          ease: 'easeInOut',
+        }}
       >
         <Text strong>O alienígena quer isso:</Text>
 
@@ -128,7 +137,11 @@ export function Board({
                     <AlienSign
                       key={`${request.itemId}-${spriteId}`}
                       signId={spriteId}
-                      width={Math.max(itemWidth - 10, 42)}
+                      width={Math.max(
+                        itemWidth -
+                          ALIENADO_BOARD_ITEM_FRAME.requestSignWidthOffset,
+                        ALIENADO_BOARD_ITEM_FRAME.requestSignMinWidth,
+                      )}
                     />
                   ))}
                 </div>
@@ -149,7 +162,7 @@ export function Board({
                     <DailyItem
                       itemId={selectedItemId}
                       width={itemWidth}
-                      padding={4}
+                      padding={ALIENADO_BOARD_ITEM_FRAME.padding}
                     />
                   </button>
                 ) : (
@@ -158,10 +171,14 @@ export function Board({
                     onClick={() => onSelectSlot(index)}
                     disabled={isComplete}
                     className={cn(
-                      'flex h-[76px] w-[76px] items-center justify-center rounded-2xl border-2 border-dashed border-border-strong bg-surface text-2xl font-semibold text-subtle-foreground transition focus:outline-none focus:ring-2 focus:ring-primary/50',
+                      'flex items-center justify-center rounded-2xl border-2 border-dashed border-border-strong bg-surface text-2xl font-semibold text-subtle-foreground transition focus:outline-none focus:ring-2 focus:ring-primary/50',
                       slotIndex === index &&
                         'border-primary bg-primary-soft text-primary',
                     )}
+                    style={{
+                      width: ALIENADO_BOARD_ITEM_FRAME.emptySlotSize,
+                      height: ALIENADO_BOARD_ITEM_FRAME.emptySlotSize,
+                    }}
                     aria-label={`Selecionar a posição ${index + 1}`}
                   >
                     ?
@@ -173,7 +190,7 @@ export function Board({
                     <DailyItem
                       itemId={request.itemId}
                       width={itemWidth}
-                      padding={4}
+                      padding={ALIENADO_BOARD_ITEM_FRAME.padding}
                     />
                   </div>
                 )}
@@ -219,7 +236,7 @@ export function Board({
                 <DailyItem
                   itemId={itemId}
                   width={itemWidth}
-                  padding={4}
+                  padding={ALIENADO_BOARD_ITEM_FRAME.padding}
                 />
               </button>
             );
@@ -236,15 +253,18 @@ export function Board({
           <div className="space-y-2">
             {previousGuesses.map((guess, guessIndex) => (
               <div
-                key={`${guess.join('-')}-${guessIndex}`}
+                key={`${guess.join(ALIENADO_GUESS_DELIMITER)}-${guessIndex}`}
                 className="flex flex-wrap items-center justify-center gap-2 rounded-2xl bg-surface-raised p-3"
               >
                 {guess.map((itemId, itemIndex) => (
                   <DailyItem
                     key={`${itemId}-${itemIndex}`}
                     itemId={itemId}
-                    width={Math.max(itemWidth - 12, 38)}
-                    padding={3}
+                    width={Math.max(
+                      itemWidth - ALIENADO_BOARD_ITEM_FRAME.historyWidthOffset,
+                      ALIENADO_BOARD_ITEM_FRAME.historyMinWidth,
+                    )}
+                    padding={ALIENADO_BOARD_ITEM_FRAME.historyPadding}
                   />
                 ))}
               </div>

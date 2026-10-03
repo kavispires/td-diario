@@ -2,6 +2,7 @@ import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
+import { RESULTS_PAIR_CARD_WIDTH } from '../utils/constants';
 import { createPairId } from '../utils/helpers';
 import type { RelatedPair } from '../utils/types';
 import { PairImageCard } from './PairImageCard';
@@ -94,12 +95,12 @@ export function ResultsSplash({
                 <PairImageCard
                   imageId={pair.imageId1}
                   label={`Primeira imagem da ligação ${index + 1}`}
-                  width={120}
+                  width={RESULTS_PAIR_CARD_WIDTH}
                 />
                 <PairImageCard
                   imageId={pair.imageId2}
                   label={`Segunda imagem da ligação ${index + 1}`}
-                  width={120}
+                  width={RESULTS_PAIR_CARD_WIDTH}
                 />
               </div>
             </Surface>

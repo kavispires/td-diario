@@ -1,4 +1,9 @@
 import type { DailyConjuntosThing } from 'types/games';
+import {
+  CONJUNTOS_LATEST_THING_WIDTH_MULTIPLIER,
+  CONJUNTOS_MINIMIZED_THINGS_THRESHOLD,
+  CONJUNTOS_PREVIOUS_THING_WIDTH_MULTIPLIER,
+} from '../utils/constants';
 import { ThingCard } from './ThingCard';
 
 /**
@@ -33,8 +38,16 @@ export function InDiagramThings({ things, width }: InDiagramThingsProps) {
             key={`${thing.id}-${index}`}
             itemId={thing.id}
             name={thing.name}
-            width={width * (isLatestThing ? 1.15 : 0.8)}
-            minimize={array.length > 3 && !isLatestThing}
+            width={
+              width *
+              (isLatestThing
+                ? CONJUNTOS_LATEST_THING_WIDTH_MULTIPLIER
+                : CONJUNTOS_PREVIOUS_THING_WIDTH_MULTIPLIER)
+            }
+            minimize={
+              array.length > CONJUNTOS_MINIMIZED_THINGS_THRESHOLD &&
+              !isLatestThing
+            }
             emphasize={isLatestThing}
             className={isLatestThing ? 'max-w-full' : 'max-w-[72px]'}
           />

@@ -5,11 +5,10 @@ import type { DailyVitralEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
   COLS,
-  countConnections,
-  getTotalPossibleConnections,
   HEART_LOSS_INTERVAL_SECONDS,
   VITRAL_TOTAL_HEARTS,
-} from './puzzleUtils';
+} from './constants';
+import { countConnections, getTotalPossibleConnections } from './puzzleUtils';
 import type { GameState, GridState } from './types';
 
 /**

@@ -3,10 +3,8 @@ import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPortaisCorridor, DailyPortaisEntry } from 'types/games';
 import { gameInfo } from '../info';
+import { DEFAULT_COLUMN_POSITION, DEFAULT_HEARTS } from './constants';
 import type { GameState } from './types';
-
-const DEFAULT_HEARTS = 4;
-const DEFAULT_COLUMN_POSITION = 1;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);

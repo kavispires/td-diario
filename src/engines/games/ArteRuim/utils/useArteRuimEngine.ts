@@ -11,8 +11,8 @@ import { playSFX } from '@utils/soundEffects';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { DailyArteRuimEntry } from 'types/games';
 import { gameInfo } from '../info';
+import { ARTE_RUIM_HEARTS } from './constants';
 import {
-  ARTE_RUIM_HEARTS,
   countLetterOccurrences,
   countRevealedLetters,
   getProgress,

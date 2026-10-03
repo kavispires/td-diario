@@ -12,6 +12,7 @@ import type { PlaceholderGameData } from 'types/puzzles';
 import { Corridor } from './components/Corridor';
 import { Passcode } from './components/Passcode';
 import { ResultsSplash } from './components/ResultsSplash';
+import { DEFAULT_HEARTS, EMPTY_PORTAIS_ENTRY } from './utils/constants';
 import { getInitialState, getTotalMoves } from './utils/helpers';
 import { usePortaisEngine } from './utils/usePortaisEngine';
 
@@ -23,14 +24,6 @@ type DailyPortaisGameProps = {
    * Today's Portais payload, as resolved by `GameScreen`.
    */
   data: PlaceholderGameData;
-};
-
-const EMPTY_PORTAIS_ENTRY: DailyPortaisEntry = {
-  id: '',
-  number: 0,
-  type: 'portais',
-  goal: 0,
-  corridors: [],
 };
 
 function isDailyPortaisEntry(
@@ -113,7 +106,7 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
         <div className="flex items-center justify-center">
           <Hearts
             remaining={hearts}
-            total={4}
+            total={DEFAULT_HEARTS}
             size={16}
           />
         </div>

@@ -10,6 +10,7 @@ import type { DailyPicacoEntry } from 'types/games';
 import { Canvas } from './components/Canvas';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
+import { DRAWINGS_COUNT, ROUND_DURATION_SECONDS } from './utils/constants';
 import { countAcceptedDrawings, getInitialState } from './utils/helpers';
 import { usePicacoEngine } from './utils/usePicacoEngine';
 
@@ -100,9 +101,9 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
       {isIdle && (
         <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-6 text-center">
           <Paragraph className="mb-0 text-center">
-            Você terá <strong>10 segundos</strong> para cada desenho, sem usar
-            letras nem números. Depois do sexto rabisco, tudo é salvo de uma
-            vez.
+            Você terá <strong>{ROUND_DURATION_SECONDS} segundos</strong> para
+            cada desenho, sem usar letras nem números. Depois do{' '}
+            <strong>{DRAWINGS_COUNT}º rabisco</strong>, tudo é salvo de uma vez.
           </Paragraph>
 
           <div className="grid w-full gap-3 rounded-3xl bg-primary-soft px-4 py-4 text-left">

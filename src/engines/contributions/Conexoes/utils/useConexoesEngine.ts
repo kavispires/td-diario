@@ -14,12 +14,15 @@ import { useEffect, useState } from 'react';
 import type { DailyConexoesEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
-  buildSavePayload,
+  CONEXOES_SAVE_MUTATION_KEY,
   GENERATED_PAIRS_BATCH_SIZE,
+  MIN_REQUIRED_PAIRS,
+} from './constants';
+import {
+  buildSavePayload,
   generatePairs,
   getProgress,
   getScore,
-  MIN_REQUIRED_PAIRS,
 } from './helpers';
 import type {
   ConexoesEngineState,
@@ -61,7 +64,7 @@ export function useConexoesEngine(
   }, [state]);
 
   const saveMutation = useMutation<void, Error, RelatedPair[]>({
-    mutationKey: ['conexoes-save-pairs', data.id],
+    mutationKey: [CONEXOES_SAVE_MUTATION_KEY, data.id],
     mutationFn: async (pairsToSave) => {
       await DAILY_API.run({
         action: DAILY_API_ACTIONS.SAVE_CONEXOES,

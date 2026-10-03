@@ -3,6 +3,10 @@ import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import type { DailyQuartetosSet } from 'types/games';
+import {
+  QUARTETOS_GROUP_SIZE,
+  QUARTETOS_RESULTS_ITEM_WIDTH,
+} from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 
 /**
@@ -136,7 +140,12 @@ export function ResultsSplash({
               {quartetSet.title}
             </Title>
 
-            <div className="mt-3 grid grid-cols-4 justify-items-center gap-2">
+            <div
+              className="mt-3 grid justify-items-center gap-2"
+              style={{
+                gridTemplateColumns: `repeat(${QUARTETOS_GROUP_SIZE}, minmax(0, 1fr))`,
+              }}
+            >
               {quartetSet.itemsIds.map((itemId) => (
                 <div
                   key={itemId}
@@ -144,7 +153,7 @@ export function ResultsSplash({
                 >
                   <DailyItem
                     itemId={itemId}
-                    width={56}
+                    width={QUARTETOS_RESULTS_ITEM_WIDTH}
                   />
                 </div>
               ))}

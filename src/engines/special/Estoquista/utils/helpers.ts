@@ -4,11 +4,13 @@ import { generateShareableResult } from '@utils/shareResults';
 import type { DailyEstoquistaEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
+  ESTOQUISTA_FINAL_SUBMISSION_PROGRESS_STEPS,
+  ESTOQUISTA_MINIMUM_HEARTS,
+  ESTOQUISTA_OUT_OF_STOCK_ORDER_COUNT,
   ESTOQUISTA_PHASE,
-  type Fulfillment,
-  type GameState,
   OUT_OF_STOCK_SHELF_INDEX,
-} from './types';
+} from './constants';
+import type { Fulfillment, GameState } from './types';
 
 /**
  * Derives today's starting heart count from the puzzle shape: one heart for
@@ -18,7 +20,10 @@ import {
  * @returns The total number of hearts available for the day.
  */
 export function getTotalHearts(data: DailyEstoquistaEntry): number {
-  return Math.max(data.orders.length - 1, 1);
+  return Math.max(
+    data.orders.length - ESTOQUISTA_OUT_OF_STOCK_ORDER_COUNT,
+    ESTOQUISTA_MINIMUM_HEARTS,
+  );
 }
 
 /**
@@ -40,7 +45,11 @@ export function getPlacedGoodsCount(warehouse: GameState['warehouse']): number {
  * @returns The total count of progress steps.
  */
 export function getTotalProgressSteps(data: DailyEstoquistaEntry): number {
-  return data.goods.length + data.orders.length + 1;
+  return (
+    data.goods.length +
+    data.orders.length +
+    ESTOQUISTA_FINAL_SUBMISSION_PROGRESS_STEPS
+  );
 }
 
 /**

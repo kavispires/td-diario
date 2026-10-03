@@ -12,11 +12,11 @@ import type { PlaceholderGameData } from 'types/puzzles';
 import { Board } from './components/Board';
 import { ResultsSplash } from './components/ResultsSplash';
 import {
-  getInitialState,
-  getTotalHearts,
   PALAVREADO_SECRET_WORD_SCORE,
   PALAVREADO_WORD_SCORE,
-} from './utils/helpers';
+  WORD_TONE_CLASSES,
+} from './utils/constants';
+import { getInitialState, getTotalHearts } from './utils/helpers';
 import { usePalavreadoEngine } from './utils/usePalavreadoEngine';
 
 /**
@@ -264,15 +264,8 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
               const isCorrectWord =
                 word.toLowerCase() === words[wordIndex]?.toLowerCase();
               const wordTone =
-                wordIndex === 0
-                  ? 'bg-red-500 text-white'
-                  : wordIndex === 1
-                    ? 'bg-blue-500 text-white'
-                    : wordIndex === 2
-                      ? 'bg-purple-500 text-white'
-                      : wordIndex === 3
-                        ? 'bg-amber-700 text-white'
-                        : 'bg-orange-500 text-white';
+                WORD_TONE_CLASSES[wordIndex] ??
+                WORD_TONE_CLASSES[WORD_TONE_CLASSES.length - 1];
 
               return (
                 <span

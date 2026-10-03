@@ -10,7 +10,15 @@ import { vibrate } from '@utils/vibrate';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DailyAquiOEntry } from 'types/games';
 import { gameInfo } from '../info';
-import { getDiscs, ROUND_DURATION_SECONDS } from './helpers';
+import {
+  CORRECT_MATCH_SCORE,
+  ROUND_DURATION_SECONDS,
+  SPEECH_LANGUAGE,
+  SPEECH_RATE,
+  TIMER_TICK_INTERVAL_MS,
+  WIN_MATCH_SCORE,
+} from './constants';
+import { getDiscs } from './helpers';
 import type { GameState, RoundStopType, SessionState } from './types';
 
 const INITIAL_SESSION: SessionState = {
@@ -30,8 +38,8 @@ function speakInPortuguese(text: string) {
 
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'pt-BR';
-  utterance.rate = 1;
+  utterance.lang = SPEECH_LANGUAGE;
+  utterance.rate = SPEECH_RATE;
   window.speechSynthesis.speak(utterance);
 }
 
@@ -101,7 +109,7 @@ export function useAquiOEngine(
     };
 
     updateTimer();
-    const timerId = window.setInterval(updateTimer, 100);
+    const timerId = window.setInterval(updateTimer, TIMER_TICK_INTERVAL_MS);
 
     return () => window.clearInterval(timerId);
   }, [isPlaying]);
@@ -162,7 +170,8 @@ export function useAquiOEngine(
         const nextMaxProgress = Math.max(prev.maxProgress, nextDiscIndex);
         const hasNewRecord = nextMaxProgress > prev.maxProgress;
         const nextScore = hasNewRecord
-          ? prev.score + prev.hearts * (isWin ? 20 : 10)
+          ? prev.score +
+            prev.hearts * (isWin ? WIN_MATCH_SCORE : CORRECT_MATCH_SCORE)
           : prev.score;
 
         return {

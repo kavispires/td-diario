@@ -1,8 +1,7 @@
+import { BUTTON_SEPARATOR } from './constants';
 import type { ButtonDictionaryEntry, PoolGroupEntry } from './data';
 import { BUTTONS_LIBRARY, POOLS } from './data';
 import type { ButtonEntry, PanicoExpectedAction } from './types';
-
-const BUTTON_SEPARATOR = '::';
 
 /**
  * Safely narrows an unknown pool value to a string.

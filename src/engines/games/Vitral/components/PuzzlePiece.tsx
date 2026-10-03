@@ -1,9 +1,8 @@
 import { motion } from 'motion/react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
+import { BORDER_STYLE, COLS } from '../utils/constants';
 import { getPieceStyle } from '../utils/puzzleUtils';
 import type { PieceBorders } from '../utils/types';
-
-const BORDER_STYLE = '0.5px solid rgba(0, 0, 0, 0.55)';
 
 /**
  * Props accepted by the {@link PuzzlePiece} component.
@@ -74,8 +73,8 @@ export function PuzzlePiece({
   borders,
   onPointerDown,
 }: PuzzlePieceProps) {
-  const col = currentSlotIndex % 3;
-  const row = Math.floor(currentSlotIndex / 3);
+  const col = currentSlotIndex % COLS;
+  const row = Math.floor(currentSlotIndex / COLS);
   const left = col * cellWidth;
   const top = row * cellHeight;
 

@@ -1,5 +1,12 @@
 import { Package2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import {
+  ESTOQUISTA_BOARD_COLUMNS,
+  ESTOQUISTA_PACKAGE_ICON_MIN_SIZE,
+  ESTOQUISTA_PACKAGE_ICON_SIZE_RATIO,
+  ESTOQUISTA_STOCKED_CARD_INITIAL_SCALE,
+  ESTOQUISTA_TRANSITION_DURATION,
+} from '../utils/constants';
 import type { GameState } from '../utils/types';
 import { WarehouseGoodCard } from './WarehouseGoodCard';
 
@@ -40,7 +47,12 @@ export function StockingBoard({
   width,
 }: StockingBoardProps) {
   return (
-    <div className="grid grid-cols-4 gap-2 rounded-[2rem] bg-amber-900/80 p-3 shadow-inner">
+    <div
+      className="grid gap-2 rounded-[2rem] bg-amber-900/80 p-3 shadow-inner"
+      style={{
+        gridTemplateColumns: `repeat(${ESTOQUISTA_BOARD_COLUMNS}, minmax(0, 1fr))`,
+      }}
+    >
       {warehouse.map((goodId, index) => {
         if (!goodId) {
           return (
@@ -65,7 +77,10 @@ export function StockingBoard({
               style={{ width, height: width }}
             >
               <Package2
-                size={Math.max(width * 0.5, 24)}
+                size={Math.max(
+                  width * ESTOQUISTA_PACKAGE_ICON_SIZE_RATIO,
+                  ESTOQUISTA_PACKAGE_ICON_MIN_SIZE,
+                )}
                 aria-hidden="true"
               />
             </div>
@@ -75,9 +90,15 @@ export function StockingBoard({
         return (
           <motion.div
             key={`${goodId}-${index}`}
-            initial={{ scale: 0.92, opacity: 0 }}
+            initial={{
+              scale: ESTOQUISTA_STOCKED_CARD_INITIAL_SCALE,
+              opacity: 0,
+            }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={{
+              duration: ESTOQUISTA_TRANSITION_DURATION,
+              ease: 'easeOut',
+            }}
           >
             <WarehouseGoodCard
               itemId={goodId}

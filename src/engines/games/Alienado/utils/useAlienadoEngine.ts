@@ -13,6 +13,13 @@ import { vibrate } from '@utils/vibrate';
 import { useEffect, useMemo, useState } from 'react';
 import type { DailyAlienadoEntry } from 'types/games';
 import { gameInfo } from '../info';
+import {
+  ALIENADO_DUPLICATE_GUESS_MESSAGE,
+  ALIENADO_GUESS_DELIMITER,
+  ALIENADO_INCORRECT_GUESS_MESSAGE,
+  ALIENADO_SCORE_PER_REMAINING_HEART,
+  ALIENADO_SELECT_SLOT_MESSAGE,
+} from './constants';
 import { countMatchedPositions, splitGuess } from './helpers';
 import type { AlienadoEngineState, GameState, SessionState } from './types';
 
@@ -85,7 +92,7 @@ export function useAlienadoEngine(
         : session.slotIndex;
 
     if (targetIndex === -1) {
-      notification.info('Escolha uma posição para trocar um item.');
+      notification.info(ALIENADO_SELECT_SLOT_MESSAGE);
       return;
     }
 
@@ -116,10 +123,10 @@ export function useAlienadoEngine(
     const guessItems = session.selection.filter(
       (itemId): itemId is string => itemId !== null,
     );
-    const guess = guessItems.join('-');
+    const guess = guessItems.join(ALIENADO_GUESS_DELIMITER);
 
     if (state.guesses.includes(guess)) {
-      notification.warning('Você já tentou essa combinação. Tente outra!');
+      notification.warning(ALIENADO_DUPLICATE_GUESS_MESSAGE);
       playSFX('wrong');
       vibrate('wrong');
       updateSession({ latestAttempt: Date.now() });
@@ -139,7 +146,7 @@ export function useAlienadoEngine(
       playSFX('alienYay');
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
     } else {
-      notification.warning('Combinação incorreta. Tente novamente!');
+      notification.warning(ALIENADO_INCORRECT_GUESS_MESSAGE);
       playSFX('alienBoo');
       vibrate(isLose ? 'lose' : 'wrong');
 
@@ -158,7 +165,9 @@ export function useAlienadoEngine(
           ? GAME_LIFECYCLE_STATUS.LOSE
           : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
       progress: isCorrect ? 1 : progress,
-      score: isCorrect ? remainingHearts * 25 : prev.score,
+      score: isCorrect
+        ? remainingHearts * ALIENADO_SCORE_PER_REMAINING_HEART
+        : prev.score,
     }));
 
     updateSession({

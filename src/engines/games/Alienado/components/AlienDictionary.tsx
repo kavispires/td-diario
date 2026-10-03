@@ -2,6 +2,7 @@ import { DailyItem } from '@components/games/DailyItem';
 import { Text } from '@components/ui/Typography';
 import { ArrowRight } from 'lucide-react';
 import type { DailyAlienadoAttribute } from 'types/games';
+import { ALIENADO_DICTIONARY_ITEM_FRAME } from '../utils/constants';
 import { AlienSign } from './AlienSign';
 
 /**
@@ -58,8 +59,10 @@ export function AlienDictionary({
                   >
                     <DailyItem
                       itemId={itemId}
-                      width={itemWidth - 4}
-                      padding={2}
+                      width={
+                        itemWidth - ALIENADO_DICTIONARY_ITEM_FRAME.widthOffset
+                      }
+                      padding={ALIENADO_DICTIONARY_ITEM_FRAME.padding}
                     />
                   </div>
                 ))}

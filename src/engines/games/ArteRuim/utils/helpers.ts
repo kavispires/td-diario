@@ -4,12 +4,8 @@ import { generateShareableResult } from '@utils/shareResults';
 import type { DailyArteRuimEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { gameInfo } from '../info';
+import { ARTE_RUIM_HEARTS } from './constants';
 import type { GameState } from './types';
-
-/**
- * Number of mistakes the player can make before losing today's Arte Ruim.
- */
-export const ARTE_RUIM_HEARTS = 3;
 
 /**
  * Normalizes a character for answer matching, removing accents and forcing

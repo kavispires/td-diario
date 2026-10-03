@@ -1,5 +1,10 @@
 import { Text } from '@components/ui/Typography';
 import { Heart, Star } from 'lucide-react';
+import {
+  CONJUNTOS_BASE_HEARTS,
+  CONJUNTOS_SCORE_PER_REMAINING_HEART,
+  CONJUNTOS_WEEKEND_EXTRA_HEARTS,
+} from '../utils/constants';
 
 /**
  * Renders Conjuntos' rules inside the shared `RulesOverlay`.
@@ -36,7 +41,11 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Cada acerto vale <strong>10 pontos por coração restante</strong>.
+          Cada acerto vale{' '}
+          <strong>
+            {CONJUNTOS_SCORE_PER_REMAINING_HEART} pontos por coração restante
+          </strong>
+          .
         </Text>
       </li>
       <li>
@@ -51,12 +60,14 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Você começa com 4{' '}
+          Você começa com {CONJUNTOS_BASE_HEARTS}{' '}
           <Heart
             className="inline h-4 w-4 fill-destructive text-destructive"
             aria-hidden="true"
           />{' '}
-          durante a semana e 5 aos fins de semana. Perca todos e o jogo acaba.
+          durante a semana e{' '}
+          {CONJUNTOS_BASE_HEARTS + CONJUNTOS_WEEKEND_EXTRA_HEARTS} aos fins de
+          semana. Perca todos e o jogo acaba.
         </Text>
       </li>
     </ul>

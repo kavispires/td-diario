@@ -3,6 +3,11 @@ import { cn } from '@utils/cn';
 import { AudioLines, Grid2x2, Heart, Search } from 'lucide-react';
 import { motion } from 'motion/react';
 import type { DailyInvestigacaoStatement } from 'types/games';
+import {
+  STATEMENT_CARD_ANIMATION_DELAY_STEP,
+  STATEMENT_CARD_ANIMATION_DURATION_SECONDS,
+  STATEMENT_CARD_ANIMATION_Y_OFFSET,
+} from '../utils/constants';
 import { isStatementComplete } from '../utils/helpers';
 
 /**
@@ -93,9 +98,13 @@ function StatementCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: STATEMENT_CARD_ANIMATION_Y_OFFSET }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.18, ease: 'easeOut', delay: index * 0.04 }}
+      transition={{
+        duration: STATEMENT_CARD_ANIMATION_DURATION_SECONDS,
+        ease: 'easeOut',
+        delay: index * STATEMENT_CARD_ANIMATION_DELAY_STEP,
+      }}
       className={cn(
         'flex items-start gap-3 rounded-2xl border px-4 py-3 shadow-sm',
         complete

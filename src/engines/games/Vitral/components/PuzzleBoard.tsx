@@ -2,11 +2,10 @@ import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { Fragment } from 'react';
+import { COLS, OVERLAY_BORDER_STYLE } from '../utils/constants';
 import { getPieceStyle } from '../utils/puzzleUtils';
 import type { BoardMeasures, GridState, PieceBorders } from '../utils/types';
 import { PuzzlePiece } from './PuzzlePiece';
-
-const OVERLAY_BORDER_STYLE = '0.5px solid rgba(255, 255, 255, 0.85)';
 
 /**
  * Props accepted by the {@link PuzzleBoard} component.
@@ -117,7 +116,7 @@ export function PuzzleBoard({
         <div
           className="absolute inset-0 grid pointer-events-none"
           style={{
-            gridTemplateColumns: `repeat(3, minmax(0, 1fr))`,
+            gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`,
             gridTemplateRows: `repeat(${measures.rows}, minmax(0, 1fr))`,
           }}
         >
@@ -189,10 +188,10 @@ export function PuzzleBoard({
                 }
 
                 const colOffset =
-                  (originalIndex % 3) - (activeDrag.originIndex % 3);
+                  (originalIndex % COLS) - (activeDrag.originIndex % COLS);
                 const rowOffset =
-                  Math.floor(originalIndex / 3) -
-                  Math.floor(activeDrag.originIndex / 3);
+                  Math.floor(originalIndex / COLS) -
+                  Math.floor(activeDrag.originIndex / COLS);
                 const borders = getBorders(originalIndex);
 
                 return (

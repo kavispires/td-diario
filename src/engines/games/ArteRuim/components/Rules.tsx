@@ -1,5 +1,6 @@
 import { Text } from '@components/ui/Typography';
 import { Heart } from 'lucide-react';
+import { ARTE_RUIM_HEARTS } from '../utils/constants';
 
 /**
  * Renders Arte Ruim's rules, shown inside the shared `RulesOverlay`.
@@ -28,7 +29,7 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Você tem 3{' '}
+          Você tem {ARTE_RUIM_HEARTS}{' '}
           <Heart
             className="inline h-4 w-4 fill-destructive text-destructive"
             aria-hidden="true"

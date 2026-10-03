@@ -3,6 +3,11 @@ import { Surface } from '@components/ui/Surface';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
 import { ArrowDown } from 'lucide-react';
 import type { DailyConjuntosThing } from 'types/games';
+import {
+  CONJUNTOS_REVIEW_AREA_THING_WIDTH_MULTIPLIER,
+  CONJUNTOS_RULE1_AREA,
+  CONJUNTOS_RULE2_AREA,
+} from '../utils/constants';
 import { getAreaLabel } from '../utils/helpers';
 import type { DiagramArea } from '../utils/types';
 import { InDiagramThings } from './InDiagramThings';
@@ -64,9 +69,9 @@ export function PlacementReview({
   thingWidth,
 }: PlacementReviewProps) {
   const areaThings =
-    activeArea === 1
+    activeArea === CONJUNTOS_RULE1_AREA
       ? [...rule1Things, ...intersectingThings]
-      : activeArea === 2
+      : activeArea === CONJUNTOS_RULE2_AREA
         ? [...rule2Things, ...intersectingThings]
         : intersectingThings;
 
@@ -95,7 +100,7 @@ export function PlacementReview({
         {areaThings.length > 0 ? (
           <InDiagramThings
             things={areaThings}
-            width={thingWidth * 0.7}
+            width={thingWidth * CONJUNTOS_REVIEW_AREA_THING_WIDTH_MULTIPLIER}
           />
         ) : (
           <Text type="secondary">Essa área ainda está vazia.</Text>

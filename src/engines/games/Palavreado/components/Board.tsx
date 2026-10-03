@@ -1,15 +1,7 @@
 import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
+import { TILE_TONE_CLASSES } from '../utils/constants';
 import type { PalavreadoLetter } from '../utils/types';
-
-const TILE_TONE_CLASSES = {
-  idle: 'bg-white/85 text-foreground border-border-strong',
-  0: 'bg-red-500 text-white border-red-400',
-  1: 'bg-blue-500 text-white border-blue-400',
-  2: 'bg-purple-500 text-white border-purple-400',
-  3: 'bg-amber-700 text-white border-amber-600',
-  4: 'bg-orange-500 text-white border-orange-400',
-} as const;
 
 /**
  * Props accepted by the {@link Board} component.

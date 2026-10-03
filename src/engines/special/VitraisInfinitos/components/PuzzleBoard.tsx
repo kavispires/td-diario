@@ -1,7 +1,14 @@
 import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { GRID_COLUMNS, getConnectedGroupIndexes } from '../utils/helpers';
+import {
+  BOARD_ASPECT_RATIO,
+  BOARD_FALLBACK_WIDTH,
+  DRAG_DISTANCE_THRESHOLD,
+  GRID_COLUMNS,
+  PIECE_MOVE_TRANSITION,
+} from '../utils/constants';
+import { getConnectedGroupIndexes } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link PuzzleBoard} component.
@@ -115,13 +122,14 @@ function getPieceStyle(
 ): React.CSSProperties {
   const column = pieceId % GRID_COLUMNS;
   const row = Math.floor(pieceId / GRID_COLUMNS);
+  const xOffset = GRID_COLUMNS > 1 ? column * (100 / (GRID_COLUMNS - 1)) : 0;
   const yOffset = totalRows > 1 ? row * (100 / (totalRows - 1)) : 0;
 
   return {
     backgroundImage: `url(${imageUrl})`,
     backgroundRepeat: 'no-repeat',
     backgroundSize: `${GRID_COLUMNS * 100}% ${totalRows * 100}%`,
-    backgroundPosition: `${column * 50}% ${yOffset}%`,
+    backgroundPosition: `${xOffset}% ${yOffset}%`,
   };
 }
 
@@ -145,9 +153,9 @@ export function PuzzleBoard({
   const boardRef = useRef<HTMLDivElement | null>(null);
   const [dragState, setDragState] = useState<DragState | null>(null);
 
-  const safeWidth = width > 0 ? width : 300;
+  const safeWidth = width > 0 ? width : BOARD_FALLBACK_WIDTH;
   const rows = Math.max(1, Math.ceil(pieceOrder.length / GRID_COLUMNS));
-  const totalHeight = safeWidth * 1.5;
+  const totalHeight = safeWidth * BOARD_ASPECT_RATIO;
   const cellWidth = safeWidth / GRID_COLUMNS;
   const cellHeight = totalHeight / rows;
   const draggedIndexes = useMemo(() => {
@@ -209,7 +217,7 @@ export function PuzzleBoard({
           ...prev,
           pointer: { x: event.clientX, y: event.clientY },
           hoveredAnchorIndex: getHoveredAnchor(event.clientX, event.clientY),
-          didDrag: prev.didDrag || distance > 6,
+          didDrag: prev.didDrag || distance > DRAG_DISTANCE_THRESHOLD,
         };
       });
     }
@@ -317,7 +325,7 @@ export function PuzzleBoard({
               )}
               initial={false}
               animate={{ left, top }}
-              transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+              transition={PIECE_MOVE_TRANSITION}
               style={{
                 width: cellWidth,
                 height: cellHeight,

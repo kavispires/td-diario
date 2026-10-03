@@ -3,6 +3,11 @@ import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyAlienadoAttribute, DailyAlienadoRequest } from 'types/games';
+import {
+  ALIENADO_GAME_ID,
+  ALIENADO_GUESS_DELIMITER,
+  ALIENADO_RESULTS_LAYOUT,
+} from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 import { AlienSign } from './AlienSign';
 
@@ -76,7 +81,7 @@ export function ResultsSplash({
 
   return (
     <GameResultsSplash
-      gameId="alienado"
+      gameId={ALIENADO_GAME_ID}
       title={win ? 'Parabéns!' : 'Que pena!'}
       shareText={shareText}
       onClose={onClose}
@@ -111,7 +116,7 @@ export function ResultsSplash({
                 <AlienSign
                   key={`${request.itemId}-${spriteId}`}
                   signId={spriteId}
-                  width={46}
+                  width={ALIENADO_RESULTS_LAYOUT.requestSignWidth}
                 />
               ))}
             </div>
@@ -119,8 +124,8 @@ export function ResultsSplash({
             <div className="rounded-2xl bg-gold-soft p-1">
               <DailyItem
                 itemId={request.itemId}
-                width={60}
-                padding={4}
+                width={ALIENADO_RESULTS_LAYOUT.requestItemWidth}
+                padding={ALIENADO_RESULTS_LAYOUT.requestItemPadding}
               />
             </div>
           </div>
@@ -138,7 +143,7 @@ export function ResultsSplash({
             >
               <AlienSign
                 signId={attribute.spriteId}
-                width={44}
+                width={ALIENADO_RESULTS_LAYOUT.attributeSignWidth}
               />
 
               <div className="min-w-0 space-y-1">
@@ -162,15 +167,15 @@ export function ResultsSplash({
           <div className="space-y-2">
             {guesses.map((guess, guessIndex) => (
               <div
-                key={`${guess.join('-')}-${guessIndex}`}
+                key={`${guess.join(ALIENADO_GUESS_DELIMITER)}-${guessIndex}`}
                 className="flex flex-wrap items-center justify-center gap-2 rounded-2xl bg-white/60 p-3"
               >
                 {guess.map((itemId, itemIndex) => (
                   <DailyItem
                     key={`${itemId}-${itemIndex}`}
                     itemId={itemId}
-                    width={38}
-                    padding={3}
+                    width={ALIENADO_RESULTS_LAYOUT.guessItemWidth}
+                    padding={ALIENADO_RESULTS_LAYOUT.guessItemPadding}
                   />
                 ))}
               </div>

@@ -13,6 +13,13 @@ import { vibrate } from '@utils/vibrate';
 import { useEffect, useState } from 'react';
 import type { DailyConjuntosEntry, DailyConjuntosThing } from 'types/games';
 import { gameInfo } from '../info';
+import {
+  CONJUNTOS_INTERSECTION_AREA,
+  CONJUNTOS_RULE1_AREA,
+  CONJUNTOS_RULE2_AREA,
+  CONJUNTOS_SCORE_PER_REMAINING_HEART,
+  CONJUNTOS_WRONG_GUESS_HEART_PENALTY,
+} from './constants';
 import { getAreaThingsKey, getTotalHearts } from './helpers';
 import type {
   ConjuntosEngineState,
@@ -117,7 +124,12 @@ export function useConjuntosEngine(
     }
 
     const correctArea = activeThing.rule;
-    if (correctArea !== 0 && correctArea !== 1 && correctArea !== 2) {
+    const isValidCorrectArea =
+      correctArea === CONJUNTOS_INTERSECTION_AREA ||
+      correctArea === CONJUNTOS_RULE1_AREA ||
+      correctArea === CONJUNTOS_RULE2_AREA;
+
+    if (!isValidCorrectArea) {
       notification.error(
         'Não deu para validar essa coisa agora. Recarregue a página.',
       );
@@ -138,7 +150,9 @@ export function useConjuntosEngine(
       },
     ];
     const nextProgress = totalThings > 0 ? nextGuesses.length / totalThings : 1;
-    const nextHearts = isCorrect ? state.hearts : Math.max(state.hearts - 1, 0);
+    const nextHearts = isCorrect
+      ? state.hearts
+      : Math.max(state.hearts - CONJUNTOS_WRONG_GUESS_HEART_PENALTY, 0);
     const resolvedHand = replacementThing
       ? [...nextHand, replacementThing]
       : nextHand;
@@ -175,7 +189,8 @@ export function useConjuntosEngine(
       guesses: nextGuesses,
       progress: nextProgress,
       score: isCorrect
-        ? previousState.score + previousState.hearts * 10
+        ? previousState.score +
+          previousState.hearts * CONJUNTOS_SCORE_PER_REMAINING_HEART
         : previousState.score,
       status: nextStatus,
     }));

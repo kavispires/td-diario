@@ -4,16 +4,12 @@ import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyMapeamentoEntry } from 'types/games';
 import { gameInfo } from '../info';
+import { LOCATION_FRAGMENT_PLACEHOLDER, MAPEAMENTO_HEARTS } from './constants';
 import type { GameState } from './types';
 
 function stripAccents(value: string): string {
   return value.normalize('NFD').replaceAll(/\p{Diacritic}/gu, '');
 }
-
-/**
- * Total number of mistakes the player can make before losing.
- */
-export const MAPEAMENTO_HEARTS = 4;
 
 /**
  * Builds the default `GameState` for a fresh Mapeamento day.
@@ -90,7 +86,7 @@ export function getLocationFragments(
     }
 
     if (!inGap) {
-      fragments.push('_');
+      fragments.push(LOCATION_FRAGMENT_PLACEHOLDER);
       inGap = true;
     }
   }

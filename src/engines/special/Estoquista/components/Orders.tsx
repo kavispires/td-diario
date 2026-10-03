@@ -2,6 +2,10 @@ import { Pill } from '@components/ui/Pill';
 import { Surface } from '@components/ui/Surface';
 import { cn } from '@utils/cn';
 import { Check, ClipboardList } from 'lucide-react';
+import {
+  ESTOQUISTA_ORDER_CARD_MIN_WIDTH,
+  ESTOQUISTA_ORDER_CARD_WIDTH_RATIO,
+} from '../utils/constants';
 import type { Fulfillment, GoodId } from '../utils/types';
 import { WarehouseGoodCard } from './WarehouseGoodCard';
 
@@ -94,7 +98,10 @@ export function Orders({
               )}
               <WarehouseGoodCard
                 itemId={order}
-                width={Math.max(Math.floor(shelfWidth * 0.88), 48)}
+                width={Math.max(
+                  Math.floor(shelfWidth * ESTOQUISTA_ORDER_CARD_WIDTH_RATIO),
+                  ESTOQUISTA_ORDER_CARD_MIN_WIDTH,
+                )}
                 highlighted={isActive}
                 className={cn(
                   isActive && 'border-gold bg-gold-soft',

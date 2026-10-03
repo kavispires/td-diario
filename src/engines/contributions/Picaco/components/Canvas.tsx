@@ -4,7 +4,11 @@ import { cn } from '@utils/cn';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import {
+  CANVAS_CORNER_RADIUS,
+  CANVAS_FILL_COLOR,
+  CANVAS_STROKE_COLOR,
   CANVAS_VIEWBOX_SIZE,
+  COUNTDOWN_TICK_MS,
   ROUND_DURATION_SECONDS,
   STROKE_WIDTH,
 } from '../utils/constants';
@@ -161,8 +165,8 @@ function SketchBoard({ lines, setLines }: SketchBoardProps) {
       <rect
         width={CANVAS_VIEWBOX_SIZE}
         height={CANVAS_VIEWBOX_SIZE}
-        rx="32"
-        fill="white"
+        rx={CANVAS_CORNER_RADIUS}
+        fill={CANVAS_FILL_COLOR}
       />
 
       {paths.map((path, index) => (
@@ -170,7 +174,7 @@ function SketchBoard({ lines, setLines }: SketchBoardProps) {
           key={`${path}-${index}`}
           d={path}
           fill="none"
-          stroke="#111827"
+          stroke={CANVAS_STROKE_COLOR}
           strokeWidth={STROKE_WIDTH}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -211,7 +215,7 @@ export function Canvas({ onComplete }: CanvasProps) {
 
         return previousSeconds - 1;
       });
-    }, 1000);
+    }, COUNTDOWN_TICK_MS);
 
     return () => window.clearInterval(intervalId);
   }, [onComplete]);
@@ -294,14 +298,14 @@ export function DrawingPreview({
             <rect
               width={CANVAS_VIEWBOX_SIZE}
               height={CANVAS_VIEWBOX_SIZE}
-              fill="white"
+              fill={CANVAS_FILL_COLOR}
             />
             {paths.map((path, index) => (
               <path
                 key={`${path}-${index}`}
                 d={path}
                 fill="none"
-                stroke="#111827"
+                stroke={CANVAS_STROKE_COLOR}
                 strokeWidth={STROKE_WIDTH}
                 strokeLinecap="round"
                 strokeLinejoin="round"

@@ -11,6 +11,15 @@ import type { DailyVitraisInfinitosEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { PuzzleBoard } from './components/PuzzleBoard';
 import { ResultsSplash } from './components/ResultsSplash';
+import {
+  BOARD_CONTAINER_COLUMNS,
+  BOARD_CONTAINER_GAP,
+  BOARD_CONTAINER_MARGIN,
+  BOARD_MAX_WIDTH,
+  BOARD_MIN_WIDTH,
+  FALLBACK_ENTRY,
+  PROGRESS_BAR_TRANSITION,
+} from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useVitraisInfinitosEngine } from './utils/useVitraisInfinitosEngine';
 
@@ -23,15 +32,6 @@ type DailyVitraisInfinitosGameProps = {
    * `GameScreen`.
    */
   data: PlaceholderGameData;
-};
-
-const FALLBACK_ENTRY: DailyVitraisInfinitosEntry = {
-  id: 'invalid-vitrais-infinitos-entry',
-  number: 0,
-  type: 'vitrais-infinitos',
-  title: '',
-  cardId: '',
-  pieces: [0, 1, 2, 3, 4, 5],
 };
 
 /**
@@ -82,12 +82,15 @@ export function DailyVitraisInfinitosGame({
     toggleSelection,
   } = useVitraisInfinitosEngine(entry, initialState);
   const imageUrl = useTDImageCardUrl(entry.cardId);
-  const [boardWidth, containerRef] = useCardWidthByContainerRef(1, {
-    margin: 72,
-    gap: 0,
-    maxWidth: 512,
-    minWidth: 256,
-  });
+  const [boardWidth, containerRef] = useCardWidthByContainerRef(
+    BOARD_CONTAINER_COLUMNS,
+    {
+      margin: BOARD_CONTAINER_MARGIN,
+      gap: BOARD_CONTAINER_GAP,
+      maxWidth: BOARD_MAX_WIDTH,
+      minWidth: BOARD_MIN_WIDTH,
+    },
+  );
 
   if (!isDailyVitraisInfinitosEntry(data)) {
     return (
@@ -138,7 +141,7 @@ export function DailyVitraisInfinitosGame({
           <motion.div
             className="h-full rounded-full bg-gold"
             animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={PROGRESS_BAR_TRANSITION}
           />
         </div>
       )}

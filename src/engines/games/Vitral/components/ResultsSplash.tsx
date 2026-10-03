@@ -2,8 +2,8 @@ import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyVitralEntry } from 'types/games';
+import { VITRAL_TOTAL_HEARTS } from '../utils/constants';
 import { buildShareText, formatElapsedTime } from '../utils/helpers';
-import { VITRAL_TOTAL_HEARTS } from '../utils/puzzleUtils';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.

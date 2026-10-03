@@ -12,7 +12,8 @@ import type { DailyAquiOEntry } from 'types/games';
 import { Disc } from './components/Disc';
 import { PreloadItems } from './components/PreloadItems';
 import { ResultsSplash } from './components/ResultsSplash';
-import { getInitialState, ROUND_DURATION_SECONDS } from './utils/helpers';
+import { HEARTS, ROUND_DURATION_SECONDS } from './utils/constants';
+import { getInitialState } from './utils/helpers';
 import { useAquiOEngine } from './utils/useAquiOEngine';
 
 /**
@@ -91,7 +92,7 @@ export function DailyAquiOGame({ data }: DailyAquiOGameProps) {
           <div className="flex items-center justify-center">
             <Hearts
               remaining={hearts}
-              total={3}
+              total={HEARTS}
               size={16}
             />
           </div>
@@ -132,7 +133,7 @@ export function DailyAquiOGame({ data }: DailyAquiOGameProps) {
           Encontre o item que aparece nos dois discos antes que o tempo acabe.
           <br />
           {attempts === 0
-            ? `Hoje são ${goal} discos para achar com apenas 3 corações.`
+            ? `Hoje são ${goal} discos para achar com apenas ${HEARTS} corações.`
             : `Melhor rodada de hoje: ${maxProgress} de ${goal} discos em ${attempts} tentativa${attempts === 1 ? '' : 's'}.`}
         </Text>
       </div>

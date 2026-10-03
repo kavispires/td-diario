@@ -9,147 +9,20 @@ import type {
   DailyInvestigacaoStatement,
 } from 'types/games';
 import { gameInfo } from '../info';
+import {
+  CLUE_PENALTY_POINTS,
+  FEATURE_PT_TRANSLATIONS,
+  MAIN_STATEMENT_REVEAL_INTERVAL,
+  RELEASE_SCORE_POINTS,
+  SHARE_LOSE_ICON,
+  SHARE_WIN_ICON,
+  STARTING_HEARTS,
+  SUSPECT_IMAGE_CARD_VARIANT,
+  VALID_STATUSES,
+  WIN_COMPLETION_BONUS_POINTS,
+  WIN_HEART_BONUS_POINTS,
+} from './constants';
 import type { GameState } from './types';
-
-/**
- * Number of optional clue hearts available at the start of every
- * Investigação puzzle.
- */
-export const STARTING_HEARTS = 3;
-
-const VALID_STATUSES = new Set(Object.values(GAME_LIFECYCLE_STATUS));
-
-const FEATURE_PT_TRANSLATIONS: Dictionary<string> = {
-  male: 'é homem',
-  female: 'é mulher',
-  transgender: 'é transgênero',
-  none: 'não possui gênero',
-  fluid: 'é de gênero fluido',
-  'non-binary': 'é não-binário(a)',
-  other: 'é de um gênero diferente/desconhecido',
-  black: 'é negro(a)',
-  'black.male': 'é negro',
-  'black.female': 'é negra',
-  'black.non-binary': 'é negre',
-  caucasian: 'é branco(a)',
-  'caucasian.male': 'é branco',
-  'caucasian.female': 'é branca',
-  'caucasian.non-binary': 'é branque',
-  white: 'é branco(a)',
-  'white.male': 'é branco',
-  'white.female': 'é branca',
-  'white.non-binary': 'é branque',
-  asian: 'é asiático(a)',
-  'asian.male': 'é asiático',
-  'asian.female': 'é asiática',
-  'asian.non-binary': 'é asiaique',
-  latino: 'é latino(a)',
-  'latino.male': 'é latino',
-  'latino.female': 'é latina',
-  'latino.non-binary': 'é latinex',
-  brown: 'é pardo(a)',
-  'brown.male': 'é pardo',
-  'brown.female': 'é parda',
-  'brown.non-binary': 'é parde',
-  thin: 'é magrelo(a)',
-  'thin.male': 'é magrelo',
-  'thin.female': 'é magrela',
-  'thin.non-binary': 'é magrele',
-  fat: 'é gordo(a)',
-  'fat.male': 'é gordo',
-  'fat.female': 'é gorda',
-  'fat.non-binary': 'é gordix',
-  large: 'é gordo(a)',
-  'large.male': 'é gordo',
-  'large.female': 'é gorda',
-  'large.non-binary': 'é gordix',
-  tall: 'é alto(a)',
-  'tall.male': 'é alto',
-  'tall.female': 'é alta',
-  'tall.non-binary': 'é altix',
-  short: 'é baixinho(a)',
-  'short.male': 'é baixinho',
-  'short.female': 'é baixinha',
-  'short.non-binary': 'é baixinhe',
-  young: 'é jovem',
-  undefinedAge: 'sem idade definida',
-  adult: 'é adulto(a)',
-  'adult.male': 'é adulto',
-  'adult.female': 'é adulta',
-  'adult.non-binary': 'é adultx',
-  senior: 'é idoso(a)',
-  'senior.male': 'é idoso',
-  'senior.female': 'é idosa',
-  'senior.non-binary': 'é idose',
-  average: 'tem corpo normal',
-  medium: 'é de altura média',
-  mixed: 'é mestiço(a)',
-  'mixed.male': 'é mestiço',
-  'mixed.female': 'é mestiça',
-  'mixed.non-binary': 'é mestice',
-  indigenous: 'é indígena',
-  hat: 'está usando um chapéu',
-  tie: 'está usando uma gravata',
-  glasses: 'está usando óculos',
-  brownHair: 'tem cabelo castanho',
-  shortHair: 'tem cabelo curto',
-  beard: 'tem barba',
-  scarf: 'está usando um cachecol',
-  blondeHair: 'tem cabelo loiro',
-  longHair: 'tem cabelo longo',
-  greyHair: 'tem cabelo grisalho',
-  bald: 'é careca',
-  suspenders: 'está usando suspensório',
-  zipper: 'tem zíper na roupa',
-  mustache: 'tem bigode',
-  goatee: 'tem cavanhaque',
-  muscular: 'é sarado(a)',
-  'muscular.male': 'é sarado',
-  'muscular.female': 'é sarada',
-  'muscular.non-binary': 'é sarade',
-  blackHair: 'tem cabelo preto',
-  hoodie: 'está usando um moletom',
-  earrings: 'está usando brincos',
-  lipstick: 'está usando batom',
-  necklace: 'está usando um colar',
-  mediumHair: 'tem cabelo médio',
-  'middle-eastern': 'é do Oriente Médio',
-  headscarf: 'está usando um lenço na cabeça',
-  redHair: 'tem cabelo ruivo',
-  piercings: 'tem piercings',
-  coloredHair: 'tem cabelo colorido',
-  indian: 'é indiano(a)',
-  'indian.male': 'é indiano',
-  'indian.female': 'é indiana',
-  'indian.non-binary': 'é indiane',
-  'native-american': 'é nativo-americano(a)',
-  noAccessories: 'está sem nenhum acessório',
-  avoidingCamera: 'está evitando olhar para a câmera',
-  wearingStripes: 'tem listras na roupa',
-  blackClothes: 'está vestindo roupas pretas',
-  blueClothes: 'está vestindo roupas azuis',
-  greenClothes: 'está vestindo roupas verdes',
-  redClothes: 'está vestindo roupas vermelhas',
-  yellowClothes: 'está vestindo roupas amarelas',
-  purpleClothes: 'está vestindo roupas roxas',
-  orangeClothes: 'está vestindo roupas laranjas',
-  brownClothes: 'está vestindo roupas marrons',
-  whiteShirt: 'está usando camisa branca',
-  pinkClothes: 'está vestindo roupas rosas',
-  beigeClothes: 'está vestindo roupas bege',
-  greyClothes: 'está vestindo roupas cinzas',
-  patternedShirt: 'está usando roupa estampada',
-  buttonShirt: 'está usando camisa com botões',
-  bow: 'está usando um laço',
-  hairyChest: 'está mostrando o peito peludo',
-  wearingFlowers: 'está usando flores',
-  showTeeth: 'está mostrando os dentes',
-  hairTie: 'está usando um xuxinha ou fita no cabelo',
-  shirtless: 'está provavelmente sem camisa',
-  noHairInfo: 'não dá pra saber direito sobre o cabelo',
-  holdingSomething: 'está segurando algo',
-  turtleNeck: 'está usando gola rolê',
-};
 
 /**
  * Options accepted by {@link getVisibleStatements}.
@@ -208,9 +81,11 @@ export function getScore(
   hearts: number,
   isWin: boolean,
 ): number {
-  const releasePoints = releasedCount * 20;
-  const cluePenalty = (STARTING_HEARTS - hearts) * 5;
-  const completionBonus = isWin ? hearts * 10 + 20 : 0;
+  const releasePoints = releasedCount * RELEASE_SCORE_POINTS;
+  const cluePenalty = (STARTING_HEARTS - hearts) * CLUE_PENALTY_POINTS;
+  const completionBonus = isWin
+    ? hearts * WIN_HEART_BONUS_POINTS + WIN_COMPLETION_BONUS_POINTS
+    : 0;
 
   return Math.max(releasePoints - cluePenalty + completionBonus, 0);
 }
@@ -300,7 +175,7 @@ export function getInitialState(data: DailyInvestigacaoEntry): GameState {
  */
 export function getSuspectImageCardId(suspectId: string): string {
   const splitId = suspectId.split('-');
-  return `${splitId[0]}-gb-${splitId[splitId.length - 1]}`;
+  return `${splitId[0]}-${SUSPECT_IMAGE_CARD_VARIANT}-${splitId[splitId.length - 1]}`;
 }
 
 /**
@@ -335,7 +210,7 @@ export function getVisibleStatements({
 }: VisibleStatementsOptions) {
   const visibleMainCount = isComplete
     ? statements.length
-    : Math.floor(releasedCount / 2) + 1;
+    : Math.floor(releasedCount / MAIN_STATEMENT_REVEAL_INTERVAL) + 1;
   const visibleAdditionalCount = isComplete
     ? additionalStatements.length
     : STARTING_HEARTS - hearts;
@@ -383,7 +258,8 @@ export function buildShareText({
   totalSuspects: number;
 }): string {
   const releaseGoal = totalSuspects - 1;
-  const winIcon = releasedCount === releaseGoal ? '🏆' : '☠️';
+  const winIcon =
+    releasedCount === releaseGoal ? SHARE_WIN_ICON : SHARE_LOSE_ICON;
   const progress = Math.round((releasedCount / releaseGoal) * 100);
 
   return generateShareableResult({
