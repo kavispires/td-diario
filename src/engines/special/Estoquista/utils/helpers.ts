@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyEstoquistaEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
@@ -204,5 +205,36 @@ export function validateAttempts(
     }
 
     return warehouse[fulfillment.shelfIndex] === order;
+  });
+}
+
+/**
+ * Builds the plain-text shareable result for today's Estoquista run,
+ * reusing the original delivery/evaluation emoji rows.
+ *
+ * @param options - Today's challenge number and final run state.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  totalHearts,
+  evaluations,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  totalHearts: number;
+  evaluations: boolean[][];
+}): string {
+  const additionalLines = evaluations
+    .map((attempt) => attempt.map((value) => (value ? '📫' : '🤬')).join(' '))
+    .filter(Boolean);
+
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts,
+    remainingHearts: hearts,
+    additionalLines,
   });
 }

@@ -2,7 +2,7 @@ import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Text } from '@components/ui/Typography';
-import { FILMACO_HEARTS } from '../utils/helpers';
+import { buildShareText, FILMACO_HEARTS } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -46,6 +46,10 @@ type ResultsSplashProps = {
    */
   score: number;
   /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
+  /**
    * Called to dismiss the splash and return to the completed board.
    */
   onClose: () => void;
@@ -69,12 +73,21 @@ export function ResultsSplash({
   solvedLetters,
   totalLetters,
   score,
+  challengeNumber,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    solvedLetters,
+    totalLetters,
+  });
+
   return (
     <GameResultsSplash
       gameId="filmaco"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

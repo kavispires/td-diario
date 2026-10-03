@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyAlienadoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import type { GameState } from './types';
@@ -65,4 +66,49 @@ export function countMatchedPositions(
     (total, itemId, index) => total + (itemId === solutionItems[index] ? 1 : 0),
     0,
   );
+}
+
+/**
+ * Builds the plain-text shareable result for today's Alienado run, reusing
+ * the original per-slot emoji feedback for each submitted guess.
+ *
+ * @param options - Today's challenge number and final run state.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  guesses,
+  solution,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  guesses: string[][];
+  solution: string;
+}): string {
+  const solutionItems = solution.split('-');
+  const indexEmojis = ['🟤', '🟡', '🔵', '🟣'];
+  const additionalLines = guesses.map((guessItems) =>
+    guessItems
+      .map((itemId, index) => {
+        if (itemId === solutionItems[index]) {
+          return indexEmojis[index] ?? '❌';
+        }
+
+        if (solutionItems.includes(itemId)) {
+          return '❌';
+        }
+
+        return '👽';
+      })
+      .join(''),
+  );
+
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: solutionItems.length,
+    remainingHearts: hearts,
+    additionalLines,
+  });
 }

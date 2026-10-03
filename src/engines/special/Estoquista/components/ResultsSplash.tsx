@@ -1,5 +1,6 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Text } from '@components/ui/Typography';
+import { buildShareText } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -30,6 +31,10 @@ type ResultsSplashProps = {
    */
   score: number;
   /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
+  /**
    * Called to dismiss the splash and return to the completed board.
    */
   onClose: () => void;
@@ -50,12 +55,21 @@ export function ResultsSplash({
   totalHearts,
   evaluations,
   score,
+  challengeNumber,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    totalHearts,
+    evaluations,
+  });
+
   return (
     <GameResultsSplash
       gameId="estoquista"
       title={win ? 'Expedição perfeita!' : 'O estoque te venceu hoje'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

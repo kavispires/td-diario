@@ -118,6 +118,7 @@ export function DailyPanicoGame({ data }: DailyPanicoGameProps) {
           farthestButtonIndex={farthestButtonIndex}
           totalButtons={totalButtons}
           score={score}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

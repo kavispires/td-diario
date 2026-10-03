@@ -1,7 +1,7 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Text, Title } from '@components/ui/Typography';
-import { MAPEAMENTO_HEARTS } from '../utils/helpers';
+import { buildShareText, MAPEAMENTO_HEARTS } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -36,6 +36,10 @@ type ResultsSplashProps = {
    */
   totalClues: number;
   /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
+  /**
    * Called to dismiss the splash and return to the completed game view.
    */
   onClose: () => void;
@@ -56,12 +60,19 @@ export function ResultsSplash({
   score,
   revealedClues,
   totalClues,
+  challengeNumber,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+  });
+
   return (
     <GameResultsSplash
       gameId="mapeamento"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <span

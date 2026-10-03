@@ -2,6 +2,7 @@ import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Text, Title } from '@components/ui/Typography';
 import type { DailyQuartetosSet } from 'types/games';
+import { buildShareText } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -32,6 +33,10 @@ type ResultsSplashProps = {
    */
   sets: DailyQuartetosSet[];
   /**
+   * Normalized keys for each submitted guess.
+   */
+  guesses: string[];
+  /**
    * Called to dismiss the splash and return to the completed game view.
    */
   onClose: () => void;
@@ -52,12 +57,21 @@ export function ResultsSplash({
   guessesCount,
   challengeNumber,
   sets,
+  guesses,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    guesses,
+    sets,
+  });
+
   return (
     <GameResultsSplash
       gameId="quartetos"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

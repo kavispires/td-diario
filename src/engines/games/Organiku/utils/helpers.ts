@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyOrganikuEntry } from 'types/games';
 import { gameInfo } from '../info';
 import type { GameState } from './types';
@@ -77,4 +78,46 @@ export function getRowAndColumnIndexes(
   }
 
   return indexes;
+}
+
+/**
+ * Builds the plain-text shareable result for today's Organiku run: the
+ * standard header/hearts lines plus a single-row emoji grid marking which
+ * items were fully found (🟢) versus not (◼️).
+ *
+ * @param options - Today's challenge number and final run state.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  itemsIds,
+  foundCount,
+  gridSize,
+  flips,
+  swapLimit,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  itemsIds: string[];
+  foundCount: Dictionary<number>;
+  gridSize: number;
+  flips: number;
+  swapLimit: number;
+}): string {
+  const correctItems = itemsIds.map((itemId) =>
+    foundCount[itemId] === gridSize ? itemId : null,
+  );
+  const additionalLines = [
+    correctItems.map((item) => (item ? '🟢' : '◼️')).join(''),
+  ];
+
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: itemsIds.length,
+    remainingHearts: hearts,
+    heartsSuffix: `(${flips}/${swapLimit} viradas)`,
+    additionalLines,
+  });
 }

@@ -258,6 +258,7 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
           totalHearts={totalHearts}
           evaluations={evaluations}
           score={score}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

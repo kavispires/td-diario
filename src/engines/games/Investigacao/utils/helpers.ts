@@ -1,5 +1,9 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import {
+  generateShareableResult,
+  writeHeartResultString,
+} from '@utils/shareResults';
 import type {
   DailyInvestigacaoEntry,
   DailyInvestigacaoStatement,
@@ -357,4 +361,39 @@ export function isStatementComplete(
   released: string[],
 ): boolean {
   return excludes.every((suspectId) => released.includes(suspectId));
+}
+
+/**
+ * Builds the plain-text shareable result for today's Investigação run.
+ *
+ * @param options - Today's challenge number and final suspect-release state.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  totalHearts,
+  releasedCount,
+  totalSuspects,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  totalHearts: number;
+  releasedCount: number;
+  totalSuspects: number;
+}): string {
+  const releaseGoal = totalSuspects - 1;
+  const winIcon = releasedCount === releaseGoal ? '🏆' : '☠️';
+  const progress = Math.round((releasedCount / releaseGoal) * 100);
+
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts,
+    remainingHearts: hearts,
+    additionalLines: [
+      `${winIcon} ${writeHeartResultString(hearts, totalHearts)} (${progress}%)`,
+    ],
+    hideHearts: true,
+  });
 }

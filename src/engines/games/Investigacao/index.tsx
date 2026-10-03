@@ -264,6 +264,7 @@ function DailyInvestigacaoGameContent({
           totalHearts={STARTING_HEARTS}
           releasedCount={released.length}
           totalSuspects={data.suspects.length}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyVitralEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
@@ -22,6 +23,35 @@ export function formatElapsedTime(totalSeconds: number): string {
   const seconds = totalSeconds % 60;
 
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+/**
+ * Builds the plain-text shareable result for today's Vitral run: the
+ * standard header/hearts lines plus the original score/time suffix and a
+ * deliberate blank line before the site link.
+ *
+ * @param options - Today's challenge number and final run state.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  timeElapsed,
+  score,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  timeElapsed: number;
+  score: number;
+}): string {
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: VITRAL_TOTAL_HEARTS,
+    remainingHearts: hearts,
+    heartsSuffix: `(${score} pts em ${Math.floor(timeElapsed / 60)}:${(timeElapsed % 60).toString().padStart(2, '0')}s)`,
+    additionalLines: [' '],
+  });
 }
 
 /**

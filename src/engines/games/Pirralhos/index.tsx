@@ -250,6 +250,7 @@ export function DailyPirralhosGame({ data }: DailyPirralhosGameProps) {
         <ResultsSplash
           win={isWin}
           hearts={hearts}
+          challengeNumber={data.number}
           score={score}
           culpritId={data.culpritId}
           liarsIds={data.liarsIds}

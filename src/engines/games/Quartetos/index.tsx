@@ -329,6 +329,7 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
           guessesCount={guesses.length}
           challengeNumber={data.number}
           sets={data.sets}
+          guesses={guesses}
           onClose={() => setShowResults(false)}
         />
       )}

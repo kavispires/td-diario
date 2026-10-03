@@ -253,6 +253,7 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
           maxHearts={maxHearts}
           score={score}
           guesses={guesses}
+          challengeNumber={conjuntosData.number}
           onClose={() => setShowResults(false)}
         />
       )}

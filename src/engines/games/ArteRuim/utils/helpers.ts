@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyArteRuimEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { gameInfo } from '../info';
@@ -185,4 +186,35 @@ export function isDailyArteRuimEntry(
     Array.isArray(value.dataIds) &&
     value.dataIds.every((dataId) => typeof dataId === 'string')
   );
+}
+
+/**
+ * Builds the plain-text shareable result for today's Arte Ruim run,
+ * reusing the original revealed-letter completion percentage.
+ *
+ * @param options - Today's challenge number and final run state.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  revealedLetters,
+  totalLetters,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  revealedLetters: number;
+  totalLetters: number;
+}): string {
+  const percentage = totalLetters
+    ? Math.round((revealedLetters / totalLetters) * 100)
+    : 100;
+
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: ARTE_RUIM_HEARTS,
+    remainingHearts: hearts,
+    heartsSuffix: `(${percentage}%)`,
+  });
 }

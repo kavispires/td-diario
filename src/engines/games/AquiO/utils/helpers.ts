@@ -1,5 +1,7 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { pluralize } from '@utils/helpers';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyAquiOEntry } from 'types/games';
 import { gameInfo } from '../info';
 import type { AquiODisc, AquiOItem, GameState } from './types';
@@ -189,4 +191,44 @@ export function getDiscs(
   }
 
   return discs;
+}
+
+/**
+ * Builds the plain-text shareable result for today's Aqui O run, matching
+ * the original title/mode line and best-progress summary.
+ *
+ * @param options - Today's challenge number and final run state.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  title,
+  progress,
+  bestProgress,
+  goal,
+  hardMode,
+  attempts,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  title: string;
+  progress: number;
+  bestProgress: number;
+  goal: number;
+  hardMode: boolean;
+  attempts: number;
+}): string {
+  const usedProgress = Math.max(progress, bestProgress);
+
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: HEARTS,
+    remainingHearts: hearts,
+    additionalLines: [
+      `${title}${hardMode ? '*' : ''}`,
+      `${usedProgress}/${goal} discos (${attempts} ${pluralize(attempts, 'tentativa')})`,
+    ],
+  });
 }

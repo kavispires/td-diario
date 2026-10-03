@@ -128,7 +128,7 @@ export function GameResultsSplash({
             block
             onClick={onClose}
           >
-            Fechar
+            Ver jogo
           </Button>
           {copied && (
             <Text

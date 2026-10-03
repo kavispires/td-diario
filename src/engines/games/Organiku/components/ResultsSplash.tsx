@@ -2,6 +2,7 @@ import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Text } from '@components/ui/Typography';
+import { buildShareText } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -40,6 +41,10 @@ type ResultsSplashProps = {
    */
   swapLimit: number;
   /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
+  /**
    * Called to dismiss the splash and return to viewing the completed grid.
    */
   onClose: () => void;
@@ -62,12 +67,24 @@ export function ResultsSplash({
   gridSize,
   flips,
   swapLimit,
+  challengeNumber,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    itemsIds,
+    foundCount,
+    gridSize,
+    flips,
+    swapLimit,
+  });
+
   return (
     <GameResultsSplash
       gameId="organiku"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

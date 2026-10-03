@@ -1,5 +1,6 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Text } from '@components/ui/Typography';
+import { buildShareText } from '../utils/helpers';
 
 const WORD_TONE_CLASSES = [
   'bg-red-500 text-white',
@@ -26,6 +27,10 @@ type ResultsSplashProps = {
    */
   words: string[];
   /**
+   * Submitted row words, one matrix per attempt.
+   */
+  guesses: string[][];
+  /**
    * Number of swaps made during the run.
    */
   swaps: number;
@@ -37,6 +42,10 @@ type ResultsSplashProps = {
    * Whether the one-time smart shuffle hint was used.
    */
   usedSmartShuffle: boolean;
+  /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
   /**
    * Called to dismiss the splash and return to the completed board.
    */
@@ -54,15 +63,28 @@ export function ResultsSplash({
   win,
   hearts,
   words,
+  guesses,
   swaps,
   score,
   usedSmartShuffle,
+  challengeNumber,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    swaps,
+    guesses,
+    words,
+    usedSmartShuffle,
+    score,
+  });
+
   return (
     <GameResultsSplash
       gameId="palavreado"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <div

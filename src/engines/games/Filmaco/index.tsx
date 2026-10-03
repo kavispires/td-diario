@@ -174,6 +174,7 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
           solvedLetters={solvedLetters}
           totalLetters={totalLetters}
           score={score}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

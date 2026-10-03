@@ -1,6 +1,10 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Text } from '@components/ui/Typography';
-import { getCompletionPercentage, PANICO_TOTAL_HEARTS } from '../utils/helpers';
+import {
+  buildShareText,
+  getCompletionPercentage,
+  PANICO_TOTAL_HEARTS,
+} from '../utils/helpers';
 
 /**
  * Props accepted by {@link ResultsSplash}.
@@ -27,6 +31,10 @@ type ResultsSplashProps = {
    */
   score: number;
   /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
+  /**
    * Called to dismiss the splash and keep looking at the game screen.
    */
   onClose: () => void;
@@ -44,17 +52,24 @@ export function ResultsSplash({
   farthestButtonIndex,
   totalButtons,
   score,
+  challengeNumber,
   onClose,
 }: ResultsSplashProps) {
   const completionPercentage = getCompletionPercentage(
     farthestButtonIndex,
     totalButtons,
   );
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    percentage: completionPercentage,
+  });
 
   return (
     <GameResultsSplash
       gameId="panico"
       title={win ? 'Parabéns!' : 'Cabum!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

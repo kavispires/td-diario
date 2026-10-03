@@ -3,6 +3,8 @@ import { Hearts } from '@components/games/Hearts';
 import { Text } from '@components/ui/Typography';
 import { useMemo } from 'react';
 import type { DailyConjuntosEntry } from 'types/games';
+import { buildShareText } from '../utils/helpers';
+import type { Guess } from '../utils/types';
 import { ThingCard } from './ThingCard';
 
 /**
@@ -32,20 +34,15 @@ type ResultsSplashProps = {
   /**
    * Placement attempts recorded during play.
    */
-  guesses: Array<{
-    /**
-     * Id of the thing that was being placed.
-     */
-    thingId: string;
-    /**
-     * Final result of the placement attempt.
-     */
-    result: 0 | 1 | 2 | false;
-  }>;
+  guesses: Guess[];
   /**
    * Called to dismiss the splash and return to the completed board.
    */
   onClose: () => void;
+  /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
 };
 
 /**
@@ -64,6 +61,7 @@ export function ResultsSplash({
   score,
   guesses,
   onClose,
+  challengeNumber,
 }: ResultsSplashProps) {
   const thingNamesById = useMemo(
     () =>
@@ -80,11 +78,18 @@ export function ResultsSplash({
   const correctGuesses = guesses.filter(
     (guess) => guess.result !== false,
   ).length;
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    totalHearts: maxHearts,
+    guesses,
+  });
 
   return (
     <GameResultsSplash
       gameId="conjuntos"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

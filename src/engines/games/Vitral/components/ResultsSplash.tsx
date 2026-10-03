@@ -1,7 +1,7 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Text } from '@components/ui/Typography';
 import type { DailyVitralEntry } from 'types/games';
-import { formatElapsedTime } from '../utils/helpers';
+import { buildShareText, formatElapsedTime } from '../utils/helpers';
 import { VITRAL_TOTAL_HEARTS } from '../utils/puzzleUtils';
 
 /**
@@ -20,6 +20,10 @@ type ResultsSplashProps = {
    * Hearts remaining when the game ended.
    */
   hearts: number;
+  /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
   /**
    * Final elapsed time, in seconds.
    */
@@ -49,15 +53,24 @@ export function ResultsSplash({
   data,
   win,
   hearts,
+  challengeNumber,
   totalTime,
   score,
   correctPieces,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    timeElapsed: totalTime,
+    score,
+  });
+
   return (
     <GameResultsSplash
       gameId="vitral"
       title={win ? 'Vitral montado!' : 'O vitral ficou inacabado'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

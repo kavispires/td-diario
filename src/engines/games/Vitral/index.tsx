@@ -152,6 +152,7 @@ export function DailyVitralGame({ data }: DailyVitralGameProps) {
           data={data}
           win={isWin}
           hearts={hearts}
+          challengeNumber={data.number}
           totalTime={totalTime}
           score={score}
           correctPieces={correctPieces}

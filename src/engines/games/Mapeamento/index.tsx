@@ -267,6 +267,7 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
           score={score}
           revealedClues={availableClues.length}
           totalClues={allClues.length}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

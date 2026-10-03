@@ -79,3 +79,19 @@ export const getGameStatuses = (status: string) => {
 
   return { isWin, isLose, isComplete };
 };
+
+/**
+ * Picks the singular or plural form of a word based on a quantity.
+ *
+ * @param quantity - The quantity determining which form to use.
+ * @param singular - The singular form of the word.
+ * @param plural - Optional explicit plural form; defaults to `singular` with an `s` appended.
+ * @returns The singular form when `quantity` is `1`, otherwise the plural form.
+ */
+export const pluralize = (
+  quantity: number,
+  singular: string,
+  plural?: string,
+): string => {
+  return quantity === 1 ? singular : (plural ?? `${singular}s`);
+};

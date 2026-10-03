@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyMapeamentoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import type { GameState } from './types';
@@ -132,4 +133,25 @@ export function hasFoundAllLocationLetters(
  */
 export function getAvailableClues(clues: string[], hearts: number): string[] {
   return clues.slice(0, MAPEAMENTO_HEARTS - hearts + 1);
+}
+
+/**
+ * Builds the plain-text shareable result for today's Mapeamento run.
+ *
+ * @param options - Today's challenge number and remaining hearts.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+}: {
+  challengeNumber: number;
+  hearts: number;
+}): string {
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: MAPEAMENTO_HEARTS,
+    remainingHearts: hearts,
+  });
 }

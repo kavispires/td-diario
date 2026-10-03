@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyQuartetosEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { gameInfo } from '../info';
@@ -89,4 +90,46 @@ export function isDailyQuartetosEntry(
     Array.isArray(data.grid) &&
     Array.isArray(data.sets)
   );
+}
+
+/**
+ * Builds the plain-text shareable result for today's Quartetos run: the
+ * standard header/hearts lines plus one emoji row per submitted guess.
+ *
+ * @param options - Today's challenge number and final run state.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  guesses,
+  sets,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  guesses: string[];
+  sets: DailyQuartetosEntry['sets'];
+}): string {
+  const emojis = ['🟩', '🟨', '🟧', '🟪'];
+  const emojisMap = sets.reduce<Dictionary<string>>((accumulator, set) => {
+    set.itemsIds.forEach((itemId) => {
+      accumulator[itemId] = emojis[set.level] ?? '❓';
+    });
+    return accumulator;
+  }, {});
+  const additionalLines = guesses.map((guess) =>
+    guess
+      .split('-')
+      .map((itemId) => emojisMap[itemId] ?? '❓')
+      .join(' '),
+  );
+
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: sets.length,
+    remainingHearts: hearts,
+    heartsSpacing: ' ',
+    additionalLines,
+  });
 }

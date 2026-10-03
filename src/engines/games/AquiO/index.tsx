@@ -236,6 +236,7 @@ export function DailyAquiOGame({ data }: DailyAquiOGameProps) {
           lastMatch={result}
           hardMode={mode === 'challenge'}
           title={translate(data.title)}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

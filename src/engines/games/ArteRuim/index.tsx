@@ -168,6 +168,7 @@ function ArteRuimGameContent({ data }: ArteRuimGameContentProps) {
           drawings={data.drawings}
           revealedLetters={revealedLetters}
           totalLetters={totalLetters}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

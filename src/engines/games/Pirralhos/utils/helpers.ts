@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPirralhosEntry } from 'types/games';
 import { gameInfo } from '../info';
 import { PIRRALHOS_TOTAL_HEARTS } from './constants';
@@ -145,6 +146,29 @@ export function getInitialState(data: DailyPirralhosEntry): GameState {
     key: gameInfo.key,
     dateId: data.id,
     defaultValue: getDefaultState(data),
+  });
+}
+
+/**
+ * Builds the plain-text shareable result for today's Pirralhos run using
+ * the standard header, hearts, and site link only.
+ *
+ * @param options - Today's challenge number and final heart count.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+}: {
+  challengeNumber: number;
+  hearts: number;
+}): string {
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: PIRRALHOS_TOTAL_HEARTS,
+    remainingHearts: hearts,
+    additionalLines: [],
   });
 }
 

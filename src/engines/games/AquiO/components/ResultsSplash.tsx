@@ -3,6 +3,7 @@ import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Text } from '@components/ui/Typography';
 import { motion } from 'motion/react';
+import { buildShareText } from '../utils/helpers';
 import type { RoundStopType } from '../utils/types';
 
 const TITLES = [
@@ -102,6 +103,10 @@ type ResultsSplashProps = {
    */
   title: string;
   /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
+  /**
    * Called to dismiss the splash and return to the game view.
    */
   onClose: () => void;
@@ -129,10 +134,21 @@ export function ResultsSplash({
   lastMatch,
   hardMode,
   title,
+  challengeNumber,
   onClose,
 }: ResultsSplashProps) {
   const usedProgress = stopType === 'idle' ? bestProgress : progress;
   const titleText = getResultsTitle(usedProgress, hearts);
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    title,
+    progress,
+    bestProgress,
+    goal,
+    hardMode,
+    attempts,
+  });
   const previewItems = itemsIds
     .filter((itemId) => itemId !== lastMatch)
     .slice(0, Math.max(0, Math.floor((usedProgress - 1) / 3)));
@@ -141,6 +157,7 @@ export function ResultsSplash({
     <GameResultsSplash
       gameId="aqui-o"
       title={win ? 'Parabéns!' : lose ? 'Que pena!' : titleText}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

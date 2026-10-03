@@ -134,6 +134,7 @@ export function DailyOrganikuGame({ data }: DailyOrganikuGameProps) {
           gridSize={gridSize}
           flips={flips}
           swapLimit={swapLimit}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

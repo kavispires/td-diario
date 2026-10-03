@@ -231,9 +231,11 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
         <ResultsSplash
           win={isWin}
           hearts={hearts}
+          challengeNumber={data.number}
           corridors={data.corridors}
           currentCorridorIndex={currentCorridorIndex}
           moves={moves}
+          guesses={guesses}
           goal={data.goal}
           score={score}
           onClose={() => setShowResults(false)}

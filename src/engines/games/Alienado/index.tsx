@@ -141,7 +141,9 @@ function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
           requests={data.requests}
           attributes={data.attributes}
           guesses={previousGuesses}
+          solution={data.solution}
           score={score}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

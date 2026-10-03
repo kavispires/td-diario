@@ -304,9 +304,11 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
           win={isWin}
           hearts={hearts}
           words={words}
+          guesses={guesses}
           swaps={swaps}
           score={score}
           usedSmartShuffle={usedSmartShuffle}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

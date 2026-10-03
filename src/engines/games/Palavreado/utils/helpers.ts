@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPalavreadoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import type {
@@ -336,4 +337,56 @@ export function smartShuffle(
   shuffleGroup(consonantIndexes);
 
   return nextLetters;
+}
+
+/**
+ * Builds the plain-text shareable result for today's Palavreado run.
+ *
+ * @param options - Today's challenge number and final guess history.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  swaps,
+  guesses,
+  words,
+  usedSmartShuffle = false,
+  score,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  swaps: number;
+  guesses: string[][];
+  words: string[];
+  usedSmartShuffle?: boolean;
+  score: number;
+}): string {
+  const size = guesses[0].length;
+  const colors = ['🟥', '🟦', '🟪', '🟫', '🟧'];
+  const cleanUpAttempts = guesses.map((attempt) =>
+    attempt.map((word, index) =>
+      words[index].toLowerCase() === word.toLowerCase() ? colors[index] : '⬜️',
+    ),
+  );
+
+  if (cleanUpAttempts.length < size) {
+    while (cleanUpAttempts.length < size) {
+      cleanUpAttempts.push(cleanUpAttempts[cleanUpAttempts.length - 1]);
+    }
+  }
+
+  const hintIndicator = usedSmartShuffle ? ' 💡' : '';
+
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: getTotalHearts(words.length),
+    remainingHearts: hearts,
+    heartsSuffix: `${score} pts | ${swaps} trocas${hintIndicator}`,
+    heartsSpacing: ' ',
+    additionalLines: cleanUpAttempts
+      .map((row) => row.join(' ').trim())
+      .filter(Boolean),
+  });
 }

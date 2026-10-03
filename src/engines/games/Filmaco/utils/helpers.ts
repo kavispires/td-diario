@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyFilmacoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import type { GameState, LetterGuess, LettersDictionary } from './types';
@@ -201,4 +202,30 @@ export function getInitialState(data: DailyFilmacoEntry): GameState {
   });
 
   return isValidState(restoredState, data) ? restoredState : defaultState;
+}
+
+/**
+ * Builds the plain-text shareable result for today's Filmaco run.
+ *
+ * @param options - Today's challenge number and solved-letter progress.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  solvedLetters,
+  totalLetters,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  solvedLetters: number;
+  totalLetters: number;
+}): string {
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: FILMACO_HEARTS,
+    remainingHearts: hearts,
+    heartsSuffix: `(${Math.round((solvedLetters / totalLetters) * 100)}%)`,
+  });
 }

@@ -3,6 +3,7 @@ import { Text } from '@components/ui/Typography';
 import type { DailyPirralhosKidEntry } from 'types/games';
 import type { KidProfile } from '../utils/constants';
 import { KIDS_LIBRARY, PIRRALHOS_TOTAL_HEARTS } from '../utils/constants';
+import { buildShareText } from '../utils/helpers';
 import { KidPortrait } from './KidPortrait';
 
 /**
@@ -17,6 +18,10 @@ type ResultsSplashProps = {
    * Remaining accusation attempts after the final guess.
    */
   hearts: number;
+  /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
   /**
    * Current score shown in the recap.
    */
@@ -50,12 +55,17 @@ type ResultsSplashProps = {
 export function ResultsSplash({
   win,
   hearts,
+  challengeNumber,
   score,
   culpritId,
   liarsIds,
   kids,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+  });
   const culprit = KIDS_LIBRARY[culpritId];
   const liars = kids
     .filter((kidEntry) => liarsIds.includes(kidEntry.kidId))
@@ -66,6 +76,7 @@ export function ResultsSplash({
     <GameResultsSplash
       gameId="pirralhos"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

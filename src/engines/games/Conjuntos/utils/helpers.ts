@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyConjuntosEntry, DailyConjuntosThing } from 'types/games';
 import { gameInfo } from '../info';
 import type { DiagramArea, GameState, Guess } from './types';
@@ -246,4 +247,45 @@ export function getAreaThingsKey(
     case 2:
       return 'rule2Things';
   }
+}
+
+/**
+ * Builds the plain-text shareable result for today's Conjuntos run, reusing
+ * the original per-attempt emoji summary and spaced heart row.
+ *
+ * @param options - Today's challenge number and final run state.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  totalHearts,
+  guesses,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  totalHearts: number;
+  guesses: Array<Pick<Guess, 'result'>>;
+}): string {
+  const additionalLines = [
+    guesses
+      .map((guess) => {
+        return {
+          1: '🟡',
+          2: '🔴',
+          0: '🟠',
+          false: '✖️',
+        }[String(guess.result)];
+      })
+      .join(' '),
+  ].filter(Boolean);
+
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts,
+    remainingHearts: hearts,
+    heartsSpacing: ' ',
+    additionalLines,
+  });
 }

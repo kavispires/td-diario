@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPortaisCorridor, DailyPortaisEntry } from 'types/games';
 import { gameInfo } from '../info';
 import type { GameState } from './types';
@@ -141,4 +142,54 @@ export function getInitialState(data: DailyPortaisEntry): GameState {
  */
 export function getTotalMoves(moves: number[]): number {
   return moves.reduce((total, moveCount) => total + moveCount, 0);
+}
+
+/**
+ * Builds the plain-text shareable result for today's Portais run: the
+ * standard header/hearts lines plus a single emoji line marking each
+ * corridor's misses (💥) and eventual success (🔶).
+ *
+ * @param options - Today's challenge number and final run state.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  guesses,
+  win,
+  hearts,
+  moves,
+  goal,
+}: {
+  challengeNumber: number;
+  guesses: string[][];
+  win: boolean;
+  hearts: number;
+  moves: number[];
+  goal: number;
+}): string {
+  const lastPlayedIndex =
+    guesses.filter((guess) => guess.length > 0).length - 1;
+  const result = guesses
+    .map((guessBatch, index) => {
+      const isLastGuessingRound = lastPlayedIndex === index;
+      const quantity = Math.max(guessBatch.length, 0);
+      const lostLives = Math.max(
+        quantity - (isLastGuessingRound ? (win ? 1 : 0) : 1),
+        0,
+      );
+      const lostHearts = Array.from({ length: lostLives }, () => '💥').join('');
+      const correct = quantity - lostLives > 0 ? '🔶' : '';
+
+      return `${lostHearts}${correct}`;
+    })
+    .join('');
+
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: DEFAULT_HEARTS,
+    remainingHearts: hearts,
+    heartsSuffix: `(${getTotalMoves(moves)}/${goal} movimentos)`,
+    additionalLines: [result],
+  });
 }

@@ -1,6 +1,7 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Text, Title } from '@components/ui/Typography';
+import { buildShareText } from '../utils/helpers';
 import { DrawingPreview } from './DrawingPreview';
 
 /**
@@ -36,6 +37,10 @@ type ResultsSplashProps = {
    */
   totalLetters: number;
   /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
+  /**
    * Called to dismiss the splash and return to the completed board.
    */
   onClose: () => void;
@@ -57,12 +62,21 @@ export function ResultsSplash({
   drawings,
   revealedLetters,
   totalLetters,
+  challengeNumber,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    revealedLetters,
+    totalLetters,
+  });
+
   return (
     <GameResultsSplash
       gameId="arte-ruim"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <div

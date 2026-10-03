@@ -2,6 +2,7 @@ import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Text } from '@components/ui/Typography';
 import type { DailyAlienadoAttribute, DailyAlienadoRequest } from 'types/games';
+import { buildShareText } from '../utils/helpers';
 import { AlienSign } from './AlienSign';
 
 /**
@@ -29,9 +30,17 @@ type ResultsSplashProps = {
    */
   guesses: string[][];
   /**
+   * Final encoded solution in the original slot order.
+   */
+  solution: string;
+  /**
    * Final score recorded for the day.
    */
   score: number;
+  /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
   /**
    * Called to dismiss the splash and return to the completed board.
    */
@@ -52,13 +61,23 @@ export function ResultsSplash({
   requests,
   attributes,
   guesses,
+  solution,
   score,
+  challengeNumber,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    guesses,
+    solution,
+  });
+
   return (
     <GameResultsSplash
       gameId="alienado"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

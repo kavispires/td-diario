@@ -2,7 +2,7 @@ import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Text } from '@components/ui/Typography';
 import type { DailyPortaisCorridor } from 'types/games';
-import { getTotalMoves } from '../utils/helpers';
+import { buildShareText, getTotalMoves } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -17,6 +17,10 @@ type ResultsSplashProps = {
    */
   hearts: number;
   /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
+  /**
    * Corridors that made up today's challenge.
    */
   corridors: DailyPortaisCorridor[];
@@ -28,6 +32,10 @@ type ResultsSplashProps = {
    * Move count tracked for each corridor.
    */
   moves: number[];
+  /**
+   * Submitted guesses grouped by corridor, in submission order.
+   */
+  guesses: string[][];
   /**
    * Suggested move target for the whole run.
    */
@@ -53,20 +61,31 @@ type ResultsSplashProps = {
 export function ResultsSplash({
   win,
   hearts,
+  challengeNumber,
   corridors,
   currentCorridorIndex,
   moves,
+  guesses,
   goal,
   score,
   onClose,
 }: ResultsSplashProps) {
   const totalMoves = getTotalMoves(moves);
   const solvedCorridors = win ? corridors.length : currentCorridorIndex;
+  const shareText = buildShareText({
+    challengeNumber,
+    guesses,
+    win,
+    hearts,
+    moves,
+    goal,
+  });
 
   return (
     <GameResultsSplash
       gameId="portais"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Text

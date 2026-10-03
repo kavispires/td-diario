@@ -5,7 +5,7 @@ import { cn } from '@utils/cn';
 import { Heart, Search, UserRoundCheck } from 'lucide-react';
 import type { ComponentType, SVGProps } from 'react';
 import type { DailyInvestigacaoSuspect } from 'types/games';
-import { getFeatureLabel } from '../utils/helpers';
+import { buildShareText, getFeatureLabel } from '../utils/helpers';
 import { SuspectPortrait } from './SuspectPortrait';
 
 /**
@@ -41,6 +41,10 @@ type ResultsSplashProps = {
    */
   totalSuspects: number;
   /**
+   * Today's sequential challenge number, used in the shareable result.
+   */
+  challengeNumber: number;
+  /**
    * Called to dismiss the splash and return to the completed board.
    */
   onClose: () => void;
@@ -62,12 +66,22 @@ export function ResultsSplash({
   totalHearts,
   releasedCount,
   totalSuspects,
+  challengeNumber,
   onClose,
 }: ResultsSplashProps) {
+  const shareText = buildShareText({
+    challengeNumber,
+    hearts,
+    totalHearts,
+    releasedCount,
+    totalSuspects,
+  });
+
   return (
     <GameResultsSplash
       gameId="investigacao"
       title={win ? 'Parabéns!' : 'Que pena!'}
+      shareText={shareText}
       onClose={onClose}
     >
       <Pill

@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPanicoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import type { GameState } from './types';
@@ -83,4 +84,28 @@ export function getCompletionPercentage(
   totalButtons: number,
 ): number {
   return Math.round(getProgress(completedButtons, totalButtons) * 100);
+}
+
+/**
+ * Builds the plain-text shareable result for today's Panico run.
+ *
+ * @param options - Today's challenge number, remaining hearts, and progress.
+ * @returns The assembled shareable result text.
+ */
+export function buildShareText({
+  challengeNumber,
+  hearts,
+  percentage,
+}: {
+  challengeNumber: number;
+  hearts: number;
+  percentage: number;
+}): string {
+  return generateShareableResult({
+    gameInfo,
+    challengeNumber,
+    totalHearts: PANICO_TOTAL_HEARTS,
+    remainingHearts: hearts,
+    heartsSuffix: `(${percentage}%)`,
+  });
 }
