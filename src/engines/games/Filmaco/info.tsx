@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Grab the popcorn and come find out about this movie!',
   },
   releaseDate: '2024-05-30',
-  release: 'maintenance',
+  release: 'beta',
   version: '0.0.1',
 };
 
