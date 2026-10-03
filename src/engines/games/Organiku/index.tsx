@@ -1,7 +1,7 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
-import { Button } from '@components/ui/Button';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Coins, Repeat } from 'lucide-react';
 import { useState } from 'react';
@@ -117,15 +117,10 @@ export function DailyOrganikuGame({ data }: DailyOrganikuGameProps) {
         itemWidth={itemWidth}
       />
 
-      {isComplete && !showResults && (
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setShowResults(true)}
-        >
-          Ver resultado
-        </Button>
-      )}
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       {isComplete && showResults && (
         <ResultsSplash
