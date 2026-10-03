@@ -1,4 +1,3 @@
-import { Surface } from '@components/ui/Surface';
 import { Tooltip } from '@components/ui/Tooltip';
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
@@ -70,7 +69,7 @@ export function GuessedLocation({
   }, [fragments, typedLocation]);
 
   return (
-    <div className="flex min-h-16 flex-wrap items-center gap-2 rounded-2xl border-2 border-dashed border-border px-4 py-3">
+    <div className="flex flex-wrap items-center justify-center gap-1">
       {displayText.length === 0 && (
         <Text type="secondary">Seu palpite aparece aqui.</Text>
       )}
@@ -79,9 +78,8 @@ export function GuessedLocation({
         <span
           key={`${character}-${index}`}
           className={cn(
-            'min-w-6 rounded-lg px-1 py-1 text-center text-lg font-semibold text-foreground',
-            character === ' ' && 'bg-border/70',
-            highlightedIndices.has(index) && 'bg-gold-soft text-foreground',
+            'text-xl font-bold uppercase text-foreground',
+            highlightedIndices.has(index) && 'text-success',
           )}
         >
           {character === ' ' ? '\u00A0' : character}
@@ -95,7 +93,7 @@ export function GuessedLocation({
           repeat: Number.POSITIVE_INFINITY,
           repeatType: 'reverse',
         }}
-        className="text-lg font-semibold text-primary"
+        className="text-xl font-semibold text-primary"
       >
         |
       </motion.span>
@@ -126,22 +124,25 @@ export function LocationFragments({ fragments }: LocationFragmentsProps) {
   }
 
   return (
-    <Tooltip title="Partes do nome que você já revelou; os blocos cinza ainda podem ser letras ou espaços.">
-      <Surface className="flex flex-wrap items-center justify-center gap-2 bg-card px-5 py-4 text-center">
-        {fragments.map((fragment, index) => (
-          <span
-            key={`${fragment}-${index}`}
-            className={cn(
-              'flex min-h-10 min-w-10 items-center justify-center rounded-xl px-2 py-2 text-lg font-semibold shadow-sm',
-              fragment === LOCATION_FRAGMENT_PLACEHOLDER
-                ? 'bg-border text-border-strong'
-                : 'bg-white text-foreground',
-            )}
-          >
-            {fragment}
-          </span>
-        ))}
-      </Surface>
+    <Tooltip title="Partes do nome que você já revelou; as barras cinzas ainda podem ser letras ou espaços.">
+      <div className="flex flex-wrap items-center justify-center gap-1.5 px-5 py-2 text-center">
+        {fragments.map((fragment, index) =>
+          fragment === LOCATION_FRAGMENT_PLACEHOLDER ? (
+            <span
+              key={`${fragment}-${index}`}
+              className="h-6 w-8 rounded-full bg-border-strong"
+              aria-hidden="true"
+            />
+          ) : (
+            <span
+              key={`${fragment}-${index}`}
+              className="text-xl font-bold uppercase text-success"
+            >
+              {fragment}
+            </span>
+          ),
+        )}
+      </div>
     </Tooltip>
   );
 }

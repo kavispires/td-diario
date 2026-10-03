@@ -95,6 +95,95 @@ export function getLocationFragments(
 }
 
 /**
+ * Counts every guessable (alphanumeric) character in the answer, including
+ * repeats, ignoring spaces and punctuation. Used as the denominator for
+ * progress, so progress reflects the absolute number of letters in the
+ * location name rather than the number of guesses made.
+ *
+ * @param location - Correct answer for today's challenge.
+ * @returns The total count of guessable letters in `location`.
+ */
+export function countGuessableLetters(location: string): number {
+  return normalizeComparableLocationText(location).replaceAll(' ', '').length;
+}
+
+/**
+ * Counts how many letter positions in the answer have already been
+ * revealed, based on the already-collapsed fragment list (each revealed
+ * position is pushed individually, while unknown runs collapse to a single
+ * placeholder).
+ *
+ * @param fragments - Revealed letter fragments built from guesses so far.
+ * @returns The count of already-revealed letter positions.
+ */
+export function countRevealedLetters(fragments: string[]): number {
+  return fragments.filter(
+    (fragment) => fragment !== LOCATION_FRAGMENT_PLACEHOLDER,
+  ).length;
+}
+
+/**
+ * Calculates progress as the fraction of the answer's guessable letters
+ * already revealed, from `0` to `1`.
+ *
+ * @param location - Correct answer for today's challenge.
+ * @param fragments - Revealed letter fragments built from guesses so far.
+ * @returns The fraction of guessable letters already revealed.
+ */
+export function calculateLocationProgress(
+  location: string,
+  fragments: string[],
+): number {
+  const totalGuessableLetters = countGuessableLetters(location);
+
+  if (totalGuessableLetters === 0) {
+    return 0;
+  }
+
+  return Math.min(countRevealedLetters(fragments) / totalGuessableLetters, 1);
+}
+
+/**
+ * Counts how many distinct answer letters a freshly submitted guess reveals
+ * for the first time, comparing the letters already known from previous
+ * guesses against the letters newly introduced by `guess`.
+ *
+ * @param location - Correct answer for today's challenge.
+ * @param previousGuesses - Guesses submitted before this round.
+ * @param guess - The guess just submitted.
+ * @returns The count of newly revealed distinct answer letters.
+ */
+export function countNewlyRevealedLetters(
+  location: string,
+  previousGuesses: string[],
+  guess: string,
+): number {
+  const locationLetters = new Set(
+    normalizeComparableLocationText(location)
+      .toUpperCase()
+      .split('')
+      .filter((char) => /[A-Z0-9]/.test(char)),
+  );
+  const previouslyKnownLetters = new Set(
+    normalizeComparableLocationText(previousGuesses.join(''))
+      .toUpperCase()
+      .split(''),
+  );
+  const guessLetters = new Set(
+    normalizeComparableLocationText(guess).toUpperCase().split(''),
+  );
+
+  let newlyRevealedCount = 0;
+  for (const letter of guessLetters) {
+    if (locationLetters.has(letter) && !previouslyKnownLetters.has(letter)) {
+      newlyRevealedCount += 1;
+    }
+  }
+
+  return newlyRevealedCount;
+}
+
+/**
  * Determines whether the accumulated wrong guesses have already surfaced
  * every distinct alphanumeric character present in the answer.
  *

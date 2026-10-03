@@ -12,8 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Where am I? Who am I? Where am I going?',
   },
   releaseDate: '2026-05-17',
-  release: 'beta',
-  version: '0.0.1',
+  release: 'stable',
+  version: '1.0.0',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

@@ -1,13 +1,13 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
 import { Keyboard } from '@components/games/Keyboard';
-import { Button } from '@components/ui/Button';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
-import { Lightbulb, Repeat } from 'lucide-react';
+import { Coins, Lightbulb } from 'lucide-react';
 import { useState } from 'react';
 import type { DailyMapeamentoEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import {
   GuessedLocation,
   LocationFragments,
@@ -29,19 +29,8 @@ type DailyMapeamentoGameProps = {
   /**
    * Today's Mapeamento payload, as resolved by `GameScreen`.
    */
-  data: PlaceholderGameData;
+  data: DailyMapeamentoEntry;
 };
-
-function isDailyMapeamentoEntry(
-  data: PlaceholderGameData,
-): data is DailyMapeamentoEntry {
-  return (
-    typeof data.language === 'string' &&
-    typeof data.setId === 'string' &&
-    typeof data.location === 'string' &&
-    Array.isArray(data.clues)
-  );
-}
 
 /**
  * Renders a full day of Mapeamento: clue progression, fragment discovery,
@@ -51,10 +40,6 @@ function isDailyMapeamentoEntry(
  * @returns The rendered Mapeamento game.
  */
 export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
-  if (!isDailyMapeamentoEntry(data)) {
-    throw new Error('Dados inválidos para o desafio de Mapeamento.');
-  }
-
   const [initialState] = useState(() => getInitialState(data));
   const [typedLocation, setTypedLocation] = useState('');
   const {
@@ -108,11 +93,10 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
         color={gameInfo.color}
       >
         <GameStat
-          icon={Repeat}
-          value={`${guesses.length}/${MAPEAMENTO_HEARTS}`}
-          label="Tentativas usadas"
+          icon={Lightbulb}
+          value={`${availableClues.length}/${allClues.length}`}
+          label="Pistas liberadas"
         />
-
         <div className="flex items-center justify-center">
           <Hearts
             remaining={hearts}
@@ -122,43 +106,38 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
         </div>
 
         <GameStat
-          icon={Lightbulb}
-          value={`${availableClues.length}/${allClues.length}`}
-          label="Pistas liberadas"
+          icon={Coins}
+          value={score}
+          label="Pontuação"
           align="end"
         />
       </GameStatsRow>
 
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Title level={3}>{gameInfo.name.pt}</Title>
-        <Text type="secondary">Que lugar é esse?</Text>
-      </div>
+      <GameTitle title="Que lugar é esse?" />
 
-      <Surface className="bg-card px-5 py-5">
-        <ul className="grid gap-3">
-          {allClues.map((clue, index) => {
-            const isAvailable = availableClues.includes(clue);
+      <ul className="grid gap-1">
+        {allClues.map((clue, index) => {
+          const isAvailable = availableClues.includes(clue);
 
-            if (!isComplete && !isAvailable) {
-              return null;
-            }
+          if (!isComplete && !isAvailable) {
+            return null;
+          }
 
-            return (
-              <li
-                key={`${index}-${clue}`}
-                className={`grid grid-cols-[2rem_1fr] items-start gap-3 rounded-2xl px-3 py-3 ${
-                  isAvailable ? 'bg-primary-soft' : 'bg-border/70 opacity-70'
-                }`}
-              >
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white font-semibold text-foreground">
-                  {index + 1}
-                </span>
-                <Text className="pt-1 leading-relaxed">{clue}</Text>
-              </li>
-            );
-          })}
-        </ul>
-      </Surface>
+          return (
+            <li
+              key={`${index}-${clue}`}
+              className={`grid grid-cols-[2rem_1fr] items-start gap-0 rounded-2xl px-1 py-1 ${
+                isAvailable ? 'bg-primary-soft' : 'bg-border/70 opacity-70'
+              }`}
+            >
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white font-semibold text-foreground">
+                {index + 1}
+              </span>
+              <Text className="leading-relaxed">{clue}</Text>
+            </li>
+          );
+        })}
+      </ul>
 
       {!isWin && <LocationFragments fragments={locationFragments} />}
 
@@ -173,7 +152,7 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
 
       {isComplete && (
         <Surface
-          className={`px-5 py-5 text-center ${isWin ? 'bg-gold-soft' : 'bg-card'}`}
+          className={`p-2 text-center ${isWin ? 'bg-gold-soft' : 'bg-card'}`}
         >
           <Text type="secondary">O lugar é:</Text>
           <div className="mt-2">
@@ -182,8 +161,15 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
         </Surface>
       )}
 
+      <div className="flex flex-col items-center gap-4">
+        <SeeResultsButton
+          isComplete={isComplete}
+          setShowResults={setShowResults}
+        />
+      </div>
+
       {!isComplete && (
-        <Surface className="flex flex-col gap-3 bg-card px-5 py-5">
+        <div className="flex flex-col gap-2">
           <GuessedLocation
             typedLocation={typedLocation}
             fragments={locationFragments}
@@ -199,9 +185,10 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
             withNumbers
             withSpaceBar
             withScoreDots={false}
+            incorrectClassName="bg-border-strong"
             getAriaLabel={(key) => `Digitar ${key.toUpperCase()}`}
           />
-        </Surface>
+        </div>
       )}
 
       {locationFragments.includes(LOCATION_FRAGMENT_PLACEHOLDER) &&
@@ -210,16 +197,21 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
             type="secondary"
             className="text-center text-sm"
           >
-            O fragmento mostra letras que já apareceram nas suas tentativas. Os
-            espaços cinza ainda podem ser letras ou espaços reais.
+            O fragmento acima mostra as letras que você já acertou; as barras
+            cinzas{' '}
+            <span
+              className="inline-block h-4 w-6 rounded-full bg-border-strong align-middle"
+              aria-hidden="true"
+            />{' '}
+            ainda podem ser letras ou espaços que você não acertou.
           </Text>
         )}
 
       {guesses.length > 0 && (
-        <Surface className="bg-card px-5 py-5">
+        <Surface className="bg-card px-5 py-5 ">
           <Title
             level={5}
-            className="mb-3"
+            className="mb-3 text-center"
           >
             Suas tentativas
           </Title>
@@ -237,24 +229,11 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
         </Surface>
       )}
 
-      {isComplete && !showResults && (
-        <div className="flex justify-center">
-          <Button
-            variant="primary"
-            size="small"
-            onClick={() => setShowResults(true)}
-          >
-            Ver resultado
-          </Button>
-        </div>
-      )}
-
       {showResults && (
         <ResultsSplash
           win={isWin}
           hearts={hearts}
           location={data.location}
-          guesses={guesses}
           score={score}
           revealedClues={availableClues.length}
           totalClues={allClues.length}

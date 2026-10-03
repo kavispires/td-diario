@@ -82,6 +82,13 @@ type KeyboardProps = {
    * isn't relevant (e.g. free-text word building).
    */
   withScoreDots?: boolean;
+  /**
+   * Color class applied to keys marked `incorrect`. Defaults to the
+   * standard destructive red; pass an override (e.g. a neutral gray) for
+   * games where an incorrect letter isn't a penalized "wrong" guess, such
+   * as Mapeamento's free exploration of letters.
+   */
+  incorrectClassName?: string;
 };
 
 /**
@@ -106,6 +113,7 @@ export function Keyboard({
   onEnterClick,
   onBackspaceClick,
   withScoreDots,
+  incorrectClassName = 'bg-destructive',
 }: KeyboardProps) {
   const rows = useMemo(
     () => (withNumbers ? [NUMBERS_ROW, ...LETTER_ROWS] : LETTER_ROWS),
@@ -182,7 +190,7 @@ export function Keyboard({
                   keyState === 'correct' &&
                     'bg-success shadow-[0_3px_0_rgba(0,0,0,0.35)]',
                   keyState === 'incorrect' &&
-                    'bg-destructive shadow-[0_3px_0_rgba(0,0,0,0.35)]',
+                    cn(incorrectClassName, 'shadow-[0_3px_0_rgba(0,0,0,0.35)]'),
                 )}
               >
                 <span>{key}</span>

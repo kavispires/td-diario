@@ -15,11 +15,12 @@ import { gameInfo } from '../info';
 import {
   FRAGMENT_WARNING_DURATION_MS,
   LOCATION_FRAGMENT_PLACEHOLDER,
-  MAPEAMENTO_HEARTS,
-  WIN_SCORE_PER_REMAINING_HEART,
+  MAPEAMENTO_WIN_BONUS_SCORE,
 } from './constants';
 import {
   buildKeyboardKeysState,
+  calculateLocationProgress,
+  countNewlyRevealedLetters,
   getAvailableClues,
   getLocationFragments,
   hasFoundAllLocationLetters,
@@ -115,12 +116,21 @@ export function useMapeamentoEngine(
       normalizeComparableLocationText(data.location);
 
     if (isCorrect) {
-      setState((previousState) => ({
-        ...previousState,
-        status: GAME_LIFECYCLE_STATUS.WIN,
-        progress: 1,
-        score: previousState.hearts * WIN_SCORE_PER_REMAINING_HEART,
-      }));
+      setState((previousState) => {
+        const newLettersCount = countNewlyRevealedLetters(
+          data.location,
+          previousState.guesses,
+          trimmedLocation,
+        );
+        const letterScore = newLettersCount * previousState.hearts;
+
+        return {
+          ...previousState,
+          status: GAME_LIFECYCLE_STATUS.WIN,
+          progress: 1,
+          score: previousState.score + letterScore + MAPEAMENTO_WIN_BONUS_SCORE,
+        };
+      });
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
       playSFX('win');
       return true;
@@ -129,6 +139,14 @@ export function useMapeamentoEngine(
     setState((previousState) => {
       const hearts = previousState.hearts - 1;
       const isLose = hearts <= 0;
+      const newLettersCount = countNewlyRevealedLetters(
+        data.location,
+        previousState.guesses,
+        trimmedLocation,
+      );
+      const letterScore = newLettersCount * previousState.hearts;
+      const nextGuesses = [...previousState.guesses, trimmedLocation];
+      const nextFragments = getLocationFragments(data.location, nextGuesses);
 
       if (isLose) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
@@ -140,13 +158,14 @@ export function useMapeamentoEngine(
       return {
         ...previousState,
         hearts,
-        guesses: [...previousState.guesses, trimmedLocation],
+        guesses: nextGuesses,
+        score: previousState.score + letterScore,
         status: isLose
           ? GAME_LIFECYCLE_STATUS.LOSE
           : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
         progress: isLose
           ? 1
-          : (previousState.guesses.length + 1) / MAPEAMENTO_HEARTS,
+          : calculateLocationProgress(data.location, nextFragments),
       };
     });
 

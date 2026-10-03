@@ -9,9 +9,9 @@ export const MAPEAMENTO_HEARTS = 4;
 export const LOCATION_FRAGMENT_PLACEHOLDER = '_';
 
 /**
- * Points awarded for each remaining heart when the player finds the location.
+ * Flat bonus points awarded for finding the correct location.
  */
-export const WIN_SCORE_PER_REMAINING_HEART = 25;
+export const MAPEAMENTO_WIN_BONUS_SCORE = 15;
 
 /**
  * Time, in milliseconds, that the fragment validation warning stays visible.
