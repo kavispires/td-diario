@@ -6,20 +6,18 @@ import {
 } from '@services/firebase';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
+import {
+  countSolvedLetters,
+  countTotalLetters,
+  isGuessableCharacter,
+  normalizeCharacter,
+} from '@utils/prompts';
 import { playSFX } from '@utils/soundEffects';
 import { useEffect, useState } from 'react';
 import type { DailyFilmacoEntry } from 'types/games';
 import { gameInfo } from '../info';
-import {
-  countSolvedLetters,
-  countTotalLetters,
-  isGuessableFilmacoCharacter,
-  normalizeFilmacoCharacter,
-} from './helpers';
+import { CORRECT_GUESS_SCORE, WIN_BONUS_SCORE } from './constants';
 import type { FilmacoEngineState, GameState, LetterState } from './types';
-
-const CORRECT_GUESS_SCORE = 5;
-const WIN_BONUS_SCORE = 10;
 
 /**
  * Drives a single day's Filmaco game: letter-guessing logic, hearts,
@@ -56,10 +54,10 @@ export function useFilmacoEngine(
    * @param letter - Raw guessed character.
    */
   function guessLetter(letter: string) {
-    const normalizedLetter = normalizeFilmacoCharacter(letter);
+    const normalizedLetter = normalizeCharacter(letter);
 
     if (
-      !isGuessableFilmacoCharacter(normalizedLetter, true) ||
+      !isGuessableCharacter(normalizedLetter, true) ||
       state.guesses[normalizedLetter] ||
       state.status === GAME_LIFECYCLE_STATUS.WIN ||
       state.status === GAME_LIFECYCLE_STATUS.LOSE

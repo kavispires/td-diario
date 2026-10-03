@@ -1,11 +1,12 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
 import { Keyboard } from '@components/games/Keyboard';
 import { Button } from '@components/ui/Button';
 import { Surface } from '@components/ui/Surface';
-import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
+import { countSolvedLetters, countTotalLetters } from '@utils/prompts';
 import { Coins, Type } from 'lucide-react';
 import { useState } from 'react';
 import type { DailyFilmacoEntry } from 'types/games';
@@ -13,12 +14,8 @@ import type { PlaceholderGameData } from 'types/puzzles';
 import { Prompt } from './components/Prompt';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
-import {
-  countSolvedLetters,
-  countTotalLetters,
-  FILMACO_HEARTS,
-  getInitialState,
-} from './utils/helpers';
+import { FILMACO_HEARTS } from './utils/constants';
+import { getInitialState } from './utils/helpers';
 import { useFilmacoEngine } from './utils/useFilmacoEngine';
 
 /**
@@ -112,20 +109,16 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
         />
       </GameStatsRow>
 
-      <div className="flex w-full items-center justify-center">
-        {data.isDoubleFeature
-          ? `Sessão Dupla · ${data.year}`
-          : `Lançamento · ${data.year}`}
-      </div>
+      <GameTitle
+        title={
+          data.isDoubleFeature
+            ? `Sessão Dupla · ${data.year}`
+            : `Lançamento · ${data.year}`
+        }
+        description="Use as pistas visuais e o ano para descobrir o nome exato do filme."
+      />
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        Use as pistas visuais e o ano para descobrir o nome exato do filme.
-      </Text>
-
-      <Surface className="flex w-full flex-wrap justify-center gap-3 bg-card px-4 py-4">
+      <Surface className="flex w-full flex-wrap justify-center gap-3 bg-card p-2">
         {data.itemsIds.map((itemId, index) => (
           <DailyItem
             key={`${itemId}-${index}`}
@@ -156,6 +149,7 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
         disabled={isComplete}
         color={gameInfo.color}
         withNumbers
+        withScoreDots
         getAriaLabel={(key, points) =>
           `Palpite ${key.toUpperCase()}, vale ${points} ponto${points > 1 ? 's' : ''}`
         }

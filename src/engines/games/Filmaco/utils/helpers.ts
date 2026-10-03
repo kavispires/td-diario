@@ -1,90 +1,11 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { getLettersInWord } from '@utils/prompts';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyFilmacoEntry } from 'types/games';
 import { gameInfo } from '../info';
+import { FILMACO_HEARTS } from './constants';
 import type { GameState, LetterGuess, LettersDictionary } from './types';
-
-/**
- * Number of wrong guesses Filmaco allows before ending the puzzle.
- */
-export const FILMACO_HEARTS = 3;
-
-/**
- * Removes accents and normalizes a guessed character to lowercase so the
- * keyboard can match accented movie titles with plain latin letters.
- *
- * @param character - Raw character from the title or keyboard.
- * @returns The normalized character.
- */
-export function normalizeFilmacoCharacter(character: string): string {
-  return character
-    .normalize('NFD')
-    .replaceAll(/\p{Diacritic}/gu, '')
-    .toLowerCase();
-}
-
-/**
- * Determines whether a title character should be guessed in Filmaco.
- *
- * @param character - Raw character from the movie title.
- * @param allowNumbers - Whether digits should count as guessable too.
- * @returns Whether the character belongs to the guessable alphabet.
- */
-export function isGuessableFilmacoCharacter(
-  character: string,
-  allowNumbers = false,
-): boolean {
-  const normalizedCharacter = normalizeFilmacoCharacter(character);
-  return allowNumbers
-    ? /^[a-z0-9]$/i.test(normalizedCharacter)
-    : /^[a-z]$/i.test(normalizedCharacter);
-}
-
-/**
- * Extracts the normalized set of unique letters/digits present in a movie
- * title, initializing each one as not yet discovered.
- *
- * @param text - Movie title shown in today's Filmaco challenge.
- * @param allowNumbers - Whether digits should count as guessable too.
- * @returns A normalized solution map keyed by unique character.
- */
-export function getLettersInWord(
-  text: string,
-  allowNumbers = false,
-): Dictionary<boolean> {
-  const lettersInWord: Dictionary<boolean> = {};
-
-  for (const character of text) {
-    if (!isGuessableFilmacoCharacter(character, allowNumbers)) {
-      continue;
-    }
-
-    lettersInWord[normalizeFilmacoCharacter(character)] = false;
-  }
-
-  return lettersInWord;
-}
-
-/**
- * Counts how many unique solution characters have already been discovered.
- *
- * @param solution - Normalized solution map for today's title.
- * @returns Number of unique letters/digits marked as solved.
- */
-export function countSolvedLetters(solution: Dictionary<boolean>): number {
-  return Object.values(solution).filter(Boolean).length;
-}
-
-/**
- * Counts how many unique guessable characters today's title contains.
- *
- * @param solution - Normalized solution map for today's title.
- * @returns Total number of unique letters/digits the player must discover.
- */
-export function countTotalLetters(solution: Dictionary<boolean>): number {
-  return Object.keys(solution).length;
-}
 
 /**
  * Builds the default `GameState` for a fresh Filmaco day.

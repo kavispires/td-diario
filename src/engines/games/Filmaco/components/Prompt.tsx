@@ -1,10 +1,7 @@
 import { Surface } from '@components/ui/Surface';
 import { cn } from '@utils/cn';
+import { isGuessableCharacter, normalizeCharacter } from '@utils/prompts';
 import { useMemo } from 'react';
-import {
-  isGuessableFilmacoCharacter,
-  normalizeFilmacoCharacter,
-} from '../utils/helpers';
 
 /**
  * Props accepted by the {@link Prompt} component.
@@ -31,17 +28,16 @@ export function Prompt({ text, solution }: PromptProps) {
   const words = useMemo(() => text.split(' '), [text]);
 
   return (
-    <Surface className="flex w-full flex-wrap justify-center gap-x-3 gap-y-4 bg-primary-soft p-2 uppercase">
+    <Surface className="flex w-full flex-wrap justify-center gap-x-5 gap-y-4 bg-primary-soft p-2 uppercase">
       {words.map((word, wordIndex) => (
         <div
           key={`${word}-${wordIndex}`}
           className="flex flex-wrap justify-center gap-0.5"
         >
           {Array.from(word).map((character, characterIndex) => {
-            const isGuessable = isGuessableFilmacoCharacter(character, true);
+            const isGuessable = isGuessableCharacter(character, true);
             const isRevealed =
-              isGuessable &&
-              Boolean(solution[normalizeFilmacoCharacter(character)]);
+              isGuessable && Boolean(solution[normalizeCharacter(character)]);
 
             return (
               <div
@@ -55,6 +51,7 @@ export function Prompt({ text, solution }: PromptProps) {
                     !isRevealed &&
                     'border-border-strong bg-surface-raised text-transparent',
                   !isGuessable && 'border-border bg-card text-foreground/70',
+                  character === '×' && 'bg-card shadow-none border-none',
                 )}
               >
                 {isGuessable ? (
@@ -63,6 +60,8 @@ export function Prompt({ text, solution }: PromptProps) {
                   ) : (
                     <span />
                   )
+                ) : character === '×' ? (
+                  <span>{character}</span>
                 ) : (
                   <span>{character}</span>
                 )}

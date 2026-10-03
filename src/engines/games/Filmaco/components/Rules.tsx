@@ -1,6 +1,6 @@
 import { Text } from '@components/ui/Typography';
 import { Heart } from 'lucide-react';
-import { FILMACO_HEARTS } from '../utils/helpers';
+import { FILMACO_HEARTS } from '../utils/constants';
 
 /**
  * Renders Filmaco's rules inside the shared `RulesOverlay`.

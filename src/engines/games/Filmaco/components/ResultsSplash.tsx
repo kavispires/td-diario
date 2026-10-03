@@ -3,7 +3,8 @@ import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
-import { buildShareText, FILMACO_HEARTS } from '../utils/helpers';
+import { FILMACO_HEARTS } from '../utils/constants';
+import { buildShareText } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.

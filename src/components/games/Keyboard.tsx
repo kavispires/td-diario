@@ -1,5 +1,5 @@
 import { cn } from '@utils/cn';
-import { getLetterPoints } from '@utils/letterPoints';
+import { getLetterPoints } from '@utils/prompts';
 import { useEffect, useMemo } from 'react';
 
 /**
@@ -105,7 +105,7 @@ export function Keyboard({
   withSpaceBar = false,
   onEnterClick,
   onBackspaceClick,
-  withScoreDots = true,
+  withScoreDots,
 }: KeyboardProps) {
   const rows = useMemo(
     () => (withNumbers ? [NUMBERS_ROW, ...LETTER_ROWS] : LETTER_ROWS),
