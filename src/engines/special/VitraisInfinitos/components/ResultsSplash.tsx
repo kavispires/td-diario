@@ -1,4 +1,5 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 
 /**
@@ -65,15 +66,15 @@ export function ResultsSplash({
         {title}
       </Text>
 
-      <div className="w-full overflow-hidden rounded-[2rem] bg-black/20 p-2 shadow-sm">
+      <Surface className="w-full overflow-hidden bg-black/20 p-2">
         <img
           src={imageUrl}
           alt={`Prévia completa do vitral "${title}"`}
           className="h-auto w-full rounded-[1.5rem] object-cover"
         />
-      </div>
+      </Surface>
 
-      <div className="grid w-full grid-cols-3 gap-3 rounded-[2rem] bg-white/70 px-4 py-4 text-center shadow-sm">
+      <Surface className="grid w-full grid-cols-3 gap-3 bg-white/70 px-4 py-4 text-center">
         <div className="flex flex-col gap-1">
           <Text
             strong
@@ -118,7 +119,7 @@ export function ResultsSplash({
             Pontos
           </Text>
         </div>
-      </div>
+      </Surface>
 
       <Text
         type="secondary"

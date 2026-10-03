@@ -1,6 +1,7 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Alert } from '@components/ui/Alert';
 import { Button } from '@components/ui/Button';
+import { Surface } from '@components/ui/Surface';
 import { Switch } from '@components/ui/Switch';
 import { Text, Title } from '@components/ui/Typography';
 import {
@@ -169,7 +170,7 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
       )}
 
       {isSaving && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-card px-5 py-8 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-8 text-center">
           <LoaderCircle
             className="h-8 w-8 animate-spin text-primary"
             aria-hidden="true"
@@ -178,11 +179,11 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
           <Text type="secondary">
             Estamos enviando os depoimentos de hoje para o banco do TD.
           </Text>
-        </div>
+        </Surface>
       )}
 
       {isIdle && !isWin && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-card px-5 py-6 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-6 text-center">
           <Text>
             Você verá uma sequência de depoimentos e deverá marcar quem combina
             com cada frase. Se bater dúvida, deixe em branco.
@@ -223,7 +224,7 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
           >
             Começar
           </Button>
-        </div>
+        </Surface>
       )}
 
       {isPlaying && currentQuestion && currentAnswers && (
@@ -351,7 +352,7 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
       )}
 
       {isWin && !showResults && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-gold-soft px-5 py-6 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-gold-soft px-5 py-6 text-center">
           <Title level={4}>Você já respondeu hoje!</Title>
           <Text type="secondary">
             Sua contribuição foi salva. Abra o resumo para rever os depoimentos
@@ -364,11 +365,11 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
           >
             Ver resultado
           </Button>
-        </div>
+        </Surface>
       )}
 
       {!isWin && (
-        <div className="flex w-full flex-col gap-3 rounded-[2rem] bg-card px-5 py-5 shadow-sm">
+        <Surface className="flex w-full flex-col gap-3 bg-card px-5 py-5">
           <Text
             strong
             className="text-center"
@@ -388,7 +389,7 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
               </Button>
             ))}
           </div>
-        </div>
+        </Surface>
       )}
 
       {showResults && (

@@ -1,5 +1,6 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyPortaisCorridor } from 'types/games';
 import { buildShareText, getTotalMoves } from '../utils/helpers';
@@ -149,8 +150,8 @@ export function ResultsSplash({
         })}
       </div>
 
-      <div
-        className={`flex w-full flex-col items-center gap-2 rounded-[2rem] px-5 py-4 text-center shadow-sm ${
+      <Surface
+        className={`flex w-full flex-col items-center gap-2 px-5 py-4 text-center ${
           win ? 'bg-gold-soft' : 'bg-white/70'
         }`}
       >
@@ -158,7 +159,7 @@ export function ResultsSplash({
         <Text type="secondary">
           {totalMoves} de {goal} movimentos projetados
         </Text>
-      </div>
+      </Surface>
     </GameResultsSplash>
   );
 }

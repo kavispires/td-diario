@@ -1,4 +1,5 @@
 import { Button } from '@components/ui/Button';
+import { Surface } from '@components/ui/Surface';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
 import { ArrowDown } from 'lucide-react';
 import type { DailyConjuntosThing } from 'types/games';
@@ -70,7 +71,7 @@ export function PlacementReview({
         : intersectingThings;
 
   return (
-    <div className="flex w-full flex-col items-center gap-3 rounded-[2rem] bg-card px-5 py-5 text-center shadow-sm">
+    <Surface className="flex w-full flex-col items-center gap-3 bg-card px-5 py-5 text-center">
       <Title level={4}>Confirmar jogada</Title>
 
       <Paragraph className="mb-0 text-center">
@@ -119,6 +120,6 @@ export function PlacementReview({
           Cancelar
         </Button>
       </div>
-    </div>
+    </Surface>
   );
 }

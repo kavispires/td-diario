@@ -1,4 +1,5 @@
 import { Pill } from '@components/ui/Pill';
+import { Surface } from '@components/ui/Surface';
 import { cn } from '@utils/cn';
 import { Check, ClipboardList } from 'lucide-react';
 import type { Fulfillment, GoodId } from '../utils/types';
@@ -45,7 +46,7 @@ export function Orders({
   shelfWidth,
 }: OrdersProps) {
   return (
-    <div className="flex w-full items-start gap-3 rounded-[2rem] bg-card px-4 py-4 shadow-sm">
+    <Surface className="flex w-full items-start gap-3 bg-card px-4 py-4">
       <div className="flex flex-col items-center gap-2 pt-1 text-primary">
         <ClipboardList
           className="h-6 w-6"
@@ -104,6 +105,6 @@ export function Orders({
           );
         })}
       </div>
-    </div>
+    </Surface>
   );
 }

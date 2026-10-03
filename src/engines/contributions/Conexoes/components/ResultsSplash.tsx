@@ -1,4 +1,5 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
 import { createPairId } from '../utils/helpers';
@@ -75,9 +76,9 @@ export function ResultsSplash({
       {win && relatedPairs.length > 0 && (
         <div className="grid w-full gap-3">
           {relatedPairs.map((pair, index) => (
-            <div
+            <Surface
               key={createPairId(pair.imageId1, pair.imageId2)}
-              className="rounded-[2rem] bg-white/75 p-4 shadow-sm"
+              className="bg-white/75 p-4"
             >
               <div className="mb-3 flex items-center justify-between gap-3">
                 <Text strong>Ligação #{index + 1}</Text>
@@ -101,7 +102,7 @@ export function ResultsSplash({
                   width={120}
                 />
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
       )}

@@ -1,4 +1,5 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { buildShareText } from '../utils/helpers';
 
@@ -87,8 +88,8 @@ export function ResultsSplash({
       shareText={shareText}
       onClose={onClose}
     >
-      <div
-        className={`flex w-full max-w-xs flex-col gap-4 rounded-[2rem] px-5 py-6 text-center shadow-sm ${
+      <Surface
+        className={`flex w-full max-w-xs flex-col gap-4 px-5 py-6 text-center ${
           win ? 'bg-gold-soft' : 'bg-surface-raised/90'
         }`}
       >
@@ -118,7 +119,7 @@ export function ResultsSplash({
           <p>Vidas restantes: {hearts}</p>
           <p>{usedSmartShuffle ? 'Dica usada: sim' : 'Dica usada: não'}</p>
         </div>
-      </div>
+      </Surface>
     </GameResultsSplash>
   );
 }

@@ -1,3 +1,4 @@
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
 import { CircleOff, Package2, RotateCcw } from 'lucide-react';
@@ -143,7 +144,7 @@ export function FulfillmentBoard({
         })}
       </div>
 
-      <div className="rounded-[2rem] bg-card px-4 py-4 shadow-sm">
+      <Surface className="bg-card px-4 py-4">
         <Text
           strong
           className="mb-3 block text-center"
@@ -201,7 +202,7 @@ export function FulfillmentBoard({
             </span>
           </button>
         )}
-      </div>
+      </Surface>
     </div>
   );
 }

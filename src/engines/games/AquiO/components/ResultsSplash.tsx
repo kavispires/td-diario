@@ -1,6 +1,7 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { motion } from 'motion/react';
 import { buildShareText } from '../utils/helpers';
@@ -167,10 +168,8 @@ export function ResultsSplash({
         {title}
       </Text>
 
-      <div
-        className={`w-full rounded-[2rem] px-5 py-4 text-center shadow-sm ${
-          win ? 'bg-gold-soft' : 'bg-white/75'
-        }`}
+      <Surface
+        className={`w-full px-5 py-4 text-center ${win ? 'bg-gold-soft' : 'bg-white/75'}`}
       >
         <Text
           strong
@@ -240,7 +239,7 @@ export function ResultsSplash({
             </Text>
           </div>
         </div>
-      </div>
+      </Surface>
 
       <Hearts
         remaining={hearts}

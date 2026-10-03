@@ -1,6 +1,7 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
 import { Button } from '@components/ui/Button';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Coins, SendHorizontal } from 'lucide-react';
@@ -161,9 +162,9 @@ function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
 export function DailyAlienadoGame({ data }: DailyAlienadoGameProps) {
   if (!isDailyAlienadoEntry(data)) {
     return (
-      <div className="mx-auto w-full max-w-md rounded-[2rem] bg-surface/85 p-5 text-center shadow-sm">
+      <Surface className="mx-auto w-full max-w-md bg-surface/85 p-5 text-center">
         <Text>Os dados de Alienado não vieram no formato esperado.</Text>
-      </div>
+      </Surface>
     );
   }
 

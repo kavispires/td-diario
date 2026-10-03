@@ -1,6 +1,7 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
+import { Surface } from '@components/ui/Surface';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
 import { BrushCleaning, Check, Coins, LoaderCircle } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -97,7 +98,7 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
       )}
 
       {isIdle && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-card px-5 py-6 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-6 text-center">
           <Paragraph className="mb-0 text-center">
             Você terá <strong>10 segundos</strong> para cada desenho, sem usar
             letras nem números. Depois do sexto rabisco, tudo é salvo de uma
@@ -117,7 +118,7 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
           >
             Começar
           </Button>
-        </div>
+        </Surface>
       )}
 
       {isPlaying && currentCard && (
@@ -151,7 +152,7 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
       )}
 
       {isSaving && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-card px-5 py-8 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-8 text-center">
           <LoaderCircle
             className="h-8 w-8 animate-spin text-primary"
             aria-hidden="true"
@@ -160,11 +161,11 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
           <Text type="secondary">
             Estamos enviando os rabiscos de hoje para o banco de dados.
           </Text>
-        </div>
+        </Surface>
       )}
 
       {isRetryable && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-card px-5 py-8 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-8 text-center">
           <Title level={4}>Não deu para salvar agora</Title>
           <Text type="secondary">
             Seus desenhos continuam aqui. Tente enviar de novo quando a conexão
@@ -177,11 +178,11 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
           >
             Tentar novamente
           </Button>
-        </div>
+        </Surface>
       )}
 
       {isWin && !showResults && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-gold-soft px-5 py-6 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-gold-soft px-5 py-6 text-center">
           <Title level={4}>Você já desenhou hoje!</Title>
           <Text type="secondary">
             Seus rabiscos já foram enviados. Se quiser, abra o resumo para rever
@@ -194,7 +195,7 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
           >
             Ver resultado
           </Button>
-        </div>
+        </Surface>
       )}
 
       {showResults && (

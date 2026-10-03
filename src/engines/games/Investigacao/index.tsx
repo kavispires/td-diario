@@ -1,5 +1,6 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Button } from '@components/ui/Button';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Heart, Search, UserRoundCheck } from 'lucide-react';
@@ -58,13 +59,13 @@ function isDailyInvestigacaoEntry(
 export function DailyInvestigacaoGame({ data }: DailyInvestigacaoGameProps) {
   if (!isDailyInvestigacaoEntry(data)) {
     return (
-      <div className="mx-auto flex w-full max-w-md flex-col gap-3 rounded-[2rem] bg-card px-5 py-6 text-center shadow-sm">
+      <Surface className="mx-auto flex w-full max-w-md flex-col gap-3 bg-card px-5 py-6 text-center">
         <Title level={4}>Não deu para abrir a investigação de hoje.</Title>
         <Text type="secondary">
           O pacote recebido está incompleto. Tente recarregar a página em
           instantes.
         </Text>
-      </div>
+      </Surface>
     );
   }
 
@@ -156,7 +157,7 @@ function DailyInvestigacaoGameContent({
         </Text>
       </div>
 
-      <div className="w-full rounded-[2rem] bg-card px-5 py-5 text-center shadow-sm">
+      <Surface className="w-full bg-card px-5 py-5 text-center">
         {!isComplete ? (
           <Text strong>
             Libere alguém que <span className="text-primary">não</span> se
@@ -174,7 +175,7 @@ function DailyInvestigacaoGameContent({
             </Text>
           </div>
         )}
-      </div>
+      </Surface>
 
       <div
         className="grid w-full gap-3"
@@ -201,7 +202,7 @@ function DailyInvestigacaoGameContent({
         })}
       </div>
 
-      <div className="flex w-full flex-col gap-3 rounded-[2rem] bg-card px-5 py-5 shadow-sm">
+      <Surface className="flex w-full flex-col gap-3 bg-card px-5 py-5">
         <div className="flex flex-col gap-1">
           <Text strong>Declarações</Text>
           <Text type="secondary">
@@ -233,7 +234,7 @@ function DailyInvestigacaoGameContent({
             Você já gastou todas as dicas extras de hoje.
           </Text>
         )}
-      </div>
+      </Surface>
 
       {isComplete && !showResults && (
         <Button

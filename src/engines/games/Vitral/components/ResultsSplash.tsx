@@ -1,4 +1,5 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyVitralEntry } from 'types/games';
 import { buildShareText, formatElapsedTime } from '../utils/helpers';
@@ -80,11 +81,11 @@ export function ResultsSplash({
         "{data.title}"
       </Text>
 
-      <div
+      <Surface
         className={
           win
-            ? 'w-full rounded-[2rem] bg-gold-soft px-5 py-6 text-center shadow-sm'
-            : 'w-full rounded-[2rem] bg-white/70 px-5 py-6 text-center shadow-sm'
+            ? 'w-full bg-gold-soft px-5 py-6 text-center'
+            : 'w-full bg-white/70 px-5 py-6 text-center'
         }
       >
         <div className="grid grid-cols-2 gap-4 text-left sm:grid-cols-4">
@@ -130,7 +131,7 @@ export function ResultsSplash({
             <Text strong>{score}</Text>
           </div>
         </div>
-      </div>
+      </Surface>
 
       <Text
         type="secondary"

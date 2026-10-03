@@ -1,4 +1,5 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyPirralhosKidEntry } from 'types/games';
 import type { KidProfile } from '../utils/constants';
@@ -96,17 +97,17 @@ export function ResultsSplash({
       </Text>
 
       {culprit && (
-        <div className="flex w-full flex-col items-center gap-3 rounded-[2rem] bg-white/70 px-5 py-5 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-3 bg-white/70 px-5 py-5 text-center">
           <Text strong>Quem pegou o brinquedo</Text>
           <KidPortrait
             kid={culprit}
             width={132}
             showName
           />
-        </div>
+        </Surface>
       )}
 
-      <div className="flex w-full flex-col gap-3 rounded-[2rem] bg-white/70 px-5 py-5 shadow-sm">
+      <Surface className="flex w-full flex-col gap-3 bg-white/70 px-5 py-5">
         <Text
           strong
           className="text-center"
@@ -137,7 +138,7 @@ export function ResultsSplash({
             ))}
           </div>
         )}
-      </div>
+      </Surface>
     </GameResultsSplash>
   );
 }

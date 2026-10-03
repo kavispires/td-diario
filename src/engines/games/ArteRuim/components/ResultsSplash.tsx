@@ -1,5 +1,6 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { buildShareText } from '../utils/helpers';
 import { DrawingPreview } from './DrawingPreview';
@@ -79,10 +80,8 @@ export function ResultsSplash({
       shareText={shareText}
       onClose={onClose}
     >
-      <div
-        className={`w-full rounded-[2rem] px-5 py-4 text-center shadow-sm ${
-          win ? 'bg-gold-soft' : 'bg-white/75'
-        }`}
+      <Surface
+        className={`w-full px-5 py-4 text-center ${win ? 'bg-gold-soft' : 'bg-white/75'}`}
       >
         <Text
           strong
@@ -96,7 +95,7 @@ export function ResultsSplash({
         >
           {answer}
         </Title>
-      </div>
+      </Surface>
 
       <Hearts
         remaining={hearts}

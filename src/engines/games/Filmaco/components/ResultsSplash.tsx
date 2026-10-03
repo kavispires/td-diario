@@ -1,6 +1,7 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { buildShareText, FILMACO_HEARTS } from '../utils/helpers';
 
@@ -110,7 +111,7 @@ export function ResultsSplash({
         emptyClassName="text-black"
       />
 
-      <div className="flex w-full flex-wrap justify-center gap-3 rounded-[2rem] bg-white/70 px-4 py-4 shadow-sm">
+      <Surface className="flex w-full flex-wrap justify-center gap-3 bg-white/70 px-4 py-4">
         {itemsIds.map((itemId, index) => (
           <DailyItem
             key={`${itemId}-${index}`}
@@ -118,7 +119,7 @@ export function ResultsSplash({
             width={56}
           />
         ))}
-      </div>
+      </Surface>
 
       <Text
         type="secondary"

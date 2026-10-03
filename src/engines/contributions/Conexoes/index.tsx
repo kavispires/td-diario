@@ -1,6 +1,7 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Alert } from '@components/ui/Alert';
 import { Button } from '@components/ui/Button';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import {
@@ -163,7 +164,7 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
       )}
 
       {isSaving && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-card px-5 py-8 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-8 text-center">
           <LoaderCircle
             className="h-8 w-8 animate-spin text-primary"
             aria-hidden="true"
@@ -172,11 +173,11 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
           <Text type="secondary">
             Estamos enviando os pares que você marcou para o banco do TD.
           </Text>
-        </div>
+        </Surface>
       )}
 
       {isIdle && !isComplete && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-card px-5 py-6 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-6 text-center">
           <Text>
             Você vai receber pares de imagens para julgar. Vale cor parecida,
             tema em comum, objeto repetido ou qualquer associação que faça
@@ -197,7 +198,7 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
           >
             Começar
           </Button>
-        </div>
+        </Surface>
       )}
 
       {isPlaying && (
@@ -217,7 +218,7 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
             </Text>
           </div>
 
-          <div className="flex w-full flex-col gap-3 rounded-[2rem] bg-gold-soft px-5 py-6 text-center shadow-sm">
+          <Surface className="flex w-full flex-col gap-3 bg-gold-soft px-5 py-6 text-center">
             <Title level={4}>Essas duas imagens estão relacionadas?</Title>
             <Text
               type="secondary"
@@ -226,7 +227,7 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
               Use seu próprio julgamento — a conexão pode ser óbvia ou bem
               pessoal.
             </Text>
-          </div>
+          </Surface>
 
           <div
             ref={pairContainerRef}
@@ -348,7 +349,7 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
       )}
 
       {isWin && !showResults && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-gold-soft px-5 py-6 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-gold-soft px-5 py-6 text-center">
           <Title level={4}>Você já conectou imagens hoje!</Title>
           <Text type="secondary">
             Sua contribuição foi salva. Abra o resumo para rever os pares que
@@ -361,11 +362,11 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
           >
             Ver resultado
           </Button>
-        </div>
+        </Surface>
       )}
 
       {isLose && !showResults && (
-        <div className="flex w-full flex-col items-center gap-4 rounded-[2rem] bg-card px-5 py-6 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-6 text-center">
           <Title level={4}>Sessão concluída</Title>
           <Text type="secondary">
             Hoje você preferiu não salvar nenhuma relação. Ainda assim, já valeu
@@ -378,7 +379,7 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
           >
             Ver resultado
           </Button>
-        </div>
+        </Surface>
       )}
 
       {showResults && isComplete && (

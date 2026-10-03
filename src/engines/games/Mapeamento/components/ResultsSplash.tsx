@@ -1,5 +1,6 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { buildShareText, MAPEAMENTO_HEARTS } from '../utils/helpers';
 
@@ -85,12 +86,12 @@ export function ResultsSplash({
         {win ? 'Você encontrou o lugar' : 'Hoje não deu'}
       </span>
 
-      <div className="rounded-[2rem] bg-white/75 px-5 py-5 text-center shadow-sm backdrop-blur-sm">
+      <Surface className="bg-white/75 px-5 py-5 text-center backdrop-blur-sm">
         <Text type="secondary">A resposta de hoje era</Text>
         <div className="mt-2">
           <Title level={3}>{location}</Title>
         </div>
-      </div>
+      </Surface>
 
       <Hearts
         remaining={hearts}
@@ -119,7 +120,7 @@ export function ResultsSplash({
         </div>
       </div>
 
-      <div className="w-full rounded-[2rem] bg-white/70 px-5 py-5 shadow-sm backdrop-blur-sm">
+      <Surface className="w-full bg-white/70 px-5 py-5 backdrop-blur-sm">
         <Title
           level={5}
           className="mb-3 text-center"
@@ -143,7 +144,7 @@ export function ResultsSplash({
             Você acertou sem gastar nenhuma tentativa errada.
           </Text>
         )}
-      </div>
+      </Surface>
     </GameResultsSplash>
   );
 }

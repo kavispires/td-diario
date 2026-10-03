@@ -2,6 +2,7 @@ import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
 import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { ArrowRight, Coins, Crosshair } from 'lucide-react';
@@ -211,7 +212,7 @@ export function DailyPirralhosGame({ data }: DailyPirralhosGameProps) {
           })}
         </div>
 
-        <div className="flex w-full flex-col items-center gap-3 rounded-[2rem] bg-card px-5 py-5 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-3 bg-card px-5 py-5 text-center">
           <Text className="text-sm leading-relaxed text-subtle-foreground">
             Use as marcações para separar quem parece culpado, quem parece
             mentir e quem parece inocente. Elas são só anotações suas e não
@@ -225,7 +226,7 @@ export function DailyPirralhosGame({ data }: DailyPirralhosGameProps) {
           >
             Limpar tudo
           </Button>
-        </div>
+        </Surface>
 
         {isComplete && !showResults && (
           <Button

@@ -1,6 +1,7 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
 import { Button } from '@components/ui/Button';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { useDualTranslate } from '@hooks/useDualTranslate';
@@ -137,7 +138,7 @@ export function DailyAquiOGame({ data }: DailyAquiOGameProps) {
       </div>
 
       {!isPlaying && (
-        <div className="flex w-full flex-col items-center gap-3 rounded-[2rem] bg-white/70 px-4 py-4 shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-3 bg-white/70 px-4 py-4">
           <Button
             variant="primary"
             size="small"
@@ -191,7 +192,7 @@ export function DailyAquiOGame({ data }: DailyAquiOGameProps) {
             items={data.itemsIds}
             itemLabels={itemLabels}
           />
-        </div>
+        </Surface>
       )}
 
       {isPlaying && discA && discB && (

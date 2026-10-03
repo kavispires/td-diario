@@ -1,5 +1,6 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import type { DailyQuartetosSet } from 'types/games';
 import { buildShareText } from '../utils/helpers';
@@ -124,9 +125,9 @@ export function ResultsSplash({
 
       <div className="grid w-full gap-3">
         {sets.map((quartetSet) => (
-          <div
+          <Surface
             key={quartetSet.id}
-            className="rounded-[2rem] border border-gold/40 bg-gold-soft px-4 py-4 shadow-sm"
+            className="border border-gold/40 bg-gold-soft px-4 py-4"
           >
             <Title
               level={5}
@@ -148,7 +149,7 @@ export function ResultsSplash({
                 </div>
               ))}
             </div>
-          </div>
+          </Surface>
         ))}
       </div>
     </GameResultsSplash>

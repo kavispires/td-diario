@@ -1,5 +1,6 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Button } from '@components/ui/Button';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { useTDImageCardUrl } from '@hooks/useTDImageCardUrl';
@@ -90,12 +91,12 @@ export function DailyVitraisInfinitosGame({
 
   if (!isDailyVitraisInfinitosEntry(data)) {
     return (
-      <div className="mx-auto flex w-full max-w-md flex-col items-center gap-3 rounded-[2rem] bg-card px-5 py-6 text-center shadow-sm">
+      <Surface className="mx-auto flex w-full max-w-md flex-col items-center gap-3 bg-card px-5 py-6 text-center">
         <Title level={4}>Não deu para abrir o vitral de hoje</Title>
         <Text type="secondary">
           Os dados recebidos para Vitrais∞ não têm o formato esperado.
         </Text>
-      </div>
+      </Surface>
     );
   }
 
@@ -161,7 +162,7 @@ export function DailyVitraisInfinitosGame({
       />
 
       {isComplete && !showResults && (
-        <div className="flex w-full flex-col items-center gap-3 rounded-[2rem] bg-gold-soft px-5 py-5 text-center shadow-sm">
+        <Surface className="flex w-full flex-col items-center gap-3 bg-gold-soft px-5 py-5 text-center">
           <Title level={4}>Vitral concluído!</Title>
           <Text type="secondary">
             Você já montou a imagem de hoje. Abra o resultado para rever o
@@ -174,7 +175,7 @@ export function DailyVitraisInfinitosGame({
           >
             Ver resultado
           </Button>
-        </div>
+        </Surface>
       )}
 
       {isComplete && showResults && (

@@ -2,6 +2,7 @@ import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
 import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Check, Coins, Star } from 'lucide-react';
@@ -218,7 +219,7 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
         })}
       </div>
 
-      <div className="w-full rounded-[2rem] bg-card px-5 py-5 text-center shadow-sm">
+      <Surface className="w-full bg-card px-5 py-5 text-center">
         <Text
           strong
           className="block"
@@ -233,7 +234,7 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
           mais estrelas, mais traiçoeiras ficam as pistas.
           {isWeekend ? ' Hoje o desafio usa a versão de fim de semana.' : ''}
         </Text>
-      </div>
+      </Surface>
 
       {isComplete && !showResults && (
         <Button

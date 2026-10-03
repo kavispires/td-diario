@@ -4,6 +4,7 @@ import { Hearts } from '@components/games/Hearts';
 import { Alert } from '@components/ui/Alert';
 import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { cn } from '@utils/cn';
@@ -35,7 +36,7 @@ type DailyQuartetosGameProps = {
  */
 function getMatchedCardClasses(isComplete: boolean): string {
   return cn(
-    'rounded-[2rem] border px-4 py-4 shadow-sm transition-colors',
+    'border px-4 py-4 transition-colors',
     isComplete ? 'border-gold/50 bg-gold-soft' : 'border-secondary/20 bg-card',
   );
 }
@@ -176,7 +177,7 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
 
       <div className="flex w-full flex-col gap-3">
         {matches.map((quartetSet) => (
-          <div
+          <Surface
             key={quartetSet.id}
             className={getMatchedCardClasses(isComplete)}
           >
@@ -200,7 +201,7 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
                 </div>
               ))}
             </div>
-          </div>
+          </Surface>
         ))}
 
         {grid.length > 0 && (
@@ -295,9 +296,9 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
       )}
 
       {isComplete && !showResults && (
-        <div
+        <Surface
           className={cn(
-            'flex w-full flex-col items-center gap-4 rounded-[2rem] px-5 py-6 text-center shadow-sm',
+            'flex w-full flex-col items-center gap-4 px-5 py-6 text-center',
             isWin ? 'bg-gold-soft' : 'bg-card',
           )}
         >
@@ -318,7 +319,7 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
           >
             Ver resultado
           </Button>
-        </div>
+        </Surface>
       )}
 
       {showResults && (

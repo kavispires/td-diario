@@ -1,5 +1,6 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyAlienadoAttribute, DailyAlienadoRequest } from 'types/games';
 import { buildShareText } from '../utils/helpers';
@@ -126,7 +127,7 @@ export function ResultsSplash({
         ))}
       </div>
 
-      <div className="w-full space-y-3 rounded-[2rem] bg-white/70 p-4 shadow-sm">
+      <Surface className="w-full space-y-3 bg-white/70 p-4">
         <Text strong>Dicionário alienígena</Text>
 
         <div className="space-y-3">
@@ -152,10 +153,10 @@ export function ResultsSplash({
             </div>
           ))}
         </div>
-      </div>
+      </Surface>
 
       {guesses.length > 0 && (
-        <div className="w-full space-y-3 rounded-[2rem] bg-white/70 p-4 shadow-sm">
+        <Surface className="w-full space-y-3 bg-white/70 p-4">
           <Text strong>Tentativas enviadas</Text>
 
           <div className="space-y-2">
@@ -175,7 +176,7 @@ export function ResultsSplash({
               </div>
             ))}
           </div>
-        </div>
+        </Surface>
       )}
     </GameResultsSplash>
   );

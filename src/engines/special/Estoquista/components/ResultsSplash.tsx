@@ -1,4 +1,5 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { buildShareText } from '../utils/helpers';
 
@@ -88,7 +89,7 @@ export function ResultsSplash({
           : `Você ficou sem corações depois de ${evaluations.length} envio${evaluations.length === 1 ? '' : 's'}.`}
       </Text>
 
-      <div className="flex flex-col items-center gap-2 rounded-[2rem] bg-white/55 px-5 py-4 shadow-sm">
+      <Surface className="flex flex-col items-center gap-2 bg-white/55 px-5 py-4">
         <Text strong>Pontuação: {score}</Text>
         <div className="flex flex-wrap justify-center gap-2">
           {evaluations.map((attempt, index) => (
@@ -110,7 +111,7 @@ export function ResultsSplash({
             </div>
           ))}
         </div>
-      </div>
+      </Surface>
     </GameResultsSplash>
   );
 }

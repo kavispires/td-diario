@@ -2,6 +2,7 @@ import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
 import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Coins, Repeat, Send } from 'lucide-react';
@@ -82,9 +83,9 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
 
   if (!isDailyPortaisEntry(data)) {
     return (
-      <div className="mx-auto flex w-full max-w-md justify-center rounded-[2rem] bg-card px-5 py-6 text-center shadow-sm">
+      <Surface className="mx-auto flex w-full max-w-md justify-center bg-card px-5 py-6 text-center">
         <Text type="danger">Não conseguimos carregar o desafio de hoje.</Text>
-      </div>
+      </Surface>
     );
   }
 
@@ -142,7 +143,7 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
       </Pill>
 
       {currentCorridor && !isComplete && (
-        <div className="flex w-full flex-col gap-4 rounded-[2rem] bg-card px-5 py-6 shadow-sm">
+        <Surface className="flex w-full flex-col gap-4 bg-card px-5 py-6">
           <Corridor
             number={currentCorridorIndex + 1}
             totalCorridors={data.corridors.length}
@@ -193,15 +194,15 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
               ))}
             </div>
           )}
-        </div>
+        </Surface>
       )}
 
       {isComplete && (
         <div className="grid w-full gap-4">
           {data.corridors.map((corridor, index) => (
-            <div
+            <Surface
               key={corridor.passcode}
-              className="rounded-[2rem] bg-card px-5 py-5 shadow-sm"
+              className="bg-card px-5 py-5"
             >
               <Corridor
                 number={index + 1}
@@ -212,7 +213,7 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
                 moves={moves[index] ?? 0}
                 solved={index < completedCorridors}
               />
-            </div>
+            </Surface>
           ))}
         </div>
       )}

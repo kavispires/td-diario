@@ -2,6 +2,7 @@ import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
 import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
+import { Surface } from '@components/ui/Surface';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { ArchiveRestore, ClipboardCheck, Coins, Package2 } from 'lucide-react';
@@ -131,7 +132,7 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
             lastPlacedGoodId={lastPlacedGoodId}
           />
 
-          <div className="flex w-full flex-col items-center gap-3 rounded-[2rem] bg-card px-5 py-6 text-center shadow-sm">
+          <Surface className="flex w-full flex-col items-center gap-3 bg-card px-5 py-6 text-center">
             <Text type="secondary">Produto atual</Text>
             {currentGood ? (
               <WarehouseGoodCard
@@ -142,7 +143,7 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
             ) : (
               <Title level={4}>Prateleiras prontas!</Title>
             )}
-          </div>
+          </Surface>
         </>
       ) : (
         <>
@@ -198,7 +199,7 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
       )}
 
       {evaluations.length > 0 && (
-        <div className="flex w-full flex-col gap-2 rounded-[2rem] bg-card px-4 py-4 shadow-sm">
+        <Surface className="flex w-full flex-col gap-2 bg-card px-4 py-4">
           <Text
             strong
             className="text-center"
@@ -225,7 +226,7 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
               </div>
             ))}
           </div>
-        </div>
+        </Surface>
       )}
 
       {phase === ESTOQUISTA_PHASE.STOCKING && (

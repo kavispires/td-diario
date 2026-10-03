@@ -1,5 +1,6 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
+import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { useMemo } from 'react';
 import type { DailyConjuntosEntry } from 'types/games';
@@ -105,10 +106,8 @@ export function ResultsSplash({
         emptyClassName="text-black"
       />
 
-      <div
-        className={`grid w-full gap-3 rounded-[2rem] px-4 py-4 shadow-sm ${
-          win ? 'bg-gold-soft' : 'bg-white/75'
-        }`}
+      <Surface
+        className={`grid w-full gap-3 px-4 py-4 ${win ? 'bg-gold-soft' : 'bg-white/75'}`}
       >
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="rounded-2xl bg-white/60 px-3 py-3">
@@ -191,7 +190,7 @@ export function ResultsSplash({
             ))}
           </div>
         </div>
-      </div>
+      </Surface>
     </GameResultsSplash>
   );
 }

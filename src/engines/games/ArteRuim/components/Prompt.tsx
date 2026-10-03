@@ -1,3 +1,4 @@
+import { Surface } from '@components/ui/Surface';
 import { useMemo } from 'react';
 import { isPlayableLetter, normalizeLetter } from '../utils/helpers';
 
@@ -26,7 +27,7 @@ export function Prompt({ text, solution }: PromptProps) {
   const words = useMemo(() => text.split(' '), [text]);
 
   return (
-    <div className="flex w-full flex-wrap items-center justify-center gap-x-4 gap-y-3 rounded-[2rem] bg-card px-4 py-5 text-center shadow-sm">
+    <Surface className="flex w-full flex-wrap items-center justify-center gap-x-4 gap-y-3 bg-card px-4 py-5 text-center">
       {words.map((word, wordIndex) => (
         <div
           key={`${word}-${wordIndex}`}
@@ -54,6 +55,6 @@ export function Prompt({ text, solution }: PromptProps) {
           })}
         </div>
       ))}
-    </div>
+    </Surface>
   );
 }

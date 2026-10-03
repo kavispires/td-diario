@@ -1,5 +1,6 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Pill } from '@components/ui/Pill';
+import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
 import { Heart, Search, UserRoundCheck } from 'lucide-react';
@@ -102,9 +103,9 @@ export function ResultsSplash({
           : 'O suspeito errado foi liberado e o criminoso escapou.'}
       </Text>
 
-      <div
+      <Surface
         className={cn(
-          'flex w-full flex-col items-center gap-4 rounded-[2rem] px-5 py-5 shadow-sm',
+          'flex w-full flex-col items-center gap-4 px-5 py-5',
           win ? 'bg-gold-soft' : 'bg-white/75',
         )}
       >
@@ -129,7 +130,7 @@ export function ResultsSplash({
             </span>
           ))}
         </div>
-      </div>
+      </Surface>
 
       <div className="grid w-full grid-cols-3 gap-3">
         <ResultStat
