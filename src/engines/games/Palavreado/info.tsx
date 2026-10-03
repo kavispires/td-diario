@@ -12,8 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'What if the word search was all scrambled?',
   },
   releaseDate: '2024-05-10',
-  release: 'maintenance',
-  version: '0.0.1',
+  release: 'stable',
+  version: '1.0.0',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

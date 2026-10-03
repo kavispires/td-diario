@@ -1,8 +1,18 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
 import { Popconfirm } from '@components/ui/Popconfirm';
-import { Text, Title } from '@components/ui/Typography';
+import { Text } from '@components/ui/Typography';
+import {
+  DndContext,
+  type DragEndEvent,
+  PointerSensor,
+  pointerWithin,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { notification } from '@utils/notification';
 import { Coins, Lightbulb, Repeat } from 'lucide-react';
@@ -73,6 +83,7 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
     isWin,
     isComplete,
     selectLetter,
+    swapLetters,
     submitGrid,
     swap,
     swaps,
@@ -93,6 +104,31 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
     maxWidth: 72,
     minWidth: 52,
   });
+
+  // A short drag distance threshold lets regular taps fire instantly while
+  // still recognizing an intentional drag gesture.
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    const fromIndex = active.data.current?.index;
+    const toIndex = over?.data.current?.index;
+
+    if (
+      over &&
+      typeof fromIndex === 'number' &&
+      typeof toIndex === 'number' &&
+      fromIndex !== toIndex
+    ) {
+      swapLetters(fromIndex, toIndex);
+    }
+  }
 
   const totalHearts = getTotalHearts(size);
   const isSmartShuffleDisabled =
@@ -168,33 +204,30 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
         />
       </GameStatsRow>
 
-      <div className="flex flex-col items-center gap-1 text-center">
-        <Text type="secondary">Palavra-chave</Text>
-        <Title
-          level={3}
-          className="tracking-[0.35em] uppercase"
-        >
-          {keyword}
-        </Title>
-      </div>
-
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        Troque as letras até reconstruir as palavras horizontais.
-      </Text>
-
-      <Board
-        letters={letters}
-        onLetterSelection={selectLetter}
-        selection={selection}
-        swap={swap}
-        guesses={guesses}
-        size={size}
-        itemWidth={itemWidth}
-        disabled={isComplete}
+      <GameTitle
+        title={keyword}
+        description="Troque as letras até reconstruir as palavras horizontais."
+        classNames={{
+          title: 'uppercase',
+        }}
       />
+
+      <DndContext
+        sensors={sensors}
+        collisionDetection={pointerWithin}
+        onDragEnd={handleDragEnd}
+      >
+        <Board
+          letters={letters}
+          onLetterSelection={selectLetter}
+          selection={selection}
+          swap={swap}
+          guesses={guesses}
+          size={size}
+          itemWidth={itemWidth}
+          disabled={isComplete}
+        />
+      </DndContext>
 
       {guesses.length > 0 && (
         <div className="flex w-full items-start gap-3 rounded-2xl bg-surface-raised/80 p-4">
@@ -239,7 +272,8 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
                 variant="outlined"
                 size="small"
                 block
-                disabled={isSmartShuffleDisabled}
+                // disabled={isSmartShuffleDisabled}
+                disabled
                 icon={<Lightbulb aria-hidden="true" />}
               >
                 Embaralhar inteligente
@@ -287,15 +321,10 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
         ))}
       </div>
 
-      {isComplete && !showResults && (
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setShowResults(true)}
-        >
-          Ver resultado
-        </Button>
-      )}
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       {isComplete && showResults && (
         <ResultsSplash

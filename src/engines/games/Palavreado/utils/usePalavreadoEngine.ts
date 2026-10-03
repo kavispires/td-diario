@@ -106,6 +106,29 @@ export function usePalavreadoEngine(
   }
 
   /**
+   * Swaps two tiles directly, bypassing the tap-to-select flow. Used by
+   * drag-and-drop, which already knows both endpoints up front.
+   *
+   * @param firstIndex - Tile index being dragged.
+   * @param secondIndex - Tile index being dropped onto.
+   */
+  function swapLetters(firstIndex: number, secondIndex: number) {
+    if (getGameStatuses(state.status).isComplete) {
+      return;
+    }
+
+    if (
+      firstIndex === secondIndex ||
+      state.letters[firstIndex]?.locked ||
+      state.letters[secondIndex]?.locked
+    ) {
+      return;
+    }
+
+    commitSwap(firstIndex, secondIndex);
+  }
+
+  /**
    * Handles selecting a tile, deselecting it, or swapping it with a second
    * selected tile.
    *
@@ -248,7 +271,9 @@ export function usePalavreadoEngine(
         swapPenalty -= state.swaps;
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
       }
-      playSFX(isLose ? 'lose' : 'wrong');
+      playSFX(
+        isLose ? 'lose' : correctWords.length > 0 ? 'addCorrect' : 'wrong',
+      );
       vibrate(isLose ? 'lose' : 'wrong');
     }
 
@@ -301,6 +326,7 @@ export function usePalavreadoEngine(
     isLose,
     isComplete,
     selectLetter,
+    swapLetters,
     submitGrid,
     smartShuffle,
     keyword: data.keyword,

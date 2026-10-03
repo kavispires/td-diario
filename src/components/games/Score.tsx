@@ -1,4 +1,5 @@
 import { Text } from '@components/ui/Typography';
+import { cn } from '@utils/cn';
 import { pluralize } from '@utils/helpers';
 import { Coins } from 'lucide-react';
 
@@ -10,6 +11,10 @@ type ScoreProps = {
    * Player's final score for the game.
    */
   value: number;
+  /**
+   * Optional additional CSS classes to apply to the score text.
+   */
+  className?: string;
 };
 
 /**
@@ -19,11 +24,14 @@ type ScoreProps = {
  * @param props The score value to display.
  * @returns A styled, inline score label.
  */
-export function Score({ value }: ScoreProps) {
+export function Score({
+  value,
+  className,
+}: ScoreProps & { className?: string }) {
   return (
     <Text
       type="secondary"
-      className="text-center"
+      className={cn('text-center', className)}
     >
       <Coins
         className="inline-block mr-1"

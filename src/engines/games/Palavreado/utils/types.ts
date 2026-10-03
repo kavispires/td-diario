@@ -153,6 +153,11 @@ export type PalavreadoEngineState = {
    */
   selectLetter: (index: number) => void;
   /**
+   * Swaps two tiles directly, bypassing the tap-to-select flow. Used by
+   * drag-and-drop.
+   */
+  swapLetters: (firstIndex: number, secondIndex: number) => void;
+  /**
    * Evaluates the current board as an attempt.
    */
   submitGrid: () => void;

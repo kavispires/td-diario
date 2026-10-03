@@ -8,7 +8,7 @@ export const PALAVREADO_BASE_HEARTS = 4;
 /**
  * Points awarded when a whole row word becomes correct for the first time.
  */
-export const PALAVREADO_WORD_SCORE = 10;
+export const PALAVREADO_WORD_SCORE = 15;
 
 /**
  * Bonus points awarded per secret scoring word formed in a submission.

@@ -1,7 +1,9 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
-import { Surface } from '@components/ui/Surface';
+import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
-import { WORD_TONE_CLASSES } from '../utils/constants';
+import { PALAVREADO_BASE_HEARTS, WORD_TONE_CLASSES } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 
 /**
@@ -81,11 +83,7 @@ export function ResultsSplash({
       shareText={shareText}
       onClose={onClose}
     >
-      <Surface
-        className={`flex w-full max-w-xs flex-col gap-4 px-5 py-6 text-center ${
-          win ? 'bg-gold-soft' : 'bg-surface-raised/90'
-        }`}
-      >
+      <div className="flex w-full max-w-xs flex-col gap-4  text-center">
         <Text strong>
           {win
             ? 'Você reorganizou todas as palavras.'
@@ -105,14 +103,29 @@ export function ResultsSplash({
             </span>
           ))}
         </div>
+      </div>
 
-        <div className="space-y-1 text-sm text-foreground">
-          <p>Pontuação final: {score}</p>
-          <p>Trocas usadas: {swaps}</p>
-          <p>Vidas restantes: {hearts}</p>
-          <p>{usedSmartShuffle ? 'Dica usada: sim' : 'Dica usada: não'}</p>
-        </div>
-      </Surface>
+      <Hearts
+        remaining={hearts}
+        total={PALAVREADO_BASE_HEARTS}
+        emptyClassName="text-black"
+        filledClassName="text-black"
+      />
+
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          {0} de {words.length} caracteres descobertos
+        </Text>
+
+        <Divider orientation="vertical" />
+        <Score
+          value={score}
+          className="text-black"
+        />
+      </div>
     </GameResultsSplash>
   );
 }

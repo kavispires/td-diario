@@ -23,6 +23,13 @@ type HeartsProps = {
    * so empty hearts stay visible.
    */
   emptyClassName?: string;
+  /**
+   * Color class applied to filled (remaining) hearts. Defaults to the
+   * standard destructive red; pass an override (e.g. `text-white`) when
+   * rendering atop a background where red hearts would clash or be hard to
+   * see, such as a game's results splash.
+   */
+  filledClassName?: string;
 };
 
 /**
@@ -37,6 +44,7 @@ export function Hearts({
   total,
   size = 20,
   emptyClassName = 'text-border-strong',
+  filledClassName = 'text-destructive',
 }: HeartsProps) {
   return (
     <div
@@ -50,7 +58,7 @@ export function Hearts({
           <Heart
             key={index}
             size={size}
-            className={isFilled ? 'text-destructive' : emptyClassName}
+            className={isFilled ? filledClassName : emptyClassName}
             fill={isFilled ? 'currentColor' : 'none'}
             aria-hidden="true"
           />

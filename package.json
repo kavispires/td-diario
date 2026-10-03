@@ -17,6 +17,7 @@
     "clean": "rm -rf node_modules && yarn cache clean"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
     "@tanstack/react-query": "^5.102.8",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
