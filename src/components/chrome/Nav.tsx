@@ -1,6 +1,6 @@
 import { cn } from '@utils/cn';
 import { Calendar, Puzzle, User } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 /**
  * Renders the app's bottom navigation bar with links to the hub, archive,
@@ -10,6 +10,12 @@ import { NavLink } from 'react-router-dom';
  * @returns The sticky bottom navigation element.
  */
 export function ChromeNav() {
+  const { pathname } = useLocation();
+  // Only the Hub screen pins the nav to the viewport; everywhere else it
+  // stays sticky within the document's normal flow (see MainContent's
+  // comments on why the page itself must stay scrollable).
+  const isHub = pathname === '/';
+
   const navItems = [
     { to: '/', icon: Puzzle, label: 'Jogos' },
     { to: '/archive', icon: Calendar, label: 'Arquivo', disabled: true },
@@ -18,7 +24,12 @@ export function ChromeNav() {
 
   return (
     // Swapped to bg-chrome to match the TopBar, with a subtle top shadow
-    <nav className="sticky bottom-0 z-50 w-full bg-chrome text-slate-50 shadow-[0_-4px_10px_rgba(0,0,0,0.15)]">
+    <nav
+      className={cn(
+        'z-50 w-full bg-chrome text-slate-50 shadow-[0_-4px_10px_rgba(0,0,0,0.15)]',
+        isHub ? 'fixed inset-x-0 bottom-0' : 'sticky bottom-0',
+      )}
+    >
       <div className="mx-auto flex w-full max-w-md items-center justify-around px-2 pt-3 pb-2">
         {navItems.map((item) =>
           item.disabled ? (

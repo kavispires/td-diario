@@ -111,7 +111,9 @@ export function HubScreen() {
   );
 
   return (
-    <>
+    // pb-24 keeps the last row of cards clear of the fixed bottom nav
+    // (see ChromeNav, which pins itself only on this screen).
+    <div className="flex flex-col pb-24">
       <DailyStatusBoard />
 
       <Title className="p-1 text-center text-lg">Jogue</Title>
@@ -152,6 +154,6 @@ export function HubScreen() {
       >
         Logout
       </Button> */}
-    </>
+    </div>
   );
 }
