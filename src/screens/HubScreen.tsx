@@ -1,8 +1,14 @@
 import { DailyStatusBoard } from '@components/DailyStatusBoard';
 import { GameCard } from '@components/hub/GameCard';
+import { Button } from '@components/ui/Button';
+import { Popconfirm } from '@components/ui/Popconfirm';
 import { Title } from '@components/ui/Typography';
+import { gameInfos } from '@engines/index';
 import { CARD_STATE_ORDER, useGameProgress } from '@hooks/useGameProgress';
+import { notification } from '@utils/notification';
+import { resetGameLocalState } from '@utils/resetGameLocalState';
 import { orderBy } from 'lodash';
+import { RotateCcw } from 'lucide-react';
 import { LayoutGroup } from 'motion/react';
 
 /**
@@ -52,6 +58,29 @@ export function HubScreen() {
           ))}
         </div>
       </LayoutGroup>
+
+      {/* TODO: temporary dev-testing button, remove once not needed. */}
+      <div className="flex justify-center mt-4">
+        <Popconfirm
+          title="Limpar o progresso de todos os jogos?"
+          description="Remove o estado salvo localmente (progresso, jogadas, status) do dia de hoje para todos os jogos."
+          okVariant="primary"
+          onConfirm={() => {
+            for (const info of Object.values(gameInfos)) {
+              resetGameLocalState(info);
+            }
+            notification.success('Estado de todos os jogos limpo');
+          }}
+        >
+          <Button
+            variant="outlined"
+            size="small"
+            icon={<RotateCcw size={14} />}
+          >
+            Limpar progresso de todos os jogos
+          </Button>
+        </Popconfirm>
+      </div>
 
       {/* <Button
         onClick={() => signOut()}
