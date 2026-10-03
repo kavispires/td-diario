@@ -58,11 +58,18 @@ export function Divider({
   const lineStyle = dashed ? 'border-dashed' : 'border-solid';
 
   if (orientation === 'vertical') {
+    // Sized relative to the current font size (like AntD's Divider) instead
+    // of a flex-stretch height, since stretching isn't reliable unless the
+    // divider sits directly in a flex row with a definite cross size.
+    // Uses a darker, semi-transparent border (instead of `border-border`)
+    // since a vertical divider is often placed over colored backgrounds
+    // (e.g. a game's results splash), where the default border color has
+    // too little contrast to be visible.
     return (
       <div
         aria-hidden="true"
         className={cn(
-          'inline-block h-full min-h-4 w-px self-stretch border-l border-border',
+          'inline-block h-[0.9em] w-px align-middle border-l border-black/30',
           lineStyle,
           className,
         )}
