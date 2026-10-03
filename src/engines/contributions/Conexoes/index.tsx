@@ -12,7 +12,6 @@ import {
   RefreshCcw,
   Save,
 } from 'lucide-react';
-import { motion } from 'motion/react';
 import { useState } from 'react';
 import type { DailyConexoesEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
@@ -27,8 +26,6 @@ import {
   PAIR_CARD_MARGIN,
   PAIR_CARD_MAX_WIDTH,
   PAIR_CARD_MIN_WIDTH,
-  PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
-  PROGRESS_PERCENT_MULTIPLIER,
 } from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useConexoesEngine } from './utils/useConexoesEngine';
@@ -140,7 +137,10 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8">
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={GitCompareArrows}
           value={`${evaluatedCount}/${MIN_REQUIRED_PAIRS}`}
@@ -166,19 +166,6 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
           Compare pares de imagens e ajude o TD a descobrir novas relações.
         </Text>
       </div>
-
-      {!isComplete && (
-        <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-          <motion.div
-            className="h-full rounded-full bg-gold"
-            animate={{ width: `${progress * PROGRESS_PERCENT_MULTIPLIER}%` }}
-            transition={{
-              duration: PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
-              ease: 'easeOut',
-            }}
-          />
-        </div>
-      )}
 
       {isSaving && (
         <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-8 text-center">

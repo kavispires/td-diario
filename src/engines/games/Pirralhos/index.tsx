@@ -84,7 +84,10 @@ export function DailyPirralhosGame({ data }: DailyPirralhosGameProps) {
         ref={containerRef}
         className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
       >
-        <GameStatsRow>
+        <GameStatsRow
+          progress={isComplete ? 1 : progress}
+          color={gameInfo.color}
+        >
           <GameStat
             icon={Crosshair}
             value={`${guesses.length}/${PIRRALHOS_TOTAL_HEARTS}`}
@@ -115,15 +118,6 @@ export function DailyPirralhosGame({ data }: DailyPirralhosGameProps) {
             brinquedo.
           </Text>
         </div>
-
-        {!isComplete && (
-          <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-            <div
-              className="h-full rounded-full bg-gold transition-[width] duration-200 ease-out"
-              style={{ width: `${progress * 100}%` }}
-            />
-          </div>
-        )}
 
         <div className="flex flex-wrap items-center justify-center gap-2 text-center">
           <Pill>1 Culpado</Pill>

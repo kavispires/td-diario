@@ -11,6 +11,7 @@ import type { DailyPalavreadoEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { Board } from './components/Board';
 import { ResultsSplash } from './components/ResultsSplash';
+import { gameInfo } from './info';
 import {
   PALAVREADO_SECRET_WORD_SCORE,
   PALAVREADO_WORD_SCORE,
@@ -84,6 +85,7 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
     latestCorrectLettersCount,
     scoringSummary,
     letterScore,
+    progress,
   } = usePalavreadoEngine(data, initialState);
   const [itemWidth, containerRef] = useCardWidthByContainerRef(size, {
     margin: 32,
@@ -140,7 +142,10 @@ export function DailyPalavreadoGame({ data }: DailyPalavreadoGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Repeat}
           value={swaps}

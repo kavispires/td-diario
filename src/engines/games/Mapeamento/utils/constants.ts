@@ -24,11 +24,6 @@ export const FRAGMENT_WARNING_DURATION_MS = 5000;
 export const HEADER_HEARTS_SIZE = 16;
 
 /**
- * Duration, in seconds, of the progress bar width animation.
- */
-export const PROGRESS_BAR_ANIMATION_DURATION_SECONDS = 0.2;
-
-/**
  * Duration, in seconds, of the typing cursor blink animation.
  */
 export const TYPING_CURSOR_BLINK_DURATION_SECONDS = 0.8;

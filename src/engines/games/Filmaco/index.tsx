@@ -86,7 +86,10 @@ function FilmacoGameContent({ data }: FilmacoGameContentProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : solvedLetters / totalLetters}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Type}
           value={`${solvedLetters}/${totalLetters}`}

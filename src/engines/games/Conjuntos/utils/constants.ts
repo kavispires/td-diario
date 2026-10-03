@@ -61,11 +61,6 @@ export const CONJUNTOS_HAND_CARD_MIN_WIDTH = 54;
 export const CONJUNTOS_INTERSECTION_THING_WIDTH_MULTIPLIER = 0.95;
 
 /**
- * Duration, in seconds, of the progress bar width animation.
- */
-export const CONJUNTOS_PROGRESS_ANIMATION_DURATION = 0.2;
-
-/**
  * Width multiplier used to emphasize the most recently placed thing.
  */
 export const CONJUNTOS_LATEST_THING_WIDTH_MULTIPLIER = 1.15;

@@ -22,7 +22,6 @@ import { gameInfo } from './info';
 import {
   MIN_REQUIRED_ANSWERS,
   MIN_REQUIRED_QUESTIONS,
-  PROGRESS_TRANSITION_DURATION_SECONDS,
   QUESTION_TRANSITION_DURATION_SECONDS,
   QUESTION_TRANSITION_OFFSET_PX,
   VARIANT_OPTIONS,
@@ -137,7 +136,10 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8">
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isWin ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={FileText}
           value={`${answeredQuestions}/${totalQuestions}`}
@@ -164,19 +166,6 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
           treinar o banco do TD.
         </Text>
       </div>
-
-      {!isWin && (
-        <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-          <motion.div
-            className="h-full rounded-full bg-gold"
-            animate={{ width: `${progress * 100}%` }}
-            transition={{
-              duration: PROGRESS_TRANSITION_DURATION_SECONDS,
-              ease: 'easeOut',
-            }}
-          />
-        </div>
-      )}
 
       {isSaving && (
         <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-8 text-center">

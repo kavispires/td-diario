@@ -61,7 +61,10 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8">
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isWin ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={BrushCleaning}
           value={`${finishedRounds}/${totalRounds}`}
@@ -87,16 +90,6 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
           Desenhe rápido e ajude o TD com novos rabiscos.
         </Text>
       </div>
-
-      {!isWin && (
-        <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-          <motion.div
-            className="h-full rounded-full bg-gold"
-            animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-          />
-        </div>
-      )}
 
       {isIdle && (
         <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-6 text-center">

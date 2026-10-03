@@ -12,6 +12,7 @@ import type { DailyAquiOEntry } from 'types/games';
 import { Disc } from './components/Disc';
 import { PreloadItems } from './components/PreloadItems';
 import { ResultsSplash } from './components/ResultsSplash';
+import { gameInfo } from './info';
 import { HEARTS, ROUND_DURATION_SECONDS } from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useAquiOEngine } from './utils/useAquiOEngine';
@@ -82,7 +83,10 @@ export function DailyAquiOGame({ data }: DailyAquiOGameProps) {
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 px-4 pb-8 pt-2"
     >
       <div className="flex w-full flex-col items-center gap-2 text-center">
-        <GameStatsRow>
+        <GameStatsRow
+          progress={isComplete ? 1 : progress / goal}
+          color={gameInfo.color}
+        >
           <GameStat
             icon={Disc3}
             value={`${progress}/${goal}`}

@@ -11,6 +11,7 @@ import type { PlaceholderGameData } from 'types/puzzles';
 import { AlienDictionary } from './components/AlienDictionary';
 import { Board } from './components/Board';
 import { ResultsSplash } from './components/ResultsSplash';
+import { gameInfo } from './info';
 import {
   ALIENADO_CARD_WIDTH_CONFIG,
   ALIENADO_REQUEST_COUNT,
@@ -70,7 +71,10 @@ function AlienadoGameContent({ data }: { data: DailyAlienadoEntry }) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col gap-4"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : guesses.length / data.requests.length}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={SendHorizontal}
           value={`${guesses.length}/${data.requests.length}`}

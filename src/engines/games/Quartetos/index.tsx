@@ -21,7 +21,6 @@ import {
   QUARTETOS_GRID_SHAKE_KEYFRAMES,
   QUARTETOS_GROUP_SIZE,
   QUARTETOS_HEART_ICON_SIZE,
-  QUARTETOS_PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
   QUARTETOS_QUARTETS_PER_PUZZLE,
 } from './utils/constants';
 import { getInitialState, isDailyQuartetosEntry } from './utils/helpers';
@@ -128,7 +127,10 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Sparkles}
           value={`${solvedCount}/${data.sets.length}`}
@@ -158,19 +160,6 @@ function DailyQuartetosGameContent({ data }: DailyQuartetosGameContentProps) {
           e revele os temas escondidos.
         </Text>
       </div>
-
-      {!isComplete && (
-        <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-          <motion.div
-            className="h-full rounded-full bg-gold"
-            animate={{ width: `${progress * 100}%` }}
-            transition={{
-              duration: QUARTETOS_PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
-              ease: 'easeOut',
-            }}
-          />
-        </div>
-      )}
 
       <Pill className="bg-secondary text-white">
         {selection.length === 0

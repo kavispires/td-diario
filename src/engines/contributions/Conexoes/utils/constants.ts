@@ -49,16 +49,6 @@ export const PAIR_CARD_MAX_WIDTH = 160;
 export const PAIR_CARD_MIN_WIDTH = 112;
 
 /**
- * Multiplier used to convert progress fractions into CSS percentages.
- */
-export const PROGRESS_PERCENT_MULTIPLIER = 100;
-
-/**
- * Duration, in seconds, of the Conexões progress-bar width animation.
- */
-export const PROGRESS_BAR_ANIMATION_DURATION_SECONDS = 0.2;
-
-/**
  * Prefix used for the mutation key that saves related Conexões pairs.
  */
 export const CONEXOES_SAVE_MUTATION_KEY = 'conexoes-save-pairs';

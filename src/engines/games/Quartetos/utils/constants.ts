@@ -44,11 +44,6 @@ export const QUARTETOS_CARD_WIDTH_SETTINGS = {
 export const QUARTETOS_HEART_ICON_SIZE = 16;
 
 /**
- * Duration of the top progress-bar width animation in seconds.
- */
-export const QUARTETOS_PROGRESS_BAR_ANIMATION_DURATION_SECONDS = 0.2;
-
-/**
  * Horizontal offsets used by the grid shake animation after a wrong attempt.
  */
 export const QUARTETOS_GRID_SHAKE_KEYFRAMES: number[] = [0, -8, 8, -6, 6, 0];

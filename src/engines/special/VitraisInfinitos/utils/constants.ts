@@ -49,14 +49,6 @@ export const BOARD_MAX_WIDTH = 512;
 export const BOARD_MIN_WIDTH = 256;
 
 /**
- * Motion settings used to animate the puzzle completion progress bar.
- */
-export const PROGRESS_BAR_TRANSITION = {
-  duration: 0.2,
-  ease: 'easeOut',
-} as const;
-
-/**
  * Height multiplier applied to the board width to preserve the stained-glass
  * layout proportions.
  */

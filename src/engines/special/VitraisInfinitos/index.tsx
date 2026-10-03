@@ -5,12 +5,12 @@ import { Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { useTDImageCardUrl } from '@hooks/useTDImageCardUrl';
 import { Check, Coins, MoveHorizontal } from 'lucide-react';
-import { motion } from 'motion/react';
 import { useState } from 'react';
 import type { DailyVitraisInfinitosEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { PuzzleBoard } from './components/PuzzleBoard';
 import { ResultsSplash } from './components/ResultsSplash';
+import { gameInfo } from './info';
 import {
   BOARD_CONTAINER_COLUMNS,
   BOARD_CONTAINER_GAP,
@@ -18,7 +18,6 @@ import {
   BOARD_MAX_WIDTH,
   BOARD_MIN_WIDTH,
   FALLBACK_ENTRY,
-  PROGRESS_BAR_TRANSITION,
 } from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useVitraisInfinitosEngine } from './utils/useVitraisInfinitosEngine';
@@ -108,7 +107,10 @@ export function DailyVitraisInfinitosGame({
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isWin ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Check}
           value={`${solvedPieces}/${data.pieces.length}`}
@@ -135,16 +137,6 @@ export function DailyVitraisInfinitosGame({
           vitral inteiro.
         </Text>
       </div>
-
-      {!isWin && (
-        <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-          <motion.div
-            className="h-full rounded-full bg-gold"
-            animate={{ width: `${progress * 100}%` }}
-            transition={PROGRESS_BAR_TRANSITION}
-          />
-        </div>
-      )}
 
       <Text
         type="secondary"

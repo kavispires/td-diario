@@ -85,7 +85,10 @@ function ArteRuimGameContent({ data }: ArteRuimGameContentProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8">
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : revealedLetters / totalLetters}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Search}
           value={`${revealedLetters}/${totalLetters}`}

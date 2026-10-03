@@ -12,6 +12,7 @@ import type { PlaceholderGameData } from 'types/puzzles';
 import { Corridor } from './components/Corridor';
 import { Passcode } from './components/Passcode';
 import { ResultsSplash } from './components/ResultsSplash';
+import { gameInfo } from './info';
 import { DEFAULT_HEARTS, EMPTY_PORTAIS_ENTRY } from './utils/constants';
 import { getInitialState, getTotalMoves } from './utils/helpers';
 import { usePortaisEngine } from './utils/usePortaisEngine';
@@ -96,7 +97,10 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : completedCorridors / data.corridors.length}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Repeat}
           value={totalMoves}

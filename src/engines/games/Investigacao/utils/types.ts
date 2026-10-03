@@ -66,6 +66,10 @@ export type InvestigacaoEngineState = {
    */
   score: number;
   /**
+   * Case-solving progress from `0` to `1`, based on suspects released.
+   */
+  progress: number;
+  /**
    * Whether the case ended in a solved state.
    */
   isWin: boolean;

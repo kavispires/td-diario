@@ -165,6 +165,7 @@ export function useInvestigacaoEngine(
     visibleStatements,
     visibleAdditionalStatements,
     score: state.score,
+    progress: state.progress,
     isWin,
     isLose,
     isComplete,

@@ -8,6 +8,7 @@ import type { DailyVitralEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
 import { PuzzleBoard } from './components/PuzzleBoard';
 import { ResultsSplash } from './components/ResultsSplash';
+import { gameInfo } from './info';
 import {
   HEART_LOSS_INTERVAL_SECONDS,
   VITRAL_TOTAL_HEARTS,
@@ -60,6 +61,7 @@ export function DailyVitralGame({ data }: DailyVitralGameProps) {
     isWin,
     isComplete,
     score,
+    progress,
     time,
     totalTime,
     measures,
@@ -76,7 +78,10 @@ export function DailyVitralGame({ data }: DailyVitralGameProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 px-4 pb-4">
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Puzzle}
           value={`${correctPieces}/${data.pieces.length}`}
@@ -99,7 +104,19 @@ export function DailyVitralGame({ data }: DailyVitralGameProps) {
         />
       </GameStatsRow>
 
-      <GameStatsRow>
+      <GameStatsRow
+        progress={
+          isComplete
+            ? 1
+            : Math.min(
+                1,
+                totalTime /
+                  (VITRAL_TOTAL_HEARTS *
+                    (HEART_LOSS_INTERVAL_SECONDS + data.pieces.length)),
+              )
+        }
+        color={gameInfo.color}
+      >
         <div />
         <GameStat
           icon={Clock3}

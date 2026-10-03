@@ -5,7 +5,6 @@ import { Button } from '@components/ui/Button';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { Lightbulb, Repeat } from 'lucide-react';
-import { motion } from 'motion/react';
 import { useState } from 'react';
 import type { DailyMapeamentoEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
@@ -19,7 +18,6 @@ import {
   HEADER_HEARTS_SIZE,
   LOCATION_FRAGMENT_PLACEHOLDER,
   MAPEAMENTO_HEARTS,
-  PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
 } from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useMapeamentoEngine } from './utils/useMapeamentoEngine';
@@ -105,7 +103,10 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 pb-8">
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Repeat}
           value={`${guesses.length}/${MAPEAMENTO_HEARTS}`}
@@ -132,19 +133,6 @@ export function DailyMapeamentoGame({ data }: DailyMapeamentoGameProps) {
         <Title level={3}>{gameInfo.name.pt}</Title>
         <Text type="secondary">Que lugar é esse?</Text>
       </div>
-
-      {!isComplete && (
-        <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-          <motion.div
-            className="h-full rounded-full bg-gold"
-            animate={{ width: `${progress * 100}%` }}
-            transition={{
-              duration: PROGRESS_BAR_ANIMATION_DURATION_SECONDS,
-              ease: 'easeOut',
-            }}
-          />
-        </div>
-      )}
 
       <Surface className="bg-card px-5 py-5">
         <ul className="grid gap-3">

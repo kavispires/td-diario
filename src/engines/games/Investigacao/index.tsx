@@ -11,6 +11,7 @@ import { ReleaseModal } from './components/ReleaseModal';
 import { ResultsSplash } from './components/ResultsSplash';
 import { Statements } from './components/Statements';
 import { SuspectCard } from './components/SuspectCard';
+import { gameInfo } from './info';
 import {
   MAIN_STATEMENT_REVEAL_INTERVAL,
   STARTING_HEARTS,
@@ -114,6 +115,7 @@ function DailyInvestigacaoGameContent({
     isWin,
     isComplete,
     score,
+    progress,
     onNeedClue,
     onSelectSuspect,
     onDeselectSuspect,
@@ -143,7 +145,10 @@ function DailyInvestigacaoGameContent({
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={UserRoundCheck}
           value={`${released.length}/${releaseGoal}`}

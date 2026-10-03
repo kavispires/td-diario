@@ -6,7 +6,6 @@ import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Check, Coins, Star } from 'lucide-react';
-import { motion } from 'motion/react';
 import { useState } from 'react';
 import type { DailyConjuntosEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
@@ -15,6 +14,7 @@ import { InDiagramThings } from './components/InDiagramThings';
 import { PlacementReview } from './components/PlacementReview';
 import { ResultsSplash } from './components/ResultsSplash';
 import { ThingCard } from './components/ThingCard';
+import { gameInfo } from './info';
 import {
   CONJUNTOS_HAND_CARD_COLUMNS,
   CONJUNTOS_HAND_CARD_GAP,
@@ -24,7 +24,6 @@ import {
   CONJUNTOS_INTERSECTION_THING_WIDTH_MULTIPLIER,
   CONJUNTOS_MAX_DIFFICULTY_LEVEL,
   CONJUNTOS_MIN_DIFFICULTY_LEVEL,
-  CONJUNTOS_PROGRESS_ANIMATION_DURATION,
 } from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useConjuntosEngine } from './utils/useConjuntosEngine';
@@ -92,7 +91,10 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Check}
           value={`${placedThingsCount}/${totalThings}`}
@@ -147,19 +149,6 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
           certa do diagrama.
         </Text>
       </div>
-
-      {!isComplete && (
-        <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-          <motion.div
-            className="h-full rounded-full bg-gold"
-            animate={{ width: `${progress * 100}%` }}
-            transition={{
-              duration: CONJUNTOS_PROGRESS_ANIMATION_DURATION,
-              ease: 'easeOut',
-            }}
-          />
-        </div>
-      )}
 
       <Diagram
         className="w-full"

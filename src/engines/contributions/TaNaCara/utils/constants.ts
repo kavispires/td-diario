@@ -46,11 +46,6 @@ export const SCORE_PER_MARKED_ANSWER = 10;
 export const MAX_PREFERRED_SUSPECTS_PER_QUESTION = 5;
 
 /**
- * Duration used by the gameplay progress bar animation when answers change.
- */
-export const PROGRESS_TRANSITION_DURATION_SECONDS = 0.2;
-
-/**
  * Vertical distance used by the testimony card enter/exit animation.
  */
 export const QUESTION_TRANSITION_OFFSET_PX = 12;

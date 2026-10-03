@@ -6,7 +6,6 @@ import { Surface } from '@components/ui/Surface';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { ArchiveRestore, ClipboardCheck, Coins, Package2 } from 'lucide-react';
-import { motion } from 'motion/react';
 import { useState } from 'react';
 import type { DailyEstoquistaEntry } from 'types/games';
 import { FulfillmentBoard } from './components/FulfillmentBoard';
@@ -14,6 +13,7 @@ import { Orders } from './components/Orders';
 import { ResultsSplash } from './components/ResultsSplash';
 import { StockingBoard } from './components/StockingBoard';
 import { WarehouseGoodCard } from './components/WarehouseGoodCard';
+import { gameInfo } from './info';
 import {
   ESTOQUISTA_BOARD_COLUMNS,
   ESTOQUISTA_CARD_WIDTH_CONFIG,
@@ -22,7 +22,6 @@ import {
   ESTOQUISTA_HEART_ICON_SIZE,
   ESTOQUISTA_HEART_PENALTY,
   ESTOQUISTA_PHASE,
-  ESTOQUISTA_TRANSITION_DURATION,
 } from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useEstoquistaEngine } from './utils/useEstoquistaEngine';
@@ -79,7 +78,10 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isWin ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Package2}
           value={`${warehouse.filter(Boolean).length}/${data.goods.length}`}
@@ -108,19 +110,6 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
       >
         {data.title}
       </Text>
-
-      {!isWin && (
-        <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-          <motion.div
-            className="h-full rounded-full bg-gold"
-            animate={{ width: `${progress * 100}%` }}
-            transition={{
-              duration: ESTOQUISTA_TRANSITION_DURATION,
-              ease: 'easeOut',
-            }}
-          />
-        </div>
-      )}
 
       <Pill>
         {phase === ESTOQUISTA_PHASE.STOCKING

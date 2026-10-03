@@ -9,6 +9,7 @@ import type { DailyOrganikuEntry } from '../../../types/games';
 import { CompletionTracker } from './components/CompletionTracker';
 import { ResultsSplash } from './components/ResultsSplash';
 import { TableGrid } from './components/TableGrid';
+import { gameInfo } from './info';
 import { getInitialState } from './utils/helpers';
 import { useOrganikuEngine } from './utils/useOrganikuEngine';
 
@@ -45,6 +46,7 @@ export function DailyOrganikuGame({ data }: DailyOrganikuGameProps) {
     isComplete,
     tracker,
     score,
+    progress,
   } = useOrganikuEngine(data, initialState);
   const [itemWidth, containerRef] = useCardWidthByContainerRef(5, {
     margin: 48,
@@ -61,7 +63,10 @@ export function DailyOrganikuGame({ data }: DailyOrganikuGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Repeat}
           value={`${flips}/${swapLimit}`}

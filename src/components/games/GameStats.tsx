@@ -1,6 +1,13 @@
 import { Tooltip } from '@components/ui/Tooltip';
 import { Text } from '@components/ui/Typography';
+import { motion } from 'motion/react';
 import type { ComponentType, ReactNode, SVGProps } from 'react';
+
+/**
+ * Duration, in seconds, of the {@link GameStatsRow} progress bar's fill
+ * animation.
+ */
+const PROGRESS_BAR_TRANSITION_DURATION_SECONDS = 0.3;
 
 /**
  * Props accepted by the {@link GameStat} component.
@@ -75,20 +82,44 @@ type GameStatsRowProps = {
    * indicator), laid out with equal width.
    */
   children: ReactNode;
+  /**
+   * Completion fraction from `0` to `1`, rendered as a thin animated bar
+   * along the row's bottom edge in place of a plain border.
+   */
+  progress: number;
+  /**
+   * Fill color for the progress bar, typically the game's own theme color
+   * (`gameInfo.color`).
+   */
+  color: string;
 };
 
 /**
  * Lays out a single-line, three-column row of game stats (e.g. flips,
  * hearts, and score) as a highlighted bar at the top of a game's content,
- * above its title.
+ * above its title. Renders a thin progress bar along its bottom edge
+ * instead of a separate progress indicator elsewhere on the page.
  *
- * @param props The row's three columns.
+ * @param props The row's three columns, a completion fraction, and a
+ * progress bar fill color.
  * @returns The rendered stats row.
  */
-export function GameStatsRow({ children }: GameStatsRowProps) {
+export function GameStatsRow({ children, progress, color }: GameStatsRowProps) {
   return (
-    <div className="grid w-full grid-cols-3 items-center rounded-2xl bg-border/60 px-4 py-2 shadow-sm">
+    <div className="relative grid w-full grid-cols-3 items-center overflow-hidden rounded-2xl bg-border/60 px-4 py-2 shadow-sm">
       {children}
+
+      <div className="absolute inset-x-0 bottom-0 h-1 bg-black/10">
+        <motion.div
+          className="h-full"
+          style={{ backgroundColor: color }}
+          animate={{ width: `${progress * 100}%` }}
+          transition={{
+            duration: PROGRESS_BAR_TRANSITION_DURATION_SECONDS,
+            ease: 'easeOut',
+          }}
+        />
+      </div>
     </div>
   );
 }

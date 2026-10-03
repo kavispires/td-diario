@@ -9,6 +9,7 @@ import type { DailyPanicoEntry } from 'types/games';
 import { Panel } from './components/Panel';
 import { ResultsSplash } from './components/ResultsSplash';
 import { SoundSfxAlert } from './components/SoundSfxAlert';
+import { gameInfo } from './info';
 import { PANICO_TOTAL_HEARTS } from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { usePanicoEngine } from './utils/usePanicoEngine';
@@ -60,7 +61,10 @@ export function DailyPanicoGame({ data }: DailyPanicoGameProps) {
       ref={containerRef}
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4"
     >
-      <GameStatsRow>
+      <GameStatsRow
+        progress={isComplete ? 1 : progress}
+        color={gameInfo.color}
+      >
         <GameStat
           icon={Gauge}
           value={`${Math.max(farthestButtonIndex, 0)}/${totalButtons}`}
