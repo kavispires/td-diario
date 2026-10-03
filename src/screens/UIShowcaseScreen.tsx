@@ -11,6 +11,7 @@ import { Modal } from '@components/ui/Modal';
 import { Pill } from '@components/ui/Pill';
 import { Popconfirm } from '@components/ui/Popconfirm';
 import { Popover } from '@components/ui/Popover';
+import { Select } from '@components/ui/Select';
 import { Switch } from '@components/ui/Switch';
 import { TextInput } from '@components/ui/TextInput';
 import { Tooltip } from '@components/ui/Tooltip';
@@ -33,6 +34,8 @@ export function UIShowcaseScreen() {
   const [name, setName] = useState('');
   const [warningVisible, setWarningVisible] = useState(true);
   const [switchOn, setSwitchOn] = useState(true);
+  const gameIds = Object.keys(gameInfos);
+  const [selectedGameId, setSelectedGameId] = useState(gameIds[0]);
 
   return (
     <div className="flex flex-col gap-6 p-4">
@@ -448,28 +451,55 @@ export function UIShowcaseScreen() {
       <section className="flex flex-col gap-3">
         <Text strong>Dev Tools</Text>
         <Flex
-          wrap
+          align="center"
           gap="small"
         >
-          {Object.entries(gameInfos).map(([id, info]) => (
-            <Popconfirm
-              key={id}
-              title={`Limpar o progresso de ${info.name.pt}?`}
-              description="Remove o estado salvo localmente (progresso, jogadas, status) do dia de hoje."
-              okVariant="primary"
-              onConfirm={() => {
-                resetGameLocalState(info);
-                notification.success(`Estado de ${info.name.pt} limpo`);
-              }}
+          <Select
+            className="max-w-48"
+            value={selectedGameId}
+            onChange={setSelectedGameId}
+            options={gameIds.map((id) => ({
+              value: id,
+              label: gameInfos[id as keyof typeof gameInfos].name.pt,
+            }))}
+          />
+
+          <Popconfirm
+            title={`Limpar o progresso de ${gameInfos[selectedGameId as keyof typeof gameInfos].name.pt}?`}
+            description="Remove o estado salvo localmente (progresso, jogadas, status) do dia de hoje."
+            okVariant="primary"
+            onConfirm={() => {
+              const info = gameInfos[selectedGameId as keyof typeof gameInfos];
+              resetGameLocalState(info);
+              notification.success(`Estado de ${info.name.pt} limpo`);
+            }}
+          >
+            <Button
+              variant="outlined"
+              size="small"
             >
-              <Button
-                variant="outlined"
-                size="small"
-              >
-                Limpar {info.name.pt}
-              </Button>
-            </Popconfirm>
-          ))}
+              Limpar
+            </Button>
+          </Popconfirm>
+
+          <Popconfirm
+            title="Limpar o progresso de todos os jogos?"
+            description="Remove o estado salvo localmente (progresso, jogadas, status) do dia de hoje para todos os jogos."
+            okVariant="primary"
+            onConfirm={() => {
+              for (const info of Object.values(gameInfos)) {
+                resetGameLocalState(info);
+              }
+              notification.success('Estado de todos os jogos limpo');
+            }}
+          >
+            <Button
+              variant="outlined"
+              size="small"
+            >
+              Limpar Tudo
+            </Button>
+          </Popconfirm>
         </Flex>
       </section>
     </div>
