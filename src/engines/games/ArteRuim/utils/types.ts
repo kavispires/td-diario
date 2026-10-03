@@ -79,6 +79,11 @@ export type ArteRuimEngineState = {
    */
   progress: number;
   /**
+   * Whether today's answer contains digits, so the keyboard and prompt
+   * should also treat numbers as guessable characters.
+   */
+  allowNumbers: boolean;
+  /**
    * Whether the fullscreen results splash is currently visible.
    */
   showResults: boolean;

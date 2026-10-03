@@ -9,6 +9,18 @@ import { ARTE_RUIM_HEARTS } from './constants';
 import type { GameState } from './types';
 
 /**
+ * Determines whether today's answer contains any digits, used to decide
+ * whether Arte Ruim's keyboard and prompt should treat numbers as
+ * guessable characters too.
+ *
+ * @param text - Today's Arte Ruim answer text.
+ * @returns Whether `text` contains at least one digit.
+ */
+export function textHasNumbers(text: string): boolean {
+  return /\d/.test(text);
+}
+
+/**
  * Builds the default `GameState` for a fresh Arte Ruim day.
  *
  * @param data - Today's Arte Ruim challenge payload.
@@ -19,7 +31,7 @@ function getDefaultState(data: DailyArteRuimEntry): GameState {
     id: data.id,
     status: GAME_LIFECYCLE_STATUS.IDLE,
     hearts: ARTE_RUIM_HEARTS,
-    solution: getLettersInWord(data.text),
+    solution: getLettersInWord(data.text, textHasNumbers(data.text)),
     guesses: {},
     progress: 0,
     score: 0,
@@ -35,7 +47,9 @@ function getDefaultState(data: DailyArteRuimEntry): GameState {
  * @returns Whether the restored state is safe to reuse.
  */
 function isValidState(state: GameState, data: DailyArteRuimEntry): boolean {
-  const expectedLetters = Object.keys(getLettersInWord(data.text)).sort();
+  const expectedLetters = Object.keys(
+    getLettersInWord(data.text, textHasNumbers(data.text)),
+  ).sort();
   const currentLetters = Object.keys(state.solution).sort();
 
   return (

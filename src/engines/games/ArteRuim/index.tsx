@@ -40,6 +40,7 @@ export function DailyArteRuimGame({ data }: DailyArteRuimGameProps) {
     revealedLetters,
     score,
     progress,
+    allowNumbers,
     showResults,
     setShowResults,
     isWin,
@@ -85,6 +86,7 @@ export function DailyArteRuimGame({ data }: DailyArteRuimGameProps) {
       <LetterPrompt
         text={data.text}
         solution={solution}
+        allowNumbers={allowNumbers}
       />
 
       <SeeResultsButton
@@ -97,6 +99,7 @@ export function DailyArteRuimGame({ data }: DailyArteRuimGameProps) {
         onKeyPress={guessLetter}
         disabled={isComplete}
         color={gameInfo.color}
+        withNumbers={allowNumbers}
         withScoreDots
         getAriaLabel={(key, points) =>
           `Escolher a letra ${key.toUpperCase()}, vale ${points} ponto${points > 1 ? 's' : ''}`

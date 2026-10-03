@@ -21,6 +21,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { DailyArteRuimEntry } from 'types/games';
 import { gameInfo } from '../info';
 import { ARTE_RUIM_HEARTS, WIN_BONUS_SCORE } from './constants';
+import { textHasNumbers } from './helpers';
 import type { ArteRuimEngineState, GameState, LetterGuess } from './types';
 
 /**
@@ -39,6 +40,7 @@ export function useArteRuimEngine(
 ): ArteRuimEngineState {
   const [state, setState] = useState<GameState>(initialState);
   const [showResults, setShowResults] = useState(false);
+  const allowNumbers = useMemo(() => textHasNumbers(data.text), [data.text]);
 
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
     key: gameInfo.key,
@@ -56,7 +58,7 @@ export function useArteRuimEngine(
       const letter = normalizeCharacter(rawLetter);
 
       if (
-        !isGuessableCharacter(letter) ||
+        !isGuessableCharacter(letter, allowNumbers) ||
         state.guesses[letter] ||
         state.status === GAME_LIFECYCLE_STATUS.WIN ||
         state.status === GAME_LIFECYCLE_STATUS.LOSE
@@ -81,10 +83,14 @@ export function useArteRuimEngine(
         state: isCorrect ? 'correct' : 'incorrect',
         disabled: true,
       };
-      const totalLetterOccurrences = countTotalLetterOccurrences(data.text);
+      const totalLetterOccurrences = countTotalLetterOccurrences(
+        data.text,
+        allowNumbers,
+      );
       const solvedLetterOccurrences = countSolvedLetterOccurrences(
         data.text,
         nextSolution,
+        allowNumbers,
       );
 
       if (isCorrect) {
@@ -119,7 +125,14 @@ export function useArteRuimEngine(
             : previousState.progress,
       }));
     },
-    [data.text, state.guesses, state.hearts, state.solution, state.status],
+    [
+      allowNumbers,
+      data.text,
+      state.guesses,
+      state.hearts,
+      state.solution,
+      state.status,
+    ],
   );
 
   const { isWin, isLose, isComplete } = getGameStatuses(state.status);
@@ -144,6 +157,7 @@ export function useArteRuimEngine(
     wrongGuesses: ARTE_RUIM_HEARTS - state.hearts,
     score: state.score,
     progress: state.progress,
+    allowNumbers,
     showResults,
     setShowResults,
     isWin,
