@@ -1,5 +1,5 @@
 import { Paragraph, Text } from '@components/ui/Typography';
-import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
+import { useGameProgress } from '@hooks/useGameProgress';
 import { Clock } from 'lucide-react';
 import flameIcon from '../assets/svg/flame.svg';
 import { useDayCountdown } from '../hooks/useDayCountdown';
@@ -12,15 +12,12 @@ import { Pill } from './ui/Pill';
  * @returns A styled status board section.
  */
 export function DailyStatusBoard() {
-  const { data } = useGetDailyChallenges();
-  const totalChallenges = Object.keys(data?.challenges ?? {}).length;
-  const { streak, completedCount } = {
-    streak: 0,
-    completedCount: 0,
-  };
+  const { completedCount, totalCount } = useGameProgress();
+  // TODO: wire up a real daily-streak once backend streak tracking exists.
+  const streak: number = 0;
 
-  const progressPercent = totalChallenges
-    ? Math.round((completedCount / totalChallenges) * 100)
+  const progressPercent = totalCount
+    ? Math.round((completedCount / totalCount) * 100)
     : 0;
 
   return (
@@ -53,7 +50,7 @@ export function DailyStatusBoard() {
           >
             Progresso:
           </Text>{' '}
-          {completedCount} de {totalChallenges} jogos concluídos
+          {completedCount} de {totalCount} jogos concluídos
         </Paragraph>
 
         {/*
