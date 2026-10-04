@@ -35,6 +35,12 @@ type ThingCardProps = {
    * Whether the card should visually emphasize the label.
    */
   emphasize?: boolean;
+  /**
+   * Extra multiplier applied on top of the label's base font size, so
+   * contexts that render bigger sprites (e.g. inside the diagram) can keep
+   * the label proportionally bigger too. Defaults to `1` (no change).
+   */
+  textScale?: number;
 };
 
 /**
@@ -51,11 +57,14 @@ export function ThingCard({
   className,
   minimize = false,
   emphasize = false,
+  textScale = 1,
 }: ThingCardProps) {
   const boundedWidth = Math.max(
     Math.min(width, CONJUNTOS_THING_CARD_MAX_WIDTH),
     CONJUNTOS_THING_CARD_MIN_WIDTH,
   );
+  // Tailwind's `text-sm`/`text-base` rem sizes, scaled by `textScale`.
+  const baseFontSizeRem = emphasize ? 1 : 0.875;
 
   return (
     <div
@@ -71,10 +80,8 @@ export function ThingCard({
       )}
 
       <span
-        className={cn(
-          'text-center font-semibold text-foreground',
-          emphasize ? 'text-base' : 'text-sm',
-        )}
+        className="text-center font-semibold text-foreground"
+        style={{ fontSize: `${baseFontSizeRem * textScale}rem` }}
       >
         {name}
       </span>

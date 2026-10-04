@@ -1,5 +1,6 @@
 import type { DailyConjuntosThing } from 'types/games';
 import {
+  CONJUNTOS_DIAGRAM_THING_WIDTH_MULTIPLIER,
   CONJUNTOS_LATEST_THING_WIDTH_MULTIPLIER,
   CONJUNTOS_MINIMIZED_THINGS_THRESHOLD,
   CONJUNTOS_PREVIOUS_THING_WIDTH_MULTIPLIER,
@@ -49,6 +50,7 @@ export function InDiagramThings({ things, width }: InDiagramThingsProps) {
               !isLatestThing
             }
             emphasize={isLatestThing}
+            textScale={CONJUNTOS_DIAGRAM_THING_WIDTH_MULTIPLIER}
             className={isLatestThing ? 'max-w-full' : 'max-w-[72px]'}
           />
         );

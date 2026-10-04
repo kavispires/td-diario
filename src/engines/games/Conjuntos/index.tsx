@@ -1,21 +1,31 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
-import { Button } from '@components/ui/Button';
-import { Pill } from '@components/ui/Pill';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Surface } from '@components/ui/Surface';
-import { Text, Title } from '@components/ui/Typography';
+import { Tooltip } from '@components/ui/Tooltip';
+import { Text } from '@components/ui/Typography';
+import {
+  DndContext,
+  type DragEndEvent,
+  PointerSensor,
+  pointerWithin,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Check, Coins, Star } from 'lucide-react';
 import { useState } from 'react';
-import type { DailyConjuntosEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
+import type { DailyConjuntosEntry, DailyConjuntosThing } from 'types/games';
 import { Diagram } from './components/Diagram';
+import { GrammarRulesModal } from './components/GrammarRulesModal';
+import { HandThing } from './components/HandThing';
 import { InDiagramThings } from './components/InDiagramThings';
 import { PlacementReview } from './components/PlacementReview';
 import { ResultsSplash } from './components/ResultsSplash';
-import { ThingCard } from './components/ThingCard';
 import { gameInfo } from './info';
 import {
+  CONJUNTOS_DIAGRAM_THING_WIDTH_MULTIPLIER,
   CONJUNTOS_HAND_CARD_COLUMNS,
   CONJUNTOS_HAND_CARD_GAP,
   CONJUNTOS_HAND_CARD_MARGIN,
@@ -26,6 +36,7 @@ import {
   CONJUNTOS_MIN_DIFFICULTY_LEVEL,
 } from './utils/constants';
 import { getInitialState } from './utils/helpers';
+import type { DiagramArea } from './utils/types';
 import { useConjuntosEngine } from './utils/useConjuntosEngine';
 
 /**
@@ -35,7 +46,7 @@ type DailyConjuntosGameProps = {
   /**
    * Today's Conjuntos payload, as resolved by `GameScreen`.
    */
-  data: PlaceholderGameData;
+  data: DailyConjuntosEntry;
 };
 
 /**
@@ -47,8 +58,7 @@ type DailyConjuntosGameProps = {
  * @returns The rendered Conjuntos game.
  */
 export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
-  const conjuntosData = data as DailyConjuntosEntry;
-  const [initialState] = useState(() => getInitialState(conjuntosData));
+  const [initialState] = useState(() => getInitialState(data));
   const {
     hearts,
     maxHearts,
@@ -58,10 +68,8 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
     intersectingThings,
     guesses,
     placedThingsCount,
-    totalThings,
     progress,
     score,
-    isWeekend,
     activeThing,
     activeArea,
     showResults,
@@ -70,9 +78,10 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
     isComplete,
     onSelectThing,
     onSelectArea,
+    onDropThing,
     onConfirmPlacement,
     onCancelPlacement,
-  } = useConjuntosEngine(conjuntosData, initialState);
+  } = useConjuntosEngine(data, initialState);
   const [thingWidth, containerRef] = useCardWidthByContainerRef(
     CONJUNTOS_HAND_CARD_COLUMNS,
     {
@@ -83,8 +92,29 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
     },
   );
   const difficultyStars = Array.from({
-    length: Math.max(conjuntosData.level, CONJUNTOS_MIN_DIFFICULTY_LEVEL),
+    length: Math.max(data.level, CONJUNTOS_MIN_DIFFICULTY_LEVEL),
   });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
+
+  /**
+   * Resolves a drag-and-drop gesture into an `onDropThing` call once a hand
+   * thing is released over one of the diagram's droppable areas.
+   *
+   * @param event - The dnd-kit drag end event.
+   */
+  function handleDragEnd(event: DragEndEvent) {
+    const thing = event.active.data.current?.thing as
+      | DailyConjuntosThing
+      | undefined;
+    const area = event.over?.data.current?.area as DiagramArea | undefined;
+
+    if (thing && area !== undefined) {
+      onDropThing(thing, area);
+    }
+  }
 
   return (
     <div
@@ -97,7 +127,7 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
       >
         <GameStat
           icon={Check}
-          value={`${placedThingsCount}/${totalThings}`}
+          value={`${placedThingsCount}/${maxHearts}`}
           label="Coisas colocadas"
         />
 
@@ -117,150 +147,113 @@ export function DailyConjuntosGame({ data }: DailyConjuntosGameProps) {
         />
       </GameStatsRow>
 
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Pill>Desafio #{conjuntosData.number}</Pill>
-
-        <Title
-          level={3}
-          className="uppercase"
-        >
-          {conjuntosData.title}
-        </Title>
-
-        <div
-          className="flex items-center gap-1"
-          role="img"
-          aria-label={`Dificuldade ${conjuntosData.level} de ${CONJUNTOS_MAX_DIFFICULTY_LEVEL}`}
-        >
-          {difficultyStars.map((_, index) => (
-            <Star
-              key={index}
-              className="h-4 w-4 fill-gold text-gold"
-              aria-hidden="true"
-            />
-          ))}
-        </div>
-
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          Descubra as duas regras escondidas e encaixe cada coisa na região
-          certa do diagrama.
-        </Text>
-      </div>
-
-      <Diagram
-        className="w-full"
-        activeArea={activeArea}
-        onSelectArea={onSelectArea}
-        disabled={!activeThing || isComplete}
-        leftCircleChildren={
-          <InDiagramThings
-            things={rule1Things}
-            width={thingWidth}
-          />
-        }
-        rightCircleChildren={
-          <InDiagramThings
-            things={rule2Things}
-            width={thingWidth}
-          />
-        }
-        intersectionChildren={
-          <InDiagramThings
-            things={intersectingThings}
-            width={thingWidth * CONJUNTOS_INTERSECTION_THING_WIDTH_MULTIPLIER}
-          />
-        }
+      <GameTitle
+        title={data.title}
+        description="Descubra as duas regras escondidas e encaixe cada coisa na região
+          certa do diagrama."
       />
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        {isComplete
-          ? 'O diagrama de hoje já está resolvido. Abra o resultado para rever as regras.'
-          : 'Escolha uma coisa da sua mão e depois toque na área onde ela deve ficar.'}
-      </Text>
-
-      {activeThing && activeArea !== null && !isComplete && (
-        <PlacementReview
-          activeThing={activeThing}
-          activeArea={activeArea}
-          rule1Things={rule1Things}
-          rule2Things={rule2Things}
-          intersectingThings={intersectingThings}
-          onCancel={onCancelPlacement}
-          onConfirm={onConfirmPlacement}
-          thingWidth={thingWidth}
-        />
-      )}
-
-      <div className="flex w-full flex-wrap justify-center gap-3">
-        {hand.map((thing) => {
-          const isActive = activeThing?.id === thing.id;
-
-          return (
-            <button
-              key={thing.id}
-              type="button"
-              className={`rounded-3xl border-2 px-3 py-3 transition ${
-                isActive
-                  ? 'border-secondary bg-secondary-soft'
-                  : 'border-transparent bg-card hover:border-border-strong'
-              } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2`}
-              onClick={() => onSelectThing(thing)}
-              disabled={isComplete}
-              aria-pressed={isActive}
-              aria-label={`Selecionar ${thing.name}`}
-            >
-              <ThingCard
-                itemId={thing.id}
-                name={thing.name}
-                width={thingWidth}
+      <div className="flex flex-col items-center gap-2 text-center">
+        <Tooltip title="Dificuldade do jogo">
+          <div
+            className="flex items-center gap-1"
+            role="img"
+            aria-label={`Dificuldade ${data.level} de ${CONJUNTOS_MAX_DIFFICULTY_LEVEL}`}
+          >
+            {difficultyStars.map((_, index) => (
+              <Star
+                key={index}
+                className="h-4 w-4 fill-gold text-gold"
+                aria-hidden="true"
               />
-            </button>
-          );
-        })}
+            ))}
+          </div>
+        </Tooltip>
       </div>
 
-      <Surface className="w-full bg-card px-5 py-5 text-center">
-        <Text
-          strong
-          className="block"
-        >
-          Dica de leitura
-        </Text>
-        <Text
-          type="secondary"
-          className="mt-2 block"
-        >
-          O título aponta a família das regras gramaticais escondidas. Quanto
-          mais estrelas, mais traiçoeiras ficam as pistas.
-          {isWeekend ? ' Hoje o desafio usa a versão de fim de semana.' : ''}
-        </Text>
-      </Surface>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={pointerWithin}
+        onDragEnd={handleDragEnd}
+      >
+        <Diagram
+          className="w-full"
+          activeArea={activeArea}
+          onSelectArea={onSelectArea}
+          disabled={isComplete}
+          leftCircleChildren={
+            <InDiagramThings
+              things={rule1Things}
+              width={thingWidth * CONJUNTOS_DIAGRAM_THING_WIDTH_MULTIPLIER}
+            />
+          }
+          rightCircleChildren={
+            <InDiagramThings
+              things={rule2Things}
+              width={thingWidth * CONJUNTOS_DIAGRAM_THING_WIDTH_MULTIPLIER}
+            />
+          }
+          intersectionChildren={
+            <InDiagramThings
+              things={intersectingThings}
+              width={
+                thingWidth *
+                CONJUNTOS_DIAGRAM_THING_WIDTH_MULTIPLIER *
+                CONJUNTOS_INTERSECTION_THING_WIDTH_MULTIPLIER
+              }
+            />
+          }
+        />
 
-      {isComplete && !showResults && (
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setShowResults(true)}
-        >
-          Ver resultado
-        </Button>
-      )}
+        <Surface className="w-full bg-surface px-4 py-4 text-center">
+          <Text className="text-center block mb-2">
+            Selecione uma coisa e coloque na área correta:
+          </Text>
+
+          {activeThing && activeArea !== null && !isComplete && (
+            <PlacementReview
+              activeThing={activeThing}
+              activeArea={activeArea}
+              rule1Things={rule1Things}
+              rule2Things={rule2Things}
+              intersectingThings={intersectingThings}
+              onCancel={onCancelPlacement}
+              onConfirm={onConfirmPlacement}
+              thingWidth={thingWidth}
+            />
+          )}
+
+          <div className="flex w-full flex-wrap justify-center gap-3">
+            {hand.map((thing) => (
+              <HandThing
+                key={thing.id}
+                thing={thing}
+                isActive={activeThing?.id === thing.id}
+                width={thingWidth}
+                onSelect={() => onSelectThing(thing)}
+                disabled={isComplete}
+              />
+            ))}
+          </div>
+        </Surface>
+      </DndContext>
+
+      <GrammarRulesModal />
+
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       {showResults && (
         <ResultsSplash
-          data={conjuntosData}
+          data={data}
           win={isWin}
           hearts={hearts}
           maxHearts={maxHearts}
           score={score}
           guesses={guesses}
-          challengeNumber={conjuntosData.number}
+          challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />
       )}

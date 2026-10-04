@@ -61,6 +61,13 @@ export const CONJUNTOS_HAND_CARD_MIN_WIDTH = 54;
 export const CONJUNTOS_INTERSECTION_THING_WIDTH_MULTIPLIER = 0.95;
 
 /**
+ * Width multiplier applied to things rendered inside the diagram circles
+ * (and, combined with {@link CONJUNTOS_INTERSECTION_THING_WIDTH_MULTIPLIER},
+ * the intersection) so they read larger than the same-size hand cards.
+ */
+export const CONJUNTOS_DIAGRAM_THING_WIDTH_MULTIPLIER = 1.15;
+
+/**
  * Width multiplier used to emphasize the most recently placed thing.
  */
 export const CONJUNTOS_LATEST_THING_WIDTH_MULTIPLIER = 1.15;
@@ -74,11 +81,6 @@ export const CONJUNTOS_PREVIOUS_THING_WIDTH_MULTIPLIER = 0.8;
  * Number of placed things after which older ones collapse to compact cards.
  */
 export const CONJUNTOS_MINIMIZED_THINGS_THRESHOLD = 3;
-
-/**
- * Width multiplier used for the placement-review preview list.
- */
-export const CONJUNTOS_REVIEW_AREA_THING_WIDTH_MULTIPLIER = 0.7;
 
 /**
  * Width, in pixels, of the example cards shown in the results splash.
@@ -143,9 +145,21 @@ export const CONJUNTOS_VOWELS = 'aeiou';
  * Human-readable label shown for each selectable diagram area.
  */
 export const CONJUNTOS_AREA_LABELS: Record<DiagramArea, string> = {
-  [CONJUNTOS_INTERSECTION_AREA]: 'interseção',
-  [CONJUNTOS_RULE1_AREA]: 'círculo amarelo',
-  [CONJUNTOS_RULE2_AREA]: 'círculo vermelho',
+  [CONJUNTOS_INTERSECTION_AREA]: 'na interseção',
+  [CONJUNTOS_RULE1_AREA]: 'no círculo amarelo',
+  [CONJUNTOS_RULE2_AREA]: 'no círculo vermelho',
+};
+
+/**
+ * Background classes tinting each area's content preview (e.g. in the
+ * placement confirmation modal) to match that area's circle color in the
+ * diagram; the intersection blends both circle colors into a gradient.
+ */
+export const CONJUNTOS_AREA_BACKGROUND_CLASSES: Record<DiagramArea, string> = {
+  [CONJUNTOS_INTERSECTION_AREA]:
+    'bg-gradient-to-r from-[#ffd23f]/50 to-[#f15a24]/50',
+  [CONJUNTOS_RULE1_AREA]: 'bg-[#ffd23f]/65',
+  [CONJUNTOS_RULE2_AREA]: 'bg-[#f15a24]/65',
 };
 
 /**

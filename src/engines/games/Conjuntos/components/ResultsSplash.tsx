@@ -1,13 +1,14 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
-import { Surface } from '@components/ui/Surface';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
-import { useMemo } from 'react';
 import type { DailyConjuntosEntry } from 'types/games';
 import {
-  CONJUNTOS_INTERSECTION_AREA,
+  CONJUNTOS_AREA_BACKGROUND_CLASSES,
   CONJUNTOS_RESULTS_RULE_THING_WIDTH,
   CONJUNTOS_RULE1_AREA,
+  CONJUNTOS_RULE2_AREA,
 } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 import type { Guess } from '../utils/types';
@@ -69,21 +70,6 @@ export function ResultsSplash({
   onClose,
   challengeNumber,
 }: ResultsSplashProps) {
-  const thingNamesById = useMemo(
-    () =>
-      Object.fromEntries(
-        [
-          data.rule1.thing,
-          data.rule2.thing,
-          data.intersectingThing,
-          ...data.things,
-        ].map((thing) => [thing.id, thing.name] as const),
-      ),
-    [data],
-  );
-  const correctGuesses = guesses.filter(
-    (guess) => guess.result !== false,
-  ).length;
   const shareText = buildShareText({
     challengeNumber,
     hearts,
@@ -100,10 +86,50 @@ export function ResultsSplash({
     >
       <Text
         strong
-        className="text-center uppercase tracking-wide"
+        className="text-center text-lg"
       >
         {data.title}
       </Text>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div
+          className={`grid gap-0 rounded-3xl px-4 py-4 ${CONJUNTOS_AREA_BACKGROUND_CLASSES[CONJUNTOS_RULE1_AREA]}`}
+        >
+          <Text
+            strong
+            className="text-center block"
+          >
+            Círculo amarelo
+          </Text>
+          <Text className="text-center block italic">{data.rule1.text}</Text>
+          <div>
+            <ThingCard
+              itemId={data.rule1.thing.id}
+              name={data.rule1.thing.name}
+              width={CONJUNTOS_RESULTS_RULE_THING_WIDTH}
+            />
+          </div>
+        </div>
+
+        <div
+          className={`grid gap-0 rounded-3xl px-4 py-4 ${CONJUNTOS_AREA_BACKGROUND_CLASSES[CONJUNTOS_RULE2_AREA]}`}
+        >
+          <Text
+            strong
+            className="text-center block"
+          >
+            Círculo vermelho
+          </Text>
+          <Text className="text-center block italic">{data.rule2.text}</Text>
+          <div className="mt-3">
+            <ThingCard
+              itemId={data.rule2.thing.id}
+              name={data.rule2.thing.name}
+              width={CONJUNTOS_RESULTS_RULE_THING_WIDTH}
+            />
+          </div>
+        </div>
+      </div>
 
       <Hearts
         remaining={hearts}
@@ -111,91 +137,17 @@ export function ResultsSplash({
         emptyClassName="text-black"
       />
 
-      <Surface
-        className={`grid w-full gap-3 px-4 py-4 ${win ? 'bg-gold-soft' : 'bg-white/75'}`}
-      >
-        <div className="grid grid-cols-3 gap-3 text-center">
-          <div className="rounded-2xl bg-white/60 px-3 py-3">
-            <Text strong>{correctGuesses}</Text>
-            <br />
-            <Text
-              type="secondary"
-              className="text-sm"
-            >
-              acertos
-            </Text>
-          </div>
-          <div className="rounded-2xl bg-white/60 px-3 py-3">
-            <Text strong>{guesses.length}</Text>
-            <br />
-            <Text
-              type="secondary"
-              className="text-sm"
-            >
-              tentativas
-            </Text>
-          </div>
-          <div className="rounded-2xl bg-white/60 px-3 py-3">
-            <Text strong>{score}</Text>
-            <br />
-            <Text
-              type="secondary"
-              className="text-sm"
-            >
-              pontos
-            </Text>
-          </div>
-        </div>
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center"
+        >
+          {guesses.length} tentativas
+        </Text>
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-3xl bg-[#fbb03b]/25 px-4 py-4">
-            <Text strong>Círculo amarelo</Text>
-            <Text className="mt-1 block">{data.rule1.text}</Text>
-            <div className="mt-3">
-              <ThingCard
-                itemId={data.rule1.thing.id}
-                name={data.rule1.thing.name}
-                width={CONJUNTOS_RESULTS_RULE_THING_WIDTH}
-              />
-            </div>
-          </div>
-
-          <div className="rounded-3xl bg-[#f15a24]/20 px-4 py-4">
-            <Text strong>Círculo vermelho</Text>
-            <Text className="mt-1 block">{data.rule2.text}</Text>
-            <div className="mt-3">
-              <ThingCard
-                itemId={data.rule2.thing.id}
-                name={data.rule2.thing.name}
-                width={CONJUNTOS_RESULTS_RULE_THING_WIDTH}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-3xl bg-white/60 px-4 py-4">
-          <Text strong>Resumo das jogadas</Text>
-
-          <div className="mt-3 flex flex-wrap justify-center gap-2">
-            {guesses.map((guess, index) => (
-              <span
-                key={`${guess.thingId}-${index}`}
-                className={`rounded-full px-3 py-1.5 text-sm font-semibold ${
-                  guess.result === false
-                    ? 'bg-destructive/15 text-destructive'
-                    : guess.result === CONJUNTOS_INTERSECTION_AREA
-                      ? 'bg-orange-200 text-orange-900'
-                      : guess.result === CONJUNTOS_RULE1_AREA
-                        ? 'bg-[#fbb03b]/35 text-orange-950'
-                        : 'bg-[#f15a24]/25 text-orange-950'
-                }`}
-              >
-                {thingNamesById[guess.thingId] ?? `Jogada ${index + 1}`}
-              </span>
-            ))}
-          </div>
-        </div>
-      </Surface>
+        <Divider orientation="vertical" />
+        <Score value={score} />
+      </div>
     </GameResultsSplash>
   );
 }

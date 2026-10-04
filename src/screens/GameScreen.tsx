@@ -32,7 +32,9 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   conjuntos: lazy(() =>
     import('@engines/games/Conjuntos').then(({ DailyConjuntosGame }) => ({
-      default: DailyConjuntosGame,
+      default: DailyConjuntosGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   filmaco: lazy(() =>

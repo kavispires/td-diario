@@ -12,8 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Can you solve this set challenge?',
   },
   releaseDate: '2024-08-31',
-  release: 'maintenance',
-  version: '0.0.1',
+  release: 'stable',
+  version: '1.0.0',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

@@ -113,6 +113,19 @@ export function useConjuntosEngine(
   }
 
   /**
+   * Selects a hand thing and its target diagram area together in one step,
+   * used when a hand item is dropped directly onto an area via
+   * drag-and-drop instead of the tap-thing-then-tap-area flow.
+   *
+   * @param thing - Thing being dropped.
+   * @param area - Diagram area it was dropped onto.
+   */
+  function onDropThing(thing: DailyConjuntosThing, area: DiagramArea) {
+    playSFX('swap');
+    updateSession({ activeThing: thing, activeArea: area });
+  }
+
+  /**
    * Confirms the current thing/area pair, resolves correctness, mutates the
    * diagram, and transitions the lifecycle state when needed.
    */
@@ -149,7 +162,11 @@ export function useConjuntosEngine(
         result: isCorrect ? activeArea : false,
       },
     ];
-    const nextProgress = totalThings > 0 ? nextGuesses.length / totalThings : 1;
+    const correctPlacementsCount = nextGuesses.filter(
+      (guess) => guess.result !== false,
+    ).length;
+    const nextProgress =
+      maxHearts > 0 ? Math.min(correctPlacementsCount / maxHearts, 1) : 1;
     const nextHearts = isCorrect
       ? state.hearts
       : Math.max(state.hearts - CONJUNTOS_WRONG_GUESS_HEART_PENALTY, 0);
@@ -223,6 +240,7 @@ export function useConjuntosEngine(
     isComplete,
     onSelectThing,
     onSelectArea,
+    onDropThing,
     onConfirmPlacement,
     onCancelPlacement,
   };

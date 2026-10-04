@@ -114,11 +114,15 @@ export type ConjuntosEngineState = {
    */
   placedThingsCount: number;
   /**
-   * Total number of things the player needs to place today.
+   * Total size of today's thing pool (hand plus remaining deck). Note this
+   * is unrelated to the win condition, which only requires `maxHearts`
+   * correct placements.
    */
   totalThings: number;
   /**
-   * Current completion fraction from `0` to `1`.
+   * Current completion fraction from `0` to `1`, based on the number of
+   * correct placements so far out of `maxHearts` (the number of correct
+   * placements needed to win).
    */
   progress: number;
   /**
@@ -165,6 +169,11 @@ export type ConjuntosEngineState = {
    * Selects or clears a diagram area for confirmation.
    */
   onSelectArea: (area: DiagramArea | null) => void;
+  /**
+   * Selects a thing and its target area together in one step, used when a
+   * hand item is dropped directly onto a diagram area via drag-and-drop.
+   */
+  onDropThing: (thing: DailyConjuntosThing, area: DiagramArea) => void;
   /**
    * Confirms the currently selected thing/area pair.
    */

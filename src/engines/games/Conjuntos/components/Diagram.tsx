@@ -1,3 +1,4 @@
+import { useDroppable } from '@dnd-kit/core';
 import { cn } from '@utils/cn';
 import type { ReactNode, SVGProps } from 'react';
 import {
@@ -36,7 +37,11 @@ type DiagramProps = {
    */
   onSelectArea: (area: DiagramArea) => void;
   /**
-   * Whether the diagram areas should be non-interactive.
+   * Whether the diagram areas should be fully non-interactive (e.g. once the
+   * puzzle is complete). Clicking an area with no thing selected already
+   * no-ops in the engine, so this does not gate that case — it stays native
+   * `disabled={false}` so drag-and-drop drops keep working even before a
+   * thing has been tap-selected.
    */
   disabled?: boolean;
 } & SVGProps<SVGSVGElement>;
@@ -58,6 +63,22 @@ export function Diagram({
   className,
   ...props
 }: DiagramProps) {
+  const leftDroppable = useDroppable({
+    id: 'conjuntos-drop-rule1',
+    data: { area: CONJUNTOS_RULE1_AREA },
+    disabled,
+  });
+  const rightDroppable = useDroppable({
+    id: 'conjuntos-drop-rule2',
+    data: { area: CONJUNTOS_RULE2_AREA },
+    disabled,
+  });
+  const intersectionDroppable = useDroppable({
+    id: 'conjuntos-drop-intersection',
+    data: { area: CONJUNTOS_INTERSECTION_AREA },
+    disabled,
+  });
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +88,7 @@ export function Diagram({
     >
       <title>Diagrama de conjuntos</title>
       <path
-        fill="#fbb03b"
+        fill="#ffd23f"
         stroke="#000"
         strokeMiterlimit="10"
         strokeWidth="5"
@@ -95,6 +116,7 @@ export function Diagram({
         height={CONJUNTOS_LEFT_AREA_FRAME.height}
       >
         <button
+          ref={leftDroppable.setNodeRef}
           type="button"
           aria-label="Escolher círculo amarelo"
           aria-pressed={activeArea === CONJUNTOS_RULE1_AREA}
@@ -103,8 +125,8 @@ export function Diagram({
           className={cn(
             'grid h-full w-full place-items-center rounded-tl-[80%] rounded-bl-[70%] bg-transparent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-default',
             !disabled && 'cursor-pointer hover:bg-white/15',
-            activeArea === CONJUNTOS_RULE1_AREA &&
-              'bg-white/25 outline outline-4 outline-secondary',
+            (activeArea === CONJUNTOS_RULE1_AREA || leftDroppable.isOver) &&
+              'bg-gradient-to-r from-secondary/40 to-transparent',
           )}
         >
           {leftCircleChildren}
@@ -117,6 +139,7 @@ export function Diagram({
         height={CONJUNTOS_RIGHT_AREA_FRAME.height}
       >
         <button
+          ref={rightDroppable.setNodeRef}
           type="button"
           aria-label="Escolher círculo vermelho"
           aria-pressed={activeArea === CONJUNTOS_RULE2_AREA}
@@ -125,8 +148,8 @@ export function Diagram({
           className={cn(
             'grid h-full w-full place-items-center rounded-tr-[80%] rounded-br-[70%] bg-transparent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-default',
             !disabled && 'cursor-pointer hover:bg-white/15',
-            activeArea === CONJUNTOS_RULE2_AREA &&
-              'bg-white/25 outline outline-4 outline-secondary',
+            (activeArea === CONJUNTOS_RULE2_AREA || rightDroppable.isOver) &&
+              'bg-gradient-to-l from-secondary/40 to-transparent',
           )}
         >
           {rightCircleChildren}
@@ -139,6 +162,7 @@ export function Diagram({
         height={CONJUNTOS_INTERSECTION_AREA_FRAME.height}
       >
         <button
+          ref={intersectionDroppable.setNodeRef}
           type="button"
           aria-label="Escolher interseção"
           aria-pressed={activeArea === CONJUNTOS_INTERSECTION_AREA}
@@ -147,8 +171,9 @@ export function Diagram({
           className={cn(
             'grid h-full w-full place-items-center rounded-full bg-transparent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-default',
             !disabled && 'cursor-pointer hover:bg-white/15',
-            activeArea === CONJUNTOS_INTERSECTION_AREA &&
-              'bg-white/25 outline outline-4 outline-secondary',
+            (activeArea === CONJUNTOS_INTERSECTION_AREA ||
+              intersectionDroppable.isOver) &&
+              'bg-secondary/30',
           )}
         >
           {intersectionChildren}
