@@ -849,33 +849,3 @@ export type DailyTaNaCaraEntry = {
    */
   variant?: DailyTaNaCaraVariant;
 };
-
-/**
- * Today's Vitrais Infinitos challenge payload.
- */
-export type DailyVitraisInfinitosEntry = {
-  /**
-   * Today's daily challenge id (a date string).
-   */
-  id: string;
-  /**
-   * Sequential challenge number shown to the player.
-   */
-  number: number;
-  /**
-   * Discriminator for Vitrais Infinitos payloads.
-   */
-  type: 'vitrais-infinitos';
-  /**
-   * Title describing the stained-glass image of the day.
-   */
-  title: string;
-  /**
-   * Card id used to build the source image URL for every puzzle piece.
-   */
-  cardId: string;
-  /**
-   * Current permutation of piece ids that seeds today's board.
-   */
-  pieces: number[];
-};

@@ -86,11 +86,6 @@ export const rulesComponents: Record<string, RulesComponent> = {
       default: Rules,
     })),
   ),
-  'vitrais-infinitos': lazy(() =>
-    import('./special/VitraisInfinitos/components/Rules').then(({ Rules }) => ({
-      default: Rules,
-    })),
-  ),
   'ta-na-cara': lazy(() =>
     import('./contributions/TaNaCara/components/Rules').then(({ Rules }) => ({
       default: Rules,

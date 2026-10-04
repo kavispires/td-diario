@@ -121,15 +121,6 @@ const gameComponents: Record<string, GameComponent> = {
       }>,
     })),
   ),
-  'vitrais-infinitos': lazy(() =>
-    import('@engines/special/VitraisInfinitos').then(
-      ({ DailyVitraisInfinitosGame }) => ({
-        default: DailyVitraisInfinitosGame as ComponentType<{
-          data: PlaceholderGameData;
-        }>,
-      }),
-    ),
-  ),
   'ta-na-cara': lazy(() =>
     import('@engines/contributions/TaNaCara').then(({ DailyTaNaCaraGame }) => ({
       default: DailyTaNaCaraGame as ComponentType<{

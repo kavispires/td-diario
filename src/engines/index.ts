@@ -16,7 +16,6 @@ import { gameInfo as portais } from './games/Portais/info';
 import { gameInfo as quartetos } from './games/Quartetos/info';
 import { gameInfo as vitral } from './games/Vitral/info';
 import { gameInfo as estoquista } from './special/Estoquista/info';
-import { gameInfo as vitraisInfinitos } from './special/VitraisInfinitos/info';
 
 export const gameInfos = {
   alienado,
@@ -34,7 +33,6 @@ export const gameInfos = {
   vitral,
   'aqui-o': aquiO,
   estoquista,
-  'vitrais-infinitos': vitraisInfinitos,
   conexoes,
   'ta-na-cara': taNaCara,
   picaco,

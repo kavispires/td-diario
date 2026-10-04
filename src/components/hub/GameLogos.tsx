@@ -16,7 +16,6 @@ import { Logo as PortaisLogo } from '@engines/games/Portais/info';
 import { Logo as QuartetosLogo } from '@engines/games/Quartetos/info';
 import { Logo as VitralLogo } from '@engines/games/Vitral/info';
 import { Logo as EstoquistaLogo } from '@engines/special/Estoquista/info';
-import { Logo as VitraisInfinitosLogo } from '@engines/special/VitraisInfinitos/info';
 import type { SVGProps } from 'react';
 
 type GameLogosProps = SVGProps<SVGSVGElement> & {
@@ -58,8 +57,6 @@ export function GameLogos({ gameId, ...props }: GameLogosProps) {
       return <AquiOLogo {...props} />;
     case 'estoquista':
       return <EstoquistaLogo {...props} />;
-    case 'vitrais-infinitos':
-      return <VitraisInfinitosLogo {...props} />;
     case 'ta-na-cara':
       return <TaNaCaraLogo {...props} />;
     case 'conexoes':

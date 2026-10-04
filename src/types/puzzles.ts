@@ -17,7 +17,6 @@ import type {
   DailyPortaisEntry,
   DailyQuartetosEntry,
   DailyTaNaCaraEntry,
-  DailyVitraisInfinitosEntry,
   DailyVitralEntry,
 } from './games';
 
@@ -57,11 +56,6 @@ type GamesEntries = {
   quartetos?: DailyQuartetosEntry;
   conjuntos?: DailyConjuntosEntry;
   vitral?: DailyVitralEntry;
-  /**
-   * Special games still arrive in the main `challenges` payload bucket, so
-   * Vitrais Infinitos belongs here instead of `contributions`.
-   */
-  'vitrais-infinitos'?: DailyVitraisInfinitosEntry;
   pirralhos?: DailyPirralhosEntry;
 };
 
