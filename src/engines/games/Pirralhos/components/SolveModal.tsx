@@ -1,4 +1,5 @@
 import { Button } from '@components/ui/Button';
+import { DualTranslate } from '@components/ui/DualTranslate';
 import { Modal } from '@components/ui/Modal';
 import { Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
@@ -47,11 +48,11 @@ export function SolveModal({
   guesses,
   onResolve,
 }: SolveModalProps) {
-  const [cardWidth, containerRef] = useCardWidthByContainerRef(2, {
+  const [cardWidth, containerRef] = useCardWidthByContainerRef(4, {
     margin: 16,
     gap: 20,
-    minWidth: 110,
-    maxWidth: 160,
+    minWidth: 48,
+    maxWidth: 128,
   });
 
   const availableKids = useMemo(
@@ -82,7 +83,7 @@ export function SolveModal({
       ) : (
         <div
           ref={containerRef}
-          className="grid grid-cols-2 gap-4"
+          className="flex flex-wrap justify-center gap-2"
         >
           {availableKids.map((kidEntry) => {
             const kid = KIDS_LIBRARY[kidEntry.kidId];
@@ -93,16 +94,19 @@ export function SolveModal({
             return (
               <div
                 key={kidEntry.kidId}
-                className="flex flex-col items-center gap-2 rounded-[1.75rem] bg-card px-3 py-4 text-center shadow-sm"
+                className="flex flex-col items-center gap-2 rounded-2xl bg-card px-2 py-2 text-center shadow-sm"
               >
                 <KidPortrait
                   kid={kid}
                   width={cardWidth}
-                  showName
                 />
-                <Text className="text-xs text-subtle-foreground">
-                  {kid.height} cm
+                <Text
+                  strong
+                  className="block text-center text-sm"
+                >
+                  <DualTranslate>{kid.name}</DualTranslate>
                 </Text>
+
                 <Button
                   variant="outlined"
                   size="small"

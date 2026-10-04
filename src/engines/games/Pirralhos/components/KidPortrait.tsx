@@ -1,5 +1,4 @@
 import { Image } from '@components/ui/Image';
-import { Text } from '@components/ui/Typography';
 import { useTDImageCardUrl } from '@hooks/useTDImageCardUrl';
 import type { KidProfile } from '../utils/constants';
 
@@ -16,10 +15,6 @@ type KidPortraitProps = {
    */
   width: number;
   /**
-   * Whether the kid's name should be rendered underneath the image.
-   */
-  showName?: boolean;
-  /**
    * Optional class name applied to the outer wrapper.
    */
   className?: string;
@@ -31,12 +26,7 @@ type KidPortraitProps = {
  * @param props Kid profile, image width, and display options.
  * @returns The rendered portrait block.
  */
-export function KidPortrait({
-  kid,
-  width,
-  showName = false,
-  className,
-}: KidPortraitProps) {
+export function KidPortrait({ kid, width, className }: KidPortraitProps) {
   const imageUrl = useTDImageCardUrl(kid.id);
 
   return (
@@ -45,19 +35,11 @@ export function KidPortrait({
         src={imageUrl}
         alt={kid.name.pt}
         width={width}
-        height={width * 1.35}
+        height={width * 1.5}
         preview={false}
         rounded
         className="shadow-sm"
       />
-      {showName && (
-        <Text
-          strong
-          className="mt-2 block text-center text-sm"
-        >
-          {kid.name.pt}
-        </Text>
-      )}
     </div>
   );
 }

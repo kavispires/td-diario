@@ -125,6 +125,71 @@ export function getEllipseHeight(kidCount: number, cardWidth: number): number {
 }
 
 /**
+ * Finds the tightest vertical gap, as a percentage of the ellipse
+ * container's height, between any two positions that sit roughly in the
+ * same horizontal column (and would therefore stack visually).
+ *
+ * @param positions - Layout positions for today's kid count.
+ * @param xThreshold - Maximum horizontal percentage distance for two
+ * positions to be considered part of the same column. Defaults to `20`.
+ * @returns The smallest same-column vertical gap percentage, or `0` if no
+ * two positions share a column.
+ */
+export function getMinStackedYGapPercent(
+  positions: EllipsePosition[],
+  xThreshold = 20,
+): number {
+  let minGap = Number.POSITIVE_INFINITY;
+
+  for (let i = 0; i < positions.length; i++) {
+    for (let j = i + 1; j < positions.length; j++) {
+      const dx = Math.abs(positions[i].x - positions[j].x);
+      if (dx > xThreshold) {
+        continue;
+      }
+
+      const dy = Math.abs(positions[i].y - positions[j].y);
+      if (dy > 0 && dy < minGap) {
+        minGap = dy;
+      }
+    }
+  }
+
+  return Number.isFinite(minGap) ? minGap : 0;
+}
+
+/**
+ * Grows the base ellipse height, when needed, so that the tallest rendered
+ * kid card (portrait + badges + statement bubble) never overlaps its
+ * vertical neighbor in the same column.
+ *
+ * @param baseHeight - Height from {@link getEllipseHeight}.
+ * @param positions - Layout positions for today's kid count.
+ * @param maxCardHeight - Tallest measured kid card height, in pixels.
+ * @returns A container height guaranteed to fit same-column cards without
+ * overlap, or `baseHeight` unchanged if no measurement/column applies.
+ */
+export function getOverlapSafeEllipseHeight(
+  baseHeight: number,
+  positions: EllipsePosition[],
+  maxCardHeight: number,
+): number {
+  if (!maxCardHeight) {
+    return baseHeight;
+  }
+
+  const minYGapPercent = getMinStackedYGapPercent(positions);
+  if (!minYGapPercent) {
+    return baseHeight;
+  }
+
+  // Require the measured card height (plus a small buffer) to fit within
+  // the tightest same-column percentage gap.
+  const required = (maxCardHeight * 1.05) / (minYGapPercent / 100);
+  return Math.max(baseHeight, required);
+}
+
+/**
  * Builds the public liar-count hint text shown above the board.
  *
  * @param actualLiars - Actual liar ids embedded in today's data.

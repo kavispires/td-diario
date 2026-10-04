@@ -1,4 +1,4 @@
-import { CircleHelp, ShieldAlert, ShieldCheck, Speech } from 'lucide-react';
+import type { PirralhosIconId } from '../components/PirralhosIcon';
 import type { EllipsePosition } from './helpers';
 import type { KidAssessment } from './types';
 
@@ -224,25 +224,25 @@ export const ASSESSMENT_META = {
     label: 'Sem marca',
     ariaLabel: 'sem marcação',
     classes: 'bg-card text-subtle-foreground',
-    icon: CircleHelp,
+    iconId: 'unknown',
   },
   culprit: {
     label: 'Culpado',
     ariaLabel: 'marcado como culpado',
     classes: 'bg-gold-soft text-foreground',
-    icon: ShieldAlert,
+    iconId: 'guilty',
   },
   liar: {
     label: 'Mentiroso',
     ariaLabel: 'marcado como mentiroso',
     classes: 'bg-secondary/15 text-secondary',
-    icon: Speech,
+    iconId: 'liar',
   },
   innocent: {
     label: 'Inocente',
     ariaLabel: 'marcado como inocente',
     classes: 'bg-success/15 text-success',
-    icon: ShieldCheck,
+    iconId: 'innocent',
   },
 } satisfies Record<
   KidAssessment,
@@ -250,6 +250,6 @@ export const ASSESSMENT_META = {
     label: string;
     ariaLabel: string;
     classes: string;
-    icon: typeof CircleHelp;
+    iconId: PirralhosIconId;
   }
 >;

@@ -121,6 +121,10 @@ export function UIShowcaseScreen() {
             <Flame size={16} />
             <Text className="text-white">3 dias</Text>
           </Pill>
+          <Pill size="small">
+            <Flame size={12} />
+            <Text className="text-white text-xs">3 dias</Text>
+          </Pill>
           <Divider orientation="vertical" />
           <Text type="secondary">Flex com gap, align e wrap</Text>
         </Flex>

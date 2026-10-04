@@ -1,13 +1,14 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
 import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
 import { Surface } from '@components/ui/Surface';
-import { Text, Title } from '@components/ui/Typography';
+import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
-import { ArrowRight, Coins, Crosshair } from 'lucide-react';
-import { Fragment, useMemo, useState } from 'react';
+import { Coins, Crosshair } from 'lucide-react';
+import { Fragment, useCallback, useMemo, useRef, useState } from 'react';
 import type { DailyPirralhosEntry } from 'types/games';
 import { gameInfo } from '../info';
 import { KIDS_LIBRARY, PIRRALHOS_TOTAL_HEARTS } from '../utils/constants';
@@ -16,10 +17,12 @@ import {
   getEllipseHeight,
   getLiarsCountLabel,
   getLiarsLabel,
+  getOverlapSafeEllipseHeight,
 } from '../utils/helpers';
 import type { GameState } from '../utils/types';
 import { usePirralhosEngine } from '../utils/usePirralhosEngine';
 import { KidCard } from './KidCard';
+import { PirralhosIcon, PirralhosIconDefs } from './PirralhosIcon';
 import { ResultsSplash } from './ResultsSplash';
 import { SolveModal } from './SolveModal';
 
@@ -78,10 +81,61 @@ export function PirralhosGame({ data, initialState }: PirralhosGameProps) {
     () => getLiarsLabel(data.liarsIds, data.possibleLiars),
     [data.liarsIds, data.possibleLiars],
   );
-  const ellipseHeight = getEllipseHeight(data.kids.length, cardWidth);
+
+  // Tracks each rendered kid card's actual height so the ellipse container
+  // can grow to fit long statements/names without stacked cards overlapping.
+  const [cardHeights, setCardHeights] = useState<Record<number, number>>({});
+  const cardObserversRef = useRef(new Map<number, ResizeObserver>());
+  const cardRefCallbacksRef = useRef(
+    new Map<number, (node: HTMLDivElement | null) => void>(),
+  );
+  const observeCard = useCallback((index: number) => {
+    const cached = cardRefCallbacksRef.current.get(index);
+    if (cached) {
+      return cached;
+    }
+
+    const callback = (node: HTMLDivElement | null) => {
+      const observers = cardObserversRef.current;
+      observers.get(index)?.disconnect();
+
+      if (!node) {
+        observers.delete(index);
+        return;
+      }
+
+      const observer = new ResizeObserver(([entry]) => {
+        const height = entry?.contentRect.height;
+        if (height) {
+          setCardHeights((previous) =>
+            previous[index] === height
+              ? previous
+              : { ...previous, [index]: height },
+          );
+        }
+      });
+      observer.observe(node);
+      observers.set(index, observer);
+    };
+
+    cardRefCallbacksRef.current.set(index, callback);
+    return callback;
+  }, []);
+  const maxCardHeight = useMemo(
+    () => Math.max(0, ...Object.values(cardHeights)),
+    [cardHeights],
+  );
+
+  const ellipseHeight = getOverlapSafeEllipseHeight(
+    getEllipseHeight(data.kids.length, cardWidth),
+    positions,
+    maxCardHeight,
+  );
 
   return (
     <>
+      <PirralhosIconDefs />
+
       <div
         ref={containerRef}
         className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
@@ -112,29 +166,24 @@ export function PirralhosGame({ data, initialState }: PirralhosGameProps) {
           />
         </GameStatsRow>
 
-        <div className="flex flex-col items-center gap-2 text-center">
-          <Pill>Desafio #{data.number}</Pill>
-          <Title level={3}>{gameInfo.name.pt}</Title>
-          <Text type="secondary">
-            Escute cada pirralho, marque suas suspeitas e descubra quem pegou o
-            brinquedo.
-          </Text>
-        </div>
+        <GameTitle title="Quem pegou o brinquedo?" />
 
         <div className="flex flex-wrap items-center justify-center gap-2 text-center">
-          <Pill>1 Culpado</Pill>
-          <Pill>
+          <Pill size="small">
+            <PirralhosIcon
+              icon="guilty"
+              size={14}
+            />
+            1 Culpado
+          </Pill>
+          <Pill size="small">
+            <PirralhosIcon
+              icon="liar"
+              size={14}
+            />
             {liarsCountLabel} {liarsLabel}
           </Pill>
         </div>
-
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          Toque no ícone de cada criança para marcar suspeitas. Quando quiser,
-          abra a acusação e escolha um nome.
-        </Text>
 
         {!isComplete && (
           <Button
@@ -150,7 +199,7 @@ export function PirralhosGame({ data, initialState }: PirralhosGameProps) {
         <div
           className="relative w-full"
           style={{
-            marginTop: cardWidth / 1.85,
+            marginTop: cardWidth / 1.25,
             height: ellipseHeight,
           }}
         >
@@ -168,6 +217,7 @@ export function PirralhosGame({ data, initialState }: PirralhosGameProps) {
             return (
               <Fragment key={`kid-${kidEntry.kidId}-${index}`}>
                 <div
+                  ref={observeCard(index)}
                   className="absolute"
                   style={{
                     left: `${position.x}%`,
@@ -190,17 +240,17 @@ export function PirralhosGame({ data, initialState }: PirralhosGameProps) {
                 </div>
 
                 <div
-                  className="absolute text-primary/60"
+                  className="absolute"
                   style={{
                     left: `${arrowX}%`,
                     top: `${arrowY}%`,
                     transform: `translate(-50%, -50%) rotate(${position.angle}deg)`,
-                    zIndex: 10,
+                    zIndex: 40,
                   }}
                 >
-                  <ArrowRight
-                    className="h-6 w-6"
-                    aria-hidden="true"
+                  <PirralhosIcon
+                    icon="arrow"
+                    size={24}
                   />
                 </div>
               </Fragment>
@@ -208,20 +258,41 @@ export function PirralhosGame({ data, initialState }: PirralhosGameProps) {
           })}
         </div>
 
-        <Surface className="flex w-full flex-col items-center gap-3 bg-card px-5 py-5 text-center">
+        <Surface className="flex w-full flex-col items-center gap-2 bg-card px-5 py-4 text-center">
           <Text className="text-sm leading-relaxed text-subtle-foreground">
-            Use as marcações para separar quem parece culpado, quem parece
-            mentir e quem parece inocente. Elas são só anotações suas e não
-            interferem no resultado final.
+            Você pode clicar no botão{' '}
+            <PirralhosIcon
+              icon="unknown"
+              size={16}
+              className="inline-block align-text-bottom"
+            />{' '}
+            em cada criança pra marcá-las como culpada{' '}
+            <PirralhosIcon
+              icon="guilty"
+              size={16}
+              className="inline-block align-text-bottom"
+            />
+            , mentirosa{' '}
+            <PirralhosIcon
+              icon="liar"
+              size={16}
+              className="inline-block align-text-bottom"
+            />{' '}
+            ou inocente{' '}
+            <PirralhosIcon
+              icon="innocent"
+              size={16}
+              className="inline-block align-text-bottom"
+            />
+            .{' '}
+            <button
+              type="button"
+              onClick={resetAssessments}
+              className="font-semibold text-secondary underline underline-offset-2"
+            >
+              Limpar tudo
+            </button>
           </Text>
-
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={resetAssessments}
-          >
-            Limpar tudo
-          </Button>
         </Surface>
 
         <SeeResultsButton

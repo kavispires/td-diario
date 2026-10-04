@@ -267,7 +267,7 @@ export function Image({
       <span
         className={cn(
           'relative inline-block overflow-hidden bg-border',
-          rounded && 'rounded-2xl',
+          rounded && 'rounded-xl',
           className,
         )}
         style={style}

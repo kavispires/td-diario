@@ -1,7 +1,6 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Score } from '@components/games/Score';
-import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyPirralhosKidEntry } from 'types/games';
@@ -71,7 +70,6 @@ export function ResultsSplash({
     hearts,
   });
   const culprit = KIDS_LIBRARY[culpritId];
-  const truthTellersCount = kids.length - liarsIds.length;
   const liars = kids
     .filter((kidEntry) => liarsIds.includes(kidEntry.kidId))
     .map((kidEntry) => KIDS_LIBRARY[kidEntry.kidId])
@@ -89,53 +87,53 @@ export function ResultsSplash({
         className="text-center"
       >
         {win
-          ? `Você descobriu que ${culprit?.name ?? 'o pirralho certo'} pegou o brinquedo.`
-          : `Quem pegou o brinquedo hoje foi ${culprit?.name ?? 'um dos pirralhos'}.`}
+          ? `Você descobriu que ${culprit?.name.pt ?? 'o pirralho certo'} pegou o brinquedo.`
+          : `Quem pegou o brinquedo hoje foi ${culprit?.name.pt ?? 'um dos pirralhos'}.`}
       </Text>
 
       {culprit && (
         <Surface className="flex w-full flex-col items-center gap-3 bg-white/70 px-5 py-5 text-center">
-          <Text strong>Quem pegou o brinquedo</Text>
           <KidPortrait
             kid={culprit}
-            width={132}
-            showName
+            width={96}
           />
+
+          {liars.length === 0 && (
+            <Text
+              type="secondary"
+              className="text-center"
+            >
+              Ninguém mentiu hoje.
+            </Text>
+          )}
+
+          {liars.length > 0 && (
+            <div className="flex flex-col">
+              <Text
+                strong
+                className="text-center"
+              >
+                Quem estava mentindo
+              </Text>
+
+              <div className="flex flex-wrap justify-center gap-2">
+                {liars.map((kid) => (
+                  <div
+                    key={kid.id}
+                    className="flex flex-col items-center"
+                  >
+                    <KidPortrait
+                      kid={kid}
+                      width={48}
+                      className="rounded-sm"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </Surface>
       )}
-
-      <Surface className="flex w-full flex-col gap-3 bg-white/70 px-5 py-5">
-        <Text
-          strong
-          className="text-center"
-        >
-          Quem estava mentindo
-        </Text>
-
-        {liars.length === 0 ? (
-          <Text
-            type="secondary"
-            className="text-center"
-          >
-            Ninguém mentiu hoje.
-          </Text>
-        ) : (
-          <div className="grid grid-cols-2 gap-3">
-            {liars.map((kid) => (
-              <div
-                key={kid.id}
-                className="flex flex-col items-center rounded-[1.5rem] bg-card px-3 py-3 text-center shadow-sm"
-              >
-                <KidPortrait
-                  kid={kid}
-                  width={96}
-                  showName
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </Surface>
 
       <Hearts
         remaining={hearts}
@@ -145,14 +143,6 @@ export function ResultsSplash({
       />
 
       <div className="flex items-center justify-center gap-2">
-        <Text
-          type="secondary"
-          className="text-center text-black"
-        >
-          {truthTellersCount} de {kids.length} disseram a verdade
-        </Text>
-
-        <Divider orientation="vertical" />
         <Score
           value={score}
           className="text-black"
