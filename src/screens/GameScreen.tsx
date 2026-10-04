@@ -67,7 +67,9 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   palavreado: lazy(() =>
     import('@engines/games/Palavreado').then(({ DailyPalavreadoGame }) => ({
-      default: DailyPalavreadoGame,
+      default: DailyPalavreadoGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   panico: lazy(() =>
