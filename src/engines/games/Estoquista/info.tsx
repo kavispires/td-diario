@@ -3,7 +3,7 @@ import type { GameInfo } from '../../../types/puzzles';
 export const gameInfo: GameInfo = {
   id: 'estoquista',
   key: 'ESTOQUISTA',
-  type: 'special',
+  type: 'game',
   color: 'rgb(249, 205, 84)',
   emoji: '📦',
   name: { pt: 'Estoquista', en: 'Warehouser' },
@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Come apply some feng-shui to this shelf!',
   },
   releaseDate: '2024-08-04',
-  release: 'maintenance',
+  release: 'demo',
   version: '0.0.1',
 };
 

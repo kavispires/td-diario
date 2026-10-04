@@ -1,11 +1,50 @@
 import { USE_MOCK_DATA } from '@dev-config';
+import { generateDailyEstoquistaEntry } from '@engines/games/Estoquista/utils/helpers';
 import { DAILY_API, DAILY_API_ACTIONS } from '@services/adapters';
 import { logAnalyticsEvent } from '@services/firebase';
 import { useAuthStore } from '@store/useAuthStore';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMillisecondsUntilTomorrow, getToday, print } from '@utils/helpers';
 import { useEffect } from 'react';
-import type { DailyResponse } from '../types/puzzles';
+import type { DailyResponse, GamesEntries } from '../types/puzzles';
+
+/**
+ * Registry of games that are always generated locally rather than arriving
+ * in the `dailyEngine` response (e.g. because their puzzle content is
+ * synthesized on the client). Each entry's generator receives today's date
+ * key and returns a freshly built payload for that game.
+ */
+const LOCAL_GAME_GENERATORS: {
+  [Id in keyof GamesEntries]?: (id: DailyResponse['id']) => GamesEntries[Id];
+} = {
+  estoquista: generateDailyEstoquistaEntry,
+};
+
+/**
+ * Fills in any locally-generated games missing from a fetched/mocked daily
+ * response, mutating neither input, so games that never arrive from the
+ * API (see {@link LOCAL_GAME_GENERATORS}) are still playable.
+ *
+ * @param responseData - The daily response to inject local games into.
+ * @returns A new `DailyResponse` with every locally-generated game filled in.
+ */
+function injectLocallyGeneratedGames(
+  responseData: DailyResponse,
+): DailyResponse {
+  const challenges = { ...responseData.challenges };
+
+  for (const id of Object.keys(LOCAL_GAME_GENERATORS) as Array<
+    keyof GamesEntries
+  >) {
+    if (!challenges[id]) {
+      const generate = LOCAL_GAME_GENERATORS[id];
+      // @ts-expect-error -- each generator's return type matches its own key
+      challenges[id] = generate?.(responseData.id);
+    }
+  }
+
+  return { ...responseData, challenges };
+}
 
 export function useGetDailyChallenges() {
   const user = useAuthStore((state) => state.user);
@@ -34,7 +73,7 @@ export function useGetDailyChallenges() {
         // Delay of 3 seconds to simulate async behavior
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Ensure async context
         print({ diario: MOCK_DAILY_RESPONSE }, 'table');
-        return MOCK_DAILY_RESPONSE;
+        return injectLocallyGeneratedGames(MOCK_DAILY_RESPONSE);
       }
 
       // biome-ignore lint/suspicious/noConsole: debug purposes
@@ -47,7 +86,7 @@ export function useGetDailyChallenges() {
       const responseData = response.data as DailyResponse;
       print({ diario: responseData }, 'table');
       logAnalyticsEvent('daily_challenges_fetched');
-      return responseData;
+      return injectLocallyGeneratedGames(responseData);
     },
     enabled: !!user?.uid,
     retry: false,
@@ -1019,6 +1058,32 @@ const MOCK_DAILY_RESPONSE: DailyResponse = {
       liarsIds: ['us-gb-235', 'us-gb-236', 'us-gb-233', 'us-gb-232'],
       possibleLiars: 4,
       difficulty: 55,
+    },
+    panico: {
+      id: '2026-10-04',
+      number: 42,
+      type: 'panico',
+      buttons: [
+        'button-1::BASIC_PRESS',
+        'button-2::BASIC_DO_NOT_PRESS',
+        'button-3::BASIC_PRESS',
+        'button-4::BASIC_DO_NOT_PRESS',
+      ],
+    },
+    colorido: {
+      id: '2026-10-04',
+      number: 1,
+      type: 'colorido',
+    },
+    epocas: {
+      id: '2026-10-04',
+      number: 1,
+      type: 'epocas',
+    },
+    karaoke: {
+      id: '2026-10-04',
+      number: 1,
+      type: 'karaoke',
     },
   },
   contributions: {

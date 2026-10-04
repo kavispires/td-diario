@@ -37,13 +37,14 @@ export type PlaceholderGameData = {
 /**
  * Daily payload entries for each core game, keyed by game id.
  */
-type GamesEntries = {
+export type GamesEntries = {
   'arte-ruim'?: DailyArteRuimEntry;
   'aqui-o'?: DailyAquiOEntry;
   alienado?: DailyAlienadoEntry;
   /**
-   * Special games still arrive in the main `challenges` payload bucket, so
-   * Estoquista belongs here instead of `contributions`.
+   * Estoquista never arrives from the `dailyEngine` response; its payload
+   * is always synthesized locally (see `LOCAL_GAME_GENERATORS` in
+   * `useGetDailyChallenges`) and injected into `challenges` after fetch.
    */
   estoquista?: DailyEstoquistaEntry;
   investigacao?: DailyInvestigacaoEntry;
@@ -57,6 +58,21 @@ type GamesEntries = {
   conjuntos?: DailyConjuntosEntry;
   vitral?: DailyVitralEntry;
   pirralhos?: DailyPirralhosEntry;
+  /**
+   * Not implemented yet; will arrive from the `dailyEngine` response once
+   * the game ships, like every other entry in `GamesEntries`.
+   */
+  colorido?: PlaceholderGameData;
+  /**
+   * Not implemented yet; will arrive from the `dailyEngine` response once
+   * the game ships, like every other entry in `GamesEntries`.
+   */
+  epocas?: PlaceholderGameData;
+  /**
+   * Not implemented yet; will arrive from the `dailyEngine` response once
+   * the game ships, like every other entry in `GamesEntries`.
+   */
+  karaoke?: PlaceholderGameData;
 };
 
 /**

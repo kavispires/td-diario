@@ -82,7 +82,22 @@ export const rulesComponents: Record<string, RulesComponent> = {
     })),
   ),
   estoquista: lazy(() =>
-    import('./special/Estoquista/components/Rules').then(({ Rules }) => ({
+    import('./games/Estoquista/components/Rules').then(({ Rules }) => ({
+      default: Rules,
+    })),
+  ),
+  colorido: lazy(() =>
+    import('./games/Colorido/components/Rules').then(({ Rules }) => ({
+      default: Rules,
+    })),
+  ),
+  epocas: lazy(() =>
+    import('./games/Epocas/components/Rules').then(({ Rules }) => ({
+      default: Rules,
+    })),
+  ),
+  karaoke: lazy(() =>
+    import('./games/Karaoke/components/Rules').then(({ Rules }) => ({
       default: Rules,
     })),
   ),

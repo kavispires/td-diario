@@ -4,9 +4,13 @@ import { Logo as TaNaCaraLogo } from '@engines/contributions/TaNaCara/info';
 import { Logo as AlienadoLogo } from '@engines/games/Alienado/info';
 import { Logo as AquiOLogo } from '@engines/games/AquiO/info';
 import { Logo as ArteRuimLogo } from '@engines/games/ArteRuim/info';
+import { Logo as ColoridoLogo } from '@engines/games/Colorido/info';
 import { Logo as ConjuntosLogo } from '@engines/games/Conjuntos/info';
+import { Logo as EpocasLogo } from '@engines/games/Epocas/info';
+import { Logo as EstoquistaLogo } from '@engines/games/Estoquista/info';
 import { Logo as FilmacoLogo } from '@engines/games/Filmaco/info';
 import { Logo as InvestigacaoLogo } from '@engines/games/Investigacao/info';
+import { Logo as KaraokeLogo } from '@engines/games/Karaoke/info';
 import { Logo as MapeamentoLogo } from '@engines/games/Mapeamento/info';
 import { Logo as OrganikuLogo } from '@engines/games/Organiku/info';
 import { Logo as PalavreadoLogo } from '@engines/games/Palavreado/info';
@@ -15,7 +19,6 @@ import { Logo as PirralhosLogo } from '@engines/games/Pirralhos/info';
 import { Logo as PortaisLogo } from '@engines/games/Portais/info';
 import { Logo as QuartetosLogo } from '@engines/games/Quartetos/info';
 import { Logo as VitralLogo } from '@engines/games/Vitral/info';
-import { Logo as EstoquistaLogo } from '@engines/special/Estoquista/info';
 import type { SVGProps } from 'react';
 
 type GameLogosProps = SVGProps<SVGSVGElement> & {
@@ -57,6 +60,12 @@ export function GameLogos({ gameId, ...props }: GameLogosProps) {
       return <AquiOLogo {...props} />;
     case 'estoquista':
       return <EstoquistaLogo {...props} />;
+    case 'colorido':
+      return <ColoridoLogo {...props} />;
+    case 'epocas':
+      return <EpocasLogo {...props} />;
+    case 'karaoke':
+      return <KaraokeLogo {...props} />;
     case 'ta-na-cara':
       return <TaNaCaraLogo {...props} />;
     case 'conexoes':

@@ -115,8 +115,29 @@ const gameComponents: Record<string, GameComponent> = {
     })),
   ),
   estoquista: lazy(() =>
-    import('@engines/special/Estoquista').then(({ DailyEstoquistaGame }) => ({
+    import('@engines/games/Estoquista').then(({ DailyEstoquistaGame }) => ({
       default: DailyEstoquistaGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
+    })),
+  ),
+  colorido: lazy(() =>
+    import('@engines/games/Colorido').then(({ DailyColoridoGame }) => ({
+      default: DailyColoridoGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
+    })),
+  ),
+  epocas: lazy(() =>
+    import('@engines/games/Epocas').then(({ DailyEpocasGame }) => ({
+      default: DailyEpocasGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
+    })),
+  ),
+  karaoke: lazy(() =>
+    import('@engines/games/Karaoke').then(({ DailyKaraokeGame }) => ({
+      default: DailyKaraokeGame as ComponentType<{
         data: PlaceholderGameData;
       }>,
     })),
