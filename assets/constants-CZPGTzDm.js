@@ -1,0 +1,1 @@
+var e=`white`,t=`#111827`,n=1e3;export{t as n,n as r,e as t};

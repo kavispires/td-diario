@@ -1,0 +1,1 @@
+var e=`conexoes-save-pairs`,t=.75,n=.2,r=[`rgba(244, 63, 94, 0.18)`,`rgba(255, 255, 255, 0)`,`rgba(234, 179, 8, 0.24)`];export{t as i,r as n,n as r,e as t};

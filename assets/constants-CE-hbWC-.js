@@ -1,0 +1,1 @@
+var e={STOCKING:`stocking`,FULFILLING:`fulfilling`},t={margin:48,gap:12,maxWidth:80,minWidth:56},n=.2,r=.92,i=.5,a=1.35,o=.88,s=.58;export{i as a,n as c,o as i,a as n,e as o,s as r,r as s,t};

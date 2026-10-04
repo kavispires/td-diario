@@ -1,0 +1,1 @@
+var e={PREFERENCES:`td_diario_preferences`},t={IDLE:`idle`,IN_PROGRESS:`in-progress`,WIN:`win`,LOSE:`lose`};export{e as n,t};
