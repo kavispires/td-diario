@@ -10,17 +10,13 @@ import type {
 } from 'types/games';
 import { gameInfo } from '../info';
 import {
-  CLUE_PENALTY_POINTS,
   FEATURE_PT_TRANSLATIONS,
   MAIN_STATEMENT_REVEAL_INTERVAL,
-  RELEASE_SCORE_POINTS,
   SHARE_LOSE_ICON,
   SHARE_WIN_ICON,
   STARTING_HEARTS,
   SUSPECT_IMAGE_CARD_VARIANT,
   VALID_STATUSES,
-  WIN_COMPLETION_BONUS_POINTS,
-  WIN_HEART_BONUS_POINTS,
 } from './constants';
 import type { GameState } from './types';
 
@@ -65,29 +61,6 @@ function getDefaultState(data: DailyInvestigacaoEntry): GameState {
     hearts: STARTING_HEARTS,
     released: [],
   };
-}
-
-/**
- * Calculates Investigação's score from the number of innocents released,
- * remaining hearts, and whether the case was solved.
- *
- * @param releasedCount - How many innocents have already been released.
- * @param hearts - Remaining clue hearts.
- * @param isWin - Whether the case is solved.
- * @returns The score to persist for the current state.
- */
-export function getScore(
-  releasedCount: number,
-  hearts: number,
-  isWin: boolean,
-): number {
-  const releasePoints = releasedCount * RELEASE_SCORE_POINTS;
-  const cluePenalty = (STARTING_HEARTS - hearts) * CLUE_PENALTY_POINTS;
-  const completionBonus = isWin
-    ? hearts * WIN_HEART_BONUS_POINTS + WIN_COMPLETION_BONUS_POINTS
-    : 0;
-
-  return Math.max(releasePoints - cluePenalty + completionBonus, 0);
 }
 
 /**
@@ -157,11 +130,8 @@ export function getInitialState(data: DailyInvestigacaoEntry): GameState {
     return defaultState;
   }
 
-  const isWin = restoredState.status === GAME_LIFECYCLE_STATUS.WIN;
-
   return {
     ...restoredState,
-    score: getScore(restoredState.released.length, restoredState.hearts, isWin),
     progress: getProgress(restoredState.released.length, data.suspects.length),
   };
 }

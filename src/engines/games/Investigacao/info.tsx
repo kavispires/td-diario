@@ -12,8 +12,8 @@ export const gameInfo: GameInfo = {
     pt: 'Consegue descobrir quem é o culpado?',
   },
   releaseDate: '2025-07-05',
-  release: 'maintenance',
-  version: '0.0.1',
+  release: 'stable',
+  version: '1.0.0',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

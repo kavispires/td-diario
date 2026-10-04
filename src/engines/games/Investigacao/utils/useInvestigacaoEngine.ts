@@ -11,7 +11,8 @@ import { playSFX } from '@utils/soundEffects';
 import { useEffect, useMemo, useState } from 'react';
 import type { DailyInvestigacaoEntry } from 'types/games';
 import { gameInfo } from '../info';
-import { getProgress, getScore, getVisibleStatements } from './helpers';
+import { WIN_COMPLETION_BONUS_POINTS } from './constants';
+import { getProgress, getVisibleStatements } from './helpers';
 import type { GameState, InvestigacaoEngineState, SessionState } from './types';
 
 const INITIAL_SESSION: SessionState = {
@@ -65,11 +66,6 @@ export function useInvestigacaoEngine(
           previousState.status === GAME_LIFECYCLE_STATUS.IDLE
             ? GAME_LIFECYCLE_STATUS.IN_PROGRESS
             : previousState.status,
-        score: getScore(
-          previousState.released.length,
-          nextHearts,
-          previousState.status === GAME_LIFECYCLE_STATUS.WIN,
-        ),
       };
     });
   }
@@ -104,22 +100,23 @@ export function useInvestigacaoEngine(
         ...previousState,
         hearts: 0,
         status: GAME_LIFECYCLE_STATUS.LOSE,
-        score: getScore(previousState.released.length, 0, false),
       }));
       updateSession({ activeSuspectId: null });
       return;
     }
 
+    const nextReleasedCount = state.released.length + 1;
+    const isWin = nextReleasedCount === data.suspects.length - 1;
+
+    if (isWin) {
+      playSFX('win');
+      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
+    } else {
+      playSFX('wee');
+    }
+
     setState((previousState) => {
       const nextReleased = [...previousState.released, suspectId];
-      const isWin = nextReleased.length === data.suspects.length - 1;
-
-      if (isWin) {
-        playSFX('win');
-        logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-      } else {
-        playSFX('wee');
-      }
 
       return {
         ...previousState,
@@ -128,7 +125,10 @@ export function useInvestigacaoEngine(
           ? GAME_LIFECYCLE_STATUS.WIN
           : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
         progress: getProgress(nextReleased.length, data.suspects.length),
-        score: getScore(nextReleased.length, previousState.hearts, isWin),
+        score:
+          previousState.score +
+          previousState.hearts +
+          (isWin ? WIN_COMPLETION_BONUS_POINTS : 0),
       };
     });
     updateSession({ activeSuspectId: null });

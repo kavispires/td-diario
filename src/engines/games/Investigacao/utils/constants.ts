@@ -6,24 +6,9 @@ import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 export const STARTING_HEARTS = 3;
 
 /**
- * Score awarded for each innocent suspect released by the player.
- */
-export const RELEASE_SCORE_POINTS = 20;
-
-/**
- * Score removed whenever the player spends one bonus clue.
- */
-export const CLUE_PENALTY_POINTS = 5;
-
-/**
- * Bonus score multiplier applied to each unused heart on a solved case.
- */
-export const WIN_HEART_BONUS_POINTS = 10;
-
-/**
  * Flat score bonus awarded when the player solves the case.
  */
-export const WIN_COMPLETION_BONUS_POINTS = 20;
+export const WIN_COMPLETION_BONUS_POINTS = 10;
 
 /**
  * Number of innocents that must be released to reveal another main clue.

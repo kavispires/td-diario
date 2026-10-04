@@ -3,8 +3,7 @@ import { Hearts } from '@components/games/Hearts';
 import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
-import { Text, Title } from '@components/ui/Typography';
-import { cn } from '@utils/cn';
+import { Text } from '@components/ui/Typography';
 import type { DailyInvestigacaoSuspect } from 'types/games';
 import { buildShareText, getFeatureLabel } from '../utils/helpers';
 import { SuspectPortrait } from './SuspectPortrait';
@@ -87,46 +86,34 @@ export function ResultsSplash({
   return (
     <GameResultsSplash
       gameId="investigacao"
-      title={win ? 'Parabéns!' : 'Que pena!'}
+      title={win ? 'Capturado!' : 'Que pena!'}
       shareText={shareText}
       onClose={onClose}
     >
-      <Text
-        strong
-        className="text-center text-black"
-      >
-        {win
-          ? `O culpado era ${culprit.name.pt}.`
-          : `${culprit.name.pt} era a pessoa que deveria ter ficado por último.`}
-      </Text>
+      <Surface className="flex w-full flex-col items-center gap-4 bg-white/35 p-4">
+        <div className="flex w-full justify-center items-center gap-4">
+          <SuspectPortrait
+            suspectId={culprit.id}
+            alt={`Retrato de ${culprit.name.pt}`}
+            className="w-40"
+          />
 
-      <Surface
-        className={cn(
-          'flex w-full flex-col items-center gap-4 px-5 py-5',
-          win ? 'bg-gold-soft' : 'bg-white/75',
-        )}
-      >
-        <SuspectPortrait
-          suspectId={culprit.id}
-          alt={`Retrato de ${culprit.name.pt}`}
-          className="w-40"
-        />
+          <div className="flex flex-col text-sm">
+            <Text strong>
+              {win
+                ? `O culpado era ${culprit.name.pt}.`
+                : `${culprit.name.pt} era a pessoa que deveria ter ficado por último.`}
+            </Text>
 
-        <div className="flex flex-col items-center gap-1 text-center">
-          <Title level={4}>{culprit.name.pt}</Title>
-          <Text type="secondary">
-            {win
-              ? 'Você identificou corretamente quem deveria ficar por último.'
-              : 'O suspeito errado foi liberado e o criminoso escapou.'}
-          </Text>
-          <Text strong>Crime: {reason}</Text>
+            <Text> Crime: {reason}</Text>
+          </div>
         </div>
 
         <div className="flex flex-wrap justify-center gap-2">
           {culprit.features.map((feature) => (
             <span
               key={feature}
-              className="rounded-full bg-white/85 px-3 py-1 text-xs font-medium text-foreground shadow-sm"
+              className="rounded-full bg-white/85 px-3 py-1 text-xs text-foreground shadow-sm"
             >
               {getFeatureLabel(feature, culprit.gender)}
             </span>

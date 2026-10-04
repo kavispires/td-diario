@@ -1,10 +1,12 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
+import { Popconfirm } from '@components/ui/Popconfirm';
 import { Surface } from '@components/ui/Surface';
-import { Text, Title } from '@components/ui/Typography';
+import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
-import { Heart, Search, UserRoundCheck } from 'lucide-react';
+import { Coins, Heart, UserRoundCheck } from 'lucide-react';
 import { useMemo } from 'react';
 import type { DailyInvestigacaoEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -108,73 +110,72 @@ export function InvestigacaoGame({
           align="center"
         />
         <GameStat
-          icon={Search}
+          icon={Coins}
           value={score}
           label="Pontuação"
           align="end"
         />
       </GameStatsRow>
 
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Title level={3}>Investigação</Title>
-        <Text type="secondary">
-          Cruze as pistas, descarte inocentes e deixe o culpado por último.
-        </Text>
-      </div>
-
-      <Surface className="w-full bg-card px-5 py-5 text-center">
-        {!isComplete ? (
-          <Text strong>
-            Libere alguém que <span className="text-primary">não</span> se
+      <GameTitle
+        title="Quem é o culpado?"
+        description={
+          <>
+            Libere alguém que{' '}
+            <span className="text-primary underline font-bold">não</span> se
             encaixe nas declarações.
-          </Text>
-        ) : (
-          <div className="flex flex-col items-center gap-2">
-            <Text strong>
-              {isWin ? 'Você achou o culpado!' : 'Você liberou o culpado!'}
-            </Text>
-            <Text type="secondary">
-              {isWin
-                ? 'Abra o resultado para revisar o caso.'
-                : 'Os crimes continuam acontecendo... pelo menos dá para revisar as pistas.'}
-            </Text>
-          </div>
-        )}
-      </Surface>
+          </>
+        }
+      />
 
-      <div
-        className="grid w-full gap-3"
-        style={{
-          gridTemplateColumns: `repeat(${SUSPECT_GRID_COLUMNS}, minmax(0, ${cardWidth}px))`,
-        }}
-      >
-        {data.suspects.map((suspect, index) => {
-          const releaseOrder = released.indexOf(suspect.id);
-          const isReleased = releaseOrder >= 0;
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
-          return (
-            <SuspectCard
-              key={suspect.id}
-              suspect={suspect}
-              cardWidth={cardWidth}
-              isReleased={isReleased}
-              releaseOrder={releaseOrder}
-              isActive={activeSuspectId === suspect.id}
-              isCulprit={isComplete && suspect.id === data.culpritId}
-              disabled={isReleased || isComplete}
-              animationDelay={index * SUSPECT_CARD_ANIMATION_DELAY_STEP}
-              onSelect={() => onSelectSuspect(suspect.id)}
-            />
-          );
-        })}
+      <div className="flex w-full justify-center">
+        <div
+          className="grid gap-2"
+          style={{
+            gridTemplateColumns: `repeat(${SUSPECT_GRID_COLUMNS}, minmax(0, ${cardWidth}px))`,
+          }}
+        >
+          {data.suspects.map((suspect, index) => {
+            const releaseOrder = released.indexOf(suspect.id);
+            const isReleased = releaseOrder >= 0;
+
+            return (
+              <SuspectCard
+                key={suspect.id}
+                suspect={suspect}
+                cardWidth={cardWidth}
+                isReleased={isReleased}
+                releaseOrder={releaseOrder}
+                isActive={activeSuspectId === suspect.id}
+                isCulprit={isComplete && suspect.id === data.culpritId}
+                disabled={isReleased || isComplete}
+                animationDelay={index * SUSPECT_CARD_ANIMATION_DELAY_STEP}
+                onSelect={() => onSelectSuspect(suspect.id)}
+              />
+            );
+          })}
+        </div>
       </div>
 
       <Surface className="flex w-full flex-col gap-3 bg-card px-5 py-5">
         <div className="flex flex-col gap-1">
-          <Text strong>Declarações</Text>
-          <Text type="secondary">
-            Você revela uma pista principal a cada{' '}
-            {MAIN_STATEMENT_REVEAL_INTERVAL} inocentes liberados.
+          <Text
+            strong
+            className="text-center"
+          >
+            Declarações
+          </Text>
+          <Text
+            type="secondary"
+            className="text-center text-xs"
+          >
+            Uma nova pista é revelada a cada {MAIN_STATEMENT_REVEAL_INTERVAL}{' '}
+            inocentes liberados.
           </Text>
         </div>
 
@@ -185,13 +186,20 @@ export function InvestigacaoGame({
         />
 
         {!isComplete && hearts > 0 && (
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={onNeedClue}
+          <Popconfirm
+            title="Revelar mais uma dica?"
+            description="Isso vai consumir uma das suas dicas extras restantes."
+            onConfirm={onNeedClue}
+            okText="Revelar"
+            cancelText="Cancelar"
           >
-            Preciso de mais dicas
-          </Button>
+            <Button
+              variant="outlined"
+              size="small"
+            >
+              Preciso de mais dicas
+            </Button>
+          </Popconfirm>
         )}
 
         {!isComplete && hearts <= 0 && (
@@ -203,11 +211,6 @@ export function InvestigacaoGame({
           </Text>
         )}
       </Surface>
-
-      <SeeResultsButton
-        isComplete={isComplete}
-        setShowResults={setShowResults}
-      />
 
       <ReleaseModal
         suspect={activeSuspect}

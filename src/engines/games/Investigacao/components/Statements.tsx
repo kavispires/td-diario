@@ -1,6 +1,13 @@
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
-import { AudioLines, Grid2x2, Heart, Search } from 'lucide-react';
+import {
+  AudioLines,
+  CheckCheck,
+  Grid2x2,
+  Heart,
+  ScanEye,
+  Search,
+} from 'lucide-react';
 import { motion } from 'motion/react';
 import type { DailyInvestigacaoStatement } from 'types/games';
 import {
@@ -94,7 +101,9 @@ function StatementCard({
   variant,
 }: StatementCardProps) {
   const complete = isStatementComplete(statement.excludes, released);
-  const Icon = getStatementIcon(statement.type, variant);
+  const Icon = complete
+    ? CheckCheck
+    : getStatementIcon(statement.type, variant);
 
   return (
     <motion.div
@@ -108,7 +117,7 @@ function StatementCard({
       className={cn(
         'flex items-start gap-3 rounded-2xl border px-4 py-3 shadow-sm',
         complete
-          ? 'border-gold bg-gold-soft'
+          ? 'border-secondary bg-secondary-soft'
           : variant === 'bonus'
             ? 'border-destructive/20 bg-destructive/8'
             : 'border-border bg-surface',
@@ -118,7 +127,7 @@ function StatementCard({
         className={cn(
           'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
           complete
-            ? 'bg-gold text-chrome'
+            ? 'bg-secondary text-chrome'
             : variant === 'bonus'
               ? 'bg-destructive/12 text-destructive'
               : 'bg-primary-soft text-primary',
@@ -137,14 +146,6 @@ function StatementCard({
         >
           {statement.text}
         </Text>
-        <Text
-          type="secondary"
-          className="mt-1 block text-xs"
-        >
-          {complete
-            ? 'Todos os suspeitos incompatíveis com essa pista já foram liberados.'
-            : `${statement.excludes.length} suspeito(s) podem ser descartados com essa pista.`}
-        </Text>
       </div>
     </motion.div>
   );
@@ -162,7 +163,7 @@ function getStatementIcon(
     case 'testimony':
       return AudioLines;
     case 'feature':
-      return Search;
+      return ScanEye;
     case 'grid':
       return Grid2x2;
     default:

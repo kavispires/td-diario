@@ -1,6 +1,6 @@
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
-import { BadgeAlert, CheckCircle2, Siren } from 'lucide-react';
+import { Search, Siren } from 'lucide-react';
 import { motion } from 'motion/react';
 import type { DailyInvestigacaoSuspect } from 'types/games';
 import {
@@ -87,7 +87,7 @@ export function SuspectCard({
           : `Liberar ${suspect.name.pt}`
       }
       className={cn(
-        'relative flex flex-col gap-2 rounded-[1.5rem] bg-surface-raised p-2 text-left shadow-sm transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-default',
+        'relative flex flex-col gap-0 rounded-lg bg-surface-raised p-1 text-left shadow-sm transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-default',
         isActive && 'ring-2 ring-primary',
         isReleased && 'bg-border/60 text-muted-foreground',
         isCulprit && 'bg-gold-soft ring-2 ring-gold',
@@ -100,51 +100,35 @@ export function SuspectCard({
         className={cn(isReleased && !isCulprit && 'grayscale opacity-55')}
       />
 
-      <div className="flex min-h-12 flex-col justify-center px-1 pb-1">
+      <div className="flex min-h-6 flex-col justify-center text-center">
         <Text
           strong
           className="line-clamp-2 text-sm"
         >
           {suspect.name.pt}
         </Text>
-        <Text
-          type="secondary"
-          className="text-xs"
-        >
-          {isReleased
-            ? `Liberado #${releaseOrder + 1}`
-            : isCulprit
-              ? 'Culpado'
-              : 'Toque para analisar'}
-        </Text>
-      </div>
-
-      {isReleased && (
-        <span className="absolute top-3 left-3 flex h-7 min-w-7 items-center justify-center rounded-full bg-chrome px-2 text-xs font-semibold text-white shadow-sm">
-          <CheckCircle2
-            className="mr-1 h-3.5 w-3.5"
+        {!isReleased ? (
+          <Search
+            className="h-2 w-2 mx-auto"
             aria-hidden="true"
           />
-          {releaseOrder + 1}
-        </span>
-      )}
+        ) : (
+          <Text
+            type="secondary"
+            className="text-xs"
+          >
+            {isCulprit ? 'Culpado' : `Liberado #${releaseOrder + 1}`}
+          </Text>
+        )}
+      </div>
 
       {isCulprit && (
-        <span className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-gold px-2 py-1 text-[11px] font-semibold text-chrome shadow-sm">
+        <span className="absolute bottom-1 right-[-50%] transform -translate-x-1/2 flex items-center gap-1 rounded-full bg-gold px-2 py-1 text-[11px] font-semibold text-chrome shadow-sm">
           <Siren
             className="h-3.5 w-3.5"
             aria-hidden="true"
           />
           Culpado
-        </span>
-      )}
-
-      {!isReleased && !isCulprit && (
-        <span className="absolute top-3 right-3 rounded-full bg-white/85 p-1 text-primary shadow-sm">
-          <BadgeAlert
-            className="h-4 w-4"
-            aria-hidden="true"
-          />
         </span>
       )}
     </motion.button>

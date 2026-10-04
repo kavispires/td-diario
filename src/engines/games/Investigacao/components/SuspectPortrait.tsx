@@ -39,7 +39,7 @@ export function SuspectPortrait({
   return (
     <div
       className={cn(
-        'relative aspect-[3/4] overflow-hidden rounded-[1.35rem] bg-border',
+        'relative aspect-2/3 overflow-hidden rounded-lg bg-border',
         className,
       )}
     >
