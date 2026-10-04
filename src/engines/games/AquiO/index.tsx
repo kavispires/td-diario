@@ -1,5 +1,6 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
@@ -218,13 +219,10 @@ export function DailyAquiOGame({ data }: DailyAquiOGameProps) {
       )}
 
       {!isPlaying && attempts > 0 && !showResults && (
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setShowResults(true)}
-        >
-          Ver resultado
-        </Button>
+        <SeeResultsButton
+          isComplete={isComplete}
+          setShowResults={setShowResults}
+        />
       )}
 
       {!isPlaying && showResults && (

@@ -1,4 +1,5 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
@@ -6,7 +7,6 @@ import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Heart, Search, UserRoundCheck } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { DailyInvestigacaoEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import { ReleaseModal } from './components/ReleaseModal';
 import { ResultsSplash } from './components/ResultsSplash';
 import { Statements } from './components/Statements';
@@ -32,32 +32,8 @@ type DailyInvestigacaoGameProps = {
   /**
    * Today's Investigação payload, as resolved by `GameScreen`.
    */
-  data: PlaceholderGameData;
+  data: DailyInvestigacaoEntry;
 };
-
-/**
- * Checks whether the generic `GameScreen` payload has Investigação's
- * required shape before the engine starts rendering.
- *
- * @param data - Dynamic payload provided by `GameScreen`.
- * @returns Whether `data` matches {@link DailyInvestigacaoEntry}.
- */
-function isDailyInvestigacaoEntry(
-  data: PlaceholderGameData,
-): data is DailyInvestigacaoEntry {
-  return (
-    (data.type === 'investigacao' || data.type === 'espionagem') &&
-    typeof data.id === 'string' &&
-    typeof data.number === 'number' &&
-    typeof data.culpritId === 'string' &&
-    Array.isArray(data.statements) &&
-    Array.isArray(data.additionalStatements) &&
-    Array.isArray(data.suspects) &&
-    typeof data.reason === 'object' &&
-    data.reason !== null &&
-    'pt' in data.reason
-  );
-}
 
 /**
  * Renders a full day of Investigação: suspect grid, progressive clue list,
@@ -68,41 +44,6 @@ function isDailyInvestigacaoEntry(
  * @returns The rendered Investigação game.
  */
 export function DailyInvestigacaoGame({ data }: DailyInvestigacaoGameProps) {
-  if (!isDailyInvestigacaoEntry(data)) {
-    return (
-      <Surface className="mx-auto flex w-full max-w-md flex-col gap-3 bg-card px-5 py-6 text-center">
-        <Title level={4}>Não deu para abrir a investigação de hoje.</Title>
-        <Text type="secondary">
-          O pacote recebido está incompleto. Tente recarregar a página em
-          instantes.
-        </Text>
-      </Surface>
-    );
-  }
-
-  return <DailyInvestigacaoGameContent data={data} />;
-}
-
-/**
- * Props accepted by the internal typed Investigação renderer.
- */
-type DailyInvestigacaoGameContentProps = {
-  /**
-   * Today's validated Investigação payload.
-   */
-  data: DailyInvestigacaoEntry;
-};
-
-/**
- * Renders the playable Investigação experience once today's payload has
- * been validated.
- *
- * @param props Today's validated Investigação payload.
- * @returns The rendered Investigação game.
- */
-function DailyInvestigacaoGameContent({
-  data,
-}: DailyInvestigacaoGameContentProps) {
   const [initialState] = useState(() => getInitialState(data));
   const {
     hearts,
@@ -257,15 +198,10 @@ function DailyInvestigacaoGameContent({
         )}
       </Surface>
 
-      {isComplete && !showResults && (
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setShowResults(true)}
-        >
-          Ver resultado
-        </Button>
-      )}
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       <ReleaseModal
         suspect={activeSuspect}
@@ -286,6 +222,7 @@ function DailyInvestigacaoGameContent({
           totalHearts={STARTING_HEARTS}
           releasedCount={released.length}
           totalSuspects={data.suspects.length}
+          score={score}
           challengeNumber={data.number}
           onClose={() => setShowResults(false)}
         />

@@ -1,5 +1,3 @@
-import type { DailyVitraisInfinitosEntry } from 'types/games';
-
 /**
  * Fixed number of columns used by the Vitrais Infinitos board.
  */
@@ -9,19 +7,6 @@ export const GRID_COLUMNS = 3;
  * Score awarded for each piece currently placed in its solved slot.
  */
 export const SCORE_PER_CORRECT_PIECE = 10;
-
-/**
- * Fallback daily entry used when the shared placeholder payload cannot be
- * narrowed to a Vitrais Infinitos puzzle.
- */
-export const FALLBACK_ENTRY: DailyVitraisInfinitosEntry = {
-  id: 'invalid-vitrais-infinitos-entry',
-  number: 0,
-  type: 'vitrais-infinitos',
-  title: '',
-  cardId: '',
-  pieces: [0, 1, 2, 3, 4, 5],
-};
 
 /**
  * Outer horizontal margin reserved when measuring the board container width.
@@ -72,8 +57,3 @@ export const PIECE_MOVE_TRANSITION = {
   stiffness: 350,
   damping: 28,
 } as const;
-
-/**
- * Number of summary columns shown in the completed-results stats grid.
- */
-export const RESULTS_STATS_COLUMNS = 3;

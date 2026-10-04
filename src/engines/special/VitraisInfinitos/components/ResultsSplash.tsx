@@ -1,7 +1,9 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
-import { RESULTS_STATS_COLUMNS } from '../utils/constants';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -60,12 +62,16 @@ export function ResultsSplash({
       title="Vitral montado!"
       onClose={onClose}
     >
-      <Text
-        strong
-        className="text-center"
-      >
-        {title}
-      </Text>
+      <div className="flex w-full max-w-xs flex-col gap-2 text-center">
+        <Text strong>Você montou o vitral de hoje:</Text>
+        <Text strong>"{title}"</Text>
+      </div>
+
+      <Hearts
+        remaining={solvedPieces}
+        total={pieceCount}
+        emptyClassName="text-black"
+      />
 
       <Surface className="w-full overflow-hidden bg-black/20 p-2">
         <img
@@ -75,65 +81,20 @@ export function ResultsSplash({
         />
       </Surface>
 
-      <Surface
-        className="grid w-full gap-3 bg-white/70 px-4 py-4 text-center"
-        style={{
-          gridTemplateColumns: `repeat(${RESULTS_STATS_COLUMNS}, minmax(0, 1fr))`,
-        }}
-      >
-        <div className="flex flex-col gap-1">
-          <Text
-            strong
-            className="text-lg"
-          >
-            {solvedPieces}/{pieceCount}
-          </Text>
-          <Text
-            type="secondary"
-            className="text-xs"
-          >
-            Peças certas
-          </Text>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <Text
-            strong
-            className="text-lg"
-          >
-            {moveCount}
-          </Text>
-          <Text
-            type="secondary"
-            className="text-xs"
-          >
-            Movimentos
-          </Text>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <Text
-            strong
-            className="text-lg"
-          >
-            {score}
-          </Text>
-          <Text
-            type="secondary"
-            className="text-xs"
-          >
-            Pontos
-          </Text>
-        </div>
-      </Surface>
-
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        As peças conectadas ficaram juntas até o fim. Agora é só admirar o
-        vitral de hoje.
-      </Text>
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          {solvedPieces} de {pieceCount} peças montadas em {moveCount}{' '}
+          movimentos
+        </Text>
+        <Divider orientation="vertical" />
+        <Score
+          value={score}
+          className="text-black"
+        />
+      </div>
     </GameResultsSplash>
   );
 }

@@ -1,6 +1,6 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
-import { Button } from '@components/ui/Button';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Award, Gauge } from 'lucide-react';
@@ -106,15 +106,10 @@ export function DailyPanicoGame({ data }: DailyPanicoGameProps) {
         size={panelSize}
       />
 
-      {isComplete && !showResults && (
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setShowResults(true)}
-        >
-          Ver resultado
-        </Button>
-      )}
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       {isComplete && showResults && (
         <ResultsSplash

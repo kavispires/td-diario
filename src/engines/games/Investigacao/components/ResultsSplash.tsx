@@ -1,10 +1,10 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
-import { Pill } from '@components/ui/Pill';
+import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
-import { Heart, Search, UserRoundCheck } from 'lucide-react';
-import type { ComponentType, SVGProps } from 'react';
 import type { DailyInvestigacaoSuspect } from 'types/games';
 import { buildShareText, getFeatureLabel } from '../utils/helpers';
 import { SuspectPortrait } from './SuspectPortrait';
@@ -42,6 +42,10 @@ type ResultsSplashProps = {
    */
   totalSuspects: number;
   /**
+   * Final score achieved for the case.
+   */
+  score: number;
+  /**
    * Today's sequential challenge number, used in the shareable result.
    */
   challengeNumber: number;
@@ -67,9 +71,11 @@ export function ResultsSplash({
   totalHearts,
   releasedCount,
   totalSuspects,
+  score,
   challengeNumber,
   onClose,
 }: ResultsSplashProps) {
+  const releaseGoal = Math.max(totalSuspects - 1, 0);
   const shareText = buildShareText({
     challengeNumber,
     hearts,
@@ -85,22 +91,13 @@ export function ResultsSplash({
       shareText={shareText}
       onClose={onClose}
     >
-      <Pill
-        className={cn(
-          'px-4 py-2 text-sm shadow-sm',
-          win ? 'bg-gold text-chrome' : 'bg-white/85 text-foreground',
-        )}
-      >
-        {win ? 'Caso encerrado' : 'Culpado solto'}
-      </Pill>
-
       <Text
-        type="secondary"
-        className="text-center"
+        strong
+        className="text-center text-black"
       >
         {win
-          ? 'Você identificou corretamente quem deveria ficar por último.'
-          : 'O suspeito errado foi liberado e o criminoso escapou.'}
+          ? `O culpado era ${culprit.name.pt}.`
+          : `${culprit.name.pt} era a pessoa que deveria ter ficado por último.`}
       </Text>
 
       <Surface
@@ -117,6 +114,11 @@ export function ResultsSplash({
 
         <div className="flex flex-col items-center gap-1 text-center">
           <Title level={4}>{culprit.name.pt}</Title>
+          <Text type="secondary">
+            {win
+              ? 'Você identificou corretamente quem deveria ficar por último.'
+              : 'O suspeito errado foi liberado e o criminoso escapou.'}
+          </Text>
           <Text strong>Crime: {reason}</Text>
         </div>
 
@@ -132,64 +134,26 @@ export function ResultsSplash({
         </div>
       </Surface>
 
-      <div className="grid w-full grid-cols-3 gap-3">
-        <ResultStat
-          icon={UserRoundCheck}
-          label="Inocentes"
-          value={`${releasedCount}/${Math.max(totalSuspects - 1, 0)}`}
-        />
-        <ResultStat
-          icon={Heart}
-          label="Dicas"
-          value={`${hearts}/${totalHearts}`}
-        />
-        <ResultStat
-          icon={Search}
-          label="Suspeitos"
-          value={`${totalSuspects}`}
+      <Hearts
+        remaining={hearts}
+        total={totalHearts}
+        emptyClassName="text-black"
+      />
+
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          {releasedCount} de {releaseGoal} inocentes liberados
+        </Text>
+
+        <Divider orientation="vertical" />
+        <Score
+          value={score}
+          className="text-black"
         />
       </div>
     </GameResultsSplash>
-  );
-}
-
-/**
- * Props accepted by the {@link ResultStat} component.
- */
-type ResultStatProps = {
-  /**
-   * Icon shown above the stat label.
-   */
-  icon: ComponentType<SVGProps<SVGSVGElement>>;
-  /**
-   * Small label describing the stat.
-   */
-  label: string;
-  /**
-   * Value shown for the stat.
-   */
-  value: string;
-};
-
-function ResultStat({ icon: Icon, label, value }: ResultStatProps) {
-  return (
-    <div className="flex flex-col items-center gap-1 rounded-[1.5rem] bg-white/80 px-3 py-4 text-center shadow-sm">
-      <Icon
-        className="h-4 w-4 text-primary"
-        aria-hidden="true"
-      />
-      <Text
-        strong
-        className="text-sm"
-      >
-        {value}
-      </Text>
-      <Text
-        type="secondary"
-        className="text-xs"
-      >
-        {label}
-      </Text>
-    </div>
   );
 }

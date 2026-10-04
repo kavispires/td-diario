@@ -1,5 +1,6 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
 import { Surface } from '@components/ui/Surface';
@@ -8,12 +9,11 @@ import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { Coins, Repeat, Send } from 'lucide-react';
 import { useState } from 'react';
 import type { DailyPortaisEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import { Corridor } from './components/Corridor';
 import { Passcode } from './components/Passcode';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
-import { DEFAULT_HEARTS, EMPTY_PORTAIS_ENTRY } from './utils/constants';
+import { DEFAULT_HEARTS } from './utils/constants';
 import { getInitialState, getTotalMoves } from './utils/helpers';
 import { usePortaisEngine } from './utils/usePortaisEngine';
 
@@ -24,18 +24,8 @@ type DailyPortaisGameProps = {
   /**
    * Today's Portais payload, as resolved by `GameScreen`.
    */
-  data: PlaceholderGameData;
+  data: DailyPortaisEntry;
 };
-
-function isDailyPortaisEntry(
-  data: PlaceholderGameData,
-): data is DailyPortaisEntry {
-  return (
-    data.type === 'portais' &&
-    typeof data.goal === 'number' &&
-    Array.isArray(data.corridors)
-  );
-}
 
 /**
  * Renders a full day of Portais: the corridor previews, rotating passcode
@@ -46,8 +36,7 @@ function isDailyPortaisEntry(
  * @returns The rendered Portais game.
  */
 export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
-  const resolvedData = isDailyPortaisEntry(data) ? data : EMPTY_PORTAIS_ENTRY;
-  const [initialState] = useState(() => getInitialState(resolvedData));
+  const [initialState] = useState(() => getInitialState(data));
   const {
     hearts,
     guesses,
@@ -64,7 +53,7 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
     isComplete,
     onSlideWordPosition,
     onSubmitPasscode,
-  } = usePortaisEngine(resolvedData, initialState);
+  } = usePortaisEngine(data, initialState);
   const [imageWidth, containerRef] = useCardWidthByContainerRef(
     Math.min(Math.max(currentCorridor?.imagesIds.length ?? 3, 1), 3),
     {
@@ -74,14 +63,6 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
       minWidth: 88,
     },
   );
-
-  if (!isDailyPortaisEntry(data)) {
-    return (
-      <Surface className="mx-auto flex w-full max-w-md justify-center bg-card px-5 py-6 text-center">
-        <Text type="danger">Não conseguimos carregar o desafio de hoje.</Text>
-      </Surface>
-    );
-  }
 
   const totalMoves = getTotalMoves(moves);
   const completedCorridors = isWin
@@ -216,13 +197,10 @@ export function DailyPortaisGame({ data }: DailyPortaisGameProps) {
       )}
 
       {isComplete && !showResults && (
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setShowResults(true)}
-        >
-          Ver resultado
-        </Button>
+        <SeeResultsButton
+          isComplete={isComplete}
+          setShowResults={setShowResults}
+        />
       )}
 
       {isComplete && showResults && (

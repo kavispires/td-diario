@@ -1,11 +1,10 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
-import { Button } from '@components/ui/Button';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Text } from '@components/ui/Typography';
 import { Clock3, Coins, Puzzle } from 'lucide-react';
 import { useState } from 'react';
 import type { DailyVitralEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import { PuzzleBoard } from './components/PuzzleBoard';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
@@ -23,20 +22,8 @@ type DailyVitralGameProps = {
   /**
    * Today's Vitral payload, as resolved by `GameScreen`.
    */
-  data: PlaceholderGameData;
+  data: DailyVitralEntry;
 };
-
-function isDailyVitralEntry(
-  data: PlaceholderGameData,
-): data is DailyVitralEntry {
-  return (
-    data.type === 'vitral' &&
-    typeof data.title === 'string' &&
-    typeof data.cardId === 'string' &&
-    Array.isArray(data.pieces) &&
-    data.pieces.every((piece) => typeof piece === 'number')
-  );
-}
 
 /**
  * Renders a full day of Vitral: timer-based puzzle assembly, connected
@@ -46,12 +33,6 @@ function isDailyVitralEntry(
  * @returns The rendered Vitral game.
  */
 export function DailyVitralGame({ data }: DailyVitralGameProps) {
-  if (!isDailyVitralEntry(data)) {
-    throw new Error(
-      'Invalid Vitral payload received from daily challenges API.',
-    );
-  }
-
   const [initialState] = useState(() => getInitialState(data));
   const {
     imageUrl,
@@ -158,15 +139,10 @@ export function DailyVitralGame({ data }: DailyVitralGameProps) {
         }
       />
 
-      {isComplete && !showResults && (
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setShowResults(true)}
-        >
-          Ver resultado
-        </Button>
-      )}
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       {isComplete && showResults && (
         <ResultsSplash

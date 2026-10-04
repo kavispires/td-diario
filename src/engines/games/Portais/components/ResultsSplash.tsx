@@ -1,8 +1,10 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
-import { Surface } from '@components/ui/Surface';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import type { DailyPortaisCorridor } from 'types/games';
+import { DEFAULT_HEARTS } from '../utils/constants';
 import { buildShareText, getTotalMoves } from '../utils/helpers';
 
 /**
@@ -89,19 +91,34 @@ export function ResultsSplash({
       shareText={shareText}
       onClose={onClose}
     >
-      <Text
-        strong
-        className="text-center"
-      >
-        {win
-          ? 'Você atravessou todos os portais do dia.'
-          : 'Os portais se fecharam antes da última palavra-chave.'}
-      </Text>
+      <div className="flex w-full max-w-xs flex-col gap-4 text-center">
+        <Text strong>
+          {win
+            ? 'Você atravessou todos os portais do dia.'
+            : 'As palavras-chave de hoje eram estas:'}
+        </Text>
+
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {corridors.map((corridor, index) => (
+            <span
+              key={`${index}-${corridor.passcode}`}
+              className={`rounded-full px-3 py-1 text-sm font-semibold uppercase ${
+                index < solvedCorridors
+                  ? 'bg-gold-soft text-foreground'
+                  : 'bg-white/75 text-subtle-foreground'
+              }`}
+            >
+              {corridor.passcode}
+            </span>
+          ))}
+        </div>
+      </div>
 
       <Hearts
         remaining={hearts}
-        total={4}
+        total={DEFAULT_HEARTS}
         emptyClassName="text-black"
+        filledClassName="text-black"
       />
 
       <div className="grid w-full gap-3">
@@ -150,16 +167,21 @@ export function ResultsSplash({
         })}
       </div>
 
-      <Surface
-        className={`flex w-full flex-col items-center gap-2 px-5 py-4 text-center ${
-          win ? 'bg-gold-soft' : 'bg-white/70'
-        }`}
-      >
-        <Text strong>Pontuação final: {score}</Text>
-        <Text type="secondary">
-          {totalMoves} de {goal} movimentos projetados
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          {solvedCorridors} de {corridors.length} corredores concluídos em{' '}
+          {totalMoves} mov.
         </Text>
-      </Surface>
+
+        <Divider orientation="vertical" />
+        <Score
+          value={score}
+          className="text-black"
+        />
+      </div>
     </GameResultsSplash>
   );
 }

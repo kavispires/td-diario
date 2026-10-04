@@ -1,4 +1,5 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Alert } from '@components/ui/Alert';
 import { Button } from '@components/ui/Button';
 import { Surface } from '@components/ui/Surface';
@@ -14,12 +15,10 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import type { DailyConexoesEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import { ResultsSplash } from './components/ResultsSplash';
 import { SwipeablePair } from './components/SwipeablePair';
 import { gameInfo } from './info';
 import {
-  MIN_ENTRY_IMAGE_IDS,
   MIN_REQUIRED_PAIRS,
   PAIR_CARD_COUNT,
   PAIR_CARD_GAP,
@@ -37,26 +36,8 @@ type DailyConexoesGameProps = {
   /**
    * Today's Conexões payload, as resolved by `GameScreen`.
    */
-  data: PlaceholderGameData;
+  data: DailyConexoesEntry;
 };
-
-/**
- * Narrowly validates the shared placeholder payload before Conexões starts
- * reading its game-specific fields.
- *
- * @param data - Daily payload received from the shared `GameScreen` registry.
- * @returns Whether the payload matches the Conexões shape.
- */
-function isDailyConexoesEntry(
-  data: PlaceholderGameData,
-): data is DailyConexoesEntry {
-  return (
-    data.type === 'conexoes' &&
-    Array.isArray(data.imageIds) &&
-    data.imageIds.length >= MIN_ENTRY_IMAGE_IDS &&
-    data.imageIds.every((imageId) => typeof imageId === 'string')
-  );
-}
 
 /**
  * Renders a full day of Conexões: intro, pair evaluations, contribution
@@ -66,40 +47,6 @@ function isDailyConexoesEntry(
  * @returns The rendered Conexões game.
  */
 export function DailyConexoesGame({ data }: DailyConexoesGameProps) {
-  if (!isDailyConexoesEntry(data)) {
-    return (
-      <Alert
-        type="error"
-        message="Não conseguimos carregar o desafio de Conexões de hoje."
-        description="Atualize a página para tentar novamente."
-        showIcon
-        className="mx-auto w-full max-w-md"
-      />
-    );
-  }
-
-  return <ConexoesGameContent data={data} />;
-}
-
-/**
- * Props accepted by the internal, fully narrowed Conexões content
- * component.
- */
-type ConexoesGameContentProps = {
-  /**
-   * Today's validated Conexões payload.
-   */
-  data: DailyConexoesEntry;
-};
-
-/**
- * Renders the playable Conexões screen once the shared placeholder payload
- * has been narrowed to the game's real data shape.
- *
- * @param props Today's validated Conexões payload.
- * @returns The rendered Conexões game content.
- */
-function ConexoesGameContent({ data }: ConexoesGameContentProps) {
   const [initialState] = useState(() => getInitialState(data));
   const [cardWidth, pairContainerRef] = useCardWidthByContainerRef(
     PAIR_CARD_COUNT,
@@ -359,13 +306,10 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
             Sua contribuição foi salva. Abra o resumo para rever os pares que
             você marcou.
           </Text>
-          <Button
-            variant="primary"
-            size="small"
-            onClick={() => setShowResults(true)}
-          >
-            Ver resultado
-          </Button>
+          <SeeResultsButton
+            isComplete={isComplete}
+            setShowResults={setShowResults}
+          />
         </Surface>
       )}
 
@@ -376,13 +320,10 @@ function ConexoesGameContent({ data }: ConexoesGameContentProps) {
             Hoje você preferiu não salvar nenhuma relação. Ainda assim, já valeu
             a avaliação dos pares.
           </Text>
-          <Button
-            variant="primary"
-            size="small"
-            onClick={() => setShowResults(true)}
-          >
-            Ver resultado
-          </Button>
+          <SeeResultsButton
+            isComplete={isComplete}
+            setShowResults={setShowResults}
+          />
         </Surface>
       )}
 

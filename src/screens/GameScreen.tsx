@@ -46,7 +46,9 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   investigacao: lazy(() =>
     import('@engines/games/Investigacao').then(({ DailyInvestigacaoGame }) => ({
-      default: DailyInvestigacaoGame,
+      default: DailyInvestigacaoGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   mapeamento: lazy(() =>
@@ -58,10 +60,6 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   organiku: lazy(() =>
     import('@engines/games/Organiku').then(({ DailyOrganikuGame }) => ({
-      // DailyOrganikuGame is typed against its real `DailyOrganikuEntry`
-      // payload (src/types/games.ts) rather than the generic placeholder;
-      // this cast bridges it to the shared registry's contract. Ported
-      // games can follow this same pattern.
       default: DailyOrganikuGame as ComponentType<{
         data: PlaceholderGameData;
       }>,
@@ -88,7 +86,9 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   portais: lazy(() =>
     import('@engines/games/Portais').then(({ DailyPortaisGame }) => ({
-      default: DailyPortaisGame,
+      default: DailyPortaisGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   quartetos: lazy(() =>
@@ -100,7 +100,9 @@ const gameComponents: Record<string, GameComponent> = {
   ),
   vitral: lazy(() =>
     import('@engines/games/Vitral').then(({ DailyVitralGame }) => ({
-      default: DailyVitralGame,
+      default: DailyVitralGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   'aqui-o': lazy(() =>
@@ -120,18 +122,24 @@ const gameComponents: Record<string, GameComponent> = {
   'vitrais-infinitos': lazy(() =>
     import('@engines/special/VitraisInfinitos').then(
       ({ DailyVitraisInfinitosGame }) => ({
-        default: DailyVitraisInfinitosGame,
+        default: DailyVitraisInfinitosGame as ComponentType<{
+          data: PlaceholderGameData;
+        }>,
       }),
     ),
   ),
   'ta-na-cara': lazy(() =>
     import('@engines/contributions/TaNaCara').then(({ DailyTaNaCaraGame }) => ({
-      default: DailyTaNaCaraGame,
+      default: DailyTaNaCaraGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   conexoes: lazy(() =>
     import('@engines/contributions/Conexoes').then(({ DailyConexoesGame }) => ({
-      default: DailyConexoesGame,
+      default: DailyConexoesGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
     })),
   ),
   picaco: lazy(() =>

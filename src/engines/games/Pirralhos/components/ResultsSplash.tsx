@@ -1,4 +1,7 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyPirralhosKidEntry } from 'types/games';
@@ -68,6 +71,7 @@ export function ResultsSplash({
     hearts,
   });
   const culprit = KIDS_LIBRARY[culpritId];
+  const truthTellersCount = kids.length - liarsIds.length;
   const liars = kids
     .filter((kidEntry) => liarsIds.includes(kidEntry.kidId))
     .map((kidEntry) => KIDS_LIBRARY[kidEntry.kidId])
@@ -85,15 +89,8 @@ export function ResultsSplash({
         className="text-center"
       >
         {win
-          ? 'Você descobriu quem pegou o brinquedo.'
-          : 'Faltou um palpite para pegar o pirralho certo.'}
-      </Text>
-
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        {hearts} de {PIRRALHOS_TOTAL_HEARTS} acusações sobraram · {score} pontos
+          ? `Você descobriu que ${culprit?.name ?? 'o pirralho certo'} pegou o brinquedo.`
+          : `Quem pegou o brinquedo hoje foi ${culprit?.name ?? 'um dos pirralhos'}.`}
       </Text>
 
       {culprit && (
@@ -139,6 +136,28 @@ export function ResultsSplash({
           </div>
         )}
       </Surface>
+
+      <Hearts
+        remaining={hearts}
+        total={PIRRALHOS_TOTAL_HEARTS}
+        emptyClassName="text-black"
+        filledClassName="text-black"
+      />
+
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          {truthTellersCount} de {kids.length} disseram a verdade
+        </Text>
+
+        <Divider orientation="vertical" />
+        <Score
+          value={score}
+          className="text-black"
+        />
+      </div>
     </GameResultsSplash>
   );
 }

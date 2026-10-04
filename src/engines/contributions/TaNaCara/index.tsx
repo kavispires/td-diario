@@ -1,4 +1,5 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Alert } from '@components/ui/Alert';
 import { Button } from '@components/ui/Button';
 import { Surface } from '@components/ui/Surface';
@@ -15,7 +16,6 @@ import {
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 import type { DailyTaNaCaraEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import { ResultsSplash } from './components/ResultsSplash';
 import { SuspectChoiceCard } from './components/SuspectChoiceCard';
 import { gameInfo } from './info';
@@ -36,25 +36,8 @@ type DailyTaNaCaraGameProps = {
   /**
    * Today's Ta Na Cara payload, as resolved by `GameScreen`.
    */
-  data: PlaceholderGameData;
+  data: DailyTaNaCaraEntry;
 };
-
-/**
- * Narrowly validates the shared placeholder payload before Ta Na Cara starts
- * reading its game-specific fields.
- *
- * @param data - Daily payload received from the shared `GameScreen` registry.
- * @returns Whether the payload matches the Ta Na Cara shape.
- */
-function isDailyTaNaCaraEntry(
-  data: PlaceholderGameData,
-): data is DailyTaNaCaraEntry {
-  return (
-    data.type === 'ta-na-cara' &&
-    Array.isArray(data.testimonies) &&
-    Array.isArray(data.suspectsIds)
-  );
-}
 
 /**
  * Renders a full day of Ta Na Cara: intro, testimony rounds, contribution
@@ -64,40 +47,6 @@ function isDailyTaNaCaraEntry(
  * @returns The rendered Ta Na Cara game.
  */
 export function DailyTaNaCaraGame({ data }: DailyTaNaCaraGameProps) {
-  if (!isDailyTaNaCaraEntry(data)) {
-    return (
-      <Alert
-        type="error"
-        message="Não conseguimos carregar o desafio de Tá Na Cara de hoje."
-        description="Atualize a página para tentar novamente."
-        showIcon
-        className="mx-auto w-full max-w-md"
-      />
-    );
-  }
-
-  return <TaNaCaraGameContent data={data} />;
-}
-
-/**
- * Props accepted by the internal, fully narrowed Ta Na Cara content
- * component.
- */
-type TaNaCaraGameContentProps = {
-  /**
-   * Today's validated Ta Na Cara payload.
-   */
-  data: DailyTaNaCaraEntry;
-};
-
-/**
- * Renders the playable Ta Na Cara screen once the shared placeholder payload
- * has been narrowed to the game's real data shape.
- *
- * @param props Today's validated Ta Na Cara payload.
- * @returns The rendered Ta Na Cara game content.
- */
-function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
   const [initialState] = useState(() => getInitialState(data));
   const {
     currentQuestion,
@@ -118,6 +67,7 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
     isSaving,
     isRetryable,
     isWin,
+    isComplete,
     canGoNext,
     canGoPrevious,
     canSubmit,
@@ -365,13 +315,10 @@ function TaNaCaraGameContent({ data }: TaNaCaraGameContentProps) {
             Sua contribuição foi salva. Abra o resumo para rever os depoimentos
             e respostas marcadas.
           </Text>
-          <Button
-            variant="primary"
-            size="small"
-            onClick={() => setShowResults(true)}
-          >
-            Ver resultado
-          </Button>
+          <SeeResultsButton
+            isComplete={isComplete}
+            setShowResults={setShowResults}
+          />
         </Surface>
       )}
 

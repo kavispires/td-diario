@@ -1,6 +1,10 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import type { DailyPicacoCard } from 'types/games';
+import { DRAWINGS_COUNT } from '../utils/constants';
 import { countAcceptedDrawings } from '../utils/helpers';
 import type { PicacoDrawing } from '../utils/types';
 import { DrawingPreview } from './Canvas';
@@ -42,6 +46,7 @@ export function ResultsSplash({
   onClose,
 }: ResultsSplashProps) {
   const acceptedDrawings = countAcceptedDrawings(drawings);
+  const rejectedDrawings = Math.max(cards.length - acceptedDrawings, 0);
 
   return (
     <GameResultsSplash
@@ -49,12 +54,20 @@ export function ResultsSplash({
       title="Desenhos enviados!"
       onClose={onClose}
     >
-      <Text
-        strong
-        className="text-center"
-      >
-        {acceptedDrawings} de {cards.length} desenhos foram aproveitados
-      </Text>
+      <div className="flex w-full max-w-xs flex-col gap-4 text-center">
+        <Text strong>Os temas de hoje eram estes:</Text>
+
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {cards.map((card) => (
+            <span
+              key={card.id}
+              className="rounded-md bg-white/70 px-3 py-1 text-sm font-semibold text-black shadow-sm"
+            >
+              {card.text}
+            </span>
+          ))}
+        </div>
+      </div>
 
       <Text
         type="secondary"
@@ -98,12 +111,30 @@ export function ResultsSplash({
         })}
       </div>
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        Pontuação final: {score}
-      </Text>
+      <Hearts
+        remaining={acceptedDrawings}
+        total={Math.min(DRAWINGS_COUNT, cards.length)}
+        emptyClassName="text-black"
+        filledClassName="text-black"
+      />
+
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          {rejectedDrawings === 0
+            ? 'Todos os rabiscos passaram no corte mínimo'
+            : `${rejectedDrawings} ${
+                rejectedDrawings === 1 ? 'rabisco ficou' : 'rabiscos ficaram'
+              } curtos demais para entrar no banco`}
+        </Text>
+        <Divider orientation="vertical" />
+        <Score
+          value={score}
+          className="text-black"
+        />
+      </div>
     </GameResultsSplash>
   );
 }

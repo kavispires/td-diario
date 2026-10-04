@@ -1,6 +1,10 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import { useMemo } from 'react';
+import { MIN_REQUIRED_QUESTIONS } from '../utils/constants';
 import type { TaNaCaraResultQuestion } from '../utils/types';
 
 /**
@@ -43,6 +47,15 @@ export function ResultsSplash({
       ),
     [questions],
   );
+  const answeredQuestionsLabel = useMemo(
+    () =>
+      `${questions.length} ${
+        questions.length === 1
+          ? 'depoimento respondido'
+          : 'depoimentos respondidos'
+      }`,
+    [questions.length],
+  );
 
   return (
     <GameResultsSplash
@@ -50,21 +63,17 @@ export function ResultsSplash({
       title="Respostas enviadas!"
       onClose={onClose}
     >
-      <Text
-        strong
-        className="text-center"
-      >
-        {questions.length} depoimentos respondidos e {markedAnswers} julgamentos
-        registrados
-      </Text>
+      <div className="flex w-full max-w-xs flex-col gap-4 text-center">
+        <Text strong>
+          Estas foram as marcações que você enviou para os depoimentos de hoje.
+        </Text>
+      </div>
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        Valeu pela contribuição — essas marcações ajudam o TD a calibrar futuros
-        desafios.
-      </Text>
+      <Hearts
+        remaining={questions.length}
+        total={MIN_REQUIRED_QUESTIONS}
+        emptyClassName="text-black"
+      />
 
       <div className="grid w-full gap-3">
         {questions.map((question, index) => (
@@ -138,12 +147,19 @@ export function ResultsSplash({
         ))}
       </div>
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        Pontuação final: {score}
-      </Text>
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          {answeredQuestionsLabel} e {markedAnswers} julgamentos registrados
+        </Text>
+        <Divider orientation="vertical" />
+        <Score
+          value={score}
+          className="text-black"
+        />
+      </div>
     </GameResultsSplash>
   );
 }

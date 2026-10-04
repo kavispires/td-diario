@@ -1,5 +1,6 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
 import { Surface } from '@components/ui/Surface';
@@ -243,15 +244,10 @@ export function DailyEstoquistaGame({ data }: DailyEstoquistaGameProps) {
         </Button>
       )}
 
-      {isComplete && !showResults && (
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => setShowResults(true)}
-        >
-          Ver resultado
-        </Button>
-      )}
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       {isComplete && showResults && (
         <ResultsSplash

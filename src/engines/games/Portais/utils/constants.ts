@@ -1,5 +1,3 @@
-import type { DailyPortaisEntry } from 'types/games';
-
 /**
  * Number of hearts Portais grants at the start of each run.
  */
@@ -29,14 +27,3 @@ export const VISIBLE_ROWS = 5;
  * Zero-based row index that marks the active letter position in the viewport.
  */
 export const CENTER_ROW = 2;
-
-/**
- * Fallback Portais payload used when the loaded daily data is invalid.
- */
-export const EMPTY_PORTAIS_ENTRY: DailyPortaisEntry = {
-  id: '',
-  number: 0,
-  type: 'portais',
-  goal: 0,
-  corridors: [],
-};

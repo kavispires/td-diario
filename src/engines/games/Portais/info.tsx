@@ -8,7 +8,7 @@ export const gameInfo: GameInfo = {
   emoji: '🚪',
   name: { pt: 'Portais', en: 'Portals' },
   tagline: {
-    pt: 'Descubra o que há por trás desses portais!',
+    pt: 'Descubra o que há por trás!',
     en: 'Discover what lies beyond these doors!',
   },
   releaseDate: '2025-04-12',

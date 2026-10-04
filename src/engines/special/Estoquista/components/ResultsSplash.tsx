@@ -1,4 +1,7 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
+import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { buildShareText } from '../utils/helpers';
@@ -65,6 +68,12 @@ export function ResultsSplash({
     totalHearts,
     evaluations,
   });
+  const totalOrders = evaluations[0]?.length ?? 0;
+  const bestAttempt = evaluations.reduce((best, attempt) => {
+    const correctOrders = attempt.filter(Boolean).length;
+
+    return Math.max(best, correctOrders);
+  }, 0);
 
   return (
     <GameResultsSplash
@@ -73,12 +82,15 @@ export function ResultsSplash({
       shareText={shareText}
       onClose={onClose}
     >
-      <Text
-        strong
-        className="text-center"
-      >
-        "{title}"
-      </Text>
+      <div className="flex w-full max-w-xs flex-col gap-4 text-center">
+        <Text strong>
+          {win
+            ? 'Você organizou e separou todos os pedidos do galpão de hoje.'
+            : 'O galpão de hoje era este:'}
+        </Text>
+
+        <Text className="text-black">"{title}"</Text>
+      </div>
 
       <Text
         type="secondary"
@@ -90,7 +102,7 @@ export function ResultsSplash({
       </Text>
 
       <Surface className="flex flex-col items-center gap-2 bg-white/55 px-5 py-4">
-        <Text strong>Pontuação: {score}</Text>
+        <Text strong>Histórico de envios</Text>
         <div className="flex flex-wrap justify-center gap-2">
           {evaluations.map((attempt, index) => (
             <div
@@ -112,6 +124,28 @@ export function ResultsSplash({
           ))}
         </div>
       </Surface>
+
+      <Hearts
+        remaining={hearts}
+        total={totalHearts}
+        emptyClassName="text-black"
+        filledClassName="text-black"
+      />
+
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          Melhor envio: {bestAttempt} de {totalOrders} pedidos certos
+        </Text>
+
+        <Divider orientation="vertical" />
+        <Score
+          value={score}
+          className="text-black"
+        />
+      </div>
     </GameResultsSplash>
   );
 }

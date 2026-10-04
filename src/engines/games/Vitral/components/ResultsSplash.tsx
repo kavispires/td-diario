@@ -1,5 +1,7 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
-import { Surface } from '@components/ui/Surface';
+import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import type { DailyVitralEntry } from 'types/games';
 import { VITRAL_TOTAL_HEARTS } from '../utils/constants';
@@ -74,73 +76,37 @@ export function ResultsSplash({
       shareText={shareText}
       onClose={onClose}
     >
-      <Text
-        strong
-        className="text-center"
-      >
-        "{data.title}"
-      </Text>
+      <div className="flex w-full max-w-xs flex-col gap-2 text-center">
+        <Text strong>
+          {win ? 'Você montou o vitral de hoje:' : 'O vitral de hoje era:'}
+        </Text>
 
-      <Surface
-        className={
-          win
-            ? 'w-full bg-gold-soft px-5 py-6 text-center'
-            : 'w-full bg-white/70 px-5 py-6 text-center'
-        }
-      >
-        <div className="grid grid-cols-2 gap-4 text-left sm:grid-cols-4">
-          <div className="flex flex-col gap-1">
-            <Text
-              type="secondary"
-              className="text-xs uppercase tracking-wide"
-            >
-              Peças certas
-            </Text>
-            <Text strong>{correctPieces}</Text>
-          </div>
+        <Text strong>"{data.title}"</Text>
+      </div>
 
-          <div className="flex flex-col gap-1">
-            <Text
-              type="secondary"
-              className="text-xs uppercase tracking-wide"
-            >
-              Corações
-            </Text>
-            <Text strong>
-              {hearts}/{VITRAL_TOTAL_HEARTS}
-            </Text>
-          </div>
+      <Hearts
+        remaining={hearts}
+        total={VITRAL_TOTAL_HEARTS}
+        emptyClassName="text-black"
+      />
 
-          <div className="flex flex-col gap-1">
-            <Text
-              type="secondary"
-              className="text-xs uppercase tracking-wide"
-            >
-              Tempo
-            </Text>
-            <Text strong>{formatElapsedTime(totalTime)}</Text>
-          </div>
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          {win
+            ? `${data.pieces.length} de ${data.pieces.length} peças encaixadas em ${formatElapsedTime(totalTime)}`
+            : `${correctPieces} de ${data.pieces.length} peças encaixadas em ${formatElapsedTime(totalTime)}`}
+        </Text>
 
-          <div className="flex flex-col gap-1">
-            <Text
-              type="secondary"
-              className="text-xs uppercase tracking-wide"
-            >
-              Pontos
-            </Text>
-            <Text strong>{score}</Text>
-          </div>
-        </div>
-      </Surface>
+        <Divider orientation="vertical" />
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        {win
-          ? `Você encaixou as ${data.pieces.length} peças antes que o tempo consumisse seus corações.`
-          : `Você encaixou ${correctPieces} de ${data.pieces.length} peças antes de ficar sem corações.`}
-      </Text>
+        <Score
+          value={score}
+          className="text-black"
+        />
+      </div>
     </GameResultsSplash>
   );
 }

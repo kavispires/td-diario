@@ -1,4 +1,5 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
 import { Surface } from '@components/ui/Surface';
@@ -47,6 +48,7 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
     isSaving,
     isRetryable,
     isWin,
+    isComplete,
     submitDrawing,
     retrySave,
     startGame,
@@ -182,13 +184,10 @@ export function DailyPicacoGame({ data }: DailyPicacoGameProps) {
             Seus rabiscos já foram enviados. Se quiser, abra o resumo para rever
             o que saiu.
           </Text>
-          <Button
-            variant="primary"
-            size="small"
-            onClick={() => setShowResults(true)}
-          >
-            Ver resultado
-          </Button>
+          <SeeResultsButton
+            isComplete={isComplete}
+            setShowResults={setShowResults}
+          />
         </Surface>
       )}
 

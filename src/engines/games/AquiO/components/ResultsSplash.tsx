@@ -1,6 +1,8 @@
 import { DailyItem } from '@components/games/DailyItem';
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
+import { Score } from '@components/games/Score';
+import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { motion } from 'motion/react';
@@ -173,12 +175,20 @@ export function ResultsSplash({
       shareText={shareText}
       onClose={onClose}
     >
-      <Text
-        strong
-        className="text-center"
-      >
-        {title}
-      </Text>
+      <div className="flex w-full max-w-xs flex-col gap-3 text-center">
+        <Text strong>
+          {win
+            ? 'Você encontrou todos os itens em comum de hoje.'
+            : 'O conjunto de hoje era este:'}
+        </Text>
+
+        <Text
+          strong
+          className="text-center text-xl text-black"
+        >
+          {title}
+        </Text>
+      </div>
 
       <Surface
         className={`w-full px-5 py-4 text-center ${win ? 'bg-gold-soft' : 'bg-white/75'}`}
@@ -253,12 +263,6 @@ export function ResultsSplash({
         </div>
       </Surface>
 
-      <Hearts
-        remaining={hearts}
-        total={HEARTS}
-        emptyClassName="text-black"
-      />
-
       <Text
         type="secondary"
         className="text-center"
@@ -298,6 +302,28 @@ export function ResultsSplash({
           ))}
         </div>
       )}
+
+      <Hearts
+        remaining={hearts}
+        total={HEARTS}
+        emptyClassName="text-black"
+      />
+
+      <div className="flex items-center justify-center gap-2">
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          Melhor corrida: {bestProgress} de {goal} discos em {attempts}{' '}
+          tentativa{attempts === 1 ? '' : 's'}
+        </Text>
+
+        <Divider orientation="vertical" />
+        <Score
+          value={score}
+          className="text-black"
+        />
+      </div>
     </GameResultsSplash>
   );
 }

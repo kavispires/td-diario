@@ -1,5 +1,5 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
-import { Button } from '@components/ui/Button';
+import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
@@ -7,7 +7,6 @@ import { useTDImageCardUrl } from '@hooks/useTDImageCardUrl';
 import { Check, Coins, MoveHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import type { DailyVitraisInfinitosEntry } from 'types/games';
-import type { PlaceholderGameData } from 'types/puzzles';
 import { PuzzleBoard } from './components/PuzzleBoard';
 import { ResultsSplash } from './components/ResultsSplash';
 import { gameInfo } from './info';
@@ -17,7 +16,6 @@ import {
   BOARD_CONTAINER_MARGIN,
   BOARD_MAX_WIDTH,
   BOARD_MIN_WIDTH,
-  FALLBACK_ENTRY,
 } from './utils/constants';
 import { getInitialState } from './utils/helpers';
 import { useVitraisInfinitosEngine } from './utils/useVitraisInfinitosEngine';
@@ -27,30 +25,10 @@ import { useVitraisInfinitosEngine } from './utils/useVitraisInfinitosEngine';
  */
 type DailyVitraisInfinitosGameProps = {
   /**
-   * Today's Vitrais Infinitos payload, as resolved dynamically by
-   * `GameScreen`.
+   * Today's Vitrais Infinitos payload, as resolved by `GameScreen`.
    */
-  data: PlaceholderGameData;
+  data: DailyVitraisInfinitosEntry;
 };
-
-/**
- * Narrows the shared placeholder payload to the concrete shape expected by
- * Vitrais Infinitos.
- *
- * @param data - Dynamic daily payload received from `GameScreen`.
- * @returns Whether the payload matches Vitrais Infinitos's final model.
- */
-function isDailyVitraisInfinitosEntry(
-  data: PlaceholderGameData,
-): data is DailyVitraisInfinitosEntry {
-  return (
-    data.type === 'vitrais-infinitos' &&
-    typeof data.title === 'string' &&
-    typeof data.cardId === 'string' &&
-    Array.isArray(data.pieces) &&
-    data.pieces.every((pieceId) => typeof pieceId === 'number')
-  );
-}
 
 /**
  * Renders a full day of Vitrais Infinitos: the draggable stained-glass
@@ -63,9 +41,7 @@ function isDailyVitraisInfinitosEntry(
 export function DailyVitraisInfinitosGame({
   data,
 }: DailyVitraisInfinitosGameProps) {
-  const entry = isDailyVitraisInfinitosEntry(data) ? data : FALLBACK_ENTRY;
-
-  const [initialState] = useState(() => getInitialState(entry));
+  const [initialState] = useState(() => getInitialState(data));
   const {
     pieceOrder,
     moveCount,
@@ -79,8 +55,8 @@ export function DailyVitraisInfinitosGame({
     isComplete,
     moveGroup,
     toggleSelection,
-  } = useVitraisInfinitosEngine(entry, initialState);
-  const imageUrl = useTDImageCardUrl(entry.cardId);
+  } = useVitraisInfinitosEngine(data, initialState);
+  const imageUrl = useTDImageCardUrl(data.cardId);
   const [boardWidth, containerRef] = useCardWidthByContainerRef(
     BOARD_CONTAINER_COLUMNS,
     {
@@ -90,17 +66,6 @@ export function DailyVitraisInfinitosGame({
       minWidth: BOARD_MIN_WIDTH,
     },
   );
-
-  if (!isDailyVitraisInfinitosEntry(data)) {
-    return (
-      <Surface className="mx-auto flex w-full max-w-md flex-col items-center gap-3 bg-card px-5 py-6 text-center">
-        <Title level={4}>Não deu para abrir o vitral de hoje</Title>
-        <Text type="secondary">
-          Os dados recebidos para Vitrais∞ não têm o formato esperado.
-        </Text>
-      </Surface>
-    );
-  }
 
   return (
     <div
@@ -163,13 +128,10 @@ export function DailyVitraisInfinitosGame({
             Você já montou a imagem de hoje. Abra o resultado para rever o
             vitral completo.
           </Text>
-          <Button
-            variant="primary"
-            size="small"
-            onClick={() => setShowResults(true)}
-          >
-            Ver resultado
-          </Button>
+          <SeeResultsButton
+            isComplete={isComplete}
+            setShowResults={setShowResults}
+          />
         </Surface>
       )}
 
