@@ -3,6 +3,7 @@ import { Hearts } from '@components/games/Hearts';
 import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
+import { cn } from '@utils/cn';
 import type { DailyConjuntosEntry } from 'types/games';
 import {
   CONJUNTOS_AREA_BACKGROUND_CLASSES,
@@ -93,7 +94,10 @@ export function ResultsSplash({
 
       <div className="grid grid-cols-2 gap-4">
         <div
-          className={`grid gap-0 rounded-3xl px-4 py-4 ${CONJUNTOS_AREA_BACKGROUND_CLASSES[CONJUNTOS_RULE1_AREA]}`}
+          className={cn(
+            'grid gap-0 rounded-3xl px-4 py-4',
+            CONJUNTOS_AREA_BACKGROUND_CLASSES[CONJUNTOS_RULE1_AREA],
+          )}
         >
           <Text
             strong
@@ -112,7 +116,10 @@ export function ResultsSplash({
         </div>
 
         <div
-          className={`grid gap-0 rounded-3xl px-4 py-4 ${CONJUNTOS_AREA_BACKGROUND_CLASSES[CONJUNTOS_RULE2_AREA]}`}
+          className={cn(
+            'grid gap-0 rounded-3xl px-4 py-4',
+            CONJUNTOS_AREA_BACKGROUND_CLASSES[CONJUNTOS_RULE2_AREA],
+          )}
         >
           <Text
             strong

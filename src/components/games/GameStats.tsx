@@ -1,5 +1,6 @@
 import { Tooltip } from '@components/ui/Tooltip';
 import { Text } from '@components/ui/Typography';
+import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import type { ComponentType, ReactNode, SVGProps } from 'react';
 
@@ -55,7 +56,7 @@ export function GameStat({
   align = 'start',
 }: GameStatProps) {
   return (
-    <div className={`flex items-center ${ALIGN_CLASSES[align]}`}>
+    <div className={cn('flex items-center', ALIGN_CLASSES[align])}>
       <Tooltip title={label}>
         <button
           type="button"

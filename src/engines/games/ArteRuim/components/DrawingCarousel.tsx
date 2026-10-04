@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { AUTOPLAY_DELAY_MS } from '../utils/constants';
@@ -51,11 +52,12 @@ export function DrawingCarousel({ drawings }: DrawingCarouselProps) {
                 type="button"
                 aria-label={`Mostrar desenho ${index + 1}`}
                 aria-pressed={isActive}
-                className={`h-3 w-3 rounded-full border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                className={cn(
+                  'h-3 w-3 rounded-full border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
                   isActive
                     ? 'border-primary bg-primary'
-                    : 'border-border-strong bg-card'
-                }`}
+                    : 'border-border-strong bg-card',
+                )}
                 onClick={() => setActiveIndex(index)}
               />
             );

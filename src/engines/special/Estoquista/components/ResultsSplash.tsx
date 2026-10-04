@@ -4,6 +4,7 @@ import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
+import { cn } from '@utils/cn';
 import { buildShareText } from '../utils/helpers';
 
 /**
@@ -114,9 +115,10 @@ export function ResultsSplash({
               {attempt.map((isCorrect, itemIndex) => (
                 <span
                   key={`${index}-${itemIndex}`}
-                  className={`h-3 w-3 rounded-full ${
-                    isCorrect ? 'bg-gold' : 'bg-destructive'
-                  }`}
+                  className={cn(
+                    'h-3 w-3 rounded-full',
+                    isCorrect ? 'bg-gold' : 'bg-destructive',
+                  )}
                   aria-hidden="true"
                 />
               ))}

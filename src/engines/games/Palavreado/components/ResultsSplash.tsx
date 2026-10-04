@@ -3,6 +3,7 @@ import { Hearts } from '@components/games/Hearts';
 import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
+import { cn } from '@utils/cn';
 import { PALAVREADO_BASE_HEARTS, WORD_TONE_CLASSES } from '../utils/constants';
 import { buildShareText } from '../utils/helpers';
 
@@ -94,10 +95,11 @@ export function ResultsSplash({
           {words.map((word, index) => (
             <span
               key={`${index}-${word}`}
-              className={`rounded-md px-3 py-1 font-mono text-sm font-semibold uppercase tracking-wide ${
+              className={cn(
+                'rounded-md px-3 py-1 font-mono text-sm font-semibold uppercase tracking-wide',
                 WORD_TONE_CLASSES[index] ??
-                WORD_TONE_CLASSES[WORD_TONE_CLASSES.length - 1]
-              }`}
+                  WORD_TONE_CLASSES[WORD_TONE_CLASSES.length - 1],
+              )}
             >
               {word}
             </span>

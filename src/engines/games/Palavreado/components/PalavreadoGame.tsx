@@ -14,6 +14,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
+import { cn } from '@utils/cn';
 import { notification } from '@utils/notification';
 import { Coins, Lightbulb, Repeat } from 'lucide-react';
 import { useEffect } from 'react';
@@ -289,9 +290,10 @@ export function PalavreadoGame({ data, initialState }: PalavreadoGameProps) {
               return (
                 <span
                   key={`${attemptIndex}-${wordIndex}-${word}`}
-                  className={`rounded-md px-2 py-1 font-mono text-sm font-semibold uppercase tracking-wide ${
-                    isCorrectWord ? wordTone : 'bg-surface text-foreground'
-                  }`}
+                  className={cn(
+                    'rounded-md px-2 py-1 font-mono text-sm font-semibold uppercase tracking-wide',
+                    isCorrectWord ? wordTone : 'bg-surface text-foreground',
+                  )}
                 >
                   {word}
                 </span>

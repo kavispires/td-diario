@@ -5,6 +5,7 @@ import { Keyboard } from '@components/games/Keyboard';
 import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
+import { cn } from '@utils/cn';
 import { Coins, Lightbulb } from 'lucide-react';
 import { useState } from 'react';
 import type { DailyMapeamentoEntry } from 'types/games';
@@ -126,9 +127,10 @@ export function MapeamentoGame({ data, initialState }: MapeamentoGameProps) {
           return (
             <li
               key={`${index}-${clue}`}
-              className={`grid grid-cols-[2rem_1fr] items-start gap-0 rounded-2xl px-1 py-1 ${
-                isAvailable ? 'bg-primary-soft' : 'bg-border/70 opacity-70'
-              }`}
+              className={cn(
+                'grid grid-cols-[2rem_1fr] items-start gap-0 rounded-2xl px-1 py-1',
+                isAvailable ? 'bg-primary-soft' : 'bg-border/70 opacity-70',
+              )}
             >
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white font-semibold text-foreground">
                 {index + 1}
@@ -152,7 +154,7 @@ export function MapeamentoGame({ data, initialState }: MapeamentoGameProps) {
 
       {isComplete && (
         <Surface
-          className={`p-2 text-center ${isWin ? 'bg-gold-soft' : 'bg-card'}`}
+          className={cn('p-2 text-center', isWin ? 'bg-gold-soft' : 'bg-card')}
         >
           <Text type="secondary">O lugar é:</Text>
           <div className="mt-2">

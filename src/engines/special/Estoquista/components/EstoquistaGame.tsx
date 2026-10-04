@@ -6,6 +6,7 @@ import { Pill } from '@components/ui/Pill';
 import { Surface } from '@components/ui/Surface';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
+import { cn } from '@utils/cn';
 import { ArchiveRestore, ClipboardCheck, Coins, Package2 } from 'lucide-react';
 import type { DailyEstoquistaEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -222,9 +223,10 @@ export function EstoquistaGame({ data, initialState }: EstoquistaGameProps) {
                 {attempt.map((isCorrect, itemIndex) => (
                   <span
                     key={`${index}-${itemIndex}`}
-                    className={`h-3 w-3 rounded-full ${
-                      isCorrect ? 'bg-gold' : 'bg-destructive'
-                    }`}
+                    className={cn(
+                      'h-3 w-3 rounded-full',
+                      isCorrect ? 'bg-gold' : 'bg-destructive',
+                    )}
                     aria-hidden="true"
                   />
                 ))}

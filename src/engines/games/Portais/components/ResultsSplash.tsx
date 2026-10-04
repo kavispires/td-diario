@@ -3,6 +3,7 @@ import { Hearts } from '@components/games/Hearts';
 import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
+import { cn } from '@utils/cn';
 import type { DailyPortaisCorridor } from 'types/games';
 import { DEFAULT_HEARTS } from '../utils/constants';
 import { buildShareText, getTotalMoves } from '../utils/helpers';
@@ -109,11 +110,12 @@ export function ResultsSplash({
               className="flex justify-center items-center gap-1 rounded-[1.75rem]"
             >
               <span
-                className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold uppercase ${
+                className={cn(
+                  'mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold uppercase',
                   solved
                     ? 'bg-gold-soft text-foreground'
-                    : 'bg-surface-raised text-subtle-foreground'
-                }`}
+                    : 'bg-surface-raised text-subtle-foreground',
+                )}
               >
                 {corridor.passcode}
               </span>

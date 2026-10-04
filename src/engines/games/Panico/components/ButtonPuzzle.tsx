@@ -1,3 +1,4 @@
+import { cn } from '@utils/cn';
 import { playSFX } from '@utils/soundEffects';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { DURATION_MAP } from '../utils/constants';
@@ -6,11 +7,21 @@ import {
   stopCountdownSound,
 } from '../utils/countdownSound';
 import { validateButtonPress } from '../utils/engine';
-import type { ButtonEntry } from '../utils/types';
+import type { ButtonEntry, PanicoButtonVariant } from '../utils/types';
 import { useCountdown } from '../utils/useCountdown';
 import { ButtonContent } from './ButtonContent';
 import { CircularTimer } from './CircularTimer';
 import { PressButton } from './PressButton';
+
+/**
+ * Background class applied to the press button per {@link PanicoButtonVariant},
+ * so its color hints at the expected action.
+ */
+const BUTTON_VARIANT_BG_CLASSES: Record<PanicoButtonVariant, string> = {
+  RED: 'bg-rose-950/70',
+  YELLOW: 'bg-amber-950/70',
+  BLUE: 'bg-sky-950/70',
+};
 
 /**
  * Props accepted by {@link ButtonPuzzle}.
@@ -121,15 +132,10 @@ export function ButtonPuzzle({
           onPress={handlePress}
           size={size}
           aria-label="Responder botão de Pânico"
-          className={
-            button.buttonVariant === 'RED'
-              ? 'bg-rose-950/70'
-              : button.buttonVariant === 'YELLOW'
-                ? 'bg-amber-950/70'
-                : button.buttonVariant === 'BLUE'
-                  ? 'bg-sky-950/70'
-                  : undefined
-          }
+          className={cn(
+            button.buttonVariant &&
+              BUTTON_VARIANT_BG_CLASSES[button.buttonVariant],
+          )}
         >
           <ButtonContent
             button={button}

@@ -2,6 +2,7 @@ import {
   type FloatingPlacement,
   useFloatingPosition,
 } from '@hooks/useFloatingPosition';
+import { cn } from '@utils/cn';
 import { AnimatePresence, motion } from 'motion/react';
 import { type ReactNode, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -94,7 +95,10 @@ export function Tooltip({ title, children, placement = 'top' }: TooltipProps) {
               {title}
               {position && (
                 <span
-                  className={`absolute h-2 w-2 rotate-45 bg-chrome ${ARROW_POSITION[placement]}`}
+                  className={cn(
+                    'absolute h-2 w-2 rotate-45 bg-chrome',
+                    ARROW_POSITION[placement],
+                  )}
                   style={
                     isVertical
                       ? { left: position.arrowOffset - 4 }

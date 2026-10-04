@@ -2,6 +2,7 @@ import {
   type FloatingPlacement,
   useFloatingPosition,
 } from '@hooks/useFloatingPosition';
+import { cn } from '@utils/cn';
 import { AnimatePresence, motion } from 'motion/react';
 import { type ReactNode, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -182,7 +183,10 @@ export function Popover({
               <div className="text-sm text-muted-foreground">{content}</div>
               {position && (
                 <span
-                  className={`absolute h-2 w-2 rotate-45 bg-surface-raised ${ARROW_POSITION[placement]}`}
+                  className={cn(
+                    'absolute h-2 w-2 rotate-45 bg-surface-raised',
+                    ARROW_POSITION[placement],
+                  )}
                   style={
                     isVertical
                       ? { left: position.arrowOffset - 4 }

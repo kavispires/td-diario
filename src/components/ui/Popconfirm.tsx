@@ -4,6 +4,7 @@ import {
   type FloatingPlacement,
   useFloatingPosition,
 } from '@hooks/useFloatingPosition';
+import { cn } from '@utils/cn';
 import { HelpCircle } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { type ReactNode, useEffect, useId, useRef, useState } from 'react';
@@ -203,7 +204,10 @@ export function Popconfirm({
               </div>
               {position && (
                 <span
-                  className={`absolute h-2 w-2 rotate-45 bg-surface-raised ${ARROW_POSITION[placement]}`}
+                  className={cn(
+                    'absolute h-2 w-2 rotate-45 bg-surface-raised',
+                    ARROW_POSITION[placement],
+                  )}
                   style={
                     isVertical
                       ? { left: position.arrowOffset - 4 }

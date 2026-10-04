@@ -5,6 +5,7 @@ import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
+import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import {
   GOAL,
@@ -191,7 +192,10 @@ export function ResultsSplash({
       </div>
 
       <Surface
-        className={`w-full px-5 py-4 text-center ${win ? 'bg-gold-soft' : 'bg-white/75'}`}
+        className={cn(
+          'w-full px-5 py-4 text-center',
+          win ? 'bg-gold-soft' : 'bg-white/75',
+        )}
       >
         <Text
           strong
