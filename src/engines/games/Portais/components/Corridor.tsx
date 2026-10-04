@@ -1,9 +1,8 @@
+import { DoorFrame } from '@components/game-elements/DoorFrame';
 import { Image } from '@components/ui/Image';
-import { Pill } from '@components/ui/Pill';
 import { Text } from '@components/ui/Typography';
 import { useTDImageCardUrl } from '@hooks/useTDImageCardUrl';
 import { cn } from '@utils/cn';
-import { Repeat } from 'lucide-react';
 import { motion } from 'motion/react';
 
 /**
@@ -109,28 +108,21 @@ export function Corridor({
       </div>
 
       <div className="flex items-center justify-center">
-        <Pill className="bg-white/80 text-chrome shadow-none">
-          <Repeat
-            className="h-4 w-4"
-            aria-hidden="true"
-          />
-          <Text className="text-sm">{moves} movimentos</Text>
-        </Pill>
+        <Text
+          type="secondary"
+          className="text-sm"
+        >
+          {moves} movimentos
+        </Text>
       </div>
 
-      <div
-        className="grid gap-3 rounded-[2rem] border border-white/70 bg-[linear-gradient(180deg,rgba(255,243,230,0.9)_0%,rgba(255,226,204,0.72)_40%,rgba(64,59,70,0.92)_100%)] p-4 shadow-inner"
-        style={{
-          gridTemplateColumns: `repeat(${imagesIds.length}, minmax(0, 1fr))`,
-        }}
-      >
+      <div className="flex justify-center gap-2">
         {imagesIds.map((imageId, index) => (
           <motion.div
             key={imageId}
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.2, delay: index * 0.06 }}
-            className="flex justify-center"
           >
             <PortalImageCard
               cardId={imageId}
@@ -145,27 +137,24 @@ export function Corridor({
 }
 
 /**
- * Renders a single preview image inside a rounded portal frame.
+ * Renders a single preview image framed as a portal door.
  *
  * @param props Image id, size, and accessible label.
- * @returns The rendered image tile.
+ * @returns The rendered portal frame.
  */
 function PortalImageCard({ cardId, width, alt }: PortalImageCardProps) {
   const imageUrl = useTDImageCardUrl(cardId);
 
   return (
-    <div
-      className="overflow-hidden rounded-[1.5rem] border border-white/70 bg-white/85 p-2 shadow-lg"
-      style={{ width }}
-    >
+    <DoorFrame width={width}>
       <Image
         src={imageUrl}
         alt={alt}
         width="100%"
-        height={Math.round(width * 1.2)}
+        height="100%"
         objectFit="cover"
-        className="aspect-[4/5]"
+        rounded={false}
       />
-    </div>
+    </DoorFrame>
   );
 }

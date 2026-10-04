@@ -9,14 +9,22 @@ export const DEFAULT_HEARTS = 4;
 export const DEFAULT_COLUMN_POSITION = 1;
 
 /**
- * Width in pixels assigned to each rotating passcode column.
+ * Largest width, in pixels, a rotating passcode column (and its square
+ * letter tiles) is allowed to grow to.
  */
-export const COLUMN_WIDTH = 44;
+export const MAX_COLUMN_WIDTH = 44;
 
 /**
- * Height in pixels for each visible letter slot in a passcode column.
+ * Smallest width, in pixels, a rotating passcode column (and its square
+ * letter tiles) is allowed to shrink to, so even long passcodes keep every
+ * column on screen without wrapping or scrolling.
  */
-export const LETTER_HEIGHT = 44;
+export const MIN_COLUMN_WIDTH = 10;
+
+/**
+ * Horizontal gap, in pixels, kept between adjacent passcode columns.
+ */
+export const COLUMN_GAP = 4;
 
 /**
  * Total number of letter rows shown in each passcode column viewport.

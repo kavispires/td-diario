@@ -16,11 +16,11 @@ export function useTDImageCardUrl(
   cardId: string,
   source: 'images' | 'classic' = 'images',
 ): string {
-  const { baseUrl } = useTDBaseUrl(source);
+  const { getUrl } = useTDBaseUrl(source);
 
   const imageURL = useMemo(() => {
     return cardId.replace(/-/g, '/');
   }, [cardId]);
 
-  return `${baseUrl}/${imageURL}.jpg`;
+  return getUrl(`${imageURL}.jpg`);
 }

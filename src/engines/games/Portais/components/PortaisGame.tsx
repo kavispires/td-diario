@@ -2,7 +2,6 @@ import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { Hearts } from '@components/games/Hearts';
 import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
-import { Pill } from '@components/ui/Pill';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
@@ -48,6 +47,7 @@ export function PortaisGame({ data, initialState }: PortaisGameProps) {
     currentCorridorIndex,
     currentCorridor,
     currentCorridorIndexes,
+    progress,
     currentGuess,
     latestGuess,
     showResults,
@@ -72,9 +72,6 @@ export function PortaisGame({ data, initialState }: PortaisGameProps) {
     ? data.corridors.length
     : currentCorridorIndex;
   const latestGuesses = guesses[currentCorridorIndex] ?? [];
-  const corridorLabel = isComplete
-    ? 'Corredores revelados'
-    : `Corredor ${currentCorridorIndex + 1} de ${data.corridors.length}`;
 
   return (
     <div
@@ -82,7 +79,7 @@ export function PortaisGame({ data, initialState }: PortaisGameProps) {
       className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8"
     >
       <GameStatsRow
-        progress={isComplete ? 1 : completedCorridors / data.corridors.length}
+        progress={progress}
         color={gameInfo.color}
       >
         <GameStat
@@ -107,24 +104,8 @@ export function PortaisGame({ data, initialState }: PortaisGameProps) {
         />
       </GameStatsRow>
 
-      <div className="flex flex-col items-center gap-2 text-center">
-        <Pill>Desafio #{data.number}</Pill>
-        <Text strong>Descubra a palavra que liga cada portal.</Text>
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          Trave as letras certas e atravesse todos os corredores antes que os
-          corações acabem.
-        </Text>
-      </div>
-
-      <Pill className="bg-white/80 text-chrome shadow-none">
-        {corridorLabel}
-      </Pill>
-
       {currentCorridor && !isComplete && (
-        <Surface className="flex w-full flex-col gap-4 bg-card px-5 py-6">
+        <div className="flex w-full flex-col gap-4 bg-card px-5 py-6">
           <Corridor
             number={currentCorridorIndex + 1}
             totalCorridors={data.corridors.length}
@@ -138,10 +119,6 @@ export function PortaisGame({ data, initialState }: PortaisGameProps) {
             className="text-center"
           >
             Organize as palavras verticalmente para formar a palavra-chave.
-          </Text>
-
-          <Text className="text-center text-lg font-semibold uppercase tracking-[0.32em]">
-            {currentGuess}
           </Text>
 
           <Passcode
@@ -175,7 +152,7 @@ export function PortaisGame({ data, initialState }: PortaisGameProps) {
               ))}
             </div>
           )}
-        </Surface>
+        </div>
       )}
 
       {isComplete && (
@@ -183,13 +160,13 @@ export function PortaisGame({ data, initialState }: PortaisGameProps) {
           {data.corridors.map((corridor, index) => (
             <Surface
               key={corridor.passcode}
-              className="bg-card px-5 py-5"
+              className="bg-card px-3 py-3"
             >
               <Corridor
                 number={index + 1}
                 totalCorridors={data.corridors.length}
                 imagesIds={corridor.imagesIds}
-                width={Math.max(imageWidth * 0.78, 72)}
+                width={Math.max(imageWidth * 0.4, 72)}
                 passcode={corridor.passcode}
                 moves={moves[index] ?? 0}
                 solved={index < completedCorridors}
@@ -199,12 +176,10 @@ export function PortaisGame({ data, initialState }: PortaisGameProps) {
         </div>
       )}
 
-      {isComplete && !showResults && (
-        <SeeResultsButton
-          isComplete={isComplete}
-          setShowResults={setShowResults}
-        />
-      )}
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       {isComplete && showResults && (
         <ResultsSplash

@@ -12,7 +12,12 @@ import { playSFX } from '@utils/soundEffects';
 import { useEffect, useMemo, useState } from 'react';
 import type { DailyPortaisEntry } from 'types/games';
 import { gameInfo } from '../info';
-import { getCurrentGuess, getStartingCorridorIndexes } from './helpers';
+import {
+  getCorrectLetterCount,
+  getCurrentGuess,
+  getLetterProgress,
+  getStartingCorridorIndexes,
+} from './helpers';
 import type { GameState } from './types';
 
 /**
@@ -141,11 +146,20 @@ export function usePortaisEngine(
       didSubmit = true;
       passcode = corridor.passcode;
       isCorrect = guess === corridor.passcode;
+      const previousCorrectLetterCount = getCorrectLetterCount(
+        corridor.passcode,
+        latestStoredGuess,
+      );
+      const letterScore =
+        (getCorrectLetterCount(corridor.passcode, guess) -
+          previousCorrectLetterCount) *
+        prev.hearts;
+      const progress = getLetterProgress(data.corridors, guesses);
+      const corridorMoves = prev.moves[prev.currentCorridorIndex] ?? 0;
 
       if (isCorrect) {
         const nextCorridorIndex = prev.currentCorridorIndex + 1;
         const didFinishGame = nextCorridorIndex === data.corridors.length;
-        const scoreIncrement = prev.hearts * (didFinishGame ? 20 : 10);
 
         nextSound = didFinishGame ? 'win' : 'sparks';
         shouldLogOutcome = didFinishGame ? 'win' : null;
@@ -162,15 +176,14 @@ export function usePortaisEngine(
           currentCorridorIndexes: didFinishGame
             ? prev.currentCorridorIndexes
             : getStartingCorridorIndexes(data.corridors[nextCorridorIndex]),
-          score: prev.score + scoreIncrement,
-          progress: didFinishGame
-            ? 1
-            : nextCorridorIndex / data.corridors.length,
+          score: Math.max(0, prev.score + letterScore + 15 - corridorMoves),
+          progress,
         };
       }
 
       const hearts = prev.hearts - 1;
       const didLoseGame = hearts <= 0;
+      const scoreBeforeLossPenalty = prev.score + letterScore;
 
       nextSound = didLoseGame ? 'lose' : 'wrong';
       shouldLogOutcome = didLoseGame ? 'lose' : null;
@@ -182,6 +195,11 @@ export function usePortaisEngine(
           : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
         guesses,
         hearts,
+        score: Math.max(
+          0,
+          scoreBeforeLossPenalty - (didLoseGame ? corridorMoves : 0),
+        ),
+        progress,
       };
     });
 

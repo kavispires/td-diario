@@ -39,6 +39,13 @@ function sanitizeState(data: DailyPortaisEntry, state: GameState): GameState {
   const fallbackIndexes = getStartingCorridorIndexes(currentCorridor);
   const validStatuses = Object.values(GAME_LIFECYCLE_STATUS);
   const guesses = Array.isArray(state.guesses) ? state.guesses : [];
+  const sanitizedGuesses = data.corridors.map((_, index) =>
+    Array.isArray(guesses[index])
+      ? guesses[index].filter(
+          (guess): guess is string => typeof guess === 'string',
+        )
+      : [],
+  );
   const moves = Array.isArray(state.moves) ? state.moves : [];
   const currentCorridorIndexes = Array.isArray(state.currentCorridorIndexes)
     ? state.currentCorridorIndexes
@@ -50,13 +57,7 @@ function sanitizeState(data: DailyPortaisEntry, state: GameState): GameState {
       ? state.status
       : GAME_LIFECYCLE_STATUS.IDLE,
     hearts: clamp(state.hearts, 0, DEFAULT_HEARTS),
-    guesses: data.corridors.map((_, index) =>
-      Array.isArray(guesses[index])
-        ? guesses[index].filter(
-            (guess): guess is string => typeof guess === 'string',
-          )
-        : [],
-    ),
+    guesses: sanitizedGuesses,
     currentCorridorIndex,
     currentCorridorIndexes: fallbackIndexes.map((fallbackIndex, index) => {
       const wordLength = currentCorridor?.words[index]?.length ?? 0;
@@ -73,7 +74,7 @@ function sanitizeState(data: DailyPortaisEntry, state: GameState): GameState {
       return typeof moveCount === 'number' && moveCount > 0 ? moveCount : 0;
     }),
     score: Math.max(state.score, 0),
-    progress: clamp(state.progress, 0, 1),
+    progress: getLetterProgress(data.corridors, sanitizedGuesses),
   };
 }
 
@@ -113,6 +114,50 @@ export function getCurrentGuess(
       return word[letterIndex] ?? '';
     })
     .join('');
+}
+
+/**
+ * Counts passcode letters that match their corresponding guess positions.
+ *
+ * @param passcode Correct corridor passcode.
+ * @param guess Submitted passcode guess.
+ * @returns Number of correctly matched letters.
+ */
+export function getCorrectLetterCount(passcode: string, guess: string): number {
+  return [...passcode].reduce(
+    (count, letter, index) => count + Number(guess[index] === letter),
+    0,
+  );
+}
+
+/**
+ * Calculates progress as the share of all corridor passcode letters that
+ * are correct in each corridor's latest submitted guess.
+ *
+ * @param corridors All corridors in today's challenge.
+ * @param guesses Submitted guesses grouped by corridor.
+ * @returns Progress between zero and one.
+ */
+export function getLetterProgress(
+  corridors: DailyPortaisCorridor[],
+  guesses: string[][],
+): number {
+  const totalLetters = corridors.reduce(
+    (total, corridor) => total + [...corridor.passcode].length,
+    0,
+  );
+
+  if (totalLetters === 0) {
+    return 0;
+  }
+
+  const correctLetters = corridors.reduce((total, corridor, index) => {
+    const corridorGuesses = guesses[index] ?? [];
+    const latestGuess = corridorGuesses[corridorGuesses.length - 1] ?? '';
+    return total + getCorrectLetterCount(corridor.passcode, latestGuess);
+  }, 0);
+
+  return correctLetters / totalLetters;
 }
 
 /**

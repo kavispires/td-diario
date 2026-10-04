@@ -1,9 +1,11 @@
+import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { cn } from '@utils/cn';
 import { motion } from 'motion/react';
 import {
   CENTER_ROW,
-  COLUMN_WIDTH,
-  LETTER_HEIGHT,
+  COLUMN_GAP,
+  MAX_COLUMN_WIDTH,
+  MIN_COLUMN_WIDTH,
   VISIBLE_ROWS,
 } from '../utils/constants';
 
@@ -40,7 +42,9 @@ type PasscodeProps = {
 /**
  * Renders the slot-like word columns used to assemble Portais' current
  * passcode, locking columns whose selected letter already matches the
- * answer.
+ * answer. Column width is measured against the available container width
+ * so even long passcodes (many columns) fit on a single line without
+ * wrapping, cropping, or scrolling.
  *
  * @param props Passcode, word columns, selected indexes, and interaction handler.
  * @returns The rendered passcode selector.
@@ -53,11 +57,23 @@ export function Passcode({
   onSlideWordPosition,
   disabled,
 }: PasscodeProps) {
+  const [columnWidth, containerRef] = useCardWidthByContainerRef(
+    Math.max(Math.min(words.length, 15), 12),
+    {
+      gap: COLUMN_GAP,
+      minWidth: MIN_COLUMN_WIDTH,
+      maxWidth: MAX_COLUMN_WIDTH,
+    },
+  );
+  const letterSize = columnWidth;
+
   return (
     <div
-      className="grid justify-center gap-3"
+      ref={containerRef}
+      className="grid w-full justify-center"
       style={{
-        gridTemplateColumns: `repeat(${words.length}, ${COLUMN_WIDTH}px)`,
+        gridTemplateColumns: `repeat(${words.length}, ${columnWidth}px)`,
+        gap: COLUMN_GAP,
       }}
     >
       {words.map((word, wordIndex) => {
@@ -70,7 +86,7 @@ export function Passcode({
         );
         const selectedLetter = word[selectedIndex] ?? '';
         const isLocked = latestGuess[wordIndex] === passcode[wordIndex];
-        const offset = (CENTER_ROW - selectedIndex) * LETTER_HEIGHT;
+        const offset = (CENTER_ROW - selectedIndex) * letterSize;
 
         return (
           <button
@@ -84,25 +100,28 @@ export function Passcode({
                 : `Girar coluna ${wordIndex + 1}; letra atual ${selectedLetter.toUpperCase()}`
             }
             className={cn(
-              'relative overflow-hidden rounded-2xl border border-white/70 bg-white/20 shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+              'relative overflow-hidden rounded-xl border border-white/70 bg-white/20 shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
               isLocked && 'bg-gold-soft/80',
             )}
-            style={{ height: LETTER_HEIGHT * VISIBLE_ROWS }}
+            style={{ height: letterSize * VISIBLE_ROWS }}
           >
             <div
-              className="pointer-events-none absolute left-1/2 rounded-xl border-2 border-gold"
+              className="pointer-events-none absolute left-1/2 rounded-lg border-2 border-gold"
               style={{
-                top: CENTER_ROW * LETTER_HEIGHT,
-                width: COLUMN_WIDTH,
-                height: LETTER_HEIGHT,
+                top: CENTER_ROW * letterSize,
+                width: letterSize,
+                height: letterSize,
                 transform: 'translate(-50%, 0)',
+                zIndex: 10,
               }}
               aria-hidden="true"
             />
 
             <motion.div
               className="pointer-events-none absolute inset-x-0"
-              style={{ y: offset }}
+              initial={false}
+              animate={{ y: offset }}
+              style={{ top: 0 }}
               transition={{ type: 'spring', stiffness: 260, damping: 24 }}
             >
               {word.split('').map((letter, index) => {
@@ -113,9 +132,17 @@ export function Passcode({
                   <div
                     key={`${letter}-${index}`}
                     className={cn(
-                      'mx-auto grid h-11 w-11 place-items-center rounded-xl bg-white text-lg font-bold uppercase text-foreground shadow-sm',
+                      'mx-auto grid place-items-center rounded-sm bg-white font-bold uppercase text-foreground shadow-sm',
                       isCorrectLetter && 'bg-gold text-foreground',
                     )}
+                    style={{
+                      width: letterSize - 2,
+                      height: letterSize,
+                      fontSize: Math.min(
+                        Math.max(8, Math.round(letterSize * 0.42)),
+                        letterSize - 2,
+                      ),
+                    }}
                   >
                     {letter}
                   </div>

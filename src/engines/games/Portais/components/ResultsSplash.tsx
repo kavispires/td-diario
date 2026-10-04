@@ -97,21 +97,30 @@ export function ResultsSplash({
             ? 'Você atravessou todos os portais do dia.'
             : 'As palavras-chave de hoje eram estas:'}
         </Text>
+      </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {corridors.map((corridor, index) => (
-            <span
-              key={`${index}-${corridor.passcode}`}
-              className={`rounded-full px-3 py-1 text-sm font-semibold uppercase ${
-                index < solvedCorridors
-                  ? 'bg-gold-soft text-foreground'
-                  : 'bg-white/75 text-subtle-foreground'
-              }`}
+      <div className="grid w-full gap-3">
+        {corridors.map((corridor, index) => {
+          const solved = index < solvedCorridors;
+
+          return (
+            <div
+              key={corridor.passcode}
+              className="flex justify-center items-center gap-1 rounded-[1.75rem]"
             >
-              {corridor.passcode}
-            </span>
-          ))}
-        </div>
+              <span
+                className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold uppercase ${
+                  solved
+                    ? 'bg-gold-soft text-foreground'
+                    : 'bg-surface-raised text-subtle-foreground'
+                }`}
+              >
+                {corridor.passcode}
+              </span>
+              <span>{solved ? '🔶' : ''}</span>
+            </div>
+          );
+        })}
       </div>
 
       <Hearts
@@ -121,59 +130,21 @@ export function ResultsSplash({
         filledClassName="text-black"
       />
 
-      <div className="grid w-full gap-3">
-        {corridors.map((corridor, index) => {
-          const solved = index < solvedCorridors;
-
-          return (
-            <div
-              key={corridor.passcode}
-              className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[1.75rem] bg-white/75 px-4 py-3 shadow-sm"
-            >
-              <div className="min-w-0">
-                <Text
-                  strong
-                  className="block text-sm text-subtle-foreground"
-                >
-                  Corredor {index + 1}
-                </Text>
-                <span
-                  className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold uppercase ${
-                    solved
-                      ? 'bg-gold-soft text-foreground'
-                      : 'bg-surface-raised text-subtle-foreground'
-                  }`}
-                >
-                  {corridor.passcode}
-                </span>
-              </div>
-
-              <div className="text-right">
-                <Text
-                  strong
-                  className="block"
-                >
-                  {moves[index] ?? 0} mov.
-                </Text>
-                <Text
-                  type="secondary"
-                  className="text-xs"
-                >
-                  {solved ? 'Acertou' : 'Não concluiu'}
-                </Text>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
       <div className="flex items-center justify-center gap-2">
         <Text
           type="secondary"
           className="text-center text-black"
         >
-          {solvedCorridors} de {corridors.length} corredores concluídos em{' '}
-          {totalMoves} mov.
+          {solvedCorridors}/{corridors.length} corredores
+        </Text>
+
+        <Divider orientation="vertical" />
+
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          {totalMoves} movimentos
         </Text>
 
         <Divider orientation="vertical" />
