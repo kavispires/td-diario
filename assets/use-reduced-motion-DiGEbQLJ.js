@@ -1,0 +1,1 @@
+import{s as e}from"./Typography-9B3VJ8jh.js";import{r as t}from"./heart-fLa592sS.js";import{H as n,U as r,W as i}from"./Tooltip-1jpsYyK1.js";var a=e(t(),1);function o(){!r.current&&n();let[e]=(0,a.useState)(i.current);return e}export{o as t};
