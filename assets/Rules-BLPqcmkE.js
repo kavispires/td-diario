@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-BkSabwWG.js";var t=e();function n(){return(0,t.jsx)(`p`,{children:`As regras de Colorido estarão disponíveis em breve.`})}export{n as Rules};

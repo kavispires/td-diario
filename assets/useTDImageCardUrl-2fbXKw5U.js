@@ -1,1 +1,0 @@
-import{s as e}from"./Typography-9B3VJ8jh.js";import{r as t}from"./heart-fLa592sS.js";import{w as n}from"./index-tGkZXj7L.js";var r=e(t(),1);function i(e,t=`images`){let{getUrl:i}=n(t);return i(`${(0,r.useMemo)(()=>e.replace(/-/g,`/`),[e])}.jpg`)}export{i as t};
