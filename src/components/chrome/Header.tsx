@@ -15,13 +15,29 @@ import {
   VolumeX,
 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TDLogoIcon } from '../TDLogoIcon';
+import { GameSecretMenu } from './GameSecretMenu';
+
+/**
+ * Number of consecutive taps on the game number required to reveal the
+ * {@link GameSecretMenu}.
+ */
+const SECRET_MENU_TAP_THRESHOLD = 5;
+
+/**
+ * Maximum gap, in milliseconds, allowed between taps for them to still
+ * count as "consecutive" toward the secret menu threshold.
+ */
+const SECRET_MENU_TAP_WINDOW_MS = 1500;
 
 /**
  * Renders the app's sticky top header, showing the current game's logo and
  * title (or the app brand on the hub) plus sound control and, depending on
- * context, either notifications (hub) or a rules trigger (in-game).
+ * context, either notifications (hub) or a rules trigger (in-game). Tapping
+ * the game number several times in a row reveals a hidden maintenance menu
+ * (see {@link GameSecretMenu}).
  *
  * @returns The sticky header element.
  */
@@ -37,6 +53,10 @@ export function ChromeHeader() {
   );
   const navigate = useNavigate();
 
+  const [secretMenuOpen, setSecretMenuOpen] = useState(false);
+  const tapCountRef = useRef(0);
+  const tapResetTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
+
   const activeGameInfo = activeGameId
     ? gameInfos[activeGameId as keyof typeof gameInfos]
     : undefined;
@@ -45,6 +65,27 @@ export function ChromeHeader() {
   ) : (
     'TD Diário'
   );
+
+  /**
+   * Counts consecutive taps on the game number, opening the secret menu
+   * once the threshold is reached within the allowed time window.
+   */
+  function handleNumberTap() {
+    if (tapResetTimeoutRef.current) {
+      clearTimeout(tapResetTimeoutRef.current);
+    }
+
+    tapCountRef.current += 1;
+    if (tapCountRef.current >= SECRET_MENU_TAP_THRESHOLD) {
+      tapCountRef.current = 0;
+      setSecretMenuOpen(true);
+      return;
+    }
+
+    tapResetTimeoutRef.current = setTimeout(() => {
+      tapCountRef.current = 0;
+    }, SECRET_MENU_TAP_WINDOW_MS);
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full bg-chrome text-slate-50 shadow-md">
@@ -91,9 +132,13 @@ export function ChromeHeader() {
           >
             {headerTitle}
             {activeGameId && activeGameNumber != null && (
-              <span className="ml-1 text-base text-slate-50/70">
+              <button
+                type="button"
+                className="ml-1 text-base text-slate-50/70"
+                onClick={handleNumberTap}
+              >
                 #{activeGameNumber}
-              </span>
+              </button>
             )}
           </Title>
         </div>
@@ -127,6 +172,13 @@ export function ChromeHeader() {
           />
         </div>
       </div>
+      {activeGameInfo && (
+        <GameSecretMenu
+          open={secretMenuOpen}
+          onClose={() => setSecretMenuOpen(false)}
+          gameInfo={activeGameInfo}
+        />
+      )}
     </header>
   );
 }
