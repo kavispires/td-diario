@@ -32,9 +32,10 @@ export function HubScreen() {
     [
       (o) => CARD_STATE_ORDER[o.state],
       (o) => o.progressPercent,
+      (o) => o.info.release,
       'info.name.pt',
     ],
-    ['asc', 'desc', 'asc'],
+    ['asc', 'desc', 'asc', 'asc'],
   );
 
   return (
