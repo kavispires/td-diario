@@ -4,7 +4,7 @@ import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import { FILMACO_HEARTS } from '../utils/constants';
-import { buildShareText } from '../utils/helpers';
+import { buildShare } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -62,18 +62,19 @@ export function ResultsSplash({
   challengeNumber,
   onClose,
 }: ResultsSplashProps) {
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     solvedLetters,
     totalLetters,
+    score,
   });
 
   return (
     <GameResultsSplash
       gameId="filmaco"
       title={win ? 'Parabéns!' : 'Que pena!'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <Text

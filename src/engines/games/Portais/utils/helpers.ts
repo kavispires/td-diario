@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPortaisCorridor, DailyPortaisEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -178,6 +179,30 @@ export function getInitialState(data: DailyPortaisEntry): GameState {
 }
 
 /**
+ * Builds the shareable result for today's Portais run directly from the
+ * persisted daily payload and stored game progress, without mounting the
+ * interactive engine.
+ *
+ * @param data Today's Portais challenge payload.
+ * @param state Persisted Portais progress for today's challenge.
+ * @returns The assembled `{ title, text, url }` share result.
+ */
+export function buildShareFromProgress(
+  data: DailyPortaisEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    guesses: state.guesses,
+    win: state.status === GAME_LIFECYCLE_STATUS.WIN,
+    hearts: state.hearts,
+    moves: state.moves,
+    goal: data.goal,
+    score: state.score,
+  });
+}
+
+/**
  * Sums the recorded move counts for every corridor.
  *
  * @param moves Per-corridor move counters.
@@ -188,20 +213,21 @@ export function getTotalMoves(moves: number[]): number {
 }
 
 /**
- * Builds the plain-text shareable result for today's Portais run: the
+ * Builds the shareable result for today's Portais run: the
  * standard header/hearts lines plus a single emoji line marking each
  * corridor's misses (💥) and eventual success (🔶).
  *
  * @param options - Today's challenge number and final run state.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   guesses,
   win,
   hearts,
   moves,
   goal,
+  score,
 }: {
   challengeNumber: number;
   guesses: string[][];
@@ -209,7 +235,8 @@ export function buildShareText({
   hearts: number;
   moves: number[];
   goal: number;
-}): string {
+  score: number;
+}): ShareResult {
   const lastPlayedIndex =
     guesses.filter((guess) => guess.length > 0).length - 1;
   const result = guesses
@@ -232,7 +259,7 @@ export function buildShareText({
     challengeNumber,
     totalHearts: DEFAULT_HEARTS,
     remainingHearts: hearts,
-    heartsSuffix: `(${getTotalMoves(moves)}/${goal} movimentos)`,
+    heartsSuffix: `(${getTotalMoves(moves)}/${goal} movimentos | ${score}pts)`,
     additionalLines: [result],
   });
 }

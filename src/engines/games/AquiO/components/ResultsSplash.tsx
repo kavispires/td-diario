@@ -16,7 +16,7 @@ import {
   RESULTS_PREVIEW_GROUP_SIZE,
   RESULTS_TITLES,
 } from '../utils/constants';
-import { buildShareText } from '../utils/helpers';
+import { buildShare } from '../utils/helpers';
 import type { RoundStopType } from '../utils/types';
 
 function getResultsTitle(progress: number, hearts: number): string {
@@ -152,7 +152,7 @@ export function ResultsSplash({
 }: ResultsSplashProps) {
   const usedProgress = stopType === 'idle' ? bestProgress : progress;
   const titleText = getResultsTitle(usedProgress, hearts);
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     title,
@@ -173,7 +173,7 @@ export function ResultsSplash({
     <GameResultsSplash
       gameId="aqui-o"
       title={win ? 'Parabéns!' : lose ? 'Que pena!' : titleText}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <div className="flex w-full max-w-xs flex-col gap-3 text-center">

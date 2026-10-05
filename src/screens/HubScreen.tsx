@@ -1,9 +1,13 @@
 import { DailyStatusBoard } from '@components/DailyStatusBoard';
 import { GameCard } from '@components/hub/GameCard';
+import { GroupedShareModal } from '@components/hub/GroupedShareModal';
+import { Button } from '@components/ui/Button';
 import { Title } from '@components/ui/Typography';
 import { CARD_STATE_ORDER, useGameProgress } from '@hooks/useGameProgress';
 import { orderBy } from 'lodash';
+import { Share2 } from 'lucide-react';
 import { LayoutGroup } from 'motion/react';
+import { useState } from 'react';
 
 /**
  * Renders the hub screen: the daily status board and the grid of playable
@@ -13,6 +17,10 @@ import { LayoutGroup } from 'motion/react';
  */
 export function HubScreen() {
   const { entries } = useGameProgress();
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const completedCount = entries.filter(
+    (entry) => entry.state === 'completed',
+  ).length;
 
   // Order the cards:
   // 1. In-progress games, ordered by progress percentage (highest first)
@@ -54,26 +62,22 @@ export function HubScreen() {
         </div>
       </LayoutGroup>
 
-      {/* <Button
-        onClick={() => signOut()}
-        variant="primary"
-      >
-        Logout
-      </Button>
+      {completedCount >= 2 && (
+        <Button
+          variant="outlined"
+          size="small"
+          icon={<Share2 />}
+          className="mx-auto mt-4"
+          onClick={() => setIsShareModalOpen(true)}
+        >
+          Compartilhar Resultados
+        </Button>
+      )}
 
-      <Button
-        onClick={() => signOut()}
-        variant="secondary"
-      >
-        Logout
-      </Button>
-
-      <Button
-        onClick={() => signOut()}
-        variant="ghost"
-      >
-        Logout
-      </Button> */}
+      <GroupedShareModal
+        open={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPirralhosEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -78,25 +79,47 @@ export function getInitialState(data: DailyPirralhosEntry): GameState {
 }
 
 /**
- * Builds the plain-text shareable result for today's Pirralhos run using
+ * Builds the shareable result for today's Pirralhos run using
  * the standard header, hearts, and site link only.
  *
  * @param options - Today's challenge number and final heart count.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
+  score,
 }: {
   challengeNumber: number;
   hearts: number;
-}): string {
+  score: number;
+}): ShareResult {
   return generateShareableResult({
     gameInfo,
     challengeNumber,
     totalHearts: PIRRALHOS_TOTAL_HEARTS,
     remainingHearts: hearts,
+    heartsSuffix: `(${score}pts)`,
     additionalLines: [],
+  });
+}
+
+/**
+ * Reconstructs Pirralhos' shareable result directly from today's payload and
+ * persisted progress, without mounting the game engine or results UI.
+ *
+ * @param data - Today's Pirralhos challenge payload.
+ * @param state - Persisted progress snapshot for today's run.
+ * @returns The assembled `{ title, text, url }` share result.
+ */
+export function buildShareFromProgress(
+  data: DailyPirralhosEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    score: state.score,
   });
 }
 

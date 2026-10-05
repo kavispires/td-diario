@@ -5,7 +5,7 @@ import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import type { DailyVitralEntry } from 'types/games';
 import { VITRAL_TOTAL_HEARTS } from '../utils/constants';
-import { buildShareText, formatElapsedTime } from '../utils/helpers';
+import { buildShare, formatElapsedTime } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -62,7 +62,7 @@ export function ResultsSplash({
   correctPieces,
   onClose,
 }: ResultsSplashProps) {
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     timeElapsed: totalTime,
@@ -73,7 +73,7 @@ export function ResultsSplash({
     <GameResultsSplash
       gameId="vitral"
       title={win ? 'Vitral montado!' : 'O vitral ficou inacabado'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <div className="flex w-full max-w-xs flex-col gap-2 text-center">

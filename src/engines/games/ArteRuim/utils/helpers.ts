@@ -1,6 +1,11 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
-import { getLettersInWord } from '@utils/prompts';
+import {
+  countSolvedLetters,
+  countTotalLetters,
+  getLettersInWord,
+} from '@utils/prompts';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyArteRuimEntry } from 'types/games';
 import type { PlaceholderGameData } from 'types/puzzles';
@@ -107,23 +112,25 @@ export function isDailyArteRuimEntry(
 }
 
 /**
- * Builds the plain-text shareable result for today's Arte Ruim run,
+ * Builds the shareable result for today's Arte Ruim run,
  * reusing the original revealed-letter completion percentage.
  *
  * @param options - Today's challenge number and final run state.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   revealedLetters,
   totalLetters,
+  score,
 }: {
   challengeNumber: number;
   hearts: number;
   revealedLetters: number;
   totalLetters: number;
-}): string {
+  score: number;
+}): ShareResult {
   const percentage = totalLetters
     ? Math.round((revealedLetters / totalLetters) * 100)
     : 100;
@@ -133,6 +140,27 @@ export function buildShareText({
     challengeNumber,
     totalHearts: ARTE_RUIM_HEARTS,
     remainingHearts: hearts,
-    heartsSuffix: `(${percentage}%)`,
+    heartsSuffix: `(${percentage}% | ${score}pts)`,
+  });
+}
+
+/**
+ * Builds today's Arte Ruim share result directly from persisted progress,
+ * without mounting the game engine or results components.
+ *
+ * @param data - Today's Arte Ruim challenge payload.
+ * @param state - Persisted Arte Ruim progress for today's challenge.
+ * @returns The assembled `{ title, text, url }` share result.
+ */
+export function buildShareFromProgress(
+  data: DailyArteRuimEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    revealedLetters: countSolvedLetters(state.solution),
+    totalLetters: countTotalLetters(state.solution),
+    score: state.score,
   });
 }

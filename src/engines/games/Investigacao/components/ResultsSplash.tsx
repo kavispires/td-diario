@@ -5,7 +5,7 @@ import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyInvestigacaoSuspect } from 'types/games';
-import { buildShareText, getFeatureLabel } from '../utils/helpers';
+import { buildShare, getFeatureLabel } from '../utils/helpers';
 import { SuspectPortrait } from './SuspectPortrait';
 
 /**
@@ -75,19 +75,20 @@ export function ResultsSplash({
   onClose,
 }: ResultsSplashProps) {
   const releaseGoal = Math.max(totalSuspects - 1, 0);
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     totalHearts,
     releasedCount,
     totalSuspects,
+    score,
   });
 
   return (
     <GameResultsSplash
       gameId="investigacao"
       title={win ? 'Capturado!' : 'Que pena!'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <Surface className="flex w-full flex-col items-center gap-4 bg-white/35 p-4">

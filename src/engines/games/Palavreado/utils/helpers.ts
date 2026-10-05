@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPalavreadoEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -321,12 +322,12 @@ export function smartShuffle(
 }
 
 /**
- * Builds the plain-text shareable result for today's Palavreado run.
+ * Builds the shareable result for today's Palavreado run.
  *
  * @param options - Today's challenge number and final guess history.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   swaps,
@@ -342,7 +343,7 @@ export function buildShareText({
   words: string[];
   usedSmartShuffle?: boolean;
   score: number;
-}): string {
+}): ShareResult {
   const size = guesses[0].length;
   const cleanUpAttempts = guesses.map((attempt) =>
     attempt.map((word, index) =>
@@ -358,17 +359,41 @@ export function buildShareText({
     }
   }
 
-  const hintIndicator = usedSmartShuffle ? ' 💡' : '';
+  const hintIndicator = usedSmartShuffle ? '*' : '';
 
   return generateShareableResult({
     gameInfo,
     challengeNumber,
     totalHearts: getTotalHearts(words.length),
     remainingHearts: hearts,
-    heartsSuffix: `${score} pts | ${swaps} trocas${hintIndicator}`,
+    heartsSuffix: `(${score} pts | ${swaps} trocas${hintIndicator})`,
     heartsSpacing: ' ',
     additionalLines: cleanUpAttempts
       .map((row) => row.join(' ').trim())
       .filter(Boolean),
+  });
+}
+
+/**
+ * Recreates Palavreado's shareable result using only the persisted daily
+ * challenge payload and stored game progress, without mounting the game
+ * engine or triggering any UI side effects.
+ *
+ * @param data - Today's Palavreado challenge payload.
+ * @param state - Persisted daily Palavreado progress restored from local storage.
+ * @returns The assembled `{ title, text, url }` share result for the run.
+ */
+export function buildShareFromProgress(
+  data: DailyPalavreadoEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    swaps: state.swaps,
+    guesses: state.guesses,
+    words: data.words,
+    usedSmartShuffle: state.usedSmartShuffle,
+    score: state.score,
   });
 }

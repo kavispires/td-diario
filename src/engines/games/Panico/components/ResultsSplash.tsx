@@ -4,7 +4,7 @@ import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import { PANICO_TOTAL_HEARTS } from '../utils/constants';
-import { buildShareText, getCompletionPercentage } from '../utils/helpers';
+import { buildShare, getCompletionPercentage } from '../utils/helpers';
 
 /**
  * Props accepted by {@link ResultsSplash}.
@@ -59,7 +59,7 @@ export function ResultsSplash({
     farthestButtonIndex,
     totalButtons,
   );
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     percentage: completionPercentage,
@@ -71,7 +71,7 @@ export function ResultsSplash({
     <GameResultsSplash
       gameId="panico"
       title={win ? 'Parabéns!' : 'Cabum!'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <div className="flex w-full max-w-xs flex-col gap-4 text-center">

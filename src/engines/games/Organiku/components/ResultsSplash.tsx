@@ -5,7 +5,7 @@ import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import { ORGANIKU_PLACEHOLDER_ITEM_ID } from '../utils/constants';
-import { buildShareText } from '../utils/helpers';
+import { buildShare } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -78,7 +78,7 @@ export function ResultsSplash({
   onClose,
   score,
 }: ResultsSplashProps) {
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     itemsIds,
@@ -86,13 +86,14 @@ export function ResultsSplash({
     gridSize,
     flips,
     swapLimit,
+    score,
   });
 
   return (
     <GameResultsSplash
       gameId="organiku"
       title={win ? 'Parabéns!' : 'Que pena!'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <Text

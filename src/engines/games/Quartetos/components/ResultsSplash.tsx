@@ -6,7 +6,7 @@ import { Text, Title } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
 import type { DailyQuartetosSet } from 'types/games';
 import { QUARTETOS_LEVEL_COLOR_CLASSES } from '../utils/constants';
-import { buildShareText } from '../utils/helpers';
+import { buildShare } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -64,18 +64,19 @@ export function ResultsSplash({
   guesses,
   onClose,
 }: ResultsSplashProps) {
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     guesses,
     sets,
+    score,
   });
 
   return (
     <GameResultsSplash
       gameId="quartetos"
       title={win ? 'Parabéns!' : 'Que pena!'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <Text className="text-center">

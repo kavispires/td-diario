@@ -5,7 +5,7 @@ import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
-import { buildShareText } from '../utils/helpers';
+import { buildShare } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -63,7 +63,7 @@ export function ResultsSplash({
   challengeNumber,
   onClose,
 }: ResultsSplashProps) {
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     totalHearts,
@@ -80,7 +80,7 @@ export function ResultsSplash({
     <GameResultsSplash
       gameId="estoquista"
       title={win ? 'Expedição perfeita!' : 'O estoque te venceu hoje'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <div className="flex w-full max-w-xs flex-col gap-4 text-center">

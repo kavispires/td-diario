@@ -1,6 +1,7 @@
 import type { KeyboardKeyState } from '@components/games/Keyboard';
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyMapeamentoEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -258,22 +259,45 @@ export function buildKeyboardKeysState(
 }
 
 /**
- * Builds the plain-text shareable result for today's Mapeamento run.
+ * Builds the shareable result for today's Mapeamento run.
  *
  * @param options - Today's challenge number and remaining hearts.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
+  score,
 }: {
   challengeNumber: number;
   hearts: number;
-}): string {
+  score: number;
+}): ShareResult {
   return generateShareableResult({
     gameInfo,
     challengeNumber,
     totalHearts: MAPEAMENTO_HEARTS,
     remainingHearts: hearts,
+    heartsSuffix: `(${score}pts)`,
+  });
+}
+
+/**
+ * Recreates Mapeamento's shareable result using only today's challenge
+ * payload and persisted progress, without mounting the game engine or
+ * results UI.
+ *
+ * @param data - Today's Mapeamento challenge payload.
+ * @param state - Persisted Mapeamento progress for today's challenge.
+ * @returns The assembled `{ title, text, url }` share result.
+ */
+export function buildShareFromProgress(
+  data: DailyMapeamentoEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    score: state.score,
   });
 }

@@ -11,7 +11,7 @@ import {
   CONJUNTOS_RULE1_AREA,
   CONJUNTOS_RULE2_AREA,
 } from '../utils/constants';
-import { buildShareText } from '../utils/helpers';
+import { buildShare } from '../utils/helpers';
 import type { Guess } from '../utils/types';
 import { ThingCard } from './ThingCard';
 
@@ -71,18 +71,19 @@ export function ResultsSplash({
   onClose,
   challengeNumber,
 }: ResultsSplashProps) {
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     totalHearts: maxHearts,
     guesses,
+    score,
   });
 
   return (
     <GameResultsSplash
       gameId="conjuntos"
       title={win ? 'Parabéns!' : 'Que pena!'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <Text

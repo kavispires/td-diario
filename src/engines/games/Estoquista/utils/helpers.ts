@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import { differenceInCalendarDays } from 'date-fns';
 import type { DailyEstoquistaEntry } from 'types/games';
@@ -307,13 +308,13 @@ export function validateAttempts(
 }
 
 /**
- * Builds the plain-text shareable result for today's Estoquista run,
+ * Builds the shareable result for today's Estoquista run,
  * reusing the original delivery/evaluation emoji rows.
  *
  * @param options - Today's challenge number and final run state.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   totalHearts,
@@ -323,7 +324,7 @@ export function buildShareText({
   hearts: number;
   totalHearts: number;
   evaluations: boolean[][];
-}): string {
+}): ShareResult {
   const additionalLines = evaluations
     .map((attempt) => attempt.map((value) => (value ? '📫' : '🤬')).join(' '))
     .filter(Boolean);
@@ -334,5 +335,25 @@ export function buildShareText({
     totalHearts,
     remainingHearts: hearts,
     additionalLines,
+  });
+}
+
+/**
+ * Builds today's Estoquista share result directly from persisted progress,
+ * without mounting the game engine or results components.
+ *
+ * @param data - Today's Estoquista challenge payload.
+ * @param state - Persisted Estoquista progress for today's challenge.
+ * @returns The assembled `{ title, text, url }` share result.
+ */
+export function buildShareFromProgress(
+  data: DailyEstoquistaEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    totalHearts: getTotalHearts(data),
+    evaluations: state.evaluations,
   });
 }

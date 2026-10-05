@@ -6,7 +6,7 @@ import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import type { DailyAlienadoAttribute, DailyAlienadoRequest } from 'types/games';
 import { ALIENADO_GAME_ID, ALIENADO_RESULTS_LAYOUT } from '../utils/constants';
-import { buildShareText } from '../utils/helpers';
+import { buildShare } from '../utils/helpers';
 import { AlienSign } from './AlienSign';
 
 /**
@@ -70,18 +70,19 @@ export function ResultsSplash({
   challengeNumber,
   onClose,
 }: ResultsSplashProps) {
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     guesses,
     solution,
+    score,
   });
 
   return (
     <GameResultsSplash
       gameId={ALIENADO_GAME_ID}
       title={win ? 'Parabéns!' : 'Que pena!'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <Text

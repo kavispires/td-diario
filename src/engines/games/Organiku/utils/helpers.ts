@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyOrganikuEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -81,14 +82,14 @@ export function getRowAndColumnIndexes(
 }
 
 /**
- * Builds the plain-text shareable result for today's Organiku run: the
+ * Builds the shareable result for today's Organiku run: the
  * standard header/hearts lines plus a single-row emoji grid marking which
  * items were fully found (🟢) versus not (◼️).
  *
  * @param options - Today's challenge number and final run state.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   itemsIds,
@@ -96,6 +97,7 @@ export function buildShareText({
   gridSize,
   flips,
   swapLimit,
+  score,
 }: {
   challengeNumber: number;
   hearts: number;
@@ -104,7 +106,8 @@ export function buildShareText({
   gridSize: number;
   flips: number;
   swapLimit: number;
-}): string {
+  score: number;
+}): ShareResult {
   const correctItems = itemsIds.map((itemId) =>
     foundCount[itemId] === gridSize ? itemId : null,
   );
@@ -117,7 +120,36 @@ export function buildShareText({
     challengeNumber,
     totalHearts: itemsIds.length,
     remainingHearts: hearts,
-    heartsSuffix: `(${flips}/${swapLimit} viradas)`,
+    heartsSuffix: `(${flips}/${swapLimit} viradas | ${score}pts)`,
     additionalLines,
+  });
+}
+
+/**
+ * Recreates Organiku's shareable result using only the persisted daily
+ * challenge payload and stored game progress, without mounting the game
+ * engine or triggering any UI side effects.
+ *
+ * @param data - Today's Organiku challenge payload.
+ * @param state - Persisted daily Organiku progress restored from local
+ *   storage.
+ * @returns The assembled `{ title, text, url }` share result for the run.
+ */
+export function buildShareFromProgress(
+  data: DailyOrganikuEntry,
+  state: GameState,
+): ShareResult {
+  const gridSize = Math.sqrt(data.grid.length);
+  const swapLimit = data.grid.length - data.defaultRevealedIndexes.length;
+
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    itemsIds: data.itemsIds,
+    foundCount: state.foundCount,
+    gridSize,
+    flips: state.flips,
+    swapLimit,
+    score: state.score,
   });
 }

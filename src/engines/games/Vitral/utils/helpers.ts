@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyVitralEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -25,14 +26,14 @@ export function formatElapsedTime(totalSeconds: number): string {
 }
 
 /**
- * Builds the plain-text shareable result for today's Vitral run: the
+ * Builds the shareable result for today's Vitral run: the
  * standard header/hearts lines plus the original score/time suffix and a
  * deliberate blank line before the site link.
  *
  * @param options - Today's challenge number and final run state.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   timeElapsed,
@@ -42,7 +43,7 @@ export function buildShareText({
   hearts: number;
   timeElapsed: number;
   score: number;
-}): string {
+}): ShareResult {
   return generateShareableResult({
     gameInfo,
     challengeNumber,
@@ -50,6 +51,27 @@ export function buildShareText({
     remainingHearts: hearts,
     heartsSuffix: `(${score} pts em ${Math.floor(timeElapsed / 60)}:${(timeElapsed % 60).toString().padStart(2, '0')}s)`,
     additionalLines: [' '],
+  });
+}
+
+/**
+ * Builds today's Vitral share result directly from the persisted challenge
+ * payload and stored game progress, without mounting the engine or results
+ * UI.
+ *
+ * @param data - Today's Vitral challenge payload.
+ * @param state - Persisted Vitral progress for today's challenge.
+ * @returns The assembled `{ title, text, url }` share result.
+ */
+export function buildShareFromProgress(
+  data: DailyVitralEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    timeElapsed: state.timeElapsed,
+    score: state.score,
   });
 }
 

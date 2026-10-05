@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyAlienadoEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -75,23 +76,25 @@ export function countMatchedPositions(
 }
 
 /**
- * Builds the plain-text shareable result for today's Alienado run, reusing
+ * Builds the shareable result for today's Alienado run, reusing
  * the original per-slot emoji feedback for each submitted guess.
  *
  * @param options - Today's challenge number and final run state.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   guesses,
   solution,
+  score,
 }: {
   challengeNumber: number;
   hearts: number;
   guesses: string[][];
   solution: string;
-}): string {
+  score: number;
+}): ShareResult {
   const solutionItems = splitGuess(solution);
   const additionalLines = guesses.map((guessItems) =>
     guessItems
@@ -118,5 +121,28 @@ export function buildShareText({
     totalHearts: solutionItems.length,
     remainingHearts: hearts,
     additionalLines,
+    heartsSuffix: `(${score}pts)`,
+  });
+}
+
+/**
+ * Recreates Alienado's shareable result using only the persisted daily
+ * challenge payload and stored game progress, without mounting the game
+ * engine or triggering any UI side effects.
+ *
+ * @param data Today's Alienado challenge payload.
+ * @param state Persisted daily Alienado progress restored from local storage.
+ * @returns The assembled `{ title, text, url }` share result for the run.
+ */
+export function buildShareFromProgress(
+  data: DailyAlienadoEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    guesses: state.guesses.map(splitGuess),
+    solution: data.solution,
+    score: state.score,
   });
 }

@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyPanicoEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -72,12 +73,12 @@ export function getCompletionPercentage(
 }
 
 /**
- * Builds the plain-text shareable result for today's Panico run.
+ * Builds the shareable result for today's Panico run.
  *
  * @param options - Today's challenge number, remaining hearts, and progress.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   percentage,
@@ -85,12 +86,34 @@ export function buildShareText({
   challengeNumber: number;
   hearts: number;
   percentage: number;
-}): string {
+}): ShareResult {
   return generateShareableResult({
     gameInfo,
     challengeNumber,
     totalHearts: PANICO_TOTAL_HEARTS,
     remainingHearts: hearts,
     heartsSuffix: `(${percentage}%)`,
+  });
+}
+
+/**
+ * Rebuilds Panico's share payload directly from persisted progress and today's
+ * challenge data, without mounting the game engine.
+ *
+ * @param data Today's Panico payload.
+ * @param state Persisted Panico progress for the same challenge day.
+ * @returns The assembled `{ title, text, url }` share result.
+ */
+export function buildShareFromProgress(
+  data: DailyPanicoEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    percentage: getCompletionPercentage(
+      state.farthestButtonIndex,
+      data.buttons.length,
+    ),
   });
 }

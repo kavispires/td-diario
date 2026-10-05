@@ -5,7 +5,7 @@ import { Divider } from '@components/ui/Divider';
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
 import { PALAVREADO_BASE_HEARTS, WORD_TONE_CLASSES } from '../utils/constants';
-import { buildShareText } from '../utils/helpers';
+import { buildShare } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -67,7 +67,7 @@ export function ResultsSplash({
   challengeNumber,
   onClose,
 }: ResultsSplashProps) {
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
     swaps,
@@ -81,7 +81,7 @@ export function ResultsSplash({
     <GameResultsSplash
       gameId="palavreado"
       title={win ? 'Parabéns!' : 'Que pena!'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <div className="flex w-full max-w-xs flex-col gap-4  text-center">

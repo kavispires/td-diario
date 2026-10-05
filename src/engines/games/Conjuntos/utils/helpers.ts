@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyConjuntosEntry, DailyConjuntosThing } from 'types/games';
 import { gameInfo } from '../info';
@@ -257,23 +258,25 @@ export function getAreaThingsKey(
 }
 
 /**
- * Builds the plain-text shareable result for today's Conjuntos run, reusing
+ * Builds the shareable result for today's Conjuntos run, reusing
  * the original per-attempt emoji summary and spaced heart row.
  *
  * @param options - Today's challenge number and final run state.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   totalHearts,
   guesses,
+  score,
 }: {
   challengeNumber: number;
   hearts: number;
   totalHearts: number;
   guesses: Array<Pick<Guess, 'result'>>;
-}): string {
+  score: number;
+}): ShareResult {
   const additionalLines = [
     guesses
       .map((guess) => {
@@ -287,7 +290,29 @@ export function buildShareText({
     challengeNumber,
     totalHearts,
     remainingHearts: hearts,
+    heartsSuffix: `(${score}pts)`,
     heartsSpacing: ' ',
     additionalLines,
+  });
+}
+
+/**
+ * Builds today's Conjuntos share result directly from persisted progress,
+ * without mounting the game engine or results components.
+ *
+ * @param data - Today's Conjuntos challenge payload.
+ * @param state - Persisted Conjuntos progress for today's challenge.
+ * @returns The assembled `{ title, text, url }` share result.
+ */
+export function buildShareFromProgress(
+  data: DailyConjuntosEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    totalHearts: getTotalHearts(data.id),
+    guesses: state.guesses,
+    score: state.score,
   });
 }

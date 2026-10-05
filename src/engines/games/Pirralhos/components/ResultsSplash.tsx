@@ -6,7 +6,7 @@ import { Text } from '@components/ui/Typography';
 import type { DailyPirralhosKidEntry } from 'types/games';
 import type { KidProfile } from '../utils/constants';
 import { KIDS_LIBRARY, PIRRALHOS_TOTAL_HEARTS } from '../utils/constants';
-import { buildShareText } from '../utils/helpers';
+import { buildShare } from '../utils/helpers';
 import { KidPortrait } from './KidPortrait';
 
 /**
@@ -65,9 +65,10 @@ export function ResultsSplash({
   kids,
   onClose,
 }: ResultsSplashProps) {
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     hearts,
+    score,
   });
   const culprit = KIDS_LIBRARY[culpritId];
   const liars = kids
@@ -79,7 +80,7 @@ export function ResultsSplash({
     <GameResultsSplash
       gameId="pirralhos"
       title={win ? 'Parabéns!' : 'Que pena!'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <Text

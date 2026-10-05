@@ -1,4 +1,4 @@
-import type { GameInfo } from 'types/puzzles';
+import type { DateKey, GameInfo } from 'types/puzzles';
 
 /**
  * Renders a row of filled/empty heart emoji representing remaining lives,
@@ -24,6 +24,45 @@ export function writeHeartResultString(
 }
 
 /**
+ * The root URL shared alongside every game's result. Always points at the
+ * app's hub, never at an individual game's route.
+ */
+export const SHARE_URL = 'https://diario.kavispires.com';
+
+/**
+ * Formats a `DateKey` (`YYYY-MM-DD`) as `DD-MM-YYYY`, for display in the
+ * Hub's grouped share header (e.g. `"TD Diário 05-10-2026"`).
+ *
+ * @param dateId - A `YYYY-MM-DD` date string, e.g. today's challenge id.
+ * @returns The same date formatted as `DD-MM-YYYY`.
+ */
+export function formatShareDate(dateId: DateKey): string {
+  const [year, month, day] = dateId.split('-');
+  return `${day}-${month}-${year}`;
+}
+
+/**
+ * Shareable result returned by every game's `buildShare` function, shaped
+ * to be passed directly to the Web Share API (`navigator.share`).
+ */
+export type ShareResult = {
+  /**
+   * Short headline naming the game and today's challenge number, e.g.
+   * `"🧩 Organiku #42"`.
+   */
+  title: string;
+  /**
+   * Multi-line recap of the player's result (hearts, score, grid, etc).
+   */
+  text: string;
+  /**
+   * Link shared alongside the result. Always the app's root/hub, never a
+   * route for an individual game.
+   */
+  url: string;
+};
+
+/**
  * Options accepted by {@link generateShareableResult}.
  */
 export type GenerateShareableResultOptions = {
@@ -35,10 +74,6 @@ export type GenerateShareableResultOptions = {
    * Today's sequential challenge number.
    */
   challengeNumber: number;
-  /**
-   * Optional headline included right after the game/challenge line.
-   */
-  title?: string;
   /**
    * The total number of hearts available.
    */
@@ -63,44 +98,41 @@ export type GenerateShareableResultOptions = {
    * Whether to omit the hearts line entirely.
    */
   hideHearts?: boolean;
-  /**
-   * Whether to omit the trailing link to TD Diário.
-   */
-  hideLink?: boolean;
 };
 
 /**
- * Builds the plain-text shareable result copied to the clipboard when a
- * player taps "Compartilhar Resultados": a header line naming the game and
- * today's challenge number, an optional title, the hearts result, any
- * game-specific extra lines, and a trailing link back to TD Diário.
+ * Builds the shareable result for a game's "Compartilhar Resultados"
+ * action: a title naming the game and today's challenge number, and a body
+ * text with the hearts result plus any game-specific extra lines. The
+ * result is shaped to be passed directly to `navigator.share`.
  *
  * @param options - Game metadata, challenge number, and result details.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
 export function generateShareableResult({
   gameInfo,
   challengeNumber,
-  title,
   totalHearts = 0,
   remainingHearts = 0,
   heartsSuffix = '',
   heartsSpacing = '',
   additionalLines = [],
   hideHearts = false,
-  hideLink = false,
-}: GenerateShareableResultOptions): string {
-  return [
-    `${gameInfo.emoji} TD Diário ${gameInfo.name.pt} #${challengeNumber}`,
-    title,
+}: GenerateShareableResultOptions): ShareResult {
+  const text = [
     !hideHearts &&
       `${writeHeartResultString(remainingHearts, totalHearts, heartsSpacing)}${
         heartsSuffix ? ` ${heartsSuffix}` : ''
       }`,
     ...additionalLines,
-    !hideLink && 'https://diario.kavispires.com',
   ]
     .filter(Boolean)
     .map((line) => (line as string).trim())
     .join('\n');
+
+  return {
+    title: `${gameInfo.emoji} ${gameInfo.name.pt} #${challengeNumber}`,
+    text,
+    url: SHARE_URL,
+  };
 }

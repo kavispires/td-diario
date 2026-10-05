@@ -1,6 +1,8 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
+import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { pluralize } from '@utils/helpers';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyAquiOEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -37,6 +39,11 @@ function randomInt(maxExclusive: number): number {
 function getItemNumericId(itemId: string): number {
   const match = itemId.match(/\d+/);
   return match ? Number.parseInt(match[0], 10) : 0;
+}
+
+function translateTitle<T>(value: DualLanguageValue<T> | { en: T; pt: T }): T {
+  const language = useAppRuntimeStore.getState().language;
+  return value[language] ?? value.pt;
 }
 
 function getDefaultState(data: DailyAquiOEntry): GameState {
@@ -197,13 +204,13 @@ export function getDiscs(
 }
 
 /**
- * Builds the plain-text shareable result for today's Aqui O run, matching
+ * Builds the shareable result for today's Aqui O run, matching
  * the original title/mode line and best-progress summary.
  *
  * @param options - Today's challenge number and final run state.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   title,
@@ -221,7 +228,7 @@ export function buildShareText({
   goal: number;
   hardMode: boolean;
   attempts: number;
-}): string {
+}): ShareResult {
   const usedProgress = Math.max(progress, bestProgress);
 
   return generateShareableResult({
@@ -233,5 +240,35 @@ export function buildShareText({
       `${title}${hardMode ? '*' : ''}`,
       `${usedProgress}/${goal} discos (${attempts} ${pluralize(attempts, 'tentativa')})`,
     ],
+  });
+}
+
+/**
+ * Recreates Aqui O's shareable result using only the persisted daily
+ * challenge payload and stored game progress, without mounting the game
+ * engine or triggering any UI side effects.
+ *
+ * @param data Today's Aqui O challenge payload.
+ * @param state Persisted daily Aqui O progress restored from local storage.
+ * @returns The assembled `{ title, text, url }` share result for the run.
+ */
+export function buildShareFromProgress(
+  data: DailyAquiOEntry,
+  state: GameState,
+): ShareResult {
+  const progress = Math.max(
+    state.maxProgress,
+    Math.round(state.progress * state.goal),
+  );
+
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    title: translateTitle(data.title),
+    progress,
+    bestProgress: state.maxProgress,
+    goal: state.goal,
+    hardMode: state.hardMode,
+    attempts: state.attempts,
   });
 }

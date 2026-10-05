@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import {
   generateShareableResult,
   writeHeartResultString,
@@ -209,24 +210,26 @@ export function isStatementComplete(
 }
 
 /**
- * Builds the plain-text shareable result for today's Investigação run.
+ * Builds the shareable result for today's Investigação run.
  *
  * @param options - Today's challenge number and final suspect-release state.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   totalHearts,
   releasedCount,
   totalSuspects,
+  score,
 }: {
   challengeNumber: number;
   hearts: number;
   totalHearts: number;
   releasedCount: number;
   totalSuspects: number;
-}): string {
+  score: number;
+}): ShareResult {
   const releaseGoal = totalSuspects - 1;
   const winIcon =
     releasedCount === releaseGoal ? SHARE_WIN_ICON : SHARE_LOSE_ICON;
@@ -238,8 +241,31 @@ export function buildShareText({
     totalHearts,
     remainingHearts: hearts,
     additionalLines: [
-      `${winIcon} ${writeHeartResultString(hearts, totalHearts)} (${progress}%)`,
+      `${winIcon} ${writeHeartResultString(hearts, totalHearts)} (${progress}% | ${score}pts)`,
     ],
     hideHearts: true,
+  });
+}
+
+/**
+ * Recreates Investigação's shareable result using only today's challenge
+ * payload and persisted progress, without mounting the game engine or
+ * results UI.
+ *
+ * @param data - Today's Investigação challenge payload.
+ * @param state - Persisted Investigação progress for today's challenge.
+ * @returns The assembled `{ title, text, url }` share result.
+ */
+export function buildShareFromProgress(
+  data: DailyInvestigacaoEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    totalHearts: STARTING_HEARTS,
+    releasedCount: state.released.length,
+    totalSuspects: data.suspects.length,
+    score: state.score,
   });
 }

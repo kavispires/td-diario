@@ -1,5 +1,6 @@
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import type { ShareResult } from '@utils/shareResults';
 import { generateShareableResult } from '@utils/shareResults';
 import type { DailyQuartetosEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -80,23 +81,25 @@ export function shuffleItems<TItem>(items: TItem[]): TItem[] {
 }
 
 /**
- * Builds the plain-text shareable result for today's Quartetos run: the
+ * Builds the shareable result for today's Quartetos run: the
  * standard header/hearts lines plus one emoji row per submitted guess.
  *
  * @param options - Today's challenge number and final run state.
- * @returns The assembled shareable result text.
+ * @returns The assembled `{ title, text, url }` share result.
  */
-export function buildShareText({
+export function buildShare({
   challengeNumber,
   hearts,
   guesses,
   sets,
+  score,
 }: {
   challengeNumber: number;
   hearts: number;
   guesses: string[];
   sets: DailyQuartetosEntry['sets'];
-}): string {
+  score: number;
+}): ShareResult {
   const emojisMap = sets.reduce<Dictionary<string>>((accumulator, set) => {
     set.itemsIds.forEach((itemId) => {
       accumulator[itemId] =
@@ -117,7 +120,30 @@ export function buildShareText({
     challengeNumber,
     totalHearts: sets.length,
     remainingHearts: hearts,
+    heartsSuffix: `(${score}pts)`,
     heartsSpacing: ' ',
     additionalLines,
+  });
+}
+
+/**
+ * Recreates Quartetos' shareable result using only the persisted daily
+ * challenge payload and stored game progress, without mounting the game
+ * engine or triggering any UI side effects.
+ *
+ * @param data - Today's Quartetos challenge payload.
+ * @param state - Persisted daily Quartetos progress restored from local storage.
+ * @returns The assembled `{ title, text, url }` share result for the run.
+ */
+export function buildShareFromProgress(
+  data: DailyQuartetosEntry,
+  state: GameState,
+): ShareResult {
+  return buildShare({
+    challengeNumber: data.number,
+    hearts: state.hearts,
+    guesses: state.guesses,
+    sets: data.sets,
+    score: state.score,
   });
 }

@@ -6,7 +6,7 @@ import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
 import type { DailyPortaisCorridor } from 'types/games';
 import { DEFAULT_HEARTS } from '../utils/constants';
-import { buildShareText, getTotalMoves } from '../utils/helpers';
+import { buildShare, getTotalMoves } from '../utils/helpers';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -76,20 +76,21 @@ export function ResultsSplash({
 }: ResultsSplashProps) {
   const totalMoves = getTotalMoves(moves);
   const solvedCorridors = win ? corridors.length : currentCorridorIndex;
-  const shareText = buildShareText({
+  const share = buildShare({
     challengeNumber,
     guesses,
     win,
     hearts,
     moves,
     goal,
+    score,
   });
 
   return (
     <GameResultsSplash
       gameId="portais"
       title={win ? 'Parabéns!' : 'Que pena!'}
-      shareText={shareText}
+      share={share}
       onClose={onClose}
     >
       <div className="flex w-full max-w-xs flex-col gap-4 text-center">
