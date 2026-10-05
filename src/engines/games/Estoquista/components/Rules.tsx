@@ -1,11 +1,12 @@
 import { Text } from '@components/ui/Typography';
 import { Heart } from 'lucide-react';
 import {
-  ESTOQUISTA_RULES_GOODS_COUNT,
   ESTOQUISTA_RULES_IN_STOCK_ORDERS_COUNT,
-  ESTOQUISTA_RULES_ORDERS_COUNT,
   ESTOQUISTA_RULES_STARTING_HEARTS,
 } from '../utils/constants';
+
+const ESTOQUISTA_RULES_GOODS_COUNT = 16;
+const ESTOQUISTA_RULES_ORDERS_COUNT = 4;
 
 /**
  * Renders Estoquista's rules inside the shared `RulesOverlay`.

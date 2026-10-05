@@ -8,7 +8,7 @@ import { Tooltip } from '../ui/Tooltip';
  * Default width/height, in pixels, applied to a {@link Sprite} when `width`
  * is not provided.
  */
-export const DEFAULT_SPRITE_SIZE = 72;
+export const DEFAULT_SPRITE_SIZE = 64;
 
 /**
  * Props accepted by the {@link Sprite} component.

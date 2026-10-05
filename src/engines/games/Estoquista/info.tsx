@@ -12,8 +12,8 @@ export const gameInfo: GameInfo = {
     en: 'Come apply some feng-shui to this shelf!',
   },
   releaseDate: '2024-08-04',
-  release: 'demo',
-  version: '0.0.1',
+  release: 'stable',
+  version: '1.0.0',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

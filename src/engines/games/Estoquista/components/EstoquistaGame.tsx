@@ -1,13 +1,29 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
 import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
-import { Pill } from '@components/ui/Pill';
+import { Popconfirm } from '@components/ui/Popconfirm';
 import { Surface } from '@components/ui/Surface';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
+import {
+  DndContext,
+  type DragEndEvent,
+  PointerSensor,
+  pointerWithin,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
 import { cn } from '@utils/cn';
-import { ArchiveRestore, ClipboardCheck, Coins, Package2 } from 'lucide-react';
+import {
+  ArchiveRestore,
+  ClipboardCheck,
+  Coins,
+  Heart,
+  Package2,
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import type { DailyEstoquistaEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
@@ -15,17 +31,19 @@ import {
   ESTOQUISTA_CARD_WIDTH_CONFIG,
   ESTOQUISTA_CURRENT_GOOD_MAX_WIDTH,
   ESTOQUISTA_CURRENT_GOOD_WIDTH_RATIO,
+  ESTOQUISTA_GOOD_LAYOUT_TRANSITION,
   ESTOQUISTA_HEART_ICON_SIZE,
   ESTOQUISTA_HEART_PENALTY,
   ESTOQUISTA_PHASE,
 } from '../utils/constants';
+import { getRequiredFulfillmentCount } from '../utils/helpers';
 import type { GameState } from '../utils/types';
 import { useEstoquistaEngine } from '../utils/useEstoquistaEngine';
 import { FulfillmentBoard } from './FulfillmentBoard';
 import { Orders } from './Orders';
 import { ResultsSplash } from './ResultsSplash';
-import { StockingBoard } from './StockingBoard';
-import { WarehouseGoodCard } from './WarehouseGoodCard';
+import { getGoodLayoutId, StockingBoard } from './StockingBoard';
+import { WarehouseGoodItem } from './WarehouseGoodItem';
 
 /**
  * Props accepted by the {@link EstoquistaGame} component.
@@ -76,6 +94,26 @@ export function EstoquistaGame({ data, initialState }: EstoquistaGameProps) {
     ESTOQUISTA_BOARD_COLUMNS,
     ESTOQUISTA_CARD_WIDTH_CONFIG,
   );
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
+
+  /**
+   * Resolves a drag-and-drop gesture into an `onFulfill` call once an order
+   * card is released over a shelf droppable.
+   *
+   * @param event - The dnd-kit drag end event.
+   */
+  function handleDragEnd(event: DragEndEvent) {
+    const order = event.active.data.current?.order as string | undefined;
+    const shelfIndex = event.over?.data.current?.shelfIndex as
+      | number
+      | undefined;
+
+    if (order !== undefined && shelfIndex !== undefined) {
+      onFulfill(shelfIndex, order);
+    }
+  }
 
   return (
     <div
@@ -108,26 +146,17 @@ export function EstoquistaGame({ data, initialState }: EstoquistaGameProps) {
         />
       </GameStatsRow>
 
-      <Text
-        strong
-        className="text-center"
-      >
-        {data.title}
-      </Text>
-
-      <Pill>
-        {phase === ESTOQUISTA_PHASE.STOCKING
-          ? 'Fase 1 · Arrumando o estoque'
-          : 'Fase 2 · Separando os pedidos'}
-      </Pill>
+      <GameTitle
+        title={data.title}
+        description={
+          phase === ESTOQUISTA_PHASE.STOCKING
+            ? 'Fase 1 · Arrumando o estoque'
+            : 'Fase 2 · Separando os pedidos'
+        }
+      />
 
       {phase === ESTOQUISTA_PHASE.STOCKING ? (
         <>
-          <Paragraph className="mb-0 text-center">
-            Escolha uma lógica e memorize onde cada caixa ficou. Depois disso,
-            você vai precisar achar tudo no escuro.
-          </Paragraph>
-
           <StockingBoard
             warehouse={warehouse}
             onPlaceGood={onPlaceGood}
@@ -136,36 +165,58 @@ export function EstoquistaGame({ data, initialState }: EstoquistaGameProps) {
           />
 
           <Surface className="flex w-full flex-col items-center gap-3 bg-card px-5 py-6 text-center">
-            <Text type="secondary">Produto atual</Text>
-            {currentGood ? (
-              <WarehouseGoodCard
-                itemId={currentGood}
-                width={Math.min(
-                  itemWidth * ESTOQUISTA_CURRENT_GOOD_WIDTH_RATIO,
-                  ESTOQUISTA_CURRENT_GOOD_MAX_WIDTH,
-                )}
-                highlighted
-              />
-            ) : (
-              <Title level={4}>Prateleiras prontas!</Title>
+            {currentGood && (
+              <Text
+                strong
+                className="text-sm"
+              >
+                Clique em uma prateleira vazia para posicionar o produto:
+              </Text>
             )}
+            <AnimatePresence
+              mode="popLayout"
+              initial={false}
+            >
+              {currentGood ? (
+                <motion.div
+                  key={currentGood}
+                  layoutId={getGoodLayoutId(currentGood)}
+                  transition={ESTOQUISTA_GOOD_LAYOUT_TRANSITION}
+                  exit={{ opacity: 0 }}
+                >
+                  <WarehouseGoodItem
+                    goodId={currentGood}
+                    width={Math.min(
+                      itemWidth * ESTOQUISTA_CURRENT_GOOD_WIDTH_RATIO,
+                      ESTOQUISTA_CURRENT_GOOD_MAX_WIDTH,
+                    )}
+                    highlighted
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="ready"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Title level={4}>Prateleiras prontas!</Title>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Surface>
+
+          <Paragraph className="m-0 text-center text-sm">
+            Um bom funcionário sempre sabe onde está cada produto. Lembre-se de
+            usar uma certa lógica para memorizar a posição de cada produto.
+          </Paragraph>
         </>
       ) : (
-        <>
-          <Paragraph className="mb-0 text-center">
-            Ative um pedido, coloque-o na prateleira certa e mande para fora de
-            estoque o item que não aparece no galpão.
-          </Paragraph>
-
-          <Orders
-            orders={data.orders}
-            fulfillments={fulfillments}
-            activeOrder={activeOrder}
-            onSelectOrder={onSelectOrder}
-            shelfWidth={itemWidth}
-          />
-
+        <DndContext
+          sensors={sensors}
+          collisionDetection={pointerWithin}
+          onDragEnd={handleDragEnd}
+        >
           <FulfillmentBoard
             warehouse={warehouse}
             fulfillments={fulfillments}
@@ -176,33 +227,45 @@ export function EstoquistaGame({ data, initialState }: EstoquistaGameProps) {
             reveal={isComplete}
           />
 
-          <div className="flex w-full items-center gap-3">
-            <Button
-              variant="outlined"
-              size="small"
-              icon={<ArchiveRestore />}
-              disabled={hearts <= ESTOQUISTA_HEART_PENALTY || isComplete}
-              onClick={reset}
-              className="flex-1"
+          <div className="flex w-full justify-center">
+            <Text
+              strong
+              className="text-sm text-center mb-0"
             >
-              {`Recomeçar (-${ESTOQUISTA_HEART_PENALTY} coração)`}
-            </Button>
+              Recebemos 5 pedidos e apenas 4 deles estão em estoque!
+            </Text>
+          </div>
 
+          <Orders
+            orders={data.orders}
+            fulfillments={fulfillments}
+            activeOrder={activeOrder}
+            onSelectOrder={onSelectOrder}
+            shelfWidth={itemWidth}
+            requiredCount={getRequiredFulfillmentCount(data)}
+          />
+
+          {!isComplete && (
             <Button
               variant="primary"
               size="small"
               icon={<ClipboardCheck />}
               disabled={
-                fulfillments.length !== data.orders.length || isComplete
+                fulfillments.length !== getRequiredFulfillmentCount(data)
               }
               onClick={onSubmit}
               className="flex-1"
             >
               Enviar pedidos
             </Button>
-          </div>
-        </>
+          )}
+        </DndContext>
       )}
+
+      <SeeResultsButton
+        isComplete={isComplete}
+        setShowResults={setShowResults}
+      />
 
       {evaluations.length > 0 && (
         <Surface className="flex w-full flex-col gap-2 bg-card px-4 py-4">
@@ -213,50 +276,66 @@ export function EstoquistaGame({ data, initialState }: EstoquistaGameProps) {
             Tentativas
           </Text>
           <div className="flex flex-wrap justify-center gap-2">
-            {evaluations.map((attempt, index) => (
-              <div
-                key={`${attempt.join('-')}-${index}`}
-                role="img"
-                className="flex items-center gap-1 rounded-full bg-surface px-3 py-2"
-                aria-label={`Tentativa ${index + 1}: ${attempt.filter(Boolean).length} de ${attempt.length} pedidos corretos`}
-              >
-                {attempt.map((isCorrect, itemIndex) => (
-                  <span
-                    key={`${index}-${itemIndex}`}
-                    className={cn(
-                      'h-3 w-3 rounded-full',
-                      isCorrect ? 'bg-gold' : 'bg-destructive',
-                    )}
-                    aria-hidden="true"
-                  />
-                ))}
-              </div>
-            ))}
+            {evaluations.map((attempt, index) => {
+              const sortedAttempt = attempt
+                .map((isCorrect, itemIndex) => ({ isCorrect, itemIndex }))
+                .sort((a, b) => Number(b.isCorrect) - Number(a.isCorrect));
+
+              return (
+                <div
+                  key={`${attempt.join('-')}-${index}`}
+                  role="img"
+                  className="flex items-center gap-1 rounded-full bg-surface px-3 py-2"
+                  aria-label={`Tentativa ${index + 1}: ${attempt.filter(Boolean).length} de ${attempt.length} pedidos corretos`}
+                >
+                  {sortedAttempt.map(({ isCorrect, itemIndex }) => (
+                    <span
+                      key={`${index}-${itemIndex}`}
+                      className={cn(
+                        'h-3 w-3 rounded-full',
+                        isCorrect ? 'bg-success' : 'bg-destructive',
+                      )}
+                      aria-hidden="true"
+                    />
+                  ))}
+                </div>
+              );
+            })}
           </div>
         </Surface>
       )}
 
-      {phase === ESTOQUISTA_PHASE.STOCKING && (
-        <Button
-          variant="outlined"
-          size="small"
-          icon={<ArchiveRestore />}
+      {!isComplete && hearts > ESTOQUISTA_HEART_PENALTY && (
+        <Popconfirm
+          title="Recomeçar a arrumação do estoque?"
+          description="Você vai perder um coração e precisará organizar tudo de novo."
+          onConfirm={reset}
+          okText="Recomeçar"
+          cancelText="Cancelar"
           disabled={hearts <= ESTOQUISTA_HEART_PENALTY || isComplete}
-          onClick={reset}
         >
-          {`Recomeçar (-${ESTOQUISTA_HEART_PENALTY} coração)`}
-        </Button>
+          <Button
+            variant="outlined"
+            size="small"
+            icon={<ArchiveRestore />}
+          >
+            Recomeçar{' '}
+            <span className="text-nowrap">
+              (-{ESTOQUISTA_HEART_PENALTY}{' '}
+              <Heart
+                className="inline h-4 w-4 fill-destructive text-destructive"
+                aria-hidden="true"
+              />
+              )
+            </span>
+          </Button>
+        </Popconfirm>
       )}
-
-      <SeeResultsButton
-        isComplete={isComplete}
-        setShowResults={setShowResults}
-      />
 
       {isComplete && showResults && (
         <ResultsSplash
           win={isWin}
-          title={data.title}
+          orders={data.orders}
           hearts={hearts}
           totalHearts={totalHearts}
           evaluations={evaluations}

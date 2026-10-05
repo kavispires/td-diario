@@ -100,8 +100,9 @@ export function useGetDailyChallenges() {
         );
         // Delay of 3 seconds to simulate async behavior
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Ensure async context
-        print({ diario: MOCK_DAILY_RESPONSE }, 'table');
-        return injectLocallyGeneratedGames(MOCK_DAILY_RESPONSE);
+        const result = injectLocallyGeneratedGames(MOCK_DAILY_RESPONSE);
+        print({ diario: result }, 'table');
+        return result;
       }
 
       // biome-ignore lint/suspicious/noConsole: debug purposes
@@ -112,9 +113,10 @@ export function useGetDailyChallenges() {
         document: 'diario',
       });
       const responseData = response.data as DailyResponse;
-      print({ diario: responseData }, 'table');
       logAnalyticsEvent('daily_challenges_fetched');
-      return injectLocallyGeneratedGames(responseData);
+      const result = injectLocallyGeneratedGames(responseData);
+      print({ diario: result }, 'table');
+      return result;
     },
     enabled: !!user?.uid,
     retry: false,

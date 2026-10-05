@@ -10,19 +10,21 @@ import { getGameStatuses } from '@utils/helpers';
 import { notification } from '@utils/notification';
 import { playSFX } from '@utils/soundEffects';
 import { vibrate } from '@utils/vibrate';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { DailyEstoquistaEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
   ESTOQUISTA_COMPLETE_PROGRESS,
+  ESTOQUISTA_FINAL_SCORE_MULTIPLIER,
   ESTOQUISTA_HEART_PENALTY,
+  ESTOQUISTA_LAST_GOOD_HIGHLIGHT_DELAY,
   ESTOQUISTA_PHASE,
-  ESTOQUISTA_STOCKING_SCORE,
-  ESTOQUISTA_WIN_HEART_SCORE_MULTIPLIER,
+  ESTOQUISTA_PHASE_TRANSITION_DELAY,
 } from './constants';
 import {
   getGuessString,
   getPlacedGoodsCount,
+  getRequiredFulfillmentCount,
   getResetState,
   getTotalHearts,
   getTotalProgressSteps,
@@ -53,11 +55,22 @@ export function useEstoquistaEngine(
   const [showResults, setShowResults] = useState(false);
   const totalHearts = getTotalHearts(data);
   const totalProgressSteps = getTotalProgressSteps(data);
+  const pendingTimeouts = useRef<number[]>([]);
   const { updateLocalStorage } = useDailyLocalToday<GameState>({
     key: gameInfo.key,
     dateId: data.id,
     defaultValue: initialState,
   });
+
+  function clearPendingTimeouts() {
+    for (const timeoutId of pendingTimeouts.current) {
+      window.clearTimeout(timeoutId);
+    }
+    pendingTimeouts.current = [];
+  }
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: cleanup only, must run once on unmount
+  useEffect(() => clearPendingTimeouts, []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: only state is meant to trigger persistence
   useEffect(() => {
@@ -84,6 +97,7 @@ export function useEstoquistaEngine(
     const warehouse = [...state.warehouse];
     warehouse[shelfIndex] = currentGood;
     const placedGoods = getPlacedGoodsCount(warehouse);
+    const isLastGood = placedGoods === data.goods.length;
 
     playSFX('swap');
     setState({
@@ -94,13 +108,20 @@ export function useEstoquistaEngine(
           : state.status,
       warehouse,
       lastPlacedGoodId: currentGood,
-      phase:
-        placedGoods === data.goods.length
-          ? ESTOQUISTA_PHASE.FULFILLING
-          : ESTOQUISTA_PHASE.STOCKING,
-      score: state.score + ESTOQUISTA_STOCKING_SCORE,
+      phase: ESTOQUISTA_PHASE.STOCKING,
       progress: placedGoods / totalProgressSteps,
     });
+
+    if (isLastGood) {
+      clearPendingTimeouts();
+      const morphTimeout = window.setTimeout(() => {
+        setState((prev) => ({ ...prev, lastPlacedGoodId: null }));
+      }, ESTOQUISTA_LAST_GOOD_HIGHLIGHT_DELAY);
+      const advancePhaseTimeout = window.setTimeout(() => {
+        setState((prev) => ({ ...prev, phase: ESTOQUISTA_PHASE.FULFILLING }));
+      }, ESTOQUISTA_PHASE_TRANSITION_DELAY);
+      pendingTimeouts.current.push(morphTimeout, advancePhaseTimeout);
+    }
   }
 
   function onSelectOrder(order: string) {
@@ -122,25 +143,37 @@ export function useEstoquistaEngine(
     updateSession({ activeOrder: order });
   }
 
-  function onFulfill(shelfIndex: number) {
+  function onFulfill(shelfIndex: number, order?: string) {
+    const targetOrder = order ?? session.activeOrder;
+
+    const existingFulfillment = state.fulfillments.find(
+      (fulfillment) => fulfillment.order === targetOrder,
+    );
+    const isShelfTakenByAnotherOrder = state.fulfillments.some(
+      (fulfillment) =>
+        fulfillment.shelfIndex === shelfIndex &&
+        fulfillment.order !== targetOrder,
+    );
+    const isNewPlacement = !existingFulfillment;
+
     if (
       isComplete ||
       state.phase !== ESTOQUISTA_PHASE.FULFILLING ||
-      !session.activeOrder ||
-      state.fulfillments.some(
-        (fulfillment) => fulfillment.order === session.activeOrder,
-      ) ||
-      state.fulfillments.some(
-        (fulfillment) => fulfillment.shelfIndex === shelfIndex,
-      )
+      !targetOrder ||
+      existingFulfillment?.shelfIndex === shelfIndex ||
+      isShelfTakenByAnotherOrder ||
+      (isNewPlacement &&
+        state.fulfillments.length >= getRequiredFulfillmentCount(data))
     ) {
       return;
     }
 
     const fulfillments = [
-      ...state.fulfillments,
+      ...state.fulfillments.filter(
+        (fulfillment) => fulfillment.order !== targetOrder,
+      ),
       {
-        order: session.activeOrder,
+        order: targetOrder,
         shelfIndex,
       },
     ];
@@ -177,7 +210,7 @@ export function useEstoquistaEngine(
       fulfillments,
       progress: (data.goods.length + fulfillments.length) / totalProgressSteps,
     });
-    updateSession({ activeOrder: orderId });
+    updateSession({ activeOrder: null });
   }
 
   function onSubmit() {
@@ -185,9 +218,9 @@ export function useEstoquistaEngine(
       return;
     }
 
-    if (state.fulfillments.length !== data.orders.length) {
+    if (state.fulfillments.length !== getRequiredFulfillmentCount(data)) {
       notification.info(
-        'Ainda falta posicionar todos os pedidos, incluindo o item fora de estoque.',
+        'Ainda falta posicionar os pedidos nas prateleiras certas.',
       );
       return;
     }
@@ -210,6 +243,8 @@ export function useEstoquistaEngine(
     const hearts = allCorrect
       ? state.hearts
       : Math.max(state.hearts - ESTOQUISTA_HEART_PENALTY, 0);
+    const isGameOver = allCorrect || hearts === 0;
+    const correctCount = attemptResult.filter(Boolean).length;
 
     if (allCorrect) {
       playSFX('win');
@@ -238,8 +273,8 @@ export function useEstoquistaEngine(
       evaluations: [...state.evaluations, attemptResult],
       guesses: [...state.guesses, guessString],
       progress: allCorrect ? ESTOQUISTA_COMPLETE_PROGRESS : state.progress,
-      score: allCorrect
-        ? state.score + state.hearts * ESTOQUISTA_WIN_HEART_SCORE_MULTIPLIER
+      score: isGameOver
+        ? ESTOQUISTA_FINAL_SCORE_MULTIPLIER * hearts * correctCount
         : state.score,
     });
     updateSession({ activeOrder: null });
@@ -250,6 +285,7 @@ export function useEstoquistaEngine(
       return;
     }
 
+    clearPendingTimeouts();
     playSFX('shuffle');
     setState(
       getResetState(data, state.extraAttempts + ESTOQUISTA_HEART_PENALTY),

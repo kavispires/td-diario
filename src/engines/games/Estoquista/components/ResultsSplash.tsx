@@ -2,10 +2,9 @@ import { GameResultsSplash } from '@components/games/GameResultsSplash';
 import { Hearts } from '@components/games/Hearts';
 import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
-import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
-import { cn } from '@utils/cn';
 import { buildShare } from '../utils/helpers';
+import { WarehouseGoodItem } from './WarehouseGoodItem';
 
 /**
  * Props accepted by the {@link ResultsSplash} component.
@@ -18,7 +17,7 @@ type ResultsSplashProps = {
   /**
    * Theme title shown for today's warehouse.
    */
-  title: string;
+  orders: string[];
   /**
    * Hearts remaining at the end of the game.
    */
@@ -55,7 +54,7 @@ type ResultsSplashProps = {
  */
 export function ResultsSplash({
   win,
-  title,
+  orders,
   hearts,
   totalHearts,
   evaluations,
@@ -79,53 +78,29 @@ export function ResultsSplash({
   return (
     <GameResultsSplash
       gameId="estoquista"
-      title={win ? 'Expedição perfeita!' : 'O estoque te venceu hoje'}
+      title={win ? 'Funcionário do Mês!' : 'O estoque te venceu hoje'}
       share={share}
       onClose={onClose}
     >
       <div className="flex w-full max-w-xs flex-col gap-4 text-center">
-        <Text strong>
+        <Text>
           {win
             ? 'Você organizou e separou todos os pedidos do galpão de hoje.'
             : 'O galpão de hoje era este:'}
         </Text>
-
-        <Text className="text-black">"{title}"</Text>
       </div>
 
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        {win
-          ? `Você entregou tudo com ${hearts} de ${totalHearts} corações sobrando.`
-          : `Você ficou sem corações depois de ${evaluations.length} envio${evaluations.length === 1 ? '' : 's'}.`}
-      </Text>
-
-      <Surface className="flex flex-col items-center gap-2 bg-white/55 px-5 py-4">
-        <Text strong>Histórico de envios</Text>
-        <div className="flex flex-wrap justify-center gap-2">
-          {evaluations.map((attempt, index) => (
-            <div
-              key={`${attempt.join('-')}-${index}`}
-              role="img"
-              className="flex items-center gap-1 rounded-full bg-white/70 px-3 py-2"
-              aria-label={`Tentativa ${index + 1}: ${attempt.filter(Boolean).length} de ${attempt.length} pedidos corretos`}
-            >
-              {attempt.map((isCorrect, itemIndex) => (
-                <span
-                  key={`${index}-${itemIndex}`}
-                  className={cn(
-                    'h-3 w-3 rounded-full',
-                    isCorrect ? 'bg-gold' : 'bg-destructive',
-                  )}
-                  aria-hidden="true"
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-      </Surface>
+      <ul className="flex w-full max-w-xs justify-center gap-2 text-center">
+        {orders.map((goodId, index) => (
+          <li key={index}>
+            <WarehouseGoodItem
+              goodId={goodId}
+              width={48}
+              className="p-1 border-none shadow-none"
+            />
+          </li>
+        ))}
+      </ul>
 
       <Hearts
         remaining={hearts}
@@ -139,7 +114,7 @@ export function ResultsSplash({
           type="secondary"
           className="text-center text-black"
         >
-          Melhor envio: {bestAttempt} de {totalOrders} pedidos certos
+          Melhor envio: {bestAttempt}/{totalOrders} pedidos
         </Text>
 
         <Divider orientation="vertical" />

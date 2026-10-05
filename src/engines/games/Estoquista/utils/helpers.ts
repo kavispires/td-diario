@@ -9,7 +9,6 @@ import {
   ESTOQUISTA_MINIMUM_HEARTS,
   ESTOQUISTA_OUT_OF_STOCK_ORDER_COUNT,
   ESTOQUISTA_PHASE,
-  OUT_OF_STOCK_SHELF_INDEX,
 } from './constants';
 import type { Fulfillment, GameState } from './types';
 
@@ -25,6 +24,20 @@ export function getTotalHearts(data: DailyEstoquistaEntry): number {
     data.orders.length - ESTOQUISTA_OUT_OF_STOCK_ORDER_COUNT,
     ESTOQUISTA_MINIMUM_HEARTS,
   );
+}
+
+/**
+ * Number of orders the player must actively place on a shelf: every order
+ * except the one with no matching stocked good, which is inferred
+ * automatically from whichever order is left unplaced.
+ *
+ * @param data - Today's Estoquista payload.
+ * @returns The number of shelf placements required to submit.
+ */
+export function getRequiredFulfillmentCount(
+  data: DailyEstoquistaEntry,
+): number {
+  return data.orders.length - ESTOQUISTA_OUT_OF_STOCK_ORDER_COUNT;
 }
 
 /**
@@ -48,7 +61,7 @@ export function getPlacedGoodsCount(warehouse: GameState['warehouse']): number {
 export function getTotalProgressSteps(data: DailyEstoquistaEntry): number {
   return (
     data.goods.length +
-    data.orders.length +
+    getRequiredFulfillmentCount(data) +
     ESTOQUISTA_FINAL_SUBMISSION_PROGRESS_STEPS
   );
 }
@@ -95,13 +108,12 @@ function isValidState(state: GameState, data: DailyEstoquistaEntry): boolean {
   );
   const validGoods = new Set(data.goods);
   const validOrders = new Set(data.orders);
+  const requiredFulfillmentCount = getRequiredFulfillmentCount(data);
   const orderCount = data.orders.length;
   const goodsCount = data.goods.length;
-  const shelfAssignments = state.fulfillments
-    .filter(
-      (fulfillment) => fulfillment.shelfIndex !== OUT_OF_STOCK_SHELF_INDEX,
-    )
-    .map((fulfillment) => fulfillment.shelfIndex);
+  const shelfAssignments = state.fulfillments.map(
+    (fulfillment) => fulfillment.shelfIndex,
+  );
   const placedGoodsCount = getPlacedGoodsCount(state.warehouse);
   const phaseMatchesBoard =
     state.phase === ESTOQUISTA_PHASE.STOCKING
@@ -117,19 +129,16 @@ function isValidState(state: GameState, data: DailyEstoquistaEntry): boolean {
     state.warehouse.length === goodsCount &&
     warehouseGoods.length === new Set(warehouseGoods).size &&
     warehouseGoods.every((goodId) => validGoods.has(goodId)) &&
-    state.fulfillments.length <= orderCount &&
+    state.fulfillments.length <= requiredFulfillmentCount &&
     state.fulfillments.length ===
       new Set(state.fulfillments.map((fulfillment) => fulfillment.order))
         .size &&
     shelfAssignments.length === new Set(shelfAssignments).size &&
-    state.fulfillments.filter(
-      (fulfillment) => fulfillment.shelfIndex === OUT_OF_STOCK_SHELF_INDEX,
-    ).length <= 1 &&
     state.fulfillments.every(
       (fulfillment) =>
         validOrders.has(fulfillment.order) &&
-        (fulfillment.shelfIndex === OUT_OF_STOCK_SHELF_INDEX ||
-          (fulfillment.shelfIndex >= 0 && fulfillment.shelfIndex < goodsCount)),
+        fulfillment.shelfIndex >= 0 &&
+        fulfillment.shelfIndex < goodsCount,
     ) &&
     state.evaluations.every(
       (attempt) =>
@@ -206,16 +215,29 @@ export function validateAttempts(
       (currentFulfillment) => currentFulfillment.order === order,
     );
 
+    // An order the player never placed is their implicit "out of stock"
+    // guess: correct only when it truly never appears in the warehouse.
     if (!fulfillment) {
-      return false;
-    }
-
-    if (fulfillment.shelfIndex === OUT_OF_STOCK_SHELF_INDEX) {
       return !warehouse.includes(order);
     }
 
-    return warehouse[fulfillment.shelfIndex] === order;
+    return isFulfillmentCorrect(fulfillment, warehouse);
   });
+}
+
+/**
+ * Checks whether one placed shelf assignment ended up correct, given the
+ * final warehouse layout.
+ *
+ * @param fulfillment - One placed order assignment.
+ * @param warehouse - Final warehouse shelf contents.
+ * @returns Whether the assignment is correct.
+ */
+export function isFulfillmentCorrect(
+  fulfillment: Fulfillment,
+  warehouse: GameState['warehouse'],
+): boolean {
+  return warehouse[fulfillment.shelfIndex] === fulfillment.order;
 }
 
 /**

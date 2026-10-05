@@ -7,8 +7,8 @@ import type { ESTOQUISTA_PHASE } from './constants';
 export type GoodId = string;
 
 /**
- * One placed order assignment, either onto a shelf or into the explicit
- * out-of-stock slot.
+ * One placed order assignment, pairing an order with the shelf it was
+ * dropped onto.
  */
 export type Fulfillment = {
   /**
@@ -16,7 +16,7 @@ export type Fulfillment = {
    */
   order: GoodId;
   /**
-   * Shelf index receiving the order, or the dedicated out-of-stock slot.
+   * Shelf index receiving the order.
    */
   shelfIndex: number;
 };
@@ -147,9 +147,12 @@ export type EstoquistaEngineState = {
    */
   onSelectOrder: (order: GoodId) => void;
   /**
-   * Places the selected order on a shelf or into the out-of-stock slot.
+   * Places an order on a shelf, or moves it there if it was already placed
+   * on a different shelf. Uses the currently selected order when `order` is
+   * omitted (tap-to-place flow), or the explicitly given one (drag-and-drop
+   * flow, including dragging an already-placed order to a new shelf).
    */
-  onFulfill: (shelfIndex: number) => void;
+  onFulfill: (shelfIndex: number, order?: GoodId) => void;
   /**
    * Removes an assigned order and makes it the active selection again.
    */

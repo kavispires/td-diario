@@ -1,98 +1,100 @@
-import { differenceInCalendarDays } from 'date-fns';
 import type { DailyEstoquistaEntry } from 'types/games';
-import type { DateKey } from 'types/puzzles';
-import { gameInfo } from '../info';
-import {
-  ESTOQUISTA_GENERATED_TITLE,
-  ESTOQUISTA_ITEM_ID_POOL,
-  ESTOQUISTA_OUT_OF_STOCK_ORDER_COUNT,
-  ESTOQUISTA_RULES_GOODS_COUNT,
-  ESTOQUISTA_RULES_ORDERS_COUNT,
-} from './constants';
 
+const TOTAL_GOODS = 256;
+const GOODS_SIZE = 16;
+const ORDER_SIZE = 4;
+const OUT_OF_STOCK_SIZE = 1;
 /**
- * Creates a deterministic pseudo-random number generator seeded from a
- * string, so the same `dateId` always produces the same sequence.
- *
- * @param seed - String to derive the generator's seed from (today's id).
- * @returns A function that returns the next pseudo-random value in `[0, 1)`
- *   on each call.
+ * A simple Linear Congruential Generator (LCG) for seeded randomness.
+ * Given the same seed, it will always produce the exact same sequence of floats between 0 and 1.
  */
-export function createSeededRandom(seed: string): () => number {
-  let hash = 0;
-  for (let index = 0; index < seed.length; index++) {
-    hash = (hash << 5) - hash + seed.charCodeAt(index);
-    hash |= 0;
-  }
-  let state = hash || 1;
+const createSeededRandom = (seed: number) => {
+  let currentSeed = seed;
   return () => {
-    state = (state * 1664525 + 1013904223) | 0;
-    return (state >>> 0) / 4294967296;
+    currentSeed = (currentSeed * 16807) % 2147483647;
+    return (currentSeed - 1) / 2147483646;
   };
-}
+};
 
 /**
- * Deterministically shuffles a list using the Fisher-Yates algorithm driven
- * by a seeded random generator.
- *
- * @param items - The list to shuffle.
- * @param random - A seeded `() => number` generator in `[0, 1)`.
- * @returns A new, shuffled array.
+ * A deterministic version of the Fisher-Yates shuffle using our seeded random function.
  */
-export function seededShuffle<T>(
-  items: readonly T[],
-  random: () => number,
-): T[] {
-  const shuffled = [...items];
-  for (let index = shuffled.length - 1; index > 0; index--) {
-    const swapIndex = Math.floor(random() * (index + 1));
-    [shuffled[index], shuffled[swapIndex]] = [
-      shuffled[swapIndex],
-      shuffled[index],
-    ];
+const deterministicShuffle = <T>(array: T[], randomFunc: () => number): T[] => {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(randomFunc() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
   }
-  return shuffled;
-}
+  return result;
+};
 
 /**
- * Generates today's Estoquista payload locally. Estoquista never arrives in
- * the `dailyEngine` response, so its puzzle content (goods to stock and
- * orders to fulfill, including one deliberately out-of-stock order) is
- * synthesized on the client from a fixed pool of known-good item ids,
- * seeded by today's date so every player sees the same puzzle.
+ * Generates a purely deterministic DailyEstoquistaEntry based on the date.
+ * Calling this with "2026-06-30" will always yield the exact same puzzle setup.
  *
- * @param id - Today's date key.
- * @returns A freshly generated `DailyEstoquistaEntry` for today.
+ * @param id - The id of the entry in the format "YYYY-MM-DD".
+ * @returns The generated DailyEstoquistaEntry object.
  */
+export const generateDailyEstoquistaEntry = (
+  id: string,
+  puzzleNumber?: number,
+): DailyEstoquistaEntry => {
+  // 1. Create a numeric seed from the date string (e.g., "2026-06-30" -> 20260630)
+  const seed = Number.parseInt(id.replace(/-/g, ''), 10);
 
-export function generateDailyEstoquistaEntry(
-  id: DateKey,
-): DailyEstoquistaEntry {
-  const random = createSeededRandom(id);
-  const shuffledPool = seededShuffle(ESTOQUISTA_ITEM_ID_POOL, random);
+  // 2. Initialize the predictable random generator
+  const seededRandom = createSeededRandom(seed);
 
-  const goods = shuffledPool.slice(0, ESTOQUISTA_RULES_GOODS_COUNT);
-  const inStockOrders = seededShuffle(goods, random).slice(
-    0,
-    ESTOQUISTA_RULES_ORDERS_COUNT - ESTOQUISTA_OUT_OF_STOCK_ORDER_COUNT,
-  );
-  const outOfStockOrder = shuffledPool.find(
-    (itemId) => !goods.includes(itemId),
-  );
-  const orders = seededShuffle(
-    outOfStockOrder ? [...inStockOrders, outOfStockOrder] : inStockOrders,
-    random,
-  );
+  const [year, month, day] = id.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  const dayOfWeekIndex = date.getDay();
 
-  const number =
-    differenceInCalendarDays(new Date(id), new Date(gameInfo.releaseDate)) + 1;
+  const dayOfTheWeek = [
+    'Domingo',
+    'Segunda-feira',
+    'Terça-feira',
+    'Quarta-feira',
+    'Quinta-feira',
+    'Sexta-feira',
+    'Sábado',
+  ][dayOfWeekIndex];
 
-  return {
+  const entry: DailyEstoquistaEntry = {
     id,
-    number,
+    number: puzzleNumber ?? day, // Using the day of the month for the 'number' as requested
     type: 'estoquista',
-    title: ESTOQUISTA_GENERATED_TITLE,
-    goods,
-    orders,
+    title: dayOfTheWeek,
+    goods: [],
+    orders: [],
   };
-}
+
+  // 3. Build the full array of possible goods
+  const allGoods = Array.from(
+    { length: TOTAL_GOODS },
+    (_, i) => `good-${i + 1}`,
+  );
+
+  // 4. Deterministically shuffle the massive pool and slice what we need
+  const shuffledGoods = deterministicShuffle(allGoods, seededRandom);
+  const selectedItems = shuffledGoods.slice(0, GOODS_SIZE + OUT_OF_STOCK_SIZE);
+
+  // 5. Separate the out of stock good
+  const outOfStockGood = selectedItems.pop();
+  if (!outOfStockGood) {
+    throw new Error('No out of stock good');
+  }
+
+  // Assign the remaining 16 goods to the entry
+  entry.goods = selectedItems;
+
+  // 6. Deterministically pick the orders from the selected goods
+  // We shuffle the selected 16 to pick 4 random (but predictable) ones
+  const shuffledSelectedGoods = deterministicShuffle(entry.goods, seededRandom);
+  const baseOrders = shuffledSelectedGoods.slice(0, ORDER_SIZE);
+
+  // 7. Add the impossible out-of-stock item and shuffle the orders list one last time
+  baseOrders.push(outOfStockGood);
+  entry.orders = deterministicShuffle(baseOrders, seededRandom);
+
+  return entry;
+};

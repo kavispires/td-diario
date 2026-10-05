@@ -1,14 +1,19 @@
+import { cn } from '@utils/cn';
 import { Package2 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   ESTOQUISTA_BOARD_COLUMNS,
+  ESTOQUISTA_BOARD_GRID_CLASSNAME,
+  ESTOQUISTA_CELL_IDLE_CLASSNAME,
+  ESTOQUISTA_CELL_INTERACTIVE_CLASSNAME,
+  ESTOQUISTA_GOOD_LAYOUT_TRANSITION,
   ESTOQUISTA_PACKAGE_ICON_MIN_SIZE,
   ESTOQUISTA_PACKAGE_ICON_SIZE_RATIO,
-  ESTOQUISTA_STOCKED_CARD_INITIAL_SCALE,
+  ESTOQUISTA_PACKAGE_MORPH_SCALE,
   ESTOQUISTA_TRANSITION_DURATION,
 } from '../utils/constants';
 import type { GameState } from '../utils/types';
-import { WarehouseGoodCard } from './WarehouseGoodCard';
+import { WarehouseGoodItem } from './WarehouseGoodItem';
 
 /**
  * Props accepted by the {@link StockingBoard} component.
@@ -33,9 +38,22 @@ type StockingBoardProps = {
 };
 
 /**
- * Renders Estoquista's stocking-phase 4x4 shelf grid, where empty shelves
- * are selectable and stocked shelves turn into anonymous boxes after the
- * latest placement.
+ * Builds the shared `layoutId` used to animate a good flying from the
+ * "current good" preview card into its shelf, matching the id used by
+ * `EstoquistaGame`'s preview card.
+ *
+ * @param goodId - Id of the good being placed.
+ * @returns The shared `layoutId` string.
+ */
+export function getGoodLayoutId(goodId: string): string {
+  return `estoquista-good-${goodId}`;
+}
+
+/**
+ * Renders Estoquista's stocking-phase 4x4 shelf grid. Empty shelves are
+ * selectable; placing a good flies it in from the "current good" preview
+ * card via a shared `layoutId`, and it turns into an anonymous package icon
+ * once the next good is placed (or, for the last good, after a short delay).
  *
  * @param props Warehouse state, placement handler, latest good, and sizing.
  * @returns The rendered stocking board.
@@ -48,64 +66,85 @@ export function StockingBoard({
 }: StockingBoardProps) {
   return (
     <div
-      className="grid gap-2 rounded-[2rem] bg-amber-900/80 p-3 shadow-inner"
+      className={ESTOQUISTA_BOARD_GRID_CLASSNAME}
       style={{
         gridTemplateColumns: `repeat(${ESTOQUISTA_BOARD_COLUMNS}, minmax(0, 1fr))`,
       }}
     >
       {warehouse.map((goodId, index) => {
-        if (!goodId) {
-          return (
-            <button
-              key={index}
-              type="button"
-              aria-label={`Colocar produto na prateleira ${index + 1}`}
-              onClick={() => onPlaceGood(index)}
-              className="flex items-center justify-center rounded-2xl border-2 border-dashed border-amber-100/60 bg-black/25 text-xl font-semibold text-white transition-colors hover:bg-black/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
-              style={{ width, height: width }}
-            >
-              ?
-            </button>
-          );
-        }
-
-        if (goodId !== lastPlacedGoodId) {
-          return (
-            <div
-              key={index}
-              className="flex items-center justify-center rounded-2xl border border-amber-950/50 bg-black/25 text-amber-50"
-              style={{ width, height: width }}
-            >
-              <Package2
-                size={Math.max(
-                  width * ESTOQUISTA_PACKAGE_ICON_SIZE_RATIO,
-                  ESTOQUISTA_PACKAGE_ICON_MIN_SIZE,
-                )}
-                aria-hidden="true"
-              />
-            </div>
-          );
-        }
+        const isHighlighted = goodId !== null && goodId === lastPlacedGoodId;
 
         return (
-          <motion.div
-            key={`${goodId}-${index}`}
-            initial={{
-              scale: ESTOQUISTA_STOCKED_CARD_INITIAL_SCALE,
-              opacity: 0,
-            }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{
-              duration: ESTOQUISTA_TRANSITION_DURATION,
-              ease: 'easeOut',
-            }}
+          <div
+            key={index}
+            className={cn(
+              'flex items-center justify-center',
+              goodId && !isHighlighted && ESTOQUISTA_CELL_IDLE_CLASSNAME,
+            )}
+            style={{ width, height: width }}
           >
-            <WarehouseGoodCard
-              itemId={goodId}
-              width={width}
-              highlighted
-            />
-          </motion.div>
+            <AnimatePresence
+              mode="wait"
+              initial={false}
+            >
+              {!goodId ? (
+                <motion.button
+                  key="empty"
+                  type="button"
+                  aria-label={`Colocar produto na prateleira ${index + 1}`}
+                  onClick={() => onPlaceGood(index)}
+                  className={cn(
+                    'flex items-center justify-center text-xl font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80',
+                    ESTOQUISTA_CELL_INTERACTIVE_CLASSNAME,
+                  )}
+                  style={{ width, height: width }}
+                >
+                  ?
+                </motion.button>
+              ) : isHighlighted ? (
+                <motion.div
+                  key={`${goodId}-item`}
+                  layoutId={getGoodLayoutId(goodId)}
+                  transition={ESTOQUISTA_GOOD_LAYOUT_TRANSITION}
+                  exit={{
+                    scale: ESTOQUISTA_PACKAGE_MORPH_SCALE,
+                    opacity: 0,
+                    transition: {
+                      duration: ESTOQUISTA_TRANSITION_DURATION,
+                      ease: 'easeOut',
+                    },
+                  }}
+                >
+                  <WarehouseGoodItem
+                    goodId={goodId}
+                    width={width}
+                    highlighted
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="package"
+                  initial={{
+                    scale: ESTOQUISTA_PACKAGE_MORPH_SCALE,
+                    opacity: 0,
+                  }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{
+                    duration: ESTOQUISTA_TRANSITION_DURATION,
+                    ease: 'easeOut',
+                  }}
+                >
+                  <Package2
+                    size={Math.max(
+                      width * ESTOQUISTA_PACKAGE_ICON_SIZE_RATIO,
+                      ESTOQUISTA_PACKAGE_ICON_MIN_SIZE,
+                    )}
+                    aria-hidden="true"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         );
       })}
     </div>
