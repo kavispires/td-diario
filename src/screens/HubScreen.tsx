@@ -3,7 +3,11 @@ import { GameCard } from '@components/hub/GameCard';
 import { GroupedShareModal } from '@components/hub/GroupedShareModal';
 import { Button } from '@components/ui/Button';
 import { Title } from '@components/ui/Typography';
-import { CARD_STATE_ORDER, useGameProgress } from '@hooks/useGameProgress';
+import {
+  CARD_STATE_ORDER,
+  useContributionProgress,
+  useGameProgress,
+} from '@hooks/useGameProgress';
 import { orderBy } from 'lodash';
 import { Share2 } from 'lucide-react';
 import { LayoutGroup } from 'motion/react';
@@ -17,6 +21,7 @@ import { useState } from 'react';
  */
 export function HubScreen() {
   const { entries } = useGameProgress();
+  const { entries: contributionEntries } = useContributionProgress();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const completedCount = entries.filter(
     (entry) => entry.state === 'completed',
@@ -78,6 +83,24 @@ export function HubScreen() {
         open={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
       />
+
+      {contributionEntries.length > 0 && (
+        <>
+          <Title className="p-1 text-center text-lg mt-4 mb-2">Contribua</Title>
+
+          <div className="grid grid-cols-6 gap-3">
+            {contributionEntries.map((entry) => (
+              <GameCard
+                key={entry.key}
+                gameInfo={entry.info}
+                size="rectangle"
+                state={entry.state}
+                progressPercent={entry.progressPercent}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

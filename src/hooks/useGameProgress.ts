@@ -2,6 +2,7 @@ import { gameInfos } from '@engines';
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
+import { orderBy } from 'lodash';
 import { useMemo } from 'react';
 import type {
   DefaultGameState,
@@ -94,6 +95,39 @@ export function getCardState(
 }
 
 /**
+ * Builds today's real per-entry progress by joining each daily challenge
+ * with its locally-persisted lifecycle state.
+ *
+ * @param challenges - Today's challenge payloads, keyed by game id.
+ * @returns Every entry's progress, regardless of `GameInfo['type']`.
+ */
+function buildProgressEntries(
+  challenges: Record<string, PlaceholderGameData> | undefined,
+): GameProgressEntry[] {
+  return Object.values(challenges ?? {}).map((challenge): GameProgressEntry => {
+    const info = gameInfos[challenge.type as GameId];
+    const localState = loadLocalToday<DefaultGameState>({
+      key: info.key,
+      dateId: challenge.id,
+      defaultValue: {
+        id: challenge.id,
+        status: GAME_LIFECYCLE_STATUS.IDLE,
+        progress: 0,
+        score: 0,
+      },
+    });
+
+    return {
+      key: challenge.type,
+      challenge,
+      info,
+      state: getCardState(info.release, localState.status),
+      progressPercent: Math.round(localState.progress * 100),
+    };
+  });
+}
+
+/**
  * Builds today's real per-game progress by joining each daily challenge
  * with its locally-persisted lifecycle state, used as the single source of
  * truth for both the hub's progress summary and its game cards (before
@@ -111,32 +145,10 @@ export function useGameProgress(): {
   const { data } = useGetDailyChallenges();
 
   return useMemo(() => {
-    const entries = Object.values(data?.challenges ?? {})
-      .map((challenge): GameProgressEntry => {
-        const info = gameInfos[challenge.type as GameId];
-        const localState = loadLocalToday<DefaultGameState>({
-          key: info.key,
-          dateId: challenge.id,
-          defaultValue: {
-            id: challenge.id,
-            status: GAME_LIFECYCLE_STATUS.IDLE,
-            progress: 0,
-            score: 0,
-          },
-        });
-
-        return {
-          key: challenge.type,
-          challenge,
-          info,
-          state: getCardState(info.release, localState.status),
-          progressPercent: Math.round(localState.progress * 100),
-        };
-      })
-      .filter(
-        (entry) =>
-          entry.info.type === 'game' && entry.info.release !== 'unreleased',
-      );
+    const entries = buildProgressEntries(data?.challenges).filter(
+      (entry) =>
+        entry.info.type === 'game' && entry.info.release !== 'unreleased',
+    );
 
     // Only games currently playable (i.e. not in a non-playable release
     // stage) count toward the hub's "X of Y completed" progress summary;
@@ -156,4 +168,27 @@ export function useGameProgress(): {
 
     return { entries, completedCount, totalCount: countableEntries.length };
   }, [data?.challenges]);
+}
+
+/**
+ * Builds today's progress entries for the hub's "Contribua" section
+ * (currently Picaço and Tá Na Cara), joined with their locally-persisted
+ * lifecycle state the same way {@link useGameProgress} does for regular
+ * games.
+ *
+ * @returns Today's contribution game progress entries, in a fixed display
+ *   order.
+ */
+export function useContributionProgress(): {
+  entries: GameProgressEntry[];
+} {
+  const { data } = useGetDailyChallenges();
+
+  return useMemo(() => {
+    const entries = buildProgressEntries(data?.contributions);
+
+    const orderedEntries = orderBy(entries, ['info.name.pt'], ['asc']);
+
+    return { entries: orderedEntries };
+  }, [data?.contributions]);
 }
