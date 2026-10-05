@@ -93,7 +93,7 @@ export function HubScreen() {
               <GameCard
                 key={entry.key}
                 gameInfo={entry.info}
-                size="rectangle"
+                size="small"
                 state={entry.state}
                 progressPercent={entry.progressPercent}
               />

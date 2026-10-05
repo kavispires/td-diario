@@ -163,6 +163,13 @@ const gameComponents: Record<string, GameComponent> = {
       }>,
     })),
   ),
+  ideias: lazy(() =>
+    import('@engines/contributions/Ideias').then(({ DailyIdeiasGame }) => ({
+      default: DailyIdeiasGame as ComponentType<{
+        data: PlaceholderGameData;
+      }>,
+    })),
+  ),
 };
 
 /**

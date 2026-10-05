@@ -116,4 +116,9 @@ export const rulesComponents: Record<string, RulesComponent> = {
       default: Rules,
     })),
   ),
+  ideias: lazy(() =>
+    import('./contributions/Ideias/components/Rules').then(({ Rules }) => ({
+      default: Rules,
+    })),
+  ),
 };

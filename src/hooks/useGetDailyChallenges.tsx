@@ -1,5 +1,6 @@
 import { USE_MOCK_DATA } from '@dev-config';
-import { generateDailyEstoquistaEntry } from '@engines/games/Estoquista/utils/helpers';
+import { generateDailyIdeiasEntry } from '@engines/contributions/Ideias/utils/generator';
+import { generateDailyEstoquistaEntry } from '@engines/games/Estoquista/utils/generator';
 import { DAILY_API, DAILY_API_ACTIONS } from '@services/adapters';
 import { logAnalyticsEvent } from '@services/firebase';
 import { useAuthStore } from '@store/useAuthStore';
@@ -21,12 +22,27 @@ const LOCAL_GAME_GENERATORS: {
 };
 
 /**
- * Fills in any locally-generated games missing from a fetched/mocked daily
- * response, mutating neither input, so games that never arrive from the
- * API (see {@link LOCAL_GAME_GENERATORS}) are still playable.
+ * Registry mirroring {@link LOCAL_GAME_GENERATORS}, but for contributions:
+ * entries that are always generated locally rather than arriving in the
+ * `dailyEngine` response.
+ */
+const LOCAL_CONTRIBUTION_GENERATORS: {
+  [Id in keyof DailyResponse['contributions']]?: (
+    id: DailyResponse['id'],
+  ) => DailyResponse['contributions'][Id];
+} = {
+  ideias: generateDailyIdeiasEntry,
+};
+
+/**
+ * Fills in any locally-generated games/contributions missing from a
+ * fetched/mocked daily response, mutating neither input, so entries that
+ * never arrive from the API (see {@link LOCAL_GAME_GENERATORS} and
+ * {@link LOCAL_CONTRIBUTION_GENERATORS}) are still playable.
  *
- * @param responseData - The daily response to inject local games into.
- * @returns A new `DailyResponse` with every locally-generated game filled in.
+ * @param responseData - The daily response to inject local entries into.
+ * @returns A new `DailyResponse` with every locally-generated entry filled
+ *   in.
  */
 function injectLocallyGeneratedGames(
   responseData: DailyResponse,
@@ -43,7 +59,19 @@ function injectLocallyGeneratedGames(
     }
   }
 
-  return { ...responseData, challenges };
+  const contributions = { ...responseData.contributions };
+
+  for (const id of Object.keys(LOCAL_CONTRIBUTION_GENERATORS) as Array<
+    keyof DailyResponse['contributions']
+  >) {
+    if (!contributions[id]) {
+      const generate = LOCAL_CONTRIBUTION_GENERATORS[id];
+      // @ts-expect-error -- each generator's return type matches its own key
+      contributions[id] = generate?.(responseData.id);
+    }
+  }
+
+  return { ...responseData, challenges, contributions };
 }
 
 export function useGetDailyChallenges() {
@@ -1531,6 +1559,11 @@ const MOCK_DAILY_RESPONSE: DailyResponse = {
         'us-gb-014': 'Nataniel',
         'us-gb-015': 'Júlio',
       },
+    },
+    ideias: {
+      id: '2026-09-26',
+      type: 'ideias',
+      number: 1,
     },
   },
   metadata: {

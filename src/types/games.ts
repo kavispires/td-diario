@@ -849,3 +849,25 @@ export type DailyTaNaCaraEntry = {
    */
   variant?: DailyTaNaCaraVariant;
 };
+
+/**
+ * Today's Ideias challenge payload. Ideias never carries generated puzzle
+ * content — its submission form is always the same — so this only exists
+ * to give the contribution a stable id/number for local-storage and hub
+ * display purposes, mirroring how Estoquista is synthesized locally
+ * instead of arriving from the `dailyEngine` response.
+ */
+export type DailyIdeiasEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Ideias payloads.
+   */
+  type: 'ideias';
+};

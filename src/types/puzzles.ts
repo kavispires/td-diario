@@ -7,6 +7,7 @@ import type {
   DailyConjuntosEntry,
   DailyEstoquistaEntry,
   DailyFilmacoEntry,
+  DailyIdeiasEntry,
   DailyInvestigacaoEntry,
   DailyMapeamentoEntry,
   DailyOrganikuEntry,
@@ -82,6 +83,13 @@ type ContributionsEntries = {
   conexoes?: DailyConexoesEntry;
   picaco?: DailyPicacoEntry;
   'ta-na-cara'?: DailyTaNaCaraEntry;
+  /**
+   * Ideias never arrives from the `dailyEngine` response; its payload is
+   * always synthesized locally (see `LOCAL_CONTRIBUTION_GENERATORS` in
+   * `useGetDailyChallenges`) and injected into `contributions` after
+   * fetch, since its submission form never changes day to day.
+   */
+  ideias?: DailyIdeiasEntry;
 };
 
 /**
