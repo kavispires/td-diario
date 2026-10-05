@@ -6,7 +6,14 @@ import { gameInfos } from '@engines';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import { useUserPreferencesStore } from '@store/useUserPreferencesStore';
 import { isDevEnv } from '@utils/helpers';
-import { Bell, BookOpen, CodeXml, Volume2, VolumeX } from 'lucide-react';
+import {
+  Bell,
+  BookOpen,
+  ChevronLeft,
+  CodeXml,
+  Volume2,
+  VolumeX,
+} from 'lucide-react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { TDLogoIcon } from '../TDLogoIcon';
@@ -44,29 +51,40 @@ export function ChromeHeader() {
       <div className="mx-auto flex w-full max-w-md items-center justify-between px-4 py-3">
         {/* Brand / Logo */}
         <div className="flex items-center gap-2">
-          {activeGameId ? (
-            <motion.button
-              type="button"
-              layoutId={`game-logo-${activeGameId}`}
-              transition={{
-                layout: {
-                  type: 'spring',
-                  stiffness: 180,
-                  damping: 20,
-                },
-              }}
-              className="w-6 h-6 shrink-0"
-              aria-label="Voltar para o hub"
-              onClick={() => navigate('/')}
-            >
-              <GameLogos
-                gameId={activeGameId}
-                className="w-full h-full"
+          <div className="flex items-center">
+            {activeGameId && (
+              <IconButton
+                icon={<ChevronLeft />}
+                aria-label="Voltar para o hub"
+                size="small"
+                className="w-6 h-6 p-0 -ml-1"
+                onClick={() => navigate('/')}
               />
-            </motion.button>
-          ) : (
-            <TDLogoIcon className="w-6 h-6 shrink-0" />
-          )}
+            )}
+            {activeGameId ? (
+              <motion.button
+                type="button"
+                layoutId={`game-logo-${activeGameId}`}
+                transition={{
+                  layout: {
+                    type: 'spring',
+                    stiffness: 180,
+                    damping: 20,
+                  },
+                }}
+                className="w-6 h-6 shrink-0"
+                aria-label="Voltar para o hub"
+                onClick={() => navigate('/')}
+              >
+                <GameLogos
+                  gameId={activeGameId}
+                  className="w-full h-full"
+                />
+              </motion.button>
+            ) : (
+              <TDLogoIcon className="w-6 h-6 shrink-0" />
+            )}
+          </div>
           <Title
             level={1}
             className="text-xl text-slate-50"
