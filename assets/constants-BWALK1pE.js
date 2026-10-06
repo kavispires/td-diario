@@ -1,1 +1,0 @@
-var e=`0.5px solid rgba(0, 0, 0, 0.55)`,t=`0.5px solid rgba(255, 255, 255, 0.85)`;export{t as n,e as t};

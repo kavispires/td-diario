@@ -1,2 +1,0 @@
-function e(e,t,n=``){let r=Math.max(0,e),i=Math.max(r,t);return[...Array(r).fill(`❤️`),...Array(i-r).fill(`🩶`)].join(n)}function t({gameInfo:t,challengeNumber:n,title:r,totalHearts:i=0,remainingHearts:a=0,heartsSuffix:o=``,heartsSpacing:s=``,additionalLines:c=[],hideHearts:l=!1,hideLink:u=!1}){return[`${t.emoji} TD Diário ${t.name.pt} #${n}`,r,!l&&`${e(a,i,s)}${o?` ${o}`:``}`,...c,!u&&`https://diario.kavispires.com`].filter(Boolean).map(e=>e.trim()).join(`
-`)}export{e as n,t};

@@ -1,0 +1,1 @@
+import{r as e}from"./jsx-runtime-BkSabwWG.js";import{n as t}from"./createLucideIcon-BlhVbf4T.js";import{Er as n,Tr as r,wr as i}from"./index-dxhlbMla.js";var a=e(t(),1);function o(){!r.current&&i();let[e]=(0,a.useState)(n.current);return e}export{o as t};

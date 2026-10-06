@@ -1,1 +1,0 @@
-import{r as e}from"./jsx-runtime-BkSabwWG.js";import{r as t}from"./heart-AhYp1ZU-.js";var n=e(t(),1),r=1e3;function i(e,t){(0,n.useEffect)(()=>{if(!e)return;let n=setTimeout(()=>{t(!0)},r);return()=>clearTimeout(n)},[e,t])}export{i as t};

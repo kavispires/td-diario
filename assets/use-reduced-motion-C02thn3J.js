@@ -1,1 +1,0 @@
-import{r as e}from"./jsx-runtime-BkSabwWG.js";import{r as t}from"./heart-AhYp1ZU-.js";import{H as n,U as r,V as i}from"./Tooltip-CHo9dAlZ.js";var a=e(t(),1);function o(){!n.current&&i();let[e]=(0,a.useState)(r.current);return e}export{o as t};
