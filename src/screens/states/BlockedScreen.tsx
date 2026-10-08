@@ -1,0 +1,67 @@
+import { TDLogoIcon } from '@components/TDLogoIcon';
+import { Paragraph, Text, Title } from '@components/ui/Typography';
+import { useAuthStore } from '@store/useAuthStore';
+import { Ban } from 'lucide-react';
+
+/**
+ * Renders a full-screen blocked state, shown instead of the app's content
+ * when the signed-in user is not allowed to access it.
+ *
+ * @returns The blocked screen element.
+ */
+export function BlockedScreen() {
+  const user = useAuthStore((state) => state.user);
+
+  const getMessage = () => {
+    if (user?.uid?.startsWith('5J1AlHgM')) {
+      return 'Pare de tentar roubar, Mateus!';
+    }
+
+    return 'Eu não acredito que você pediu para a Carol roubar pra você!';
+
+    // return 'Esta conta não tem acesso ao TD Diário.';
+  };
+
+  return (
+    <main
+      className="relative flex min-h-dvh w-full items-center justify-center overflow-hidden px-5 py-10 text-foreground"
+      role="alert"
+      aria-live="assertive"
+    >
+      <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-accent-soft/70 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-secondary-soft/70 blur-3xl" />
+
+      <section className="relative z-10 flex w-full max-w-md flex-col items-center rounded-4xl border border-white/70 bg-surface/90 px-6 py-9 text-center shadow-[0_20px_60px_rgba(64,59,70,0.14)] backdrop-blur-sm sm:px-10">
+        <TDLogoIcon
+          static
+          className="mb-6 h-20 w-20 object-contain sm:h-24 sm:w-24"
+        />
+
+        <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft text-destructive">
+          <Ban
+            size={28}
+            strokeWidth={2.25}
+            aria-hidden="true"
+          />
+        </div>
+
+        <Text
+          type="secondary"
+          strong
+          className="mb-2 text-xs uppercase tracking-[0.2em]"
+        >
+          Acesso bloqueado
+        </Text>
+        <Title
+          level={1}
+          className="max-w-sm text-2xl sm:text-3xl"
+        >
+          {getMessage()}
+        </Title>
+        <Paragraph className="mb-2 mt-3 max-w-sm text-center text-muted-foreground">
+          Esta conta está temporariamente bloqueada de acessar o TD Diário.
+        </Paragraph>
+      </section>
+    </main>
+  );
+}

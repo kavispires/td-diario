@@ -1,5 +1,6 @@
 import { useGetDailyUserData } from '@hooks/useGetDailyUserData';
 import { MainContent } from '@layouts/MainContent';
+import { BlockedScreen } from '@screens/states/BlockedScreen';
 import { ErrorScreen } from '@screens/states/ErrorScreen';
 import { LoadingScreen } from '@screens/states/LoadingScreen';
 import { LoginScreen } from '@screens/states/LoginScreen';
@@ -51,6 +52,15 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     return (
       <MainContent fullscreen>
         <LoginScreen />
+      </MainContent>
+    );
+  }
+
+  // TEMPORARY: block a specific user id from accessing the app.
+  if (!user.uid.startsWith('YKj56X0vM') && !user.uid.startsWith('3c4lY413')) {
+    return (
+      <MainContent fullscreen>
+        <BlockedScreen />
       </MainContent>
     );
   }
