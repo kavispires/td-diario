@@ -24,11 +24,11 @@ const TYPE_ICONS: Record<NotificationType, typeof Info> = {
 };
 
 const TYPE_CLASSES: Record<NotificationType, string> = {
-  success: 'bg-success/10 border-success/30 text-success',
-  info: 'bg-secondary/10 border-secondary/30 text-secondary',
-  warning: 'bg-warning/10 border-warning/30 text-warning',
-  error: 'bg-destructive/10 border-destructive/30 text-destructive',
-  loading: 'bg-border/60 border-border-strong text-muted-foreground',
+  success: 'bg-success border-success text-white',
+  info: 'bg-secondary border-secondary text-white',
+  warning: 'bg-warning border-warning text-white',
+  error: 'bg-destructive border-destructive text-white',
+  loading: 'bg-chrome border-chrome text-white',
 };
 
 /**
@@ -59,16 +59,16 @@ function NotificationItem({ id, type, content, duration }: Notification) {
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.18 }}
       className={cn(
-        'pointer-events-auto flex max-w-xs items-center gap-2 rounded-full border px-4 py-2 shadow-lg',
+        'pointer-events-auto flex w-full max-w-sm items-start gap-2 rounded-2xl border px-4 py-2.5 shadow-lg',
         TYPE_CLASSES[type],
       )}
     >
       <Icon
         size={18}
-        className={cn('shrink-0', type === 'loading' && 'animate-spin')}
+        className={cn('mt-0.5 shrink-0', type === 'loading' && 'animate-spin')}
         aria-hidden="true"
       />
-      <span className="min-w-0 truncate text-sm font-medium text-foreground">
+      <span className="min-w-0 flex-1 text-balance text-sm font-medium">
         {content}
       </span>
     </motion.div>
