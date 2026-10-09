@@ -1,7 +1,7 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
 import { SeeResultsButton } from '@components/games/SeeResultsButton';
-import { Text } from '@components/ui/Typography';
 import { Clock3, Coins, Puzzle } from 'lucide-react';
 import type { DailyVitralEntry } from 'types/games';
 import { gameInfo } from '../info';
@@ -55,6 +55,7 @@ export function VitralGame({ data, initialState }: VitralGameProps) {
     activeGroupSlotIndexes,
     targetGroupSlotIndexes,
     hiddenPieceIds,
+    justDroppedPieceIds,
     getBorders,
     correctPieces,
   } = useVitralEngine(data, initialState);
@@ -87,6 +88,30 @@ export function VitralGame({ data, initialState }: VitralGameProps) {
         />
       </GameStatsRow>
 
+      <GameTitle
+        title={data.title}
+        description={`Arraste uma peça para perto de outra que combine para grudá-las.  Você perde um coração a cada
+        ${HEART_LOSS_INTERVAL_SECONDS + data.pieces.length} segundos.`}
+      />
+
+      <PuzzleBoard
+        imageUrl={imageUrl}
+        grid={grid}
+        measures={measures}
+        isComplete={isComplete}
+        isWin={isWin}
+        activeGroupSlotIndexes={activeGroupSlotIndexes}
+        targetGroupSlotIndexes={targetGroupSlotIndexes}
+        hiddenPieceIds={hiddenPieceIds}
+        justDroppedPieceIds={justDroppedPieceIds}
+        activeDrag={activeDrag}
+        boardRef={boardRef}
+        getBorders={getBorders}
+        startDrag={(index, event) =>
+          startDrag(index, event.nativeEvent.clientX, event.nativeEvent.clientY)
+        }
+      />
+
       <GameStatsRow
         progress={
           isComplete
@@ -109,37 +134,6 @@ export function VitralGame({ data, initialState }: VitralGameProps) {
         />
         <div />
       </GameStatsRow>
-
-      <div className="flex w-full items-center justify-center">
-        <Text strong>{data.title}</Text>
-      </div>
-
-      <Text
-        type="secondary"
-        className="text-center"
-      >
-        Arraste uma peça para perto de outra que combine para grudá-las.
-        <br />
-        Você perde um coração a cada{' '}
-        {HEART_LOSS_INTERVAL_SECONDS + data.pieces.length} segundos.
-      </Text>
-
-      <PuzzleBoard
-        imageUrl={imageUrl}
-        grid={grid}
-        measures={measures}
-        isComplete={isComplete}
-        isWin={isWin}
-        activeGroupSlotIndexes={activeGroupSlotIndexes}
-        targetGroupSlotIndexes={targetGroupSlotIndexes}
-        hiddenPieceIds={hiddenPieceIds}
-        activeDrag={activeDrag}
-        boardRef={boardRef}
-        getBorders={getBorders}
-        startDrag={(index, event) =>
-          startDrag(index, event.nativeEvent.clientX, event.nativeEvent.clientY)
-        }
-      />
 
       <SeeResultsButton
         isComplete={isComplete}

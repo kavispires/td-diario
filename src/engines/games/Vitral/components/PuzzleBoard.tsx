@@ -44,6 +44,12 @@ type PuzzleBoardProps = {
    */
   hiddenPieceIds: Set<number>;
   /**
+   * Set of piece ids that just landed from a completed drag and should
+   * skip their spring transition for one render (the drag overlay already
+   * animated them visually to this slot).
+   */
+  justDroppedPieceIds: Set<number>;
+  /**
    * Metadata for the drag currently in progress, if any.
    */
   activeDrag: {
@@ -89,6 +95,7 @@ export function PuzzleBoard({
   activeGroupSlotIndexes,
   targetGroupSlotIndexes,
   hiddenPieceIds,
+  justDroppedPieceIds,
   activeDrag,
   boardRef,
   getBorders,
@@ -148,7 +155,8 @@ export function PuzzleBoard({
                 cellWidth={measures.cellWidth}
                 cellHeight={measures.cellHeight}
                 isHidden={hiddenPieceIds.has(piece.id)}
-                disabled={isComplete}
+                skipEnterTransition={justDroppedPieceIds.has(piece.id)}
+                disabled={isComplete || piece.id === index}
                 borders={getBorders(index)}
                 onPointerDown={startDrag}
               />
@@ -167,12 +175,7 @@ export function PuzzleBoard({
                 left: activeDrag.pointerX - activeDrag.offsetX,
                 top: activeDrag.pointerY - activeDrag.offsetY,
               }}
-              transition={{
-                type: 'spring',
-                stiffness: 420,
-                damping: 32,
-                mass: 0.35,
-              }}
+              transition={{ duration: 0 }}
               className="absolute"
               style={{
                 width: measures.cellWidth,
@@ -206,7 +209,7 @@ export function PuzzleBoard({
                       }}
                     >
                       <div
-                        className="absolute inset-0 overflow-hidden rounded-md"
+                        className="absolute inset-0 overflow-hidden"
                         style={getPieceStyle(piece.id, imageUrl, measures.rows)}
                       />
                       <div

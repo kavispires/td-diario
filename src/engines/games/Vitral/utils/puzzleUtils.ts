@@ -103,6 +103,18 @@ export function countCorrectPieces(grid: GridState): number {
 }
 
 /**
+ * Checks whether the piece at `index` is sitting in its final solved slot.
+ * Locked pieces cannot be moved or displaced anymore.
+ *
+ * @param grid - Board arrangement to inspect.
+ * @param index - Slot index to inspect.
+ * @returns `true` when the piece at `index` has already scored and locked in.
+ */
+export function isPieceLocked(grid: GridState, index: number): boolean {
+  return grid[index]?.id === index;
+}
+
+/**
  * Computes the total number of seams in a solved puzzle with `rows` rows.
  *
  * @param rows - Number of rows in today's puzzle.
@@ -219,9 +231,17 @@ export function getPieceBorders(
 
   const currentPiece = piece;
 
-  function checkConnection(
+  /**
+   * A neighbor at `neighborIndex` is a correct match for `currentPiece`
+   * only when their piece ids are adjacent in the exact direction implied
+   * by their physical positions (e.g. a piece to the current piece's right
+   * must have an id exactly one higher, not just "off by one" in either
+   * direction).
+   */
+  function isCorrectNeighbor(
     neighborIndex: number,
-    direction: 'horizontal' | 'vertical',
+    isNeighborAfter: boolean,
+    isHorizontal: boolean,
   ): boolean {
     if (neighborIndex < 0 || neighborIndex >= totalSlots) {
       return false;
@@ -232,11 +252,9 @@ export function getPieceBorders(
       return false;
     }
 
-    return direction === 'horizontal'
-      ? arePiecesConnectable(currentPiece.id, neighbor.id, true) ||
-          arePiecesConnectable(neighbor.id, currentPiece.id, true)
-      : arePiecesConnectable(currentPiece.id, neighbor.id, false) ||
-          arePiecesConnectable(neighbor.id, currentPiece.id, false);
+    return isNeighborAfter
+      ? arePiecesConnectable(currentPiece.id, neighbor.id, isHorizontal)
+      : arePiecesConnectable(neighbor.id, currentPiece.id, isHorizontal);
   }
 
   const topIndex = index - COLS;
@@ -245,13 +263,13 @@ export function getPieceBorders(
   const rightIndex = index + 1;
 
   const hasTopConnection =
-    topIndex >= 0 && checkConnection(topIndex, 'vertical');
+    topIndex >= 0 && isCorrectNeighbor(topIndex, false, false);
   const hasBottomConnection =
-    bottomIndex < totalSlots && checkConnection(bottomIndex, 'vertical');
+    bottomIndex < totalSlots && isCorrectNeighbor(bottomIndex, true, false);
   const hasLeftConnection =
-    index % COLS !== 0 && checkConnection(leftIndex, 'horizontal');
+    index % COLS !== 0 && isCorrectNeighbor(leftIndex, false, true);
   const hasRightConnection =
-    index % COLS !== COLS - 1 && checkConnection(rightIndex, 'horizontal');
+    index % COLS !== COLS - 1 && isCorrectNeighbor(rightIndex, true, true);
 
   return {
     top: !hasTopConnection,
@@ -292,6 +310,19 @@ export function moveConnectedGroup(
   );
 
   if (!isValidMove) {
+    return null;
+  }
+
+  // Locked pieces (already in their final solved slot) can't be moved or
+  // displaced by another group being dropped onto them.
+  const hasLockedSource = sourceIndices.some((index) =>
+    isPieceLocked(grid, index),
+  );
+  const hasLockedTarget = targetIndices.some(
+    (index) => !sourceIndices.includes(index) && isPieceLocked(grid, index),
+  );
+
+  if (hasLockedSource || hasLockedTarget) {
     return null;
   }
 

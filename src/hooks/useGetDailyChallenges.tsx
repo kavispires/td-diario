@@ -1013,7 +1013,7 @@ const MOCK_DAILY_RESPONSE: DailyResponse = {
       number: 276,
       type: 'vitral',
       title: 'A Escadaria dos Ossos',
-      cardId: 'td-d16-59',
+      cardId: 'td-d14-202',
       pieces: [
         20, 14, 13, 6, 10, 8, 22, 11, 26, 15, 30, 25, 23, 27, 21, 4, 17, 0, 2,
         31, 29, 16, 18, 24, 7, 19, 28, 32, 1, 3, 12, 5, 9,

@@ -12,8 +12,8 @@ export const gameInfo: GameInfo = {
     pt: 'Já quebrou a cabeça hoje?',
   },
   releaseDate: '2025-12-24',
-  release: 'maintenance',
-  version: '0.0.1',
+  release: 'stable',
+  version: '1.0.0',
 };
 
 export function Logo(props: React.SVGProps<SVGSVGElement>) {

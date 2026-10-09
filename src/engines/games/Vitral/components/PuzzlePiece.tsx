@@ -37,6 +37,13 @@ type PuzzlePieceProps = {
    */
   isHidden: boolean;
   /**
+   * Whether this piece just landed from a completed drag and should skip
+   * its spring transition for this render, snapping straight to its new
+   * slot instead of visibly traveling from its pre-drag position (the drag
+   * overlay already carried it here).
+   */
+  skipEnterTransition: boolean;
+  /**
    * Whether interactions should be disabled because the game is complete.
    */
   disabled: boolean;
@@ -69,6 +76,7 @@ export function PuzzlePiece({
   cellWidth,
   cellHeight,
   isHidden,
+  skipEnterTransition,
   disabled,
   borders,
   onPointerDown,
@@ -83,8 +91,12 @@ export function PuzzlePiece({
       type="button"
       initial={false}
       animate={{ top, left }}
-      transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-      className="absolute overflow-hidden rounded-md bg-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/85 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+      transition={
+        skipEnterTransition
+          ? { duration: 0 }
+          : { type: 'spring', stiffness: 320, damping: 28 }
+      }
+      className="absolute overflow-hidden bg-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/85 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
       style={{
         width: cellWidth,
         height: cellHeight,

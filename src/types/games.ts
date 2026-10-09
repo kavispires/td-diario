@@ -296,6 +296,14 @@ export type DailyVitralEntry = {
    * Piece ids shuffled into the starting board order.
    */
   pieces: number[];
+  /**
+   * Number of columns in the starting board layout. (default is 3)
+   */
+  columns?: 3 | 4;
+  /**
+   * list of cards ids for the special mutating vitral
+   */
+  cardsIds?: string[];
 };
 
 /**

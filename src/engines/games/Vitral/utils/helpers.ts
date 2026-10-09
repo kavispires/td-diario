@@ -193,11 +193,9 @@ export function getInitialState(data: DailyVitralEntry): GameState {
   );
   const normalizedStatus = isSolved
     ? GAME_LIFECYCLE_STATUS.WIN
-    : normalizedHearts <= 0
-      ? GAME_LIFECYCLE_STATUS.LOSE
-      : storedState.swapCount > 0 || storedState.timeElapsed > 0
-        ? GAME_LIFECYCLE_STATUS.IN_PROGRESS
-        : GAME_LIFECYCLE_STATUS.IDLE;
+    : storedState.swapCount > 0 || storedState.timeElapsed > 0
+      ? GAME_LIFECYCLE_STATUS.IN_PROGRESS
+      : GAME_LIFECYCLE_STATUS.IDLE;
 
   return {
     id: data.id,

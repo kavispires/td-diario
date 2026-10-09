@@ -26,6 +26,7 @@ import {
   getConnectedGroupIndices,
   getPieceBorders,
   getTotalPossibleConnections,
+  isPieceLocked,
   moveConnectedGroup,
 } from './puzzleUtils';
 import type { BoardMeasures, GameState, SessionState } from './types';
@@ -62,6 +63,9 @@ export function useVitralEngine(
     grid: buildGridFromPiecesOrder(initialState.piecesOrder),
   }));
   const [showResults, setShowResults] = useState(false);
+  const [justDroppedPieceIds, setJustDroppedPieceIds] = useState<Set<number>>(
+    () => new Set(),
+  );
   const [measures, setMeasures] = useState<BoardMeasures>({
     width: 0,
     height: 0,
@@ -142,19 +146,19 @@ export function useVitralEngine(
       return;
     }
 
-    const isNowLose = expectedHearts <= 0;
-    if (isNowLose) {
+    // Running out of hearts no longer ends the game: the player can keep
+    // solving the puzzle, it just stops earning additional points (the
+    // score formula already multiplies new connections by `hearts`).
+    if (expectedHearts <= 0 && state.hearts > 0) {
       playSFX('lose');
       vibrate('lose');
-      logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
     }
 
     setState((previousState) => ({
       ...previousState,
       hearts: expectedHearts,
-      status: isNowLose
-        ? GAME_LIFECYCLE_STATUS.LOSE
-        : previousState.status === GAME_LIFECYCLE_STATUS.IDLE
+      status:
+        previousState.status === GAME_LIFECYCLE_STATUS.IDLE
           ? GAME_LIFECYCLE_STATUS.IN_PROGRESS
           : previousState.status,
     }));
@@ -214,6 +218,20 @@ export function useVitralEngine(
     };
   }, [updateMeasures]);
 
+  // Re-enables the spring transition for just-dropped pieces after the one
+  // frame where they need to reappear instantly at their new slot.
+  useEffect(() => {
+    if (justDroppedPieceIds.size === 0) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      setJustDroppedPieceIds(new Set());
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [justDroppedPieceIds]);
+
   const finishDrag = useCallback(
     (nextTargetIndex: number) => {
       const activeDrag = dragRef.current;
@@ -251,9 +269,11 @@ export function useVitralEngine(
         return;
       }
 
-      const connectionsBefore = countConnections(gridRef.current);
       const connectionsAfter = countConnections(nextGrid);
-      const newConnections = connectionsAfter - connectionsBefore;
+      const newlyLockedPieces = Math.max(
+        0,
+        countCorrectPieces(nextGrid) - countCorrectPieces(gridRef.current),
+      );
       const nextStatus =
         connectionsAfter === totalPossibleConnections
           ? GAME_LIFECYCLE_STATUS.WIN
@@ -265,6 +285,18 @@ export function useVitralEngine(
       if (nextStatus === GAME_LIFECYCLE_STATUS.WIN) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
       }
+
+      // The dragged group was visually carried by the drag overlay, which
+      // already animated it to this exact slot. Skip its spring transition
+      // for this one commit so it doesn't also animate from its pre-drag
+      // slot (where it stayed, hidden, the whole time); only the displaced
+      // piece(s) it swapped with should spring into their new slot.
+      const droppedPieceIds = new Set(
+        activeDrag.groupOffsets
+          .map((offset) => gridRef.current[activeDrag.originIndex + offset]?.id)
+          .filter((pieceId): pieceId is number => pieceId !== undefined),
+      );
+      setJustDroppedPieceIds(droppedPieceIds);
 
       setSession((previousSession) => ({
         ...previousSession,
@@ -281,9 +313,13 @@ export function useVitralEngine(
           totalPossibleConnections > 0
             ? connectionsAfter / totalPossibleConnections
             : 1,
+        // Each piece scores double the current heart count the instant it
+        // locks into its final slot; once hearts run out, newly-locked
+        // pieces are simply worth 0 additional points. The elapsed time is
+        // only deducted once, at the very end, when the puzzle is solved.
         score: Math.max(
           previousState.score +
-            (newConnections > 0 ? newConnections * previousState.hearts : 0) -
+            newlyLockedPieces * previousState.hearts * 2 -
             (nextStatus === GAME_LIFECYCLE_STATUS.WIN
               ? previousState.timeElapsed
               : 0),
@@ -378,6 +414,12 @@ export function useVitralEngine(
       const piece = gridRef.current[index];
       const boardRect = boardElementRef.current?.getBoundingClientRect();
       if (!piece || !boardRect) {
+        return;
+      }
+
+      // A piece sitting in its final solved slot is locked in place and
+      // can no longer be picked up (it has already scored).
+      if (isPieceLocked(gridRef.current, index)) {
         return;
       }
 
@@ -481,6 +523,7 @@ export function useVitralEngine(
     activeGroupSlotIndexes,
     targetGroupSlotIndexes,
     hiddenPieceIds,
+    justDroppedPieceIds,
     getBorders: (index: number) =>
       getPieceBorders(index, session.grid, measures.totalSlots),
     correctPieces,
