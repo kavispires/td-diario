@@ -24,6 +24,19 @@ type TooltipProps = {
    * Side of the trigger the tooltip is anchored to. Defaults to `top`.
    */
   placement?: FloatingPlacement;
+  /**
+   * When provided, forces the tooltip open in addition to hover/focus, e.g.
+   * to support a press-and-hold interaction on touch devices.
+   */
+  open?: boolean;
+  /**
+   * Called when the user taps/clicks the floating tooltip bubble itself.
+   * When provided, the bubble becomes tappable (instead of
+   * `pointer-events-none`), letting the caller dismiss a stuck-open
+   * controlled `open` state (e.g. a long-press that never got its
+   * release event).
+   */
+  onDismiss?: () => void;
 };
 
 const ARROW_POSITION: Record<FloatingPlacement, string> = {
@@ -41,11 +54,19 @@ const ARROW_POSITION: Record<FloatingPlacement, string> = {
  * @returns The trigger wrapped with hover/focus handlers, plus a
  *   portal-rendered tooltip bubble while visible.
  */
-export function Tooltip({ title, children, placement = 'top' }: TooltipProps) {
-  const [visible, setVisible] = useState(false);
+export function Tooltip({
+  title,
+  children,
+  placement = 'top',
+  open,
+  onDismiss,
+}: TooltipProps) {
+  const [hovered, setHovered] = useState(false);
   const triggerRef = useRef<HTMLSpanElement>(null);
   const floatingRef = useRef<HTMLDivElement>(null);
   const tooltipId = useId();
+
+  const visible = hovered || !!open;
 
   const position = useFloatingPosition(
     triggerRef,
@@ -66,10 +87,10 @@ export function Tooltip({ title, children, placement = 'top' }: TooltipProps) {
       <span
         ref={triggerRef}
         className="inline-block"
-        onMouseEnter={() => setVisible(true)}
-        onMouseLeave={() => setVisible(false)}
-        onFocus={() => setVisible(true)}
-        onBlur={() => setVisible(false)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
         aria-describedby={visible ? tooltipId : undefined}
       >
         {children}
@@ -90,7 +111,21 @@ export function Tooltip({ title, children, placement = 'top' }: TooltipProps) {
                 left: position?.left ?? 0,
                 visibility: position ? 'visible' : 'hidden',
               }}
-              className="pointer-events-none fixed z-50 max-w-xs rounded-lg bg-chrome px-3 py-1.5 text-xs text-white shadow-lg"
+              className={cn(
+                'fixed z-50 max-w-xs rounded-lg bg-chrome px-3 py-1.5 text-xs text-white shadow-lg',
+                onDismiss ? 'pointer-events-auto' : 'pointer-events-none',
+              )}
+              onClick={() => {
+                setHovered(false);
+                onDismiss?.();
+              }}
+              onPointerDown={(event) => {
+                // Dismiss on tap without also re-triggering the trigger
+                // element's own press/hover handlers underneath.
+                event.stopPropagation();
+                setHovered(false);
+                onDismiss?.();
+              }}
             >
               {title}
               {position && (

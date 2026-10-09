@@ -1,4 +1,7 @@
 import { DEFAULT_SPRITE_SIZE, Sprite } from '@components/sprites/Sprite';
+import { Tooltip } from '@components/ui/Tooltip';
+import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
+import { useLongPress } from '@hooks/useLongPress';
 
 const SPRITE_SHEET_BUCKET_SIZE = 64;
 
@@ -49,7 +52,9 @@ type DailyItemProps = {
 
 /**
  * Renders a single game item (e.g. a grid tile or tracker icon) by
- * resolving its id to the matching sprite sheet symbol.
+ * resolving its id to the matching sprite sheet symbol. On a press-and-hold
+ * of 1+ second (for touch devices without hover), shows the item's name in
+ * a tooltip when it's present in today's `metadata.dictionary`.
  *
  * @param props Item id, sizing, optional tooltip title, classes, and padding.
  * @returns The rendered item sprite.
@@ -62,15 +67,34 @@ export function DailyItem({
   padding = 6,
 }: DailyItemProps) {
   const [source, spriteId] = getItemSpriteSource(itemId);
+  const dailyChallenges = useGetDailyChallenges();
+  const dictionary = dailyChallenges.data?.metadata?.dictionary;
+  const tooltipTitle = title ?? dictionary?.[itemId];
+  const { isPressing, handlers, dismiss } = useLongPress({
+    enabled: !!tooltipTitle,
+  });
 
-  return (
-    <Sprite
-      source={source}
-      spriteId={spriteId}
-      width={width}
-      title={title}
-      className={className}
-      padding={padding}
-    />
+  const sprite = (
+    <span {...handlers}>
+      <Sprite
+        source={source}
+        spriteId={spriteId}
+        width={width}
+        className={className}
+        padding={padding}
+      />
+    </span>
+  );
+
+  return tooltipTitle ? (
+    <Tooltip
+      title={tooltipTitle}
+      open={isPressing}
+      onDismiss={dismiss}
+    >
+      {sprite}
+    </Tooltip>
+  ) : (
+    sprite
   );
 }
