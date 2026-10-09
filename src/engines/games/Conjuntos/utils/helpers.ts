@@ -226,7 +226,7 @@ export function getInitialState(data: DailyConjuntosEntry): GameState {
  * @returns A count of letters, vowels, and consonants.
  */
 export function countThing(word: string): string {
-  const letters = word.replace(/[\s-]/g, '').length;
+  const letters = (word.match(/\p{L}/gu) ?? []).length;
   const vowels = removeAccents(word.toLowerCase())
     .split('')
     .filter((letter) => CONJUNTOS_VOWELS.includes(letter)).length;

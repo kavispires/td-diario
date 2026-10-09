@@ -67,15 +67,13 @@ export function ThingCard({
   const baseFontSizeRem = emphasize ? 1 : 0.875;
 
   return (
-    <div
-      className={cn('flex min-w-0 flex-col items-center gap-1', className)}
-      title={countThing(name)}
-    >
+    <div className={cn('flex min-w-0 flex-col items-center gap-1', className)}>
       {!minimize && (
         <DailyItem
           itemId={itemId}
           width={boundedWidth}
           padding={0}
+          title={countThing(name)}
         />
       )}
 

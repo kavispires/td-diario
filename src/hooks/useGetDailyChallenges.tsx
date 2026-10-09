@@ -953,7 +953,7 @@ const MOCK_DAILY_RESPONSE: DailyResponse = {
       },
       intersectingThing: {
         id: '1489',
-        name: 'Ouija',
+        name: 'Oui-já!',
       },
       things: [
         {
