@@ -6,6 +6,7 @@ import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
+import { pluralize } from '@utils/helpers';
 import { motion } from 'motion/react';
 import {
   GOAL,
@@ -100,6 +101,10 @@ type ResultsSplashProps = {
    */
   score: number;
   /**
+   * Best score reached across all attempts today.
+   */
+  maxScore: number;
+  /**
    * Today's item pool, used for the recap strip.
    */
   itemsIds: string[];
@@ -143,6 +148,7 @@ export function ResultsSplash({
   goal,
   attempts,
   score,
+  maxScore,
   itemsIds,
   lastMatch,
   hardMode,
@@ -161,6 +167,7 @@ export function ResultsSplash({
     goal,
     hardMode,
     attempts,
+    score: maxScore,
   });
   const previewItems = itemsIds
     .filter((itemId) => itemId !== lastMatch)
@@ -197,74 +204,41 @@ export function ResultsSplash({
           win ? 'bg-gold-soft' : 'bg-white/75',
         )}
       >
-        <Text
-          strong
-          className="text-sm uppercase tracking-[0.18em]"
-        >
-          Resumo da rodada
+        {(lastMatch || previewItems.length > 0) && (
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {lastMatch && (
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.2 }}
+                className="rounded-full border border-primary bg-white/70 p-1 shadow-sm"
+              >
+                <DailyItem
+                  itemId={lastMatch}
+                  width={24}
+                />
+              </motion.div>
+            )}
+
+            {previewItems.map((itemId, index) => (
+              <motion.div
+                key={itemId}
+                initial={{ scale: 0.92, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.2, delay: index * 0.04 }}
+                className="rounded-full bg-white/50 p-1 shadow-sm"
+              >
+                <DailyItem
+                  itemId={itemId}
+                  width={24}
+                />
+              </motion.div>
+            ))}
+          </div>
+        )}
+        <Text className="text-sm">
+          {progress} {pluralize(progress, 'disco')} dessa vez
         </Text>
-
-        <div className="mt-3 grid grid-cols-2 gap-3 text-left">
-          <div className="rounded-2xl bg-background/80 px-4 py-3 shadow-sm">
-            <Text
-              strong
-              className="block text-lg"
-            >
-              {usedProgress}/{goal}
-            </Text>
-            <Text
-              type="secondary"
-              className="text-xs"
-            >
-              Discos alcançados
-            </Text>
-          </div>
-
-          <div className="rounded-2xl bg-background/80 px-4 py-3 shadow-sm">
-            <Text
-              strong
-              className="block text-lg"
-            >
-              {score}
-            </Text>
-            <Text
-              type="secondary"
-              className="text-xs"
-            >
-              Pontos no dia
-            </Text>
-          </div>
-
-          <div className="rounded-2xl bg-background/80 px-4 py-3 shadow-sm">
-            <Text
-              strong
-              className="block text-lg"
-            >
-              {attempts}
-            </Text>
-            <Text
-              type="secondary"
-              className="text-xs"
-            >
-              Tentativas
-            </Text>
-          </div>
-
-          <div className="rounded-2xl bg-background/80 px-4 py-3 shadow-sm">
-            <Text
-              strong
-              className="block text-lg"
-            >
-              {hardMode ? 'Difícil' : 'Normal'}
-            </Text>
-            <Text
-              type="secondary"
-              className="text-xs"
-            >
-              Modo atual
-            </Text>
-          </div>
-        </div>
       </Surface>
 
       <Text
@@ -273,39 +247,6 @@ export function ResultsSplash({
       >
         {getResultsMessage(stopType, bestProgress, progress)}
       </Text>
-
-      {(lastMatch || previewItems.length > 0) && (
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {lastMatch && (
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.2 }}
-              className="rounded-full border border-primary bg-white/70 p-1 shadow-sm"
-            >
-              <DailyItem
-                itemId={lastMatch}
-                width={46}
-              />
-            </motion.div>
-          )}
-
-          {previewItems.map((itemId, index) => (
-            <motion.div
-              key={itemId}
-              initial={{ scale: 0.92, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.2, delay: index * 0.04 }}
-              className="rounded-full bg-white/50 p-1 shadow-sm"
-            >
-              <DailyItem
-                itemId={itemId}
-                width={42}
-              />
-            </motion.div>
-          ))}
-        </div>
-      )}
 
       <Hearts
         remaining={hearts}
@@ -318,8 +259,16 @@ export function ResultsSplash({
           type="secondary"
           className="text-center text-black"
         >
-          Melhor corrida: {bestProgress} de {goal} discos em {attempts}{' '}
-          tentativa{attempts === 1 ? '' : 's'}
+          {bestProgress}/{goal} discos
+        </Text>
+
+        <Divider orientation="vertical" />
+
+        <Text
+          type="secondary"
+          className="text-center text-black"
+        >
+          {attempts} {pluralize(attempts, 'tentativa')}
         </Text>
 
         <Divider orientation="vertical" />

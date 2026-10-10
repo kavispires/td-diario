@@ -1,7 +1,10 @@
 import { GameStat, GameStatsRow } from '@components/games/GameStats';
+import { GameTitle } from '@components/games/GameTitle';
 import { Hearts } from '@components/games/Hearts';
 import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Button } from '@components/ui/Button';
+import { DualTranslate } from '@components/ui/DualTranslate';
+import { Segmented } from '@components/ui/Segmented';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
@@ -48,6 +51,7 @@ export function AquiOGame({ data, initialState }: AquiOGameProps) {
     maxProgress,
     goal,
     score,
+    maxScore,
     discIndex,
     discA,
     discB,
@@ -112,7 +116,10 @@ export function AquiOGame({ data, initialState }: AquiOGameProps) {
           />
         </GameStatsRow>
 
-        <Text strong>{translate(data.title)}</Text>
+        <GameTitle
+          title={<DualTranslate>{data.title}</DualTranslate>}
+          description="Encontre o item que aparece nos dois discos antes que o tempo acabe."
+        />
 
         <div className="grid w-full grid-cols-[1fr_auto] items-center gap-3 rounded-2xl bg-white/70 px-4 py-3 shadow-sm">
           <div className="h-3 overflow-hidden rounded-full bg-border">
@@ -132,21 +139,10 @@ export function AquiOGame({ data, initialState }: AquiOGameProps) {
             </Text>
           </div>
         </div>
-
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          Encontre o item que aparece nos dois discos antes que o tempo acabe.
-          <br />
-          {attempts === 0
-            ? `Hoje são ${goal} discos para achar com apenas ${HEARTS} corações.`
-            : `Melhor rodada de hoje: ${maxProgress} de ${goal} discos em ${attempts} tentativa${attempts === 1 ? '' : 's'}.`}
-        </Text>
       </div>
 
       {!isPlaying && (
-        <Surface className="flex w-full flex-col items-center gap-3 bg-white/70 px-4 py-4">
+        <div className="flex w-full flex-col items-center gap-4">
           <Button
             variant="primary"
             size="small"
@@ -156,51 +152,36 @@ export function AquiOGame({ data, initialState }: AquiOGameProps) {
             {attempts > 0 ? 'Tentar de novo' : 'Começar o desafio'}
           </Button>
 
-          <div className="flex w-full flex-wrap justify-center gap-2">
-            <Button
-              variant={mode === 'normal' ? 'primary' : 'outlined'}
-              size="small"
-              aria-pressed={mode === 'normal'}
-              onClick={() => onModeChange('normal')}
-              disabled={isPlaying || isComplete}
-            >
-              Modo normal
-            </Button>
-            <Button
-              variant={mode === 'challenge' ? 'primary' : 'outlined'}
-              size="small"
-              aria-pressed={mode === 'challenge'}
-              onClick={() => onModeChange('challenge')}
-              disabled={isPlaying || isComplete}
-            >
-              Modo difícil
-            </Button>
-          </div>
-
-          <div className="flex w-full flex-wrap justify-center gap-2">
-            <Button
-              variant={voice === 'off' ? 'primary' : 'outlined'}
-              size="small"
-              aria-pressed={voice === 'off'}
-              onClick={() => onVoiceChange('off')}
-            >
-              Sem voz
-            </Button>
-            <Button
-              variant={voice === 'on' ? 'primary' : 'outlined'}
-              size="small"
-              aria-pressed={voice === 'on'}
-              onClick={() => onVoiceChange('on')}
-            >
-              Com voz
-            </Button>
-          </div>
-
-          <PreloadItems
-            items={data.itemsIds}
-            itemLabels={itemLabels}
+          <Segmented
+            label="Modo:"
+            labelPlacement="left"
+            value={mode}
+            onChange={(value) => onModeChange(value as 'normal' | 'challenge')}
+            disabled={isPlaying || isComplete}
+            options={[
+              { value: 'normal', label: 'Normal' },
+              { value: 'challenge', label: 'Difícil' },
+            ]}
           />
-        </Surface>
+
+          <Segmented
+            label="Voz:"
+            labelPlacement="left"
+            value={voice}
+            onChange={(value) => onVoiceChange(value as 'on' | 'off')}
+            options={[
+              { value: 'off', label: 'Sem' },
+              { value: 'on', label: 'Com' },
+            ]}
+          />
+
+          <Surface className="w-full p-4">
+            <PreloadItems
+              items={data.itemsIds}
+              itemLabels={itemLabels}
+            />
+          </Surface>
+        </div>
       )}
 
       {isPlaying && discA && discB && (
@@ -222,7 +203,7 @@ export function AquiOGame({ data, initialState }: AquiOGameProps) {
 
       {!isPlaying && attempts > 0 && !showResults && (
         <SeeResultsButton
-          isComplete={isComplete}
+          isComplete={attempts > 0}
           setShowResults={setShowResults}
         />
       )}
@@ -238,6 +219,7 @@ export function AquiOGame({ data, initialState }: AquiOGameProps) {
           goal={goal}
           attempts={attempts}
           score={score}
+          maxScore={maxScore}
           itemsIds={data.itemsIds}
           lastMatch={result}
           hardMode={mode === 'challenge'}

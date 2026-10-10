@@ -69,16 +69,6 @@ export const WEEKEND_FOLLOW_UP_DISC_NEW_ITEM_COUNT = 8;
 export const DISC_SEQUENCE_LENGTH = 17;
 
 /**
- * Points multiplier awarded when the player pushes their record forward.
- */
-export const CORRECT_MATCH_SCORE = 10;
-
-/**
- * Larger points multiplier awarded when the record-setting match wins the run.
- */
-export const WIN_MATCH_SCORE = 20;
-
-/**
  * Interval between timer refreshes while an Aqui O round is active.
  */
 export const TIMER_TICK_INTERVAL_MS = 100;

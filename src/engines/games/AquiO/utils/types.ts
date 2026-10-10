@@ -72,6 +72,10 @@ export type GameState = DefaultGameState<{
    */
   maxProgress: number;
   /**
+   * Best score reached across all attempts today.
+   */
+  maxScore: number;
+  /**
    * Whether challenge mode is enabled for the next attempt.
    */
   hardMode: boolean;

@@ -3,6 +3,7 @@ import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
 } from '@services/firebase';
+import { useUserPreferencesStore } from '@store/useUserPreferencesStore';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
 import { playSFX } from '@utils/soundEffects';
@@ -11,12 +12,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DailyAquiOEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
-  CORRECT_MATCH_SCORE,
   ROUND_DURATION_SECONDS,
   SPEECH_LANGUAGE,
   SPEECH_RATE,
   TIMER_TICK_INTERVAL_MS,
-  WIN_MATCH_SCORE,
 } from './constants';
 import { getDiscs } from './helpers';
 import type { GameState, RoundStopType, SessionState } from './types';
@@ -61,7 +60,13 @@ export function useAquiOEngine(
 ) {
   const [state, setState] = useState<GameState>(initialState);
   const [session, setSession] = useState<SessionState>(INITIAL_SESSION);
-  const [voice, setVoice] = useState<'on' | 'off'>('off');
+  const aquiOVoiceEnabled = useUserPreferencesStore(
+    (prefs) => prefs.aquiOVoiceEnabled,
+  );
+  const setAquiOVoiceEnabled = useUserPreferencesStore(
+    (prefs) => prefs.setAquiOVoiceEnabled,
+  );
+  const voice = aquiOVoiceEnabled ? 'on' : 'off';
   const [showResults, setShowResults] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -147,6 +152,7 @@ export function useAquiOEngine(
     setState((prev) => ({
       ...prev,
       attempts: prev.attempts + 1,
+      score: 0,
       status: GAME_LIFECYCLE_STATUS.IN_PROGRESS,
     }));
 
@@ -165,14 +171,12 @@ export function useAquiOEngine(
     if (itemId === result) {
       const nextDiscIndex = session.discIndex + 1;
       const isWin = nextDiscIndex === state.goal;
+      const matchPoints = Math.ceil(timeLeft);
 
       setState((prev) => {
         const nextMaxProgress = Math.max(prev.maxProgress, nextDiscIndex);
-        const hasNewRecord = nextMaxProgress > prev.maxProgress;
-        const nextScore = hasNewRecord
-          ? prev.score +
-            prev.hearts * (isWin ? WIN_MATCH_SCORE : CORRECT_MATCH_SCORE)
-          : prev.score;
+        const nextScore = prev.score + matchPoints;
+        const nextMaxScore = Math.max(prev.maxScore, nextScore);
 
         return {
           ...prev,
@@ -182,17 +186,19 @@ export function useAquiOEngine(
           maxProgress: nextMaxProgress,
           progress: nextMaxProgress / prev.goal,
           score: nextScore,
+          maxScore: nextMaxScore,
         };
       });
 
       setSession((prev) => ({ ...prev, discIndex: nextDiscIndex }));
-      playSFX(isWin ? 'win' : 'correct');
 
       if (voice === 'on') {
         const itemName = itemLabels[itemId];
         if (itemName) {
           speakInPortuguese(itemName);
         }
+      } else {
+        playSFX(isWin ? 'win' : 'correct');
       }
 
       if (isWin) {
@@ -221,7 +227,12 @@ export function useAquiOEngine(
       hearts: prev.hearts - 1,
       status: GAME_LIFECYCLE_STATUS.IN_PROGRESS,
     }));
-    playSFX('wrong');
+
+    if (voice === 'on') {
+      speakInPortuguese('Não seu burro!');
+    } else {
+      playSFX('wrong');
+    }
     vibrate('wrong');
   }
 
@@ -233,7 +244,7 @@ export function useAquiOEngine(
   }
 
   function onVoiceChange(newVoice: 'on' | 'off') {
-    setVoice(newVoice);
+    setAquiOVoiceEnabled(newVoice === 'on');
   }
 
   const { isWin, isLose, isComplete } = getGameStatuses(state.status);
@@ -244,6 +255,7 @@ export function useAquiOEngine(
     maxProgress: state.maxProgress,
     goal: state.goal,
     score: state.score,
+    maxScore: state.maxScore,
     discIndex: session.discIndex,
     discA,
     discB,

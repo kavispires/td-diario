@@ -31,6 +31,15 @@ type UserPreferencesState = {
    * Updates the date of the last seen news item.
    */
   setLastSeenNews: (date: string | null) => void;
+  /**
+   * Whether Aqui O's optional spoken item callouts are enabled. Persisted so
+   * the player's choice carries over between sessions.
+   */
+  aquiOVoiceEnabled: boolean;
+  /**
+   * Enables or disables Aqui O's spoken item callouts.
+   */
+  setAquiOVoiceEnabled: (enabled: boolean) => void;
 };
 
 export const useUserPreferencesStore = create<UserPreferencesState>()(
@@ -42,6 +51,8 @@ export const useUserPreferencesStore = create<UserPreferencesState>()(
       setSoundEnabled: (enabled) => set({ soundEnabled: enabled }),
       lastSeenNews: null,
       setLastSeenNews: (date) => set({ lastSeenNews: date }),
+      aquiOVoiceEnabled: false,
+      setAquiOVoiceEnabled: (enabled) => set({ aquiOVoiceEnabled: enabled }),
     }),
     {
       name: LOCAL_STORAGE_KEYS.PREFERENCES,

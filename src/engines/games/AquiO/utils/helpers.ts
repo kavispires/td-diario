@@ -54,6 +54,7 @@ function getDefaultState(data: DailyAquiOEntry): GameState {
     goal: GOAL,
     attempts: 0,
     maxProgress: 0,
+    maxScore: 0,
     hardMode: false,
     progress: 0,
     score: 0,
@@ -219,6 +220,7 @@ export function buildShare({
   goal,
   hardMode,
   attempts,
+  score,
 }: {
   challengeNumber: number;
   hearts: number;
@@ -228,6 +230,7 @@ export function buildShare({
   goal: number;
   hardMode: boolean;
   attempts: number;
+  score: number;
 }): ShareResult {
   const usedProgress = Math.max(progress, bestProgress);
 
@@ -236,6 +239,7 @@ export function buildShare({
     challengeNumber,
     totalHearts: HEARTS,
     remainingHearts: hearts,
+    heartsSuffix: `(${score}pts)`,
     additionalLines: [
       `${title}${hardMode ? '*' : ''}`,
       `${usedProgress}/${goal} discos (${attempts} ${pluralize(attempts, 'tentativa')})`,
@@ -270,5 +274,6 @@ export function buildShareFromProgress(
     goal: state.goal,
     hardMode: state.hardMode,
     attempts: state.attempts,
+    score: state.maxScore,
   });
 }

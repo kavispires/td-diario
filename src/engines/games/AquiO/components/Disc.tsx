@@ -38,7 +38,7 @@ export function Disc({ disc, width, onSelect, animationDelay = 0 }: DiscProps) {
 
   return (
     <motion.div
-      className="grid overflow-hidden rounded-full bg-[#9b6b3f] p-3 shadow-[0_4px_16px_rgba(0,0,0,0.28)]"
+      className="grid overflow-hidden rounded-full bg-white/20 p-3 shadow-[0_4px_16px_rgba(0,0,0,0.28)]"
       style={{
         width,
         height: width,

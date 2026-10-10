@@ -11,6 +11,7 @@ import { Modal } from '@components/ui/Modal';
 import { Pill } from '@components/ui/Pill';
 import { Popconfirm } from '@components/ui/Popconfirm';
 import { Popover } from '@components/ui/Popover';
+import { Segmented } from '@components/ui/Segmented';
 import { Select } from '@components/ui/Select';
 import { Switch } from '@components/ui/Switch';
 import { TextInput } from '@components/ui/TextInput';
@@ -34,6 +35,7 @@ export function UIShowcaseScreen() {
   const [name, setName] = useState('');
   const [warningVisible, setWarningVisible] = useState(true);
   const [switchOn, setSwitchOn] = useState(true);
+  const [segmentedValue, setSegmentedValue] = useState('day');
   const gameIds = Object.keys(gameInfos);
   const [selectedGameId, setSelectedGameId] = useState(gameIds[0]);
 
@@ -341,6 +343,59 @@ export function UIShowcaseScreen() {
           <Switch
             disabled
             aria-label="Alternar desabilitado"
+          />
+        </Flex>
+      </section>
+
+      <Divider />
+
+      <section className="flex flex-col gap-3">
+        <Text strong>Segmented</Text>
+        <Flex
+          vertical
+          gap="large"
+        >
+          <Segmented
+            value={segmentedValue}
+            onChange={setSegmentedValue}
+            options={[
+              { value: 'day', label: 'Dia' },
+              { value: 'week', label: 'Semana' },
+              { value: 'month', label: 'Mês' },
+            ]}
+          />
+          <Segmented
+            label="Período"
+            value={segmentedValue}
+            onChange={setSegmentedValue}
+            options={[
+              { value: 'day', label: 'Dia' },
+              { value: 'week', label: 'Semana' },
+              { value: 'month', label: 'Mês' },
+            ]}
+          />
+          <Segmented
+            label="Período"
+            labelPlacement="left"
+            size="small"
+            value={segmentedValue}
+            onChange={setSegmentedValue}
+            options={[
+              { value: 'day', label: 'Dia' },
+              { value: 'week', label: 'Semana' },
+              { value: 'month', label: 'Mês' },
+            ]}
+          />
+          <Segmented
+            label="Período"
+            labelPlacement="right"
+            disabled
+            defaultValue="week"
+            options={[
+              { value: 'day', label: 'Dia' },
+              { value: 'week', label: 'Semana' },
+              { value: 'month', label: 'Mês' },
+            ]}
           />
         </Flex>
       </section>
