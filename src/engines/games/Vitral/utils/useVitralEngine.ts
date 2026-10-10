@@ -17,6 +17,7 @@ import { gameInfo } from '../info';
 import {
   COLS,
   HEART_LOSS_INTERVAL_SECONDS,
+  MIRAGE_CYCLE_INTERVAL_SECONDS,
   VITRAL_TOTAL_HEARTS,
 } from './constants';
 import { buildGridFromPiecesOrder, formatElapsedTime } from './helpers';
@@ -48,7 +49,6 @@ export function useVitralEngine(
   data: DailyVitralEntry,
   initialState: GameState,
 ) {
-  const imageUrl = useTDImageCardUrl(data.cardId);
   const rulesGameId = useAppRuntimeStore((state) => state.rulesGameId);
   const isRulesOpen = rulesGameId === gameInfo.id;
   const rows = Math.max(1, Math.ceil(data.pieces.length / COLS));
@@ -57,7 +57,37 @@ export function useVitralEngine(
     [rows],
   );
 
+  // A "mirage" Vitral ships multiple `cardsIds` and cycles through them
+  // every `MIRAGE_CYCLE_INTERVAL_SECONDS`, driven by the game's own elapsed
+  // timer rather than a separate interval.
+  const mirageCardIds = data.cardsIds;
+
   const [state, setState] = useState<GameState>(initialState);
+  const mirageIndex = Math.floor(
+    state.timeElapsed / MIRAGE_CYCLE_INTERVAL_SECONDS,
+  );
+  const activeCardId =
+    mirageCardIds && mirageCardIds.length > 0
+      ? mirageCardIds[mirageIndex % mirageCardIds.length]
+      : data.cardId;
+  const imageUrl = useTDImageCardUrl(activeCardId);
+  // Preload the upcoming mirage image throughout the current cycle so it's
+  // already cached by the time it becomes active, letting the cross-fade
+  // animate smoothly instead of waiting on a fresh network fetch.
+  const nextCardId =
+    mirageCardIds && mirageCardIds.length > 1
+      ? mirageCardIds[(mirageIndex + 1) % mirageCardIds.length]
+      : activeCardId;
+  const nextImageUrl = useTDImageCardUrl(nextCardId);
+
+  useEffect(() => {
+    if (nextImageUrl === imageUrl) {
+      return;
+    }
+    const preloadImage = new Image();
+    preloadImage.src = nextImageUrl;
+  }, [nextImageUrl, imageUrl]);
+
   const [session, setSession] = useState<SessionState>(() => ({
     ...INITIAL_SESSION,
     grid: buildGridFromPiecesOrder(initialState.piecesOrder),

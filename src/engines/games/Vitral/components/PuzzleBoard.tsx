@@ -3,8 +3,8 @@ import { motion } from 'motion/react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { Fragment } from 'react';
 import { COLS, OVERLAY_BORDER_STYLE } from '../utils/constants';
-import { getPieceStyle } from '../utils/puzzleUtils';
 import type { BoardMeasures, GridState, PieceBorders } from '../utils/types';
+import { PieceArtwork } from './PieceArtwork';
 import { PuzzlePiece } from './PuzzlePiece';
 
 /**
@@ -208,10 +208,13 @@ export function PuzzleBoard({
                         top: rowOffset * measures.cellHeight,
                       }}
                     >
-                      <div
-                        className="absolute inset-0 overflow-hidden"
-                        style={getPieceStyle(piece.id, imageUrl, measures.rows)}
-                      />
+                      <div className="absolute inset-0 overflow-hidden">
+                        <PieceArtwork
+                          pieceId={piece.id}
+                          imageUrl={imageUrl}
+                          totalRows={measures.rows}
+                        />
+                      </div>
                       <div
                         className="absolute inset-0"
                         style={{

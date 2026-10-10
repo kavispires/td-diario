@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { BORDER_STYLE, COLS } from '../utils/constants';
-import { getPieceStyle } from '../utils/puzzleUtils';
 import type { PieceBorders } from '../utils/types';
+import { PieceArtwork } from './PieceArtwork';
 
 /**
  * Props accepted by the {@link PuzzlePiece} component.
@@ -109,7 +109,11 @@ export function PuzzlePiece({
       disabled={disabled}
       aria-label={`Peça ${pieceId + 1}`}
     >
-      <div style={getPieceStyle(pieceId, imageUrl, totalRows)} />
+      <PieceArtwork
+        pieceId={pieceId}
+        imageUrl={imageUrl}
+        totalRows={totalRows}
+      />
 
       <div
         className="absolute inset-0 pointer-events-none"
