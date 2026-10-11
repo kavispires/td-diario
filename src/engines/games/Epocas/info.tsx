@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'epocas',
-  key: 'EPOCAS',
+  key: 'EPO',
   type: 'game',
   color: 'rgb(181, 136, 99)',
   emoji: '🕰️',

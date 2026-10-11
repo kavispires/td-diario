@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'investigacao',
-  key: 'INVESTIGACAO',
+  key: 'IVT',
   type: 'game',
   color: 'rgb(125, 192, 121)',
   emoji: '🕵️‍♂️',

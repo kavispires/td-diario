@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'filmaco',
-  key: 'FILMACO',
+  key: 'FLM',
   type: 'game',
   color: 'rgb(118, 151, 226)',
   emoji: '🎬',

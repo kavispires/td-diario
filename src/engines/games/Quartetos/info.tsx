@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'quartetos',
-  key: 'QUARTETOS',
+  key: 'QTT',
   type: 'game',
   color: 'rgb(231, 157, 179)',
   emoji: '🗂',

@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'pirralhos',
-  key: 'PIRRALHOS',
+  key: 'PRL',
   type: 'game',
   color: 'rgb(251, 232, 124)',
   emoji: '🧒',

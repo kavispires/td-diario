@@ -2,7 +2,7 @@ import type { GameInfo } from 'types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'conexoes',
-  key: 'CONEXOES',
+  key: 'CNX',
   type: 'contribution',
   color: 'rgb(232, 244, 248)',
   emoji: '🔗',

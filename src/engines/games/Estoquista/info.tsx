@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'estoquista',
-  key: 'ESTOQUISTA',
+  key: 'EST',
   type: 'game',
   color: 'rgb(249, 205, 84)',
   emoji: '📦',

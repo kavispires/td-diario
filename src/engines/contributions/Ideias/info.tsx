@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'Suggest new content for TD Diário games.',
   },
   releaseDate: '2026-11-01',
-  release: 'disabled',
+  release: 'unreleased',
   version: '0.0.1',
 };
 

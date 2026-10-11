@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'portais',
-  key: 'PORTAIS',
+  key: 'POR',
   type: 'game',
   color: 'rgb(222, 141, 93)',
   emoji: '🚪',

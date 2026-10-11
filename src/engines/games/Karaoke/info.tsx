@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'karaoke',
-  key: 'KARAOKE',
+  key: 'KRK',
   type: 'game',
   color: 'rgb(246 144 179)',
   emoji: '🎵',

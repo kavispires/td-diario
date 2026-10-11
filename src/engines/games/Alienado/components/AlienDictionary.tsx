@@ -55,7 +55,7 @@ export function AlienDictionary({
               aria-hidden="true"
             />
 
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="grid grid-cols-3 justify-center gap-2">
               {attribute.itemsIds.map((itemId) => (
                 <div
                   key={itemId}

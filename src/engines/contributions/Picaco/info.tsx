@@ -2,7 +2,7 @@ import type { GameInfo } from 'types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'picaco',
-  key: 'PICACO',
+  key: 'PCC',
   type: 'contribution',
   color: 'rgb(234, 236, 241)',
   emoji: '🎨',

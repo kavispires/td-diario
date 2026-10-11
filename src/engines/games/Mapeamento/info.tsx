@@ -2,7 +2,7 @@ import type { GameInfo } from 'types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'mapeamento',
-  key: 'MAPEAMENTO',
+  key: 'MAP',
   type: 'game',
   color: 'rgb(166, 201, 233)',
   emoji: '🗺️',

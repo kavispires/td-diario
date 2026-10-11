@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'ta-na-cara',
-  key: 'TA_NA_CARA',
+  key: 'TNC',
   type: 'contribution',
   color: 'rgb(242, 233, 236)',
   emoji: '👤',

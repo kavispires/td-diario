@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'alienado',
-  key: 'ALIENADO',
+  key: 'ALN',
   type: 'game',
   color: 'rgb(145, 203, 196)',
   emoji: '🛸',

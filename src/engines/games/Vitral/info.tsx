@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'vitral',
-  key: 'VITRAL',
+  key: 'VTL',
   type: 'game',
   color: 'rgb(253, 176, 76)',
   emoji: '🪟',

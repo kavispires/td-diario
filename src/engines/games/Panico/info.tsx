@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'panico',
-  key: 'PANICO',
+  key: 'PNC',
   type: 'game',
   color: 'rgb(126, 133, 147)',
   emoji: '🔘',

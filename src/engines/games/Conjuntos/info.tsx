@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'conjuntos',
-  key: 'CONJUNTOS',
+  key: 'CON',
   type: 'game',
   color: 'rgb(195, 135, 202)',
   emoji: '⭕️',

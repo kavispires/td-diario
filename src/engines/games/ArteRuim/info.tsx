@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'arte-ruim',
-  key: 'ARTE_RUIM',
+  key: 'ATR',
   type: 'game',
   color: 'rgb(174, 169, 223)',
   emoji: '🖼️',

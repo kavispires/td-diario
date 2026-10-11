@@ -2,7 +2,7 @@ import type { GameInfo } from '../../../types/puzzles';
 
 export const gameInfo: GameInfo = {
   id: 'palavreado',
-  key: 'PALAVREADO',
+  key: 'PLV',
   type: 'game',
   color: 'rgb(237, 101, 80)',
   emoji: '🔤',
