@@ -11,11 +11,11 @@ import { notification } from '@utils/notification';
 import { useEffect, useState } from 'react';
 import type { DailyIdeiasEntry } from 'types/games';
 import { gameInfo } from '../info';
+import { buildIdeaPayload } from './helpers';
 import type {
   GameState,
   IdeaCategory,
   IdeaDraft,
-  IdeaToSave,
   IdeiasEngineState,
 } from './types';
 
@@ -60,9 +60,9 @@ export function useIdeiasEngine(
         throw new Error('Faça login novamente para enviar sua ideia.');
       }
 
-      const idea: IdeaToSave = { category, draft, playerId: user.uid };
+      const payload = buildIdeaPayload(category, draft);
 
-      await DAILY_API.run({ action: DAILY_API_ACTIONS.SAVE_IDEA, idea });
+      await DAILY_API.run({ action: DAILY_API_ACTIONS.SAVE_IDEA, ...payload });
     },
     onSuccess: (_result, { category }) => {
       setState((previousState) => ({

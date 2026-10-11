@@ -27,6 +27,11 @@ export type IdeaCategoryOption = {
    */
   gameId?: string;
   /**
+   * 3-letter game key this category's ideas are saved under, or `'general'`
+   * for the catch-all category.
+   */
+  key: string;
+  /**
    * Category label shown on the picker.
    */
   label: string;
@@ -51,6 +56,7 @@ export const IDEA_CATEGORIES: IdeaCategoryOption[] = [
     id: 'arte-ruim',
     emoji: arteRuimInfo.emoji,
     gameId: arteRuimInfo.id,
+    key: arteRuimInfo.key,
     label: arteRuimInfo.name.pt,
     description: 'Uma expressão para os jogadores desenharem.',
   },
@@ -58,6 +64,7 @@ export const IDEA_CATEGORIES: IdeaCategoryOption[] = [
     id: 'filmaco',
     emoji: filmacoInfo.emoji,
     gameId: filmacoInfo.id,
+    key: filmacoInfo.key,
     label: filmacoInfo.name.pt,
     description: 'Um filme para virar charada.',
   },
@@ -65,6 +72,7 @@ export const IDEA_CATEGORIES: IdeaCategoryOption[] = [
     id: 'investigacao',
     emoji: investigacaoInfo.emoji,
     gameId: investigacaoInfo.id,
+    key: investigacaoInfo.key,
     label: investigacaoInfo.name.pt,
     description: 'Uma pergunta de depoimento.',
   },
@@ -72,6 +80,7 @@ export const IDEA_CATEGORIES: IdeaCategoryOption[] = [
     id: 'mapeamento',
     emoji: mapeamentoInfo.emoji,
     gameId: mapeamentoInfo.id,
+    key: mapeamentoInfo.key,
     label: mapeamentoInfo.name.pt,
     description: 'Um local para ser mapeado.',
   },
@@ -79,6 +88,7 @@ export const IDEA_CATEGORIES: IdeaCategoryOption[] = [
     id: 'quartetos',
     emoji: quartetosInfo.emoji,
     gameId: quartetosInfo.id,
+    key: quartetosInfo.key,
     label: quartetosInfo.name.pt,
     description: 'Um grupo de 4 ou mais itens com um tema em comum.',
   },
@@ -86,6 +96,7 @@ export const IDEA_CATEGORIES: IdeaCategoryOption[] = [
     id: 'karaoke',
     emoji: karaokeInfo.emoji,
     gameId: karaokeInfo.id,
+    key: karaokeInfo.key,
     label: karaokeInfo.name.pt,
     description: 'Uma música, com artista e um trecho da letra.',
   },
@@ -93,12 +104,14 @@ export const IDEA_CATEGORIES: IdeaCategoryOption[] = [
     id: 'epocas',
     emoji: epocasInfo.emoji,
     gameId: epocasInfo.id,
+    key: epocasInfo.key,
     label: epocasInfo.name.pt,
     description: 'Um acontecimento histórico, com o ano.',
   },
   {
     id: 'general',
     emoji: '💬',
+    key: 'general',
     label: 'Ideia geral',
     description: 'Uma ideia ou feedback sobre o TD Diário.',
   },

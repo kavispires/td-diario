@@ -127,19 +127,23 @@ export type IdeaDraft =
 /**
  * Payload sent to the `SAVE_IDEA` daily action for one submitted idea.
  */
-export type IdeaToSave = {
+export type DailySaveIdeaPayload = {
   /**
-   * Category the submitted idea belongs to.
+   * The idea's storage key and serialized value.
    */
-  category: IdeaCategory;
-  /**
-   * Category-specific fields collected from the submission form.
-   */
-  draft: IdeaDraft;
-  /**
-   * Firebase uid of the player who submitted the idea.
-   */
-  playerId: string;
+  idea: {
+    /**
+     * 3-letter key of the game this idea is contributed to, or `'general'`
+     * for ideas not tied to any specific game.
+     */
+    key: string;
+    /**
+     * JSON-serialized draft. Single-field drafts (a plain suggestion
+     * string) are normalized to `{ idea: <value> }` before serializing, so
+     * every category's primary text is keyed the same way.
+     */
+    value: string;
+  };
 };
 
 /**
