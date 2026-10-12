@@ -165,20 +165,17 @@ export function Board({
         </Text>
 
         <div className="flex flex-wrap justify-center gap-2">
-          {itemsIds.map((itemId) => {
-            const isSelected = selection.includes(itemId);
-
-            return (
+          {itemsIds
+            .filter((itemId) => !selection.includes(itemId))
+            .map((itemId) => (
               <PoolItem
                 key={itemId}
                 itemId={itemId}
                 itemWidth={itemWidth}
-                disabled={isSelected || isComplete}
-                isSelected={isSelected}
+                disabled={isComplete}
                 onSelectItem={onSelectItem}
               />
-            );
-          })}
+            ))}
         </div>
       </section>
 
@@ -424,10 +421,6 @@ type PoolItemProps = {
    */
   disabled: boolean;
   /**
-   * Whether the item is already placed into a slot.
-   */
-  isSelected: boolean;
-  /**
    * Places the item into the focused or first empty slot.
    */
   onSelectItem: (itemId: string) => void;
@@ -445,7 +438,6 @@ function PoolItem({
   itemId,
   itemWidth,
   disabled,
-  isSelected,
   onSelectItem,
 }: PoolItemProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -473,8 +465,8 @@ function PoolItem({
       }
       className={cn(
         'rounded-2xl border-2 border-transparent bg-surface-raised p-1 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50',
-        !isSelected && !disabled && 'cursor-grab hover:border-primary/40',
-        isSelected && 'cursor-not-allowed opacity-40 grayscale',
+        !disabled && 'cursor-grab hover:border-primary/40',
+        disabled && 'cursor-not-allowed opacity-40 grayscale',
       )}
       style={{
         touchAction: 'none',

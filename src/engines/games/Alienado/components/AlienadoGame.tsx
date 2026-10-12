@@ -108,7 +108,7 @@ export function AlienadoGame({ data, initialState }: AlienadoGameProps) {
       >
         <GameStat
           icon={Gift}
-          value={'?'}
+          value={isComplete ? guesses.length : '?'}
           label="Tentativas"
         />
 
