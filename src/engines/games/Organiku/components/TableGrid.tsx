@@ -99,7 +99,12 @@ export function TableGrid({
             initial={{ rotateY: 90, opacity: 0 }}
             animate={{ rotateY: 0, opacity: 1 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            disabled={!isClickable}
+            // A native `disabled` attribute would suppress pointer/mouse
+            // events for this button's descendants too, breaking the
+            // revealed item's hover/long-press name tooltip. Gate the
+            // interaction via `onClick`/`aria-disabled`/`tabIndex` instead.
+            aria-disabled={!isClickable}
+            tabIndex={isClickable ? 0 : -1}
             onClick={isClickable ? () => onSelectTile(index) : undefined}
             className={cn(
               'flex items-center justify-center rounded-xl bg-surface-raised transition-colors',
@@ -110,6 +115,7 @@ export function TableGrid({
               isBlocked && 'cursor-not-allowed bg-border',
               defaultRevealedIndexes.includes(index) && 'bg-secondary',
               isAllRevealed && 'bg-gold',
+              !isClickable && !isVisible && 'cursor-default',
             )}
             style={{ width: itemWidth, height: itemWidth }}
           >
