@@ -10,7 +10,8 @@ export type ButtonVariant =
   | 'secondary'
   | 'ghost'
   | 'chrome'
-  | 'outlined';
+  | 'outlined'
+  | 'link';
 
 /**
  * Positions available for an optional button icon.
@@ -57,6 +58,15 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
   default: 'py-3.5 px-6 rounded-2xl text-base gap-3',
 };
 
+/**
+ * Size classes for the `link` variant, which renders inline with normal
+ * text height instead of a padded button box.
+ */
+const LINK_SIZE_CLASSES: Record<ButtonSize, string> = {
+  small: 'text-sm gap-1',
+  default: 'text-base gap-1.5',
+};
+
 const SIZE_ICON_CLASSES: Record<ButtonSize, string> = {
   small: 'h-4 w-4',
   default: 'h-5 w-5',
@@ -94,10 +104,11 @@ export function Button({
     primary: 'bg-primary text-white shadow-lg hover:bg-primary-hover',
     secondary: 'bg-secondary text-white shadow-lg hover:bg-secondary-hover',
     ghost:
-      'bg-transparent text-muted-foreground shadow-none hover:bg-border active:bg-border-strong',
+      'bg-transparent text-foreground shadow-none hover:bg-foreground/10 active:bg-foreground/15',
     chrome: 'bg-chrome text-white shadow-lg hover:bg-slate-800',
     outlined:
       'bg-transparent border-primary text-primary shadow-none hover:bg-primary-soft',
+    link: 'bg-transparent text-primary shadow-none underline underline-offset-4 hover:text-primary-hover active:opacity-70',
   };
 
   const renderIcon = loading ? (
@@ -111,7 +122,7 @@ export function Button({
       className={cn(
         widthClass,
         baseStyles,
-        SIZE_CLASSES[size],
+        variant === 'link' ? LINK_SIZE_CLASSES[size] : SIZE_CLASSES[size],
         variants[variant],
         className,
       )}

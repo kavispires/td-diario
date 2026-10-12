@@ -38,6 +38,7 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   chrome: 'bg-chrome text-white shadow-lg hover:bg-slate-800',
   outlined:
     'bg-transparent border-primary text-primary shadow-none hover:bg-primary-soft',
+  link: 'bg-transparent text-primary shadow-none hover:bg-primary-soft',
 };
 
 /**

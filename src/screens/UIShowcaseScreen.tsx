@@ -54,6 +54,7 @@ export function UIShowcaseScreen() {
           <Button variant="chrome">Chrome</Button>
           <Button variant="ghost">Ghost</Button>
           <Button variant="outlined">Outlined</Button>
+          <Button variant="link">Link</Button>
           <Button
             variant="primary"
             icon={<Heart size={18} />}
