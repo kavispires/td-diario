@@ -65,18 +65,33 @@ export function KidCard({
       className="flex flex-col items-center gap-1 rounded-[1.25rem] bg-card/95 p-1.5 text-center shadow-lg ring-1 ring-black/5 backdrop-blur-sm"
       style={{ width }}
     >
-      <div className="relative">
-        <KidPortrait
-          kid={kid}
-          width={width - 12}
-        />
-
-        <div
-          className="absolute -top-2 left-1 rounded-full px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm"
-          style={{ backgroundColor: kid.color }}
+      <div className="relative w-full">
+        <button
+          type="button"
+          onClick={onOpenSolve}
+          className={cn('block w-full', onOpenSolve && 'cursor-pointer')}
+          aria-label={`Depoimento de ${kid.name.pt}`}
         >
-          <DualTranslate>{kid.name}</DualTranslate>
-        </div>
+          <KidPortrait
+            kid={kid}
+            width={width - 12}
+          />
+
+          <div
+            className="absolute -top-2 left-1 rounded-full px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm"
+            style={{ backgroundColor: kid.color }}
+          >
+            <DualTranslate>{kid.name}</DualTranslate>
+          </div>
+
+          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-chrome px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm">
+            <PirralhosIcon
+              icon={kid.gender === 'girl' ? 'female' : 'male'}
+              size={14}
+            />
+            {kid.height}cm
+          </div>
+        </button>
 
         <IconButton
           size="large"
@@ -92,23 +107,12 @@ export function KidCard({
           }
           onClick={() => onAssess(kid.id)}
         />
-
-        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-chrome px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm">
-          <PirralhosIcon
-            icon={kid.gender === 'girl' ? 'female' : 'male'}
-            size={14}
-          />
-          {kid.height}cm
-        </div>
       </div>
 
       <button
         type="button"
         onClick={onOpenSolve}
-        className={cn(
-          'relative -mt-4 flex w-full flex-col items-center gap-1 rounded-2xl bg-surface-raised px-2 py-1 shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
-          onOpenSolve && 'hover:bg-primary-soft/60',
-        )}
+        className="relative -mt-4 flex w-full cursor-pointer flex-col items-center gap-1 rounded-2xl bg-surface-raised px-2 py-1 shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         aria-label={`Depoimento de ${kid.name.pt}`}
       >
         <span

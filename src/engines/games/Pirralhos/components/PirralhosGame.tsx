@@ -285,13 +285,14 @@ export function PirralhosGame({ data, initialState }: PirralhosGameProps) {
               className="inline-block align-text-bottom"
             />
             .{' '}
-            <button
+            <Button
+              size="small"
               type="button"
+              variant="link"
               onClick={resetAssessments}
-              className="font-semibold text-secondary underline underline-offset-2"
             >
               Limpar tudo
-            </button>
+            </Button>
           </Text>
         </Surface>
 
