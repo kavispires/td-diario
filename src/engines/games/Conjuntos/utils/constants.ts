@@ -163,6 +163,21 @@ export const CONJUNTOS_AREA_BACKGROUND_CLASSES: Record<DiagramArea, string> = {
 };
 
 /**
+ * Background-image classes for each area's selected/drag-over mask in the
+ * diagram itself: a radial (or blended, for the intersection) gradient that
+ * fades to transparent at the edges, so the tint doesn't hard-clip against
+ * the circle's rounded silhouette.
+ */
+export const CONJUNTOS_AREA_HOVER_MASK_CLASSES: Record<DiagramArea, string> = {
+  [CONJUNTOS_INTERSECTION_AREA]:
+    'bg-[linear-gradient(to_right,transparent,rgba(255,210,63,0.55)_35%,rgba(241,90,36,0.55)_65%,transparent)]',
+  [CONJUNTOS_RULE1_AREA]:
+    'bg-[radial-gradient(circle,rgba(255,210,63,0.65)_0%,rgba(255,210,63,0)_75%)]',
+  [CONJUNTOS_RULE2_AREA]:
+    'bg-[radial-gradient(circle,rgba(241,90,36,0.65)_0%,rgba(241,90,36,0)_75%)]',
+};
+
+/**
  * State collection keys that store placed things for each diagram area.
  */
 export const CONJUNTOS_AREA_THINGS_KEYS: Record<

@@ -2,6 +2,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { cn } from '@utils/cn';
 import type { ReactNode, SVGProps } from 'react';
 import {
+  CONJUNTOS_AREA_HOVER_MASK_CLASSES,
   CONJUNTOS_DIAGRAM_VIEW_BOX,
   CONJUNTOS_INTERSECTION_AREA,
   CONJUNTOS_INTERSECTION_AREA_FRAME,
@@ -126,7 +127,7 @@ export function Diagram({
             'grid h-full w-full place-items-center rounded-tl-[80%] rounded-bl-[70%] bg-transparent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-default',
             !disabled && 'cursor-pointer hover:bg-white/15',
             (activeArea === CONJUNTOS_RULE1_AREA || leftDroppable.isOver) &&
-              'bg-gradient-to-r from-secondary/40 to-transparent',
+              CONJUNTOS_AREA_HOVER_MASK_CLASSES[CONJUNTOS_RULE1_AREA],
           )}
         >
           {leftCircleChildren}
@@ -149,7 +150,7 @@ export function Diagram({
             'grid h-full w-full place-items-center rounded-tr-[80%] rounded-br-[70%] bg-transparent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-default',
             !disabled && 'cursor-pointer hover:bg-white/15',
             (activeArea === CONJUNTOS_RULE2_AREA || rightDroppable.isOver) &&
-              'bg-gradient-to-l from-secondary/40 to-transparent',
+              CONJUNTOS_AREA_HOVER_MASK_CLASSES[CONJUNTOS_RULE2_AREA],
           )}
         >
           {rightCircleChildren}
@@ -173,7 +174,7 @@ export function Diagram({
             !disabled && 'cursor-pointer hover:bg-white/15',
             (activeArea === CONJUNTOS_INTERSECTION_AREA ||
               intersectionDroppable.isOver) &&
-              'bg-secondary/30',
+              CONJUNTOS_AREA_HOVER_MASK_CLASSES[CONJUNTOS_INTERSECTION_AREA],
           )}
         >
           {intersectionChildren}
