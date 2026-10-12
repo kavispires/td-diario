@@ -278,7 +278,7 @@ export function QuartetosGame({ data, initialState }: QuartetosGameProps) {
           win={isWin}
           hearts={hearts}
           score={score}
-          guessesCount={guesses.length}
+          foundCount={solvedCount}
           challengeNumber={data.number}
           sets={data.sets}
           guesses={guesses}

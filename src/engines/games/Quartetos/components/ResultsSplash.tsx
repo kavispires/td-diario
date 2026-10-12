@@ -25,9 +25,9 @@ type ResultsSplashProps = {
    */
   score: number;
   /**
-   * Number of guesses submitted during the run.
+   * Number of quartets correctly found during the run.
    */
-  guessesCount: number;
+  foundCount: number;
   /**
    * Sequential challenge number shown to the player.
    */
@@ -58,7 +58,7 @@ export function ResultsSplash({
   win,
   hearts,
   score,
-  guessesCount,
+  foundCount,
   challengeNumber,
   sets,
   guesses,
@@ -108,11 +108,8 @@ export function ResultsSplash({
       </div>
 
       <div className="flex items-center justify-center gap-2">
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          {guessesCount} de {sets.length} caracteres descobertos
+        <Text className="text-center">
+          {foundCount} de {sets.length} quartetos encontrados
         </Text>
 
         <Divider orientation="vertical" />
