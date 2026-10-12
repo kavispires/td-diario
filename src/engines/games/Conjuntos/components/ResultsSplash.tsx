@@ -146,12 +146,7 @@ export function ResultsSplash({
       />
 
       <div className="flex items-center justify-center gap-2">
-        <Text
-          type="secondary"
-          className="text-center"
-        >
-          {guesses.length} tentativas
-        </Text>
+        <Text className="text-center">{guesses.length} tentativas</Text>
 
         <Divider orientation="vertical" />
         <Score value={score} />

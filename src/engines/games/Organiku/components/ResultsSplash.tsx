@@ -124,10 +124,7 @@ export function ResultsSplash({
       </div>
 
       <div className="flex items-center justify-center gap-2">
-        <Text
-          type="secondary"
-          className="text-center"
-        >
+        <Text className="text-center">
           {flips} de {swapLimit} viradas projetadas
         </Text>
         <Divider orientation="vertical" />

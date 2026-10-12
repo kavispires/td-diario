@@ -134,27 +134,16 @@ export function ResultsSplash({
       />
 
       <div className="flex items-center justify-center gap-2">
-        <Text
-          type="secondary"
-          className="text-center text-black"
-        >
+        <Text className="text-center">
           {solvedCorridors}/{corridors.length} corredores
         </Text>
 
         <Divider orientation="vertical" />
 
-        <Text
-          type="secondary"
-          className="text-center text-black"
-        >
-          {totalMoves} movimentos
-        </Text>
+        <Text className="text-center">{totalMoves} movimentos</Text>
 
         <Divider orientation="vertical" />
-        <Score
-          value={score}
-          className="text-black"
-        />
+        <Score value={score} />
       </div>
     </GameResultsSplash>
   );

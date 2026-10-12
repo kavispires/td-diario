@@ -119,10 +119,7 @@ export function ResultsSplash({
       />
 
       <div className="flex items-center justify-center gap-2">
-        <Text
-          type="secondary"
-          className="text-center text-black"
-        >
+        <Text className="text-center">
           {rejectedDrawings === 0
             ? 'Todos os rabiscos passaram no corte mínimo'
             : `${rejectedDrawings} ${
@@ -130,10 +127,7 @@ export function ResultsSplash({
               } curtos demais para entrar no banco`}
         </Text>
         <Divider orientation="vertical" />
-        <Score
-          value={score}
-          className="text-black"
-        />
+        <Score value={score} />
       </div>
     </GameResultsSplash>
   );

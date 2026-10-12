@@ -91,10 +91,7 @@ export function ResultsSplash({
       />
 
       <div className="flex items-center justify-center gap-2">
-        <Text
-          type="secondary"
-          className="text-center text-black"
-        >
+        <Text className="text-center">
           {win
             ? `${data.pieces.length} de ${data.pieces.length} peças encaixadas em ${formatElapsedTime(totalTime)}`
             : `${correctPieces} de ${data.pieces.length} peças encaixadas em ${formatElapsedTime(totalTime)}`}
@@ -102,10 +99,7 @@ export function ResultsSplash({
 
         <Divider orientation="vertical" />
 
-        <Score
-          value={score}
-          className="text-black"
-        />
+        <Score value={score} />
       </div>
     </GameResultsSplash>
   );

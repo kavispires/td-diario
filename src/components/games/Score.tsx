@@ -29,10 +29,7 @@ export function Score({
   className,
 }: ScoreProps & { className?: string }) {
   return (
-    <Text
-      type="secondary"
-      className={cn('text-center', className)}
-    >
+    <Text className={cn('text-center', className)}>
       <Coins
         className="inline-block mr-1"
         size={16}

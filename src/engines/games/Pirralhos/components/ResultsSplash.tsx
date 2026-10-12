@@ -144,10 +144,7 @@ export function ResultsSplash({
       />
 
       <div className="flex items-center justify-center gap-2">
-        <Score
-          value={score}
-          className="text-black"
-        />
+        <Score value={score} />
       </div>
     </GameResultsSplash>
   );

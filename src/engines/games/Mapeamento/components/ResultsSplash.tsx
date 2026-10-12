@@ -88,10 +88,7 @@ export function ResultsSplash({
       />
 
       <div className="flex items-center justify-center gap-2">
-        <Text
-          type="secondary"
-          className="text-center"
-        >
+        <Text className="text-center">
           {revealedClues} de {totalClues} pistas reveladas
         </Text>
 

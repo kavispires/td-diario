@@ -148,17 +148,11 @@ export function ResultsSplash({
       </div>
 
       <div className="flex items-center justify-center gap-2">
-        <Text
-          type="secondary"
-          className="text-center text-black"
-        >
+        <Text className="text-center">
           {answeredQuestionsLabel} e {markedAnswers} julgamentos registrados
         </Text>
         <Divider orientation="vertical" />
-        <Score
-          value={score}
-          className="text-black"
-        />
+        <Score value={score} />
       </div>
     </GameResultsSplash>
   );
