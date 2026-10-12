@@ -186,20 +186,22 @@ export function InvestigacaoGame({
         />
 
         {!isComplete && hearts > 0 && (
-          <Popconfirm
-            title="Revelar mais uma dica?"
-            description="Isso vai consumir uma das suas dicas extras restantes."
-            onConfirm={onNeedClue}
-            okText="Revelar"
-            cancelText="Cancelar"
-          >
-            <Button
-              variant="outlined"
-              size="small"
+          <div className="flex justify-center">
+            <Popconfirm
+              title="Revelar mais uma dica?"
+              description="Isso vai consumir uma das suas dicas extras restantes."
+              onConfirm={onNeedClue}
+              okText="Revelar"
+              cancelText="Cancelar"
             >
-              Preciso de mais dicas
-            </Button>
-          </Popconfirm>
+              <Button
+                variant="outlined"
+                size="small"
+              >
+                Preciso de mais dicas
+              </Button>
+            </Popconfirm>
+          </div>
         )}
 
         {!isComplete && hearts <= 0 && (
