@@ -9,15 +9,11 @@ import { useMutation } from '@tanstack/react-query';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
 import { getGameStatuses } from '@utils/helpers';
 import { notification } from '@utils/notification';
+import { playSFX } from '@utils/soundEffects';
 import { useEffect, useMemo, useState } from 'react';
 import type { DailyPicacoCard, DailyPicacoEntry } from 'types/games';
 import { gameInfo } from '../info';
-import { SCORE_PER_LEVEL } from './constants';
-import {
-  buildSavePayload,
-  isDrawingWorthSaving,
-  serializeDrawing,
-} from './helpers';
+import { buildSavePayload, serializeDrawing } from './helpers';
 import type { CanvasLine, GameState, PicacoEngineState } from './types';
 
 /**
@@ -100,6 +96,7 @@ export function usePicacoEngine(
    * Starts today's Picaco run from the intro screen.
    */
   function startGame() {
+    playSFX('timer');
     setState((previousState) => ({
       ...previousState,
       status: GAME_LIFECYCLE_STATUS.IN_PROGRESS,
@@ -142,11 +139,6 @@ export function usePicacoEngine(
           drawing: serializedDrawing,
         },
       ],
-      score:
-        state.score +
-        (isDrawingWorthSaving(serializedDrawing)
-          ? currentCard.level * SCORE_PER_LEVEL
-          : 0),
       progress:
         selectedCards.length > 0 ? nextCardIndex / selectedCards.length : 1,
     };
@@ -154,7 +146,10 @@ export function usePicacoEngine(
     setState(nextState);
 
     if (nextCardIndex >= selectedCards.length) {
+      playSFX('win');
       saveMutation.mutate(nextState);
+    } else {
+      playSFX('timer');
     }
   }
 
@@ -173,7 +168,6 @@ export function usePicacoEngine(
     showResults,
     setShowResults,
     progress: state.progress,
-    score: state.score,
     isIdle:
       state.status === GAME_LIFECYCLE_STATUS.IDLE &&
       state.currentCardIndex === 0,

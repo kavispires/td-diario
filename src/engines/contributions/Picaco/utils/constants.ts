@@ -44,11 +44,6 @@ export const STROKE_WIDTH = 5;
 export const COUNTDOWN_TICK_MS = 1000;
 
 /**
- * Points awarded for each card level when a drawing is worth saving.
- */
-export const SCORE_PER_LEVEL = 10;
-
-/**
  * Minimum serialized drawing length required before a sketch is sent to the
  * shared database, mirroring the original Picaco threshold.
  */

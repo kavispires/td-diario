@@ -112,10 +112,6 @@ export type PicacoEngineState = {
    */
   progress: number;
   /**
-   * Score accumulated so far from drawings with enough strokes to be saved.
-   */
-  score: number;
-  /**
    * Whether the player has not started today's run yet.
    */
   isIdle: boolean;

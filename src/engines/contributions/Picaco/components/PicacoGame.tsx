@@ -4,7 +4,7 @@ import { Button } from '@components/ui/Button';
 import { Pill } from '@components/ui/Pill';
 import { Surface } from '@components/ui/Surface';
 import { Paragraph, Text, Title } from '@components/ui/Typography';
-import { BrushCleaning, Check, Coins, LoaderCircle } from 'lucide-react';
+import { BrushCleaning, Check, LoaderCircle } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useMemo } from 'react';
 import type { DailyPicacoEntry } from 'types/games';
@@ -46,7 +46,6 @@ export function PicacoGame({ data, initialState }: PicacoGameProps) {
     showResults,
     setShowResults,
     progress,
-    score,
     isIdle,
     isPlaying,
     isSaving,
@@ -80,12 +79,6 @@ export function PicacoGame({ data, initialState }: PicacoGameProps) {
           icon={Check}
           value={`${acceptedDrawings}`}
           label="Desenhos aproveitados"
-          align="center"
-        />
-        <GameStat
-          icon={Coins}
-          value={score}
-          label="Pontuação"
           align="end"
         />
       </GameStatsRow>
@@ -122,7 +115,7 @@ export function PicacoGame({ data, initialState }: PicacoGameProps) {
       )}
 
       {isPlaying && currentCard && (
-        <>
+        <div>
           <Pill>Desenho #{currentCardNumber}</Pill>
 
           <AnimatePresence mode="wait">
@@ -134,12 +127,6 @@ export function PicacoGame({ data, initialState }: PicacoGameProps) {
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
             >
-              <Text
-                type="secondary"
-                className="text-sm"
-              >
-                Sem letras ou números
-              </Text>
               <Title level={4}>{currentCard.text}</Title>
             </motion.div>
           </AnimatePresence>
@@ -148,7 +135,7 @@ export function PicacoGame({ data, initialState }: PicacoGameProps) {
             key={currentCard.id}
             onComplete={submitDrawing}
           />
-        </>
+        </div>
       )}
 
       {isSaving && (
@@ -199,7 +186,6 @@ export function PicacoGame({ data, initialState }: PicacoGameProps) {
         <ResultsSplash
           cards={selectedCards}
           drawings={completedDrawings}
-          score={score}
           onClose={() => setShowResults(false)}
         />
       )}
