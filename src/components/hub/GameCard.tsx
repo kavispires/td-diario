@@ -35,6 +35,12 @@ type GameCardProps = HTMLMotionProps<'button'> & {
    * is `in-progress`.
    */
   progressPercent?: number;
+  /**
+   * Visual treatment of the card. `solid` (default) fills the card with the
+   * game's color; `outlined` renders a transparent background with a thick
+   * colored border instead, used for idle/available contribution games.
+   */
+  variant?: 'solid' | 'outlined';
 };
 
 /**
@@ -50,6 +56,7 @@ export function GameCard({
   size = 'small',
   state = 'available',
   progressPercent = 0,
+  variant = 'solid',
   className,
   ...props
 }: GameCardProps) {
@@ -78,15 +85,23 @@ export function GameCard({
     isMaintenance ||
     gameInfo.release === 'unreleased' ||
     isSoon;
+  const isOutlined =
+    variant === 'outlined' && !isInProgress && !isCompleted && !isDisabled;
 
   // Determine dynamic styles based on state
   const dynamicStyles = {
-    backgroundColor: isInProgress
-      ? 'var(--color-surface-raised)'
-      : isDisabled
-        ? 'var(--color-border)'
-        : withAlpha(gameInfo.color, 0.85),
-    borderColor: isInProgress ? gameInfo.color : 'transparent',
+    backgroundColor: isOutlined
+      ? withAlpha(gameInfo.color, 0.25)
+      : isInProgress
+        ? 'var(--color-surface-raised)'
+        : isDisabled
+          ? 'var(--color-border)'
+          : withAlpha(gameInfo.color, 0.85),
+    borderColor: isOutlined
+      ? gameInfo.color
+      : isInProgress
+        ? gameInfo.color
+        : 'transparent',
   };
 
   const stateClasses = isSoon
@@ -95,7 +110,11 @@ export function GameCard({
       ? 'grayscale opacity-60 cursor-not-allowed shadow-none'
       : 'active:scale-95 hover:shadow-md cursor-pointer shadow-sm';
 
-  const borderClasses = isInProgress ? 'border-2' : 'border-0';
+  const borderClasses = isOutlined
+    ? 'border-4'
+    : isInProgress
+      ? 'border-2'
+      : 'border-0';
 
   // --- 3. BADGES (Teste / Breve / Novo / Manutenção) ---
   const renderBadge = () => {

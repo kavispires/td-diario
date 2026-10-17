@@ -96,6 +96,7 @@ export function HubScreen() {
                 size="small"
                 state={entry.state}
                 progressPercent={entry.progressPercent}
+                variant={entry.state === 'available' ? 'outlined' : 'solid'}
               />
             ))}
           </div>
