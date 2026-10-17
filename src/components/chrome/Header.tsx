@@ -1,11 +1,14 @@
 import { GameLogos } from '@components/hub/GameLogos';
+import { NewsModal } from '@components/news/NewsModal';
 import { DualTranslate } from '@components/ui/DualTranslate';
 import { IconButton } from '@components/ui/IconButton';
 import { Title } from '@components/ui/Typography';
+import { NEWS_ENTRIES } from '@data/news';
 import { gameInfos } from '@engines';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import { useUserPreferencesStore } from '@store/useUserPreferencesStore';
-import { isDevEnv } from '@utils/helpers';
+import { getRealToday, isDevEnv } from '@utils/helpers';
+import { getVisibleNewsEntries, hasUnseenNews } from '@utils/news';
 import {
   Bell,
   BookOpen,
@@ -15,7 +18,7 @@ import {
   VolumeX,
 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TDLogoIcon } from '../TDLogoIcon';
 import { GameSecretMenu } from './GameSecretMenu';
@@ -53,9 +56,26 @@ export function ChromeHeader() {
   );
   const navigate = useNavigate();
 
+  const lastSeenNews = useUserPreferencesStore((state) => state.lastSeenNews);
+
   const [secretMenuOpen, setSecretMenuOpen] = useState(false);
+  const [newsOpen, setNewsOpen] = useState(false);
   const tapCountRef = useRef(0);
   const tapResetTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const visibleNewsEntries = getVisibleNewsEntries(
+    NEWS_ENTRIES,
+    getRealToday(),
+  );
+  const hasNews = hasUnseenNews(visibleNewsEntries, lastSeenNews);
+
+  // Auto-open the news modal once per hub visit when there's unseen news.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: only re-run when navigating to/from the hub
+  useEffect(() => {
+    if (!activeGameId && hasNews) {
+      setNewsOpen(true);
+    }
+  }, [activeGameId]);
 
   const activeGameInfo = activeGameId
     ? gameInfos[activeGameId as keyof typeof gameInfos]
@@ -162,7 +182,8 @@ export function ChromeHeader() {
             <IconButton
               icon={<Bell />}
               aria-label="Notificações"
-              dot
+              dot={hasNews}
+              onClick={() => setNewsOpen(true)}
             />
           )}
           <IconButton
@@ -179,6 +200,10 @@ export function ChromeHeader() {
           gameInfo={activeGameInfo}
         />
       )}
+      <NewsModal
+        open={newsOpen}
+        onClose={() => setNewsOpen(false)}
+      />
     </header>
   );
 }

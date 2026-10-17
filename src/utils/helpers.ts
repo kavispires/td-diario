@@ -43,6 +43,18 @@ export function getToday(): string {
 }
 
 /**
+ * Returns the real wall-clock date in `'YYYY-MM-DD'` format, unlike
+ * `getToday()` which is pinned to a fixed mock date in development when
+ * the Firestore emulator is enabled. Use this for anything tied to the
+ * actual calendar (e.g. the news feed), not to the puzzle/emulator day.
+ *
+ * @returns Today's real date in `'YYYY-MM-DD'` format.
+ */
+export function getRealToday(): string {
+  return format(new Date(), 'yyyy-MM-dd');
+}
+
+/**
  * Returns the number of milliseconds until the next local midnight.
  */
 export function getMillisecondsUntilTomorrow(): number {

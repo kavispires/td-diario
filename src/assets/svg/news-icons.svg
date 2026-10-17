@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+  <title>News feed icon sprite</title>
+  <!--
+    Placeholder icons for the News feed (see src/types/news.ts's
+    NewsEntryType). Each <symbol> uses a 512x512 viewBox so it's a drop-in
+    replacement target for real custom artwork later — these are
+    intentionally simple geometric placeholders, not final art.
+  -->
+  <symbol id="new-game" viewBox="0 0 512 512">
+    <title>Novo jogo (placeholder)</title>
+    <circle cx="256" cy="256" r="200" fill="none" stroke="currentColor" stroke-width="32" />
+    <path d="M256 136v240M136 256h240" stroke="currentColor" stroke-width="32" stroke-linecap="round" />
+  </symbol>
+  <symbol id="new-contribution" viewBox="0 0 512 512">
+    <title>Nova contribuição (placeholder)</title>
+    <path
+      d="M256 432 96 272c-48-48-48-128 0-176 48-48 128-48 176 0l-16 16-16-16c-48-48-128-48-176 0-48 48-48 128 0 176l160 160 160-160c48-48 48-128 0-176-48-48-128-48-176 0l-16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="28"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </symbol>
+  <symbol id="rules-change" viewBox="0 0 512 512">
+    <title>Mudança nas regras (placeholder)</title>
+    <rect x="120" y="80" width="272" height="352" rx="24" fill="none" stroke="currentColor" stroke-width="28" />
+    <path d="M176 176h160M176 256h160M176 336h96" stroke="currentColor" stroke-width="28" stroke-linecap="round" />
+  </symbol>
+  <symbol id="feature" viewBox="0 0 512 512">
+    <title>Nova funcionalidade (placeholder)</title>
+    <path
+      d="M256 72v48M256 392v48M72 256h48M392 256h48M133 133l34 34M345 345l34 34M133 379l34-34M345 167l34-34"
+      stroke="currentColor"
+      stroke-width="28"
+      stroke-linecap="round"
+    />
+    <circle cx="256" cy="256" r="88" fill="none" stroke="currentColor" stroke-width="28" />
+  </symbol>
+  <symbol id="weekend" viewBox="0 0 512 512">
+    <title>Edição de fim de semana (placeholder)</title>
+    <rect x="96" y="128" width="320" height="288" rx="24" fill="none" stroke="currentColor" stroke-width="28" />
+    <path d="M96 208h320M176 80v96M336 80v96" stroke="currentColor" stroke-width="28" stroke-linecap="round" />
+    <circle cx="208" cy="304" r="20" fill="currentColor" />
+    <circle cx="304" cy="304" r="20" fill="currentColor" />
+  </symbol>
+  <symbol id="announcement" viewBox="0 0 512 512">
+    <title>Anúncio geral (placeholder)</title>
+    <path
+      d="M96 224v64l272 64V160z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="28"
+      stroke-linejoin="round"
+    />
+    <path d="M368 192v128" stroke="currentColor" stroke-width="28" stroke-linecap="round" />
+    <path d="M144 288v64a32 32 0 0 0 32 32h16a32 32 0 0 0 32-32v-48" fill="none" stroke="currentColor" stroke-width="28" />
+  </symbol>
+</svg>
