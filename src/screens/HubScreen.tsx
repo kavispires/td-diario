@@ -2,14 +2,14 @@ import { DailyStatusBoard } from '@components/DailyStatusBoard';
 import { GameCard } from '@components/hub/GameCard';
 import { GroupedShareModal } from '@components/hub/GroupedShareModal';
 import { Button } from '@components/ui/Button';
-import { Title } from '@components/ui/Typography';
+import { Text, Title } from '@components/ui/Typography';
 import {
   CARD_STATE_ORDER,
   useContributionProgress,
   useGameProgress,
 } from '@hooks/useGameProgress';
 import { orderBy } from 'lodash';
-import { Share2 } from 'lucide-react';
+import { Copyright, Share2 } from 'lucide-react';
 import { LayoutGroup } from 'motion/react';
 import { useState } from 'react';
 
@@ -101,6 +101,14 @@ export function HubScreen() {
           </div>
         </>
       )}
+
+      <Text
+        type="secondary"
+        className="mt-6 flex items-center justify-center gap-1 text-xs"
+      >
+        <Copyright size={12} />
+        TD {new Date().getFullYear()} · v{__APP_VERSION__}
+      </Text>
     </div>
   );
 }
