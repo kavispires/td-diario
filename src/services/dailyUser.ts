@@ -7,18 +7,6 @@ import type { DailyUser, GameCompletionStatus, GameStat } from 'types/user';
 import { firestore } from './firebase';
 
 /**
- * Builds the localStorage key used to guard against recording the same
- * game's completion twice on the same day (e.g. a duplicate effect fire).
- *
- * @param gameId - Kebab-case game id, matching a `GameInfo.id`.
- * @param today - Today's date (`YYYY-MM-DD`).
- * @returns The composed localStorage key.
- */
-function composeSyncedKey(gameId: string, today: string): string {
-  return `TD_DIARIO_V2_${gameId.toUpperCase().replaceAll('-', '_')}_CLOUD_SYNCED_${today}`;
-}
-
-/**
  * Computes the next `DailyUser` object after a single game completion,
  * advancing the daily streak at most once per day (on the first game
  * completed that day, regardless of outcome) and updating the per-game
@@ -92,13 +80,27 @@ export function buildDailyUserUpdate(
  * swallowed, since this tracking is purely supplementary to local
  * gameplay state.
  *
+ * The duplicate-write guard (`cloudSynced`) lives on the caller's own
+ * per-day `GameState` (see `DefaultGameState`) rather than a dedicated
+ * localStorage key, so it resets for free every day with the rest of
+ * that state instead of accumulating indefinitely.
+ *
  * @param gameId - Kebab-case game id, matching a `GameInfo.id`.
  * @param status - Whether the game was won or lost.
+ * @param cloudSynced - The caller's current `GameState.cloudSynced` flag;
+ *   when truthy, this call no-ops.
+ * @param markSynced - Callback that persists `cloudSynced: true` onto the
+ *   caller's `GameState` (typically `updateLocalStorage`), called before
+ *   the Firestore write to prevent a duplicate in-flight retry.
  */
 export async function recordGameCompletion(
   gameId: string,
   status: GameCompletionStatus,
+  cloudSynced: boolean | undefined,
+  markSynced: () => void,
 ): Promise<void> {
+  if (cloudSynced) return;
+
   const uid = useAuthStore.getState().user?.uid;
   if (!uid) return;
 
@@ -112,11 +114,9 @@ export async function recordGameCompletion(
     return;
   }
 
-  const today = getToday();
-  const syncedKey = composeSyncedKey(gameId, today);
-  if (localStorage.getItem(syncedKey)) return;
-  localStorage.setItem(syncedKey, '1');
+  markSynced();
 
+  const today = getToday();
   const next = buildDailyUserUpdate(current, gameId, status, today);
 
   try {

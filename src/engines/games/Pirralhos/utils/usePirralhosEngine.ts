@@ -116,7 +116,9 @@ export function usePirralhosEngine(
       playSFX('win');
       if (!isWin) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-        recordGameCompletion(gameInfo.key, 'win');
+        recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
+          updateLocalStorage({ cloudSynced: true }),
+        );
       }
 
       setState((previousState) => ({
@@ -138,7 +140,9 @@ export function usePirralhosEngine(
 
     if (didLose && !isLose) {
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
-      recordGameCompletion(gameInfo.key, 'lose');
+      recordGameCompletion(gameInfo.key, 'lose', state.cloudSynced, () =>
+        updateLocalStorage({ cloudSynced: true }),
+      );
     }
 
     setState((previousState) => ({

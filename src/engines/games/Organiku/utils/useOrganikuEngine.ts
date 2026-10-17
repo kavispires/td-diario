@@ -104,7 +104,9 @@ export function useOrganikuEngine(
         playSFX(isWin ? 'win' : 'wee');
         if (isWin) {
           logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-          recordGameCompletion(gameInfo.key, 'win');
+          recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
+            updateLocalStorage({ cloudSynced: true }),
+          );
         }
 
         setState((prev) => ({
@@ -135,7 +137,9 @@ export function useOrganikuEngine(
       vibrate(isLose ? 'lose' : 'wrong');
       if (isLose) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
-        recordGameCompletion(gameInfo.key, 'lose');
+        recordGameCompletion(gameInfo.key, 'lose', state.cloudSynced, () =>
+          updateLocalStorage({ cloudSynced: true }),
+        );
       }
 
       setState((prev) => ({

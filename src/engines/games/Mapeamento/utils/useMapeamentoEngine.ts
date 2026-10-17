@@ -133,7 +133,9 @@ export function useMapeamentoEngine(
         };
       });
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-      recordGameCompletion(gameInfo.key, 'win');
+      recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
+        updateLocalStorage({ cloudSynced: true }),
+      );
       playSFX('win');
       return true;
     }
@@ -152,7 +154,9 @@ export function useMapeamentoEngine(
 
       if (isLose) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
-        recordGameCompletion(gameInfo.key, 'lose');
+        recordGameCompletion(gameInfo.key, 'lose', state.cloudSynced, () =>
+          updateLocalStorage({ cloudSynced: true }),
+        );
         playSFX('lose');
       } else {
         playSFX('no');

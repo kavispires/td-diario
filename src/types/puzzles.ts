@@ -193,4 +193,11 @@ export type DefaultGameState<T = unknown> = {
    * Current score of the player in the game.
    */
   score: number;
+  /**
+   * Whether today's completion has already been synced to the player's
+   * `DailyUser` document, guarding against a duplicate Firestore write.
+   * Resets to `undefined`/falsy every day along with the rest of this
+   * state, so it never needs separate cleanup.
+   */
+  cloudSynced?: boolean;
 } & T;

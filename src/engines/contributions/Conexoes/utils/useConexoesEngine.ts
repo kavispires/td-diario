@@ -83,7 +83,9 @@ export function useConexoesEngine(
         saveFailed: false,
       }));
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-      recordGameCompletion(gameInfo.key, 'win');
+      recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
+        updateLocalStorage({ cloudSynced: true }),
+      );
       notification.success('Conexões salvas com sucesso!');
     },
     onError: () => {
@@ -244,7 +246,9 @@ export function useConexoesEngine(
       progress: 1,
     }));
     logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
-    recordGameCompletion(gameInfo.key, 'lose');
+    recordGameCompletion(gameInfo.key, 'lose', state.cloudSynced, () =>
+      updateLocalStorage({ cloudSynced: true }),
+    );
   }
 
   return {

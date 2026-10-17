@@ -222,7 +222,12 @@ export function usePortaisEngine(
       logAnalyticsEvent(
         getGameAnalyticsEventName(gameInfo.key, shouldLogOutcome),
       );
-      recordGameCompletion(gameInfo.key, shouldLogOutcome);
+      recordGameCompletion(
+        gameInfo.key,
+        shouldLogOutcome,
+        state.cloudSynced,
+        () => updateLocalStorage({ cloudSynced: true }),
+      );
     }
   }
 
