@@ -1,5 +1,7 @@
 import { Paragraph, Text } from '@components/ui/Typography';
 import { useGameProgress } from '@hooks/useGameProgress';
+import { useGetDailyUserData } from '@hooks/useGetDailyUserData';
+import { cn } from '@utils/cn';
 import { Clock } from 'lucide-react';
 import flameIcon from '../assets/svg/flame.svg';
 import { useDayCountdown } from '../hooks/useDayCountdown';
@@ -13,8 +15,8 @@ import { Pill } from './ui/Pill';
  */
 export function DailyStatusBoard() {
   const { completedCount, totalCount } = useGameProgress();
-  // TODO: wire up a real daily-streak once backend streak tracking exists.
-  const streak: number = 0;
+  const { data: dailyUser } = useGetDailyUserData();
+  const streak = dailyUser?.currentStreak ?? 0;
 
   const progressPercent = totalCount
     ? Math.round((completedCount / totalCount) * 100)
@@ -30,7 +32,10 @@ export function DailyStatusBoard() {
             src={flameIcon}
             alt=""
             aria-hidden="true"
-            className="w-4.5 h-4.5 shrink-0"
+            className={cn(
+              'w-4.5 h-4.5 shrink-0',
+              streak === 0 && 'grayscale opacity-50',
+            )}
           />
           <Text className="text-[14px] tracking-wide text-white">
             {streak} {streak === 1 ? 'Dia' : 'Dias'}

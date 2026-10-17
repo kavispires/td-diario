@@ -1,5 +1,6 @@
 import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
+import { recordGameCompletion } from '@services/dailyUser';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -221,6 +222,7 @@ export function usePortaisEngine(
       logAnalyticsEvent(
         getGameAnalyticsEventName(gameInfo.key, shouldLogOutcome),
       );
+      recordGameCompletion(gameInfo.key, shouldLogOutcome);
     }
   }
 

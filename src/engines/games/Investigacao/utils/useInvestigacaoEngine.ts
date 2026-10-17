@@ -1,5 +1,6 @@
 import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
+import { recordGameCompletion } from '@services/dailyUser';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -96,6 +97,7 @@ export function useInvestigacaoEngine(
     if (suspectId === data.culpritId) {
       playSFX('drama');
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
+      recordGameCompletion(gameInfo.key, 'lose');
       setState((previousState) => ({
         ...previousState,
         hearts: 0,
@@ -111,6 +113,7 @@ export function useInvestigacaoEngine(
     if (isWin) {
       playSFX('win');
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
+      recordGameCompletion(gameInfo.key, 'win');
     } else {
       playSFX('wee');
     }

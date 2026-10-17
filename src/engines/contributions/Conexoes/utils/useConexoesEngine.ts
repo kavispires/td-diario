@@ -1,5 +1,6 @@
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import { DAILY_API, DAILY_API_ACTIONS } from '@services/adapters';
+import { recordGameCompletion } from '@services/dailyUser';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -82,6 +83,7 @@ export function useConexoesEngine(
         saveFailed: false,
       }));
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
+      recordGameCompletion(gameInfo.key, 'win');
       notification.success('Conexões salvas com sucesso!');
     },
     onError: () => {
@@ -242,6 +244,7 @@ export function useConexoesEngine(
       progress: 1,
     }));
     logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
+    recordGameCompletion(gameInfo.key, 'lose');
   }
 
   return {

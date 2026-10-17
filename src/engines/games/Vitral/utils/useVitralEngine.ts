@@ -1,6 +1,7 @@
 import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
 import { useTDImageCardUrl } from '@hooks/useTDImageCardUrl';
+import { recordGameCompletion } from '@services/dailyUser';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -314,6 +315,7 @@ export function useVitralEngine(
       playSFX(nextStatus === GAME_LIFECYCLE_STATUS.WIN ? 'win' : 'swap');
       if (nextStatus === GAME_LIFECYCLE_STATUS.WIN) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
+        recordGameCompletion(gameInfo.key, 'win');
       }
 
       // The dragged group was visually carried by the drag overlay, which

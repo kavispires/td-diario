@@ -1,5 +1,6 @@
 import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
+import { recordGameCompletion } from '@services/dailyUser';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -115,6 +116,7 @@ export function usePirralhosEngine(
       playSFX('win');
       if (!isWin) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
+        recordGameCompletion(gameInfo.key, 'win');
       }
 
       setState((previousState) => ({
@@ -136,6 +138,7 @@ export function usePirralhosEngine(
 
     if (didLose && !isLose) {
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
+      recordGameCompletion(gameInfo.key, 'lose');
     }
 
     setState((previousState) => ({

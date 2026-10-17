@@ -1,5 +1,6 @@
 import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
+import { recordGameCompletion } from '@services/dailyUser';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -180,6 +181,7 @@ export function useAlienadoEngine(
     if (isCorrect) {
       playSFX('alienYay');
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
+      recordGameCompletion(gameInfo.key, 'win');
     } else {
       notification.warning(ALIENADO_INCORRECT_GUESS_MESSAGE);
       playSFX('alienBoo');
@@ -187,6 +189,7 @@ export function useAlienadoEngine(
 
       if (isLose) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
+        recordGameCompletion(gameInfo.key, 'lose');
       }
     }
 

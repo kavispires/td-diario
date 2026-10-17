@@ -1,5 +1,6 @@
 import { useAutoShowResults } from '@hooks/useAutoShowResults';
 import { useDailyLocalToday } from '@hooks/useDailyLocalToday';
+import { recordGameCompletion } from '@services/dailyUser';
 import {
   getGameAnalyticsEventName,
   logAnalyticsEvent,
@@ -155,6 +156,7 @@ export function useQuartetosEngine(
       if (isWin) {
         playSFX('win');
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
+        recordGameCompletion(gameInfo.key, 'win');
       } else {
         playSFX('correct');
       }
@@ -192,6 +194,7 @@ export function useQuartetosEngine(
       playSFX('lose');
       vibrate('lose');
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
+      recordGameCompletion(gameInfo.key, 'lose');
       updateSession({
         selection: [],
         latestAttempt: Date.now(),
