@@ -1,7 +1,7 @@
 {
   "name": "td-diario",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.139",
   "homepage": "https://diario.kavispires.com",
   "type": "module",
   "scripts": {
@@ -14,7 +14,8 @@
     "prepare": "husky",
     "preview": "vite preview",
     "deploy": "yarn build && gh-pages -d dist",
-    "clean": "rm -rf node_modules && yarn cache clean"
+    "clean": "rm -rf node_modules && yarn cache clean",
+    "bump-version": "node scripts/bump-version.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
