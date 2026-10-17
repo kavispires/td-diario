@@ -1,14 +1,10 @@
 import { GameResultsSplash } from '@components/games/GameResultsSplash';
-import { Hearts } from '@components/games/Hearts';
 import { Score } from '@components/games/Score';
 import { Divider } from '@components/ui/Divider';
 import { Surface } from '@components/ui/Surface';
 import { Text } from '@components/ui/Typography';
 import { cn } from '@utils/cn';
-import {
-  MIN_REQUIRED_PAIRS,
-  RESULTS_PAIR_CARD_WIDTH,
-} from '../utils/constants';
+import { RESULTS_PAIR_CARD_WIDTH } from '../utils/constants';
 import { createPairId } from '../utils/helpers';
 import type { RelatedPair } from '../utils/types';
 import { PairImageCard } from './PairImageCard';
@@ -54,16 +50,12 @@ export function ResultsSplash({
   score,
   onClose,
 }: ResultsSplashProps) {
-  const relatedPairsPreviewCount = Math.min(
-    relatedPairs.length,
-    MIN_REQUIRED_PAIRS,
-  );
-
   return (
     <GameResultsSplash
       gameId="conexoes"
       title={win ? 'Conexões enviadas!' : 'Sessão encerrada'}
       onClose={onClose}
+      hideShare
     >
       <Text
         strong
@@ -73,13 +65,6 @@ export function ResultsSplash({
           ? 'Estas foram as relações que você decidiu salvar hoje:'
           : 'Hoje nenhuma relação chegou a entrar no banco do TD.'}
       </Text>
-
-      <Hearts
-        remaining={relatedPairsPreviewCount}
-        total={MIN_REQUIRED_PAIRS}
-        emptyClassName="text-black"
-        filledClassName="text-black"
-      />
 
       <div
         className={cn(
