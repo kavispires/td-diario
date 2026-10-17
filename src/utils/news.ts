@@ -40,3 +40,26 @@ export function hasUnseenNews(
   }
   return lastSeenNews === null || newest.date > lastSeenNews;
 }
+
+const NEWS_DATE_FORMATTER = new Intl.DateTimeFormat('pt-BR', {
+  day: 'numeric',
+  month: 'long',
+});
+
+/**
+ * Formats a `NewsEntry.date` (`YYYY-MM-DD`) as a short, pt-BR day/month
+ * string (e.g. `17 de outubro`), for display alongside an entry.
+ *
+ * @param date - A `YYYY-MM-DD` date string.
+ * @returns The formatted date, or the original string if it can't be
+ *   parsed.
+ */
+export function formatNewsDate(date: string): string {
+  const [year, month, day] = date.split('-').map(Number);
+  if (!year || !month || !day) {
+    return date;
+  }
+  // Constructed from local year/month/day (rather than `new Date(date)`)
+  // to avoid UTC-vs-local timezone shifts rolling the date back a day.
+  return NEWS_DATE_FORMATTER.format(new Date(year, month - 1, day));
+}

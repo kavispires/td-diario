@@ -1,9 +1,10 @@
 import { GameLogos } from '@components/hub/GameLogos';
 import { NewsIcon } from '@components/news/NewsIcon';
 import { DualTranslate } from '@components/ui/DualTranslate';
-import { Paragraph } from '@components/ui/Typography';
+import { Paragraph, Text } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { cn } from '@utils/cn';
+import { formatNewsDate } from '@utils/news';
 import type { NewsEntry } from 'types/news';
 
 /**
@@ -18,7 +19,7 @@ type NewsEntryItemProps = {
 
 /**
  * Renders a single news entry: its type icon, the related game's logo and
- * name (when `gameId` is set), and its description.
+ * name (when `gameId` is set), its description, and its date.
  *
  * @param props The entry to render.
  * @returns A single news feed row.
@@ -59,9 +60,15 @@ export function NewsEntryItem({ entry }: NewsEntryItemProps) {
             <DualTranslate>{gameInfo.name}</DualTranslate>
           </span>
         )}
-        <Paragraph className="text-sm text-foreground/80">
+        <Paragraph className="mb-0 text-sm text-foreground/80">
           {entry.description}
         </Paragraph>
+        <Text
+          type="secondary"
+          className="text-xs"
+        >
+          {formatNewsDate(entry.date)}
+        </Text>
       </div>
     </div>
   );
