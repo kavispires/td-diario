@@ -4,8 +4,8 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 /**
  * Renders the app's bottom navigation bar with links to the hub, archive,
- * and profile sections. The archive and profile sections are currently
- * disabled placeholders.
+ * and profile sections. The archive section is currently a disabled
+ * placeholder.
  *
  * @returns The sticky bottom navigation element.
  */
@@ -19,7 +19,7 @@ export function ChromeNav() {
   const navItems = [
     { to: '/', icon: Puzzle, label: 'Jogos' },
     { to: '/archive', icon: Calendar, label: 'Arquivo', disabled: true },
-    { to: '/profile', icon: User, label: 'Perfil', disabled: true },
+    { to: '/profile', icon: User, label: 'Perfil' },
   ];
 
   return (
