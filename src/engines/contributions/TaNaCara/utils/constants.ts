@@ -35,11 +35,6 @@ export const MIN_REQUIRED_ANSWERS = 4;
 export const MIN_REQUIRED_QUESTIONS = 6;
 
 /**
- * Points awarded for each suspect that the player marks while answering.
- */
-export const SCORE_PER_MARKED_ANSWER = 10;
-
-/**
  * Maximum number of suspects preferentially drawn from a testimony's own
  * suspect list before Ta Na Cara fills remaining slots from the daily pool.
  */

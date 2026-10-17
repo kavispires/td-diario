@@ -7,7 +7,7 @@ import { Text } from './Typography';
 /**
  * Sizes available for the {@link Segmented} component.
  */
-type SegmentedSize = 'small' | 'default';
+type SegmentedSize = 'compact' | 'small' | 'default';
 
 /**
  * Where the `label` is placed relative to the segmented control.
@@ -30,6 +30,12 @@ type SegmentedOption = {
    * Disables just this option, preventing it from being picked.
    */
   disabled?: boolean;
+  /**
+   * Background class applied to this option's selected indicator. Defaults
+   * to `bg-primary`; use to give specific options distinct selected colors
+   * (e.g. green for "yes", red for "no").
+   */
+  activeClassName?: string;
 };
 
 /**
@@ -79,8 +85,20 @@ type SegmentedProps = {
 };
 
 const SIZE_CLASSES: Record<SegmentedSize, string> = {
+  compact: 'px-1 py-1 text-base leading-none',
   small: 'px-2.5 py-1 text-xs',
   default: 'px-3.5 py-1.5 text-sm',
+};
+
+/**
+ * Wrapper padding/gap classes per size, so the `compact` size (meant for
+ * icon- or emoji-only options) doesn't carry the roomier spacing used by
+ * text-label options.
+ */
+const WRAPPER_CLASSES: Record<SegmentedSize, string> = {
+  compact: 'gap-0 p-0.5',
+  small: 'gap-0.5 p-1',
+  default: 'gap-0.5 p-1',
 };
 
 /**
@@ -123,7 +141,8 @@ export function Segmented({
       role="tablist"
       aria-label={typeof label === 'string' ? label : undefined}
       className={cn(
-        'inline-flex gap-0.5 rounded-xl bg-border/50 p-1',
+        'inline-flex rounded-xl bg-border/50',
+        WRAPPER_CLASSES[size],
         block && 'flex w-full',
         className,
       )}
@@ -152,7 +171,10 @@ export function Segmented({
             {isSelected && (
               <motion.div
                 layoutId={`segmented-${indicatorId}`}
-                className="absolute inset-0 rounded-lg bg-primary shadow-lg"
+                className={cn(
+                  'absolute inset-0 rounded-lg shadow-lg',
+                  option.activeClassName ?? 'bg-primary',
+                )}
                 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
               />
             )}

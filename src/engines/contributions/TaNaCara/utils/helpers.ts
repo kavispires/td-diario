@@ -12,7 +12,6 @@ import {
   MAX_PREFERRED_SUSPECTS_PER_QUESTION,
   MIN_REQUIRED_ANSWERS,
   MIN_REQUIRED_QUESTIONS,
-  SCORE_PER_MARKED_ANSWER,
   SUSPECTS_PER_QUESTION,
   VARIANT_OPTIONS,
 } from './constants';
@@ -147,16 +146,6 @@ export function countCompletedQuestions(answers: PreliminaryAnswer[]): number {
  */
 export function hasMinimumAnswers(answer: PreliminaryAnswer): boolean {
   return countAnsweredSuspects(answer) >= MIN_REQUIRED_ANSWERS;
-}
-
-/**
- * Computes Ta Na Cara's score from the currently marked suspects.
- *
- * @param answers - All per-testimony answer maps.
- * @returns The current score.
- */
-export function getScore(answers: PreliminaryAnswer[]): number {
-  return countMarkedAnswers(answers) * SCORE_PER_MARKED_ANSWER;
 }
 
 /**

@@ -34,6 +34,12 @@ type GameResultsSplashProps = {
    */
   share?: ShareResult;
   /**
+   * When `true`, hides the "Compartilhar Resultados" action. Used by
+   * contribution games, which have no shareable score/result to brag
+   * about.
+   */
+  hideShare?: boolean;
+  /**
    * Game-specific recap content rendered between the title and the footer
    * actions.
    */
@@ -55,6 +61,7 @@ export function GameResultsSplash({
   title,
   onClose,
   share,
+  hideShare,
   children,
 }: GameResultsSplashProps) {
   const navigate = useNavigate();
@@ -125,15 +132,17 @@ export function GameResultsSplash({
           {children}
 
           <div className="flex w-full flex-col gap-2 pt-4">
-            <Button
-              variant="primary"
-              size="small"
-              icon={<Share2 />}
-              block
-              onClick={handleShare}
-            >
-              Compartilhar Resultados
-            </Button>
+            {!hideShare && (
+              <Button
+                variant="primary"
+                size="small"
+                icon={<Share2 />}
+                block
+                onClick={handleShare}
+              >
+                Compartilhar Resultados
+              </Button>
+            )}
             <Button
               variant="outlined"
               size="small"

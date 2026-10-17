@@ -1,9 +1,46 @@
-import { Button } from '@components/ui/Button';
+import { Segmented } from '@components/ui/Segmented';
 import { Text } from '@components/ui/Typography';
 import { useTDBaseUrl } from '@hooks/useTDBaseUrl';
 import { cn } from '@utils/cn';
 import type { DailyTaNaCaraVariant } from 'types/games';
 import { getSuspectImageId } from '../utils/helpers';
+
+/**
+ * Segmented option values mapped to each possible suspect answer.
+ */
+const ANSWER_OPTIONS = [
+  { value: 'no', label: '👎', activeClassName: 'bg-destructive' },
+  { value: 'blank', label: '▫️' },
+  { value: 'yes', label: '👍', activeClassName: 'bg-success' },
+];
+
+/**
+ * Maps a suspect answer to its {@link ANSWER_OPTIONS} segmented value.
+ *
+ * @param answer - Current suspect answer.
+ * @returns The matching segmented option value.
+ */
+function getAnswerOption(answer: boolean | null): string {
+  if (answer === true) {
+    return 'yes';
+  }
+
+  return answer === false ? 'no' : 'blank';
+}
+
+/**
+ * Maps a segmented option value back to a suspect answer.
+ *
+ * @param value - Segmented option value picked by the player.
+ * @returns The matching suspect answer.
+ */
+function getAnswerFromOption(value: string): boolean | null {
+  if (value === 'yes') {
+    return true;
+  }
+
+  return value === 'no' ? false : null;
+}
 
 /**
  * Props accepted by the {@link SuspectChoiceCard} component.
@@ -26,16 +63,21 @@ type SuspectChoiceCardProps = {
    */
   answer: boolean | null;
   /**
-   * Called when the player chooses `Sim` or `Não` for this suspect.
+   * Called when the player chooses an answer for this suspect.
    */
-  onAnswerChange: (answer: boolean) => void;
+  onAnswerChange: (answer: boolean | null) => void;
+  /**
+   * Portrait width, in pixels, computed to fit three cards per row.
+   */
+  width: number;
 };
 
 /**
- * Renders one Ta Na Cara suspect portrait plus the `Sim`/`Não` controls
- * used to evaluate that person for the current testimony.
+ * Renders one Ta Na Cara suspect portrait plus the thumbs-up/neutral/
+ * thumbs-down segmented control used to evaluate that person for the
+ * current testimony.
  *
- * @param props Suspect identity, current answer, and answer handler.
+ * @param props Suspect identity, current answer, answer handler, and width.
  * @returns The rendered suspect card.
  */
 export function SuspectChoiceCard({
@@ -44,6 +86,7 @@ export function SuspectChoiceCard({
   name,
   answer,
   onAnswerChange,
+  width,
 }: SuspectChoiceCardProps) {
   const { getUrl } = useTDBaseUrl('images');
   const imagePath = getSuspectImageId(suspectId, variant).replaceAll('-', '/');
@@ -51,11 +94,12 @@ export function SuspectChoiceCard({
   return (
     <div
       className={cn(
-        'overflow-hidden rounded-[1.75rem] bg-card shadow-sm ring-2 transition-colors',
-        answer === true && 'ring-primary',
-        answer === false && 'ring-secondary',
+        'overflow-hidden rounded-xl bg-card shadow-sm ring-2 transition-colors',
+        answer === true && 'ring-success',
+        answer === false && 'ring-destructive',
         answer === null && 'ring-transparent',
       )}
+      style={{ width }}
     >
       <div className="relative aspect-[2/3] bg-border">
         <img
@@ -71,32 +115,15 @@ export function SuspectChoiceCard({
         </div>
       </div>
 
-      <div className="grid gap-2 p-3">
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            variant={answer === true ? 'primary' : 'outlined'}
-            size="small"
-            block
-            onClick={() => onAnswerChange(true)}
-          >
-            Sim
-          </Button>
-          <Button
-            variant={answer === false ? 'secondary' : 'outlined'}
-            size="small"
-            block
-            onClick={() => onAnswerChange(false)}
-          >
-            Não
-          </Button>
-        </div>
-
-        <Text
-          type="secondary"
-          className="text-center text-xs"
-        >
-          {answer === null ? 'Em branco' : 'Toque de novo para limpar'}
-        </Text>
+      <div className="p-1.5">
+        <Segmented
+          block
+          size="compact"
+          className="bg-transparent"
+          value={getAnswerOption(answer)}
+          onChange={(value) => onAnswerChange(getAnswerFromOption(value))}
+          options={ANSWER_OPTIONS}
+        />
       </div>
     </div>
   );

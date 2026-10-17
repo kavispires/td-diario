@@ -2,19 +2,23 @@ import { GameStat, GameStatsRow } from '@components/games/GameStats';
 import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Alert } from '@components/ui/Alert';
 import { Button } from '@components/ui/Button';
+import { Segmented } from '@components/ui/Segmented';
 import { Surface } from '@components/ui/Surface';
 import { Switch } from '@components/ui/Switch';
+import { Tooltip } from '@components/ui/Tooltip';
 import { Text, Title } from '@components/ui/Typography';
+import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
+import { cn } from '@utils/cn';
 import {
   ChevronLeft,
   ChevronRight,
-  Coins,
   FileText,
+  FlameKindling,
   LoaderCircle,
   Users,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import type { DailyTaNaCaraEntry } from 'types/games';
+import type { DailyTaNaCaraEntry, DailyTaNaCaraVariant } from 'types/games';
 import { gameInfo } from '../info';
 import {
   MIN_REQUIRED_ANSWERS,
@@ -61,7 +65,6 @@ export function TaNaCaraGame({ data, initialState }: TaNaCaraGameProps) {
     showResults,
     setShowResults,
     progress,
-    score,
     mode,
     variant,
     isIdle,
@@ -86,6 +89,12 @@ export function TaNaCaraGame({ data, initialState }: TaNaCaraGameProps) {
     getSuspectName,
   } = useTaNaCaraEngine(data, initialState);
 
+  const [suspectWidth, suspectsContainerRef] = useCardWidthByContainerRef(3, {
+    gap: 12,
+    minWidth: 100,
+    maxWidth: 160,
+  });
+
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-4 pb-8">
       <GameStatsRow
@@ -97,16 +106,11 @@ export function TaNaCaraGame({ data, initialState }: TaNaCaraGameProps) {
           value={`${answeredQuestions}/${totalQuestions}`}
           label="Depoimentos com respostas mínimas"
         />
+        <span />
         <GameStat
           icon={Users}
           value={markedAnswers}
           label="Personagens avaliados"
-          align="center"
-        />
-        <GameStat
-          icon={Coins}
-          value={score}
-          label="Pontuação"
           align="end"
         />
       </GameStatsRow>
@@ -134,14 +138,9 @@ export function TaNaCaraGame({ data, initialState }: TaNaCaraGameProps) {
 
       {isIdle && !isWin && (
         <Surface className="flex w-full flex-col items-center gap-4 bg-card px-5 py-6 text-center">
-          <Text>
-            Você verá uma sequência de depoimentos e deverá marcar quem combina
-            com cada frase. Se bater dúvida, deixe em branco.
-          </Text>
-
           <div className="grid w-full gap-3 rounded-3xl bg-primary-soft px-4 py-4 text-left">
             <Text>1. Leia o depoimento.</Text>
-            <Text>2. Toque em Sim ou Não para cada personagem.</Text>
+            <Text>2. Toque em 👍 ou 👎 para cada personagem.</Text>
             <Text>
               3. Avalie pelo menos {MIN_REQUIRED_ANSWERS} pessoas por rodada.
             </Text>
@@ -202,7 +201,10 @@ export function TaNaCaraGame({ data, initialState }: TaNaCaraGameProps) {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentQuestion.testimonyId}
-              className="flex w-full flex-col gap-3 rounded-[2rem] bg-gold-soft px-5 py-6 text-center shadow-sm"
+              className={cn(
+                'flex w-full flex-col gap-3 rounded-[2rem] px-2 py-2 text-center shadow-sm',
+                currentQuestion.nsfw ? 'bg-pink-100' : 'bg-gold-soft',
+              )}
               initial={{ opacity: 0, y: QUESTION_TRANSITION_OFFSET_PX }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -QUESTION_TRANSITION_OFFSET_PX }}
@@ -211,33 +213,33 @@ export function TaNaCaraGame({ data, initialState }: TaNaCaraGameProps) {
                 ease: 'easeOut',
               }}
             >
-              {currentQuestion.nsfw && (
-                <Text
-                  strong
-                  className="text-sm uppercase tracking-wide text-foreground"
-                >
-                  Conteúdo sensível
-                </Text>
-              )}
-              <Title level={4}>{currentQuestion.question}</Title>
-              <Text
-                type="secondary"
-                className="text-sm"
+              <Title
+                level={4}
+                className="flex items-center justify-center gap-1 text-md"
               >
-                Toque novamente no mesmo botão para limpar a resposta.
-              </Text>
+                {currentQuestion.nsfw && (
+                  <Tooltip title="Conteúdo sensível">
+                    <FlameKindling className="shrink-0" />
+                  </Tooltip>
+                )}
+                {currentQuestion.question}
+              </Title>
             </motion.div>
           </AnimatePresence>
 
-          <div className="grid w-full grid-cols-2 gap-3">
-            {suspects.map((suspectId) => (
+          <div
+            ref={suspectsContainerRef}
+            className="flex w-full flex-wrap justify-center gap-3"
+          >
+            {suspects.map((suspectId, index) => (
               <SuspectChoiceCard
-                key={`${currentQuestion.testimonyId}-${suspectId}`}
+                key={index}
                 suspectId={suspectId}
                 variant={variant}
                 name={getSuspectName(suspectId)}
                 answer={currentAnswers.answers[suspectId] ?? null}
                 onAnswerChange={(answer) => updateAnswer(suspectId, answer)}
+                width={suspectWidth}
               />
             ))}
           </div>
@@ -332,26 +334,22 @@ export function TaNaCaraGame({ data, initialState }: TaNaCaraGameProps) {
           >
             Experimente em outros estilos
           </Text>
-          <div className="grid grid-cols-4 gap-2">
-            {VARIANT_OPTIONS.map((option) => (
-              <Button
-                key={option}
-                variant={variant === option ? 'primary' : 'outlined'}
-                size="small"
-                block
-                onClick={() => changeVariant(option)}
-              >
-                {option.toUpperCase()}
-              </Button>
-            ))}
-          </div>
+          <Segmented
+            block
+            size="small"
+            value={variant}
+            onChange={(value) => changeVariant(value as DailyTaNaCaraVariant)}
+            options={VARIANT_OPTIONS.map((option) => ({
+              value: option,
+              label: option.toUpperCase(),
+            }))}
+          />
         </Surface>
       )}
 
       {showResults && (
         <ResultsSplash
           questions={resultQuestions}
-          score={score}
           onClose={() => setShowResults(false)}
         />
       )}

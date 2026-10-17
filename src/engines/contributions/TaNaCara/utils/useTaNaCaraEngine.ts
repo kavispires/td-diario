@@ -21,7 +21,6 @@ import {
   countMarkedAnswers,
   getProgress,
   getResultQuestions,
-  getScore,
   getSuspectDisplayName,
   hasMinimumAnswers,
 } from './helpers';
@@ -163,13 +162,14 @@ export function useTaNaCaraEngine(
   }
 
   /**
-   * Toggles one suspect answer inside the current testimony and updates the
-   * score/progress metrics in state.
+   * Sets one suspect's answer inside the current testimony and updates the
+   * progress metrics in state.
    *
    * @param suspectId - Suspect being answered.
-   * @param answer - Next explicit answer chosen by the player.
+   * @param answer - Explicit answer chosen by the player, or `null` to
+   *   leave the suspect blank.
    */
-  function updateAnswer(suspectId: string, answer: boolean) {
+  function updateAnswer(suspectId: string, answer: boolean | null) {
     if (
       !currentAnswers ||
       saveMutation.isPending ||
@@ -178,10 +178,7 @@ export function useTaNaCaraEngine(
       return;
     }
 
-    const currentValue = currentAnswers.answers[suspectId] ?? null;
-    const nextValue = currentValue === answer ? null : answer;
-
-    playSFX(nextValue === null ? 'select' : nextValue ? 'yah' : 'nah');
+    playSFX(answer === null ? 'select' : answer ? 'yah' : 'nah');
     setSaveFailed(false);
     setState((previousState) => {
       const answers = previousState.answers.map((entry, index) => {
@@ -193,7 +190,7 @@ export function useTaNaCaraEngine(
           ...entry,
           answers: {
             ...entry.answers,
-            [suspectId]: nextValue,
+            [suspectId]: answer,
           },
         };
       });
@@ -201,7 +198,6 @@ export function useTaNaCaraEngine(
       return {
         ...previousState,
         answers,
-        score: getScore(answers),
         progress: getProgress(
           answers,
           previousState.selectedTestimonyIds.length,
@@ -301,7 +297,6 @@ export function useTaNaCaraEngine(
     showResults,
     setShowResults,
     progress: state.progress,
-    score: state.score,
     mode: state.mode,
     variant: state.variant,
     isIdle: state.status === GAME_LIFECYCLE_STATUS.IDLE,

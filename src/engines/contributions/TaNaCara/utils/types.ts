@@ -139,10 +139,6 @@ export type TaNaCaraEngineState = {
    */
   progress: number;
   /**
-   * Score accumulated from marked suspect answers.
-   */
-  score: number;
-  /**
    * Whether NSFW testimonies are included in today's active question deck.
    */
   mode: TaNaCaraMode;
@@ -207,9 +203,10 @@ export type TaNaCaraEngineState = {
    */
   toggleNsfwMode: (checked: boolean) => void;
   /**
-   * Sets or clears the answer for one suspect in the current testimony.
+   * Sets the answer for one suspect in the current testimony, or clears it
+   * when `answer` is `null`.
    */
-  updateAnswer: (suspectId: string, answer: boolean) => void;
+  updateAnswer: (suspectId: string, answer: boolean | null) => void;
   /**
    * Advances to the next testimony when the current one is complete enough.
    */
