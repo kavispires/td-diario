@@ -2,7 +2,7 @@ import { GameLogos } from '@components/hub/GameLogos';
 import { DualTranslate } from '@components/ui/DualTranslate';
 import { Surface } from '@components/ui/Surface';
 import { Text, Title } from '@components/ui/Typography';
-import { gameInfos } from '@engines';
+import { findByGameKey } from '@engines';
 import type { ProfileGameStat } from '@utils/profileStats';
 
 /**
@@ -36,7 +36,7 @@ export function GameStatsList({ perGameStats }: GameStatsListProps) {
       <div className="flex flex-col gap-2">
         {perGameStats.map((stat) => (
           <GameStatsRow
-            key={stat.gameId}
+            key={stat.gameKey}
             stat={stat}
           />
         ))}
@@ -50,14 +50,18 @@ type GameStatsRowProps = {
 };
 
 function GameStatsRow({ stat }: GameStatsRowProps) {
-  const gameInfo = gameInfos[stat.gameId as keyof typeof gameInfos];
+  const gameInfo = findByGameKey(stat.gameKey);
 
   return (
     <Surface className="flex items-center gap-3 bg-white p-3">
-      <GameLogos
-        gameId={stat.gameId}
-        className="h-10 w-10 shrink-0"
-      />
+      <div className="h-10 w-10 shrink-0">
+        {gameInfo && (
+          <GameLogos
+            gameId={gameInfo.id}
+            className="h-full w-full"
+          />
+        )}
+      </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
         <Text
@@ -67,7 +71,7 @@ function GameStatsRow({ stat }: GameStatsRowProps) {
           {gameInfo ? (
             <DualTranslate>{gameInfo.name}</DualTranslate>
           ) : (
-            stat.gameId
+            stat.gameKey
           )}
         </Text>
         <Text

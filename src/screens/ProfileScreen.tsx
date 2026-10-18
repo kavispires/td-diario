@@ -7,10 +7,9 @@ import { Text } from '@components/ui/Typography';
 import { gameInfos } from '@engines';
 import { useGetDailyUserData } from '@hooks/useGetDailyUserData';
 import { LoadingScreen } from '@screens/states/LoadingScreen';
+import { getToday } from '@utils/helpers';
 import { getMilestoneStatuses } from '@utils/milestones';
-import { computeProfileStats } from '@utils/profileStats';
-
-const TOTAL_GAME_COUNT = Object.keys(gameInfos).length;
+import { computeProfileStats, isGameExplorable } from '@utils/profileStats';
 
 /**
  * Renders the user's profile: their avatar and join date, streaks, overall
@@ -25,8 +24,15 @@ export function ProfileScreen() {
     return <LoadingScreen message="Carregando perfil..." />;
   }
 
+  // Recomputed per render (rather than once at module load) so it stays
+  // accurate if a game's release date arrives while the app stays open.
+  const today = getToday();
+  const totalGameCount = Object.values(gameInfos).filter((info) =>
+    isGameExplorable(info, today),
+  ).length;
+
   const stats = computeProfileStats(dailyUser);
-  const milestones = getMilestoneStatuses(dailyUser, TOTAL_GAME_COUNT);
+  const milestones = getMilestoneStatuses(dailyUser, totalGameCount);
   const hasPlayed = stats.totalGamesPlayed > 0;
 
   return (
@@ -42,7 +48,7 @@ export function ProfileScreen() {
         <>
           <StatsSummary
             stats={stats}
-            totalGameCount={TOTAL_GAME_COUNT}
+            totalGameCount={totalGameCount}
           />
 
           <MilestonesSection milestones={milestones} />

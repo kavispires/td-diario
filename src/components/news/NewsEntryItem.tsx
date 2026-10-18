@@ -43,10 +43,12 @@ export function NewsEntryItem({ entry }: NewsEntryItemProps) {
         }
       >
         {gameInfo ? (
-          <GameLogos
-            gameId={gameInfo.id}
-            className="h-6 w-6"
-          />
+          <div className="h-6 w-6">
+            <GameLogos
+              gameId={gameInfo.id}
+              className="h-full w-full"
+            />
+          </div>
         ) : (
           <NewsIcon
             type={entry.type}

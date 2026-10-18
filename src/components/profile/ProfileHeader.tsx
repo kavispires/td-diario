@@ -19,7 +19,7 @@ const MEMBER_SINCE_FORMATTER = new Intl.DateTimeFormat('pt-BR', {
 });
 
 /**
- * Renders the Profile screen's header: the user's avatar, display name, and
+ * Renders the Profile screen's header: the user's avatar, first name, and
  * the month/year they joined, derived from `DailyUser.createdAt`.
  *
  * @param props The signed-in user's `DailyUser` document.
@@ -29,6 +29,9 @@ export function ProfileHeader({ dailyUser }: ProfileHeaderProps) {
   const memberSince = MEMBER_SINCE_FORMATTER.format(
     new Date(dailyUser.createdAt),
   );
+  // Only the first name is shown, since full display names can be long
+  // and a first name feels friendlier for this header.
+  const firstName = dailyUser.displayName.split(' ')[0];
 
   return (
     <div className="flex flex-col items-center gap-2 py-4 text-center">
@@ -43,7 +46,7 @@ export function ProfileHeader({ dailyUser }: ProfileHeaderProps) {
         level={2}
         className="mb-0"
       >
-        {dailyUser.displayName}
+        {firstName}
       </Title>
 
       <Text

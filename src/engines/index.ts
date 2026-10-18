@@ -45,3 +45,16 @@ export const gameInfos = {
   picaco,
   ideias,
 } as const;
+
+/**
+ * Looks up a `GameInfo` by its short `key` (e.g. `'CNX'`), the identifier
+ * `DailyUser.stats`/`DailyUser.today.results` are keyed by (see
+ * `recordGameCompletion`'s call sites, which pass `gameInfo.key`) —
+ * distinct from `gameInfos`'s own kebab-case `id` keys.
+ *
+ * @param key - A game's short uppercase `key` (`GameInfo.key`).
+ * @returns The matching `GameInfo`, or `undefined` if no game has that key.
+ */
+export function findByGameKey(key: string) {
+  return Object.values(gameInfos).find((info) => info.key === key);
+}
