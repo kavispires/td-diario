@@ -18,6 +18,13 @@ const LETTER_ROWS = [
 ];
 
 /**
+ * Horizontal gap between keys, in `rem` — matches the `gap-1.5` Tailwind
+ * class applied to each row, and is used to compute each key's shared
+ * width via {@link Keyboard}'s `keyWidth`.
+ */
+const KEY_GAP_REM = 0.375;
+
+/**
  * Visual feedback applied to an on-screen keyboard key once a player has
  * guessed it.
  */
@@ -121,6 +128,16 @@ export function Keyboard({
   );
   const validKeys = useMemo(() => new Set(rows.flat()), [rows]);
 
+  // All letter/digit keys share the width of the widest row's keys (the
+  // row with the most keys), so every key lines up the same size instead
+  // of each row stretching independently; shorter rows just end up
+  // centered with some leftover space.
+  const maxRowLength = useMemo(
+    () => Math.max(...rows.map((row) => row.length)),
+    [rows],
+  );
+  const keyWidth = `calc((100% - ${KEY_GAP_REM * (maxRowLength - 1)}rem) / ${maxRowLength})`;
+
   useEffect(() => {
     if (disabled) {
       return;
@@ -165,11 +182,11 @@ export function Keyboard({
   ]);
 
   return (
-    <div className="flex w-full flex-col items-center gap-1.5">
+    <div className="flex w-full flex-col items-center gap-2.5">
       {rows.map((row) => (
         <div
           key={row.join('')}
-          className="flex justify-center gap-1.5"
+          className="flex w-full justify-center gap-1.5"
         >
           {row.map((key) => {
             const keyState = keysState[key]?.state;
@@ -184,9 +201,13 @@ export function Keyboard({
                 aria-pressed={!!keyState}
                 disabled={isKeyDisabled}
                 onClick={() => onKeyPress(key)}
-                style={keyState ? undefined : { backgroundColor: color }}
+                style={{
+                  flexBasis: keyWidth,
+                  maxWidth: keyWidth,
+                  ...(keyState ? undefined : { backgroundColor: color }),
+                }}
                 className={cn(
-                  'flex h-10 w-7 shrink-0 flex-col items-center justify-center gap-0.5 rounded-md text-sm font-bold uppercase text-white shadow-[0_3px_0_rgba(0,0,0,0.35)] transition-transform duration-100 active:translate-y-[2px] active:shadow-[0_1px_0_rgba(0,0,0,0.35)] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2',
+                  'flex h-10 min-w-0 shrink-0 flex-col items-center justify-center gap-0.5 rounded-md text-sm font-bold uppercase text-white shadow-[0_3px_0_rgba(0,0,0,0.35)] transition-transform duration-100 active:translate-y-[2px] active:shadow-[0_1px_0_rgba(0,0,0,0.35)] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2',
                   keyState === 'correct' &&
                     'bg-success shadow-[0_3px_0_rgba(0,0,0,0.35)]',
                   keyState === 'incorrect' &&
