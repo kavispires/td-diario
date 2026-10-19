@@ -186,18 +186,15 @@ export function AquiOGame({ data, initialState }: AquiOGameProps) {
 
       {isPlaying && discA && discB && (
         <div className="flex w-full flex-col items-center gap-4">
-          <Disc
-            disc={discA}
-            width={discWidth}
-            onSelect={onSelect}
-            animationDelay={0}
-          />
-          <Disc
-            disc={discB}
-            width={discWidth}
-            onSelect={onSelect}
-            animationDelay={0.12}
-          />
+          {[discA, discB].map((disc, slotIndex) => (
+            <Disc
+              key={disc.id}
+              disc={disc}
+              width={discWidth}
+              onSelect={onSelect}
+              animationDelay={slotIndex === 1 ? 0.12 : 0}
+            />
+          ))}
         </div>
       )}
 

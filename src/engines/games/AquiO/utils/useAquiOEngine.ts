@@ -107,9 +107,13 @@ export function useAquiOEngine(
         setSession((prev) => ({ ...prev, stopType: 'timeout' }));
         setState((prev) => ({
           ...prev,
+          // A round timing out without winning or losing isn't a fresh,
+          // untouched game — keep it "in-progress" (rather than resetting
+          // to "idle") so the hub still shows it as played, since the
+          // player can still retry with their remaining hearts today.
           status: getGameStatuses(prev.status).isComplete
             ? prev.status
-            : GAME_LIFECYCLE_STATUS.IDLE,
+            : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
         }));
       }
     };

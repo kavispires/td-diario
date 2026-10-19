@@ -28,7 +28,10 @@ type DiscProps = {
 
 /**
  * Renders one interactive Aqui O disc as a 3x3 item layout inside a round
- * board, with light entrance motion for each new pair.
+ * board. Keyed by `disc.id` at the call site, so when a match advances
+ * the round, the disc previously shown at the bottom slides up into the
+ * top slot (via Motion's `layout` animation) instead of snapping, while a
+ * genuinely new disc plays the usual fade/slide-in entrance below it.
  *
  * @param props Disc data, its rendered size, and the item-selection handler.
  * @returns The rendered disc.
@@ -38,6 +41,7 @@ export function Disc({ disc, width, onSelect, animationDelay = 0 }: DiscProps) {
 
   return (
     <motion.div
+      layout
       className="grid overflow-hidden rounded-full bg-white/20 p-3 shadow-[0_4px_16px_rgba(0,0,0,0.28)]"
       style={{
         width,
@@ -53,6 +57,7 @@ export function Disc({ disc, width, onSelect, animationDelay = 0 }: DiscProps) {
         type: 'spring',
         stiffness: 220,
         damping: 20,
+        layout: { type: 'spring', stiffness: 300, damping: 28 },
       }}
     >
       {disc.items.map((item) => (
