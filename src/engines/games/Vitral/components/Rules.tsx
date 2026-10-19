@@ -1,3 +1,4 @@
+import { Pill } from '@components/ui/Pill';
 import { Text } from '@components/ui/Typography';
 import { Heart } from 'lucide-react';
 import {
@@ -22,7 +23,8 @@ export function Rules() {
       </li>
       <li>
         <Text>
-          Cada nova conexão rende pontos de acordo com a quantidade de{' '}
+          Quando você coloca uma peça no local correto,{' '}
+          <strong>ela será travada</strong> e você ganha pontos de acordo com os{' '}
           <Heart
             className="inline h-4 w-4 fill-destructive text-destructive"
             aria-hidden="true"
@@ -45,6 +47,17 @@ export function Rules() {
         <Text>
           Se montar tudo a tempo, o vitral fica dourado e a rodada termina com
           vitória.
+        </Text>
+      </li>
+      <li>
+        <Text>
+          <Pill
+            size="small"
+            className="mr-1 inline-flex bg-gold text-black"
+          >
+            NOVO
+          </Pill>
+          As peças ficam travadas quando colocadas no local correto.
         </Text>
       </li>
     </ul>

@@ -1,3 +1,4 @@
+import { Pill } from '@components/ui/Pill';
 import { Text } from '@components/ui/Typography';
 import { Heart, Star } from 'lucide-react';
 import {
@@ -68,6 +69,18 @@ export function Rules() {
           durante a semana e{' '}
           {CONJUNTOS_BASE_HEARTS + CONJUNTOS_WEEKEND_EXTRA_HEARTS} aos fins de
           semana. Perca todos e o jogo acaba.
+        </Text>
+      </li>
+      <li>
+        <Text>
+          <Pill
+            size="small"
+            className="mr-1 inline-flex bg-gold text-black"
+          >
+            NOVO
+          </Pill>
+          Agora você pode clicar e arrastar os itens para a parte do diagrama
+          que você deseja.
         </Text>
       </li>
     </ul>

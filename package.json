@@ -1,7 +1,7 @@
 {
   "name": "td-diario",
   "private": true,
-  "version": "2.0.3",
+  "version": "2.0.4",
   "homepage": "https://diario.kavispires.com",
   "type": "module",
   "scripts": {

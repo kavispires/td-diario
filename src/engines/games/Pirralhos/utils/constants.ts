@@ -190,7 +190,7 @@ export const KIDS_LIBRARY: Dictionary<KidProfile> = {
     name: { en: 'Isaac', pt: 'Igor' },
     gender: 'boy',
     height: 127,
-    color: '#ffffff',
+    color: '#b3b4ba',
   },
   'us-gb-238': {
     id: 'us-gb-238',
