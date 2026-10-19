@@ -210,6 +210,26 @@ export function isStatementComplete(
 }
 
 /**
+ * Reorders a clue list so that completed statements sink to the bottom,
+ * while preserving the existing relative order within both the
+ * incomplete and completed groups.
+ *
+ * @param statements - Clue list in its current display order.
+ * @param released - Suspect ids already released.
+ * @returns A new array with completed statements moved to the end.
+ */
+export function orderStatementsByCompletion(
+  statements: DailyInvestigacaoStatement[],
+  released: string[],
+): DailyInvestigacaoStatement[] {
+  return [...statements].sort(
+    (a, b) =>
+      Number(isStatementComplete(a.excludes, released)) -
+      Number(isStatementComplete(b.excludes, released)),
+  );
+}
+
+/**
  * Builds the shareable result for today's Investigação run.
  *
  * @param options - Today's challenge number and final suspect-release state.

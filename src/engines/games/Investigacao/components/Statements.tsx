@@ -15,7 +15,10 @@ import {
   STATEMENT_CARD_ANIMATION_DURATION_SECONDS,
   STATEMENT_CARD_ANIMATION_Y_OFFSET,
 } from '../utils/constants';
-import { isStatementComplete } from '../utils/helpers';
+import {
+  isStatementComplete,
+  orderStatementsByCompletion,
+} from '../utils/helpers';
 
 /**
  * Props accepted by the {@link Statements} component.
@@ -38,6 +41,9 @@ type StatementsProps = {
 /**
  * Renders Investigação's currently visible clue cards, preserving the
  * original game's reversed reveal order and completion highlighting.
+ * Completed clues sink to the bottom of their list (main or bonus),
+ * keeping the relative order of the remaining incomplete and completed
+ * clues intact.
  *
  * @param props Visible clue lists plus the current released suspects.
  * @returns The rendered statement stack.
@@ -47,9 +53,15 @@ export function Statements({
   additionalStatements,
   released,
 }: StatementsProps) {
+  const orderedStatements = orderStatementsByCompletion(statements, released);
+  const orderedAdditionalStatements = orderStatementsByCompletion(
+    additionalStatements,
+    released,
+  );
+
   return (
     <div className="flex flex-col gap-2">
-      {statements.map((statement, index) => (
+      {orderedStatements.map((statement, index) => (
         <StatementCard
           key={statement.key}
           statement={statement}
@@ -59,12 +71,12 @@ export function Statements({
         />
       ))}
 
-      {additionalStatements.map((statement, index) => (
+      {orderedAdditionalStatements.map((statement, index) => (
         <StatementCard
           key={statement.key}
           statement={statement}
           released={released}
-          index={statements.length + index}
+          index={orderedStatements.length + index}
           variant="bonus"
         />
       ))}
@@ -107,9 +119,11 @@ function StatementCard({
 
   return (
     <motion.div
+      layout
       initial={{ opacity: 0, y: STATEMENT_CARD_ANIMATION_Y_OFFSET }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
+        layout: { type: 'spring', bounce: 0.2, duration: 0.4 },
         duration: STATEMENT_CARD_ANIMATION_DURATION_SECONDS,
         ease: 'easeOut',
         delay: index * STATEMENT_CARD_ANIMATION_DELAY_STEP,
