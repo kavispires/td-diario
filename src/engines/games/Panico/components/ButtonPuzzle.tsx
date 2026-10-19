@@ -14,13 +14,17 @@ import { CircularTimer } from './CircularTimer';
 import { PressButton } from './PressButton';
 
 /**
- * Background class applied to the press button per {@link PanicoButtonVariant},
- * so its color hints at the expected action.
+ * Outer rim / inner face background classes applied to the press button per
+ * {@link PanicoButtonVariant}, so its color hints at the expected action.
+ * The inner face uses a visibly brighter shade than the rim for contrast.
  */
-const BUTTON_VARIANT_BG_CLASSES: Record<PanicoButtonVariant, string> = {
-  RED: 'bg-rose-950/70',
-  YELLOW: 'bg-amber-950/70',
-  BLUE: 'bg-sky-950/70',
+const BUTTON_VARIANT_BG_CLASSES: Record<
+  PanicoButtonVariant,
+  { outer: string; inner: string }
+> = {
+  RED: { outer: 'bg-[#420c11]', inner: 'bg-[#a51d2b]' },
+  YELLOW: { outer: 'bg-[#4d3f06]', inner: 'bg-[#be9c10]' },
+  BLUE: { outer: 'bg-[#162d5e]', inner: 'bg-[#436ec8]' },
 };
 
 /**
@@ -55,7 +59,6 @@ export function ButtonPuzzle({
 }: ButtonPuzzleProps) {
   const [pressCount, setPressCount] = useState(0);
   const pressCountRef = useRef(0);
-  const playbackIdRef = useRef<number | null>(null);
   const resolvedRef = useRef(false);
   const duration = DURATION_MAP[button.durationScale];
 
@@ -66,8 +69,7 @@ export function ButtonPuzzle({
       }
 
       resolvedRef.current = true;
-      stopCountdownSound(playbackIdRef.current);
-      playbackIdRef.current = null;
+      stopCountdownSound();
       onComplete(isCorrect);
     },
     [onComplete],
@@ -88,13 +90,12 @@ export function ButtonPuzzle({
   });
 
   useEffect(() => {
-    playbackIdRef.current = playCountdownSound();
+    playCountdownSound(button.durationScale);
 
     return () => {
-      stopCountdownSound(playbackIdRef.current);
-      playbackIdRef.current = null;
+      stopCountdownSound();
     };
-  }, []);
+  }, [button.durationScale]);
 
   function handlePress() {
     if (resolvedRef.current) {
@@ -134,7 +135,11 @@ export function ButtonPuzzle({
           aria-label="Responder botão de Pânico"
           className={cn(
             button.buttonVariant &&
-              BUTTON_VARIANT_BG_CLASSES[button.buttonVariant],
+              BUTTON_VARIANT_BG_CLASSES[button.buttonVariant].outer,
+          )}
+          faceClassName={cn(
+            button.buttonVariant &&
+              BUTTON_VARIANT_BG_CLASSES[button.buttonVariant].inner,
           )}
         >
           <ButtonContent

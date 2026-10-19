@@ -1,3 +1,5 @@
+import { deterministicShuffle, seedByToday } from '@utils/deterministicShuffle';
+
 export type ButtonDictionaryEntry = {
   /**
    * Unique key identifier of the button type
@@ -821,21 +823,30 @@ export const BUTTONS_LIBRARY: Record<string, ButtonDictionaryEntry> = {
   },
 };
 
+/**
+ * Seeded random generator re-seeded once per calendar day (`YYYY-MM-DD`),
+ * so every player sees the exact same pool item arrangement on a given day
+ * instead of a fresh shuffle per module load.
+ */
+const seededRandom = seedByToday();
+
 const shuffleAndInsert = (array: string[], decoys: string[] = []): string[] => {
-  const shuffle = (arr: string[]) => arr.sort(() => Math.random() - 0.5);
-  const shuffled = shuffle([...array]);
-  const randomIndex = Math.floor(Math.random() * (shuffled.length + 1));
+  const shuffled = deterministicShuffle(array, seededRandom);
+  const randomIndex = Math.floor(seededRandom() * (shuffled.length + 1));
 
   if (decoys.length === 0) {
     return shuffled;
   }
 
-  const shuffledDecoys = shuffle([...decoys]);
-  return shuffle([
-    ...shuffled.slice(0, randomIndex),
-    shuffledDecoys[0],
-    ...shuffled.slice(randomIndex + 1),
-  ]);
+  const shuffledDecoys = deterministicShuffle(decoys, seededRandom);
+  return deterministicShuffle(
+    [
+      ...shuffled.slice(0, randomIndex),
+      shuffledDecoys[0],
+      ...shuffled.slice(randomIndex + 1),
+    ],
+    seededRandom,
+  );
 };
 
 /**

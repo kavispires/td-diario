@@ -1,32 +1,10 @@
+import { deterministicShuffle, seedById } from '@utils/deterministicShuffle';
 import type { DailyEstoquistaEntry } from 'types/games';
 
 const TOTAL_GOODS = 256;
 const GOODS_SIZE = 16;
 const ORDER_SIZE = 4;
 const OUT_OF_STOCK_SIZE = 1;
-/**
- * A simple Linear Congruential Generator (LCG) for seeded randomness.
- * Given the same seed, it will always produce the exact same sequence of floats between 0 and 1.
- */
-const createSeededRandom = (seed: number) => {
-  let currentSeed = seed;
-  return () => {
-    currentSeed = (currentSeed * 16807) % 2147483647;
-    return (currentSeed - 1) / 2147483646;
-  };
-};
-
-/**
- * A deterministic version of the Fisher-Yates shuffle using our seeded random function.
- */
-const deterministicShuffle = <T>(array: T[], randomFunc: () => number): T[] => {
-  const result = [...array];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(randomFunc() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-};
 
 /**
  * Generates a purely deterministic DailyEstoquistaEntry based on the date.
@@ -39,11 +17,8 @@ export const generateDailyEstoquistaEntry = (
   id: string,
   puzzleNumber?: number,
 ): DailyEstoquistaEntry => {
-  // 1. Create a numeric seed from the date string (e.g., "2026-06-30" -> 20260630)
-  const seed = Number.parseInt(id.replace(/-/g, ''), 10);
-
-  // 2. Initialize the predictable random generator
-  const seededRandom = createSeededRandom(seed);
+  // 1. Initialize the predictable random generator from the daily id
+  const seededRandom = seedById(id);
 
   const [year, month, day] = id.split('-').map(Number);
   const date = new Date(year, month - 1, day);

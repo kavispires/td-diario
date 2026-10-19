@@ -11,8 +11,8 @@ export const gameInfo: GameInfo = {
     en: 'Would you press the button?',
     pt: 'Você apertaria o botão?',
   },
-  releaseDate: '2026-05-10',
-  release: 'soon',
+  releaseDate: '2026-11-01',
+  release: 'unreleased',
   version: '0.0.1',
 };
 

@@ -1,5 +1,5 @@
-import { motion } from 'motion/react';
 import type { ReactNode } from 'react';
+import { useId } from 'react';
 
 /**
  * Props accepted by {@link CircularTimer}.
@@ -24,7 +24,10 @@ type CircularTimerProps = {
 };
 
 /**
- * Renders Panico's segmented circular countdown around the active button.
+ * Renders Panico's circular countdown ring around the active button: a
+ * static segmented track plus a matching segmented arc that's progressively
+ * unmasked (revealed) as `remainingMs` counts down, so the dashes themselves
+ * never move — only how many of them are lit changes.
  *
  * @param props Timer duration, remaining time, and centered content.
  * @returns The rendered countdown ring.
@@ -35,6 +38,8 @@ export function CircularTimer({
   children,
   size = 320,
 }: CircularTimerProps) {
+  const maskId = useId();
+  const gradientId = useId();
   const progress =
     duration <= 0
       ? 0
@@ -52,28 +57,9 @@ export function CircularTimer({
         viewBox="0 0 100 100"
         aria-hidden="true"
       >
-        <circle
-          cx="50"
-          cy="50"
-          r={radius}
-          stroke="rgba(255,255,255,0.18)"
-          strokeWidth="10"
-          fill="none"
-          strokeDasharray="10 2"
-        />
-        <motion.circle
-          cx="50"
-          cy="50"
-          r={radius}
-          stroke="url(#panico-timer-gradient)"
-          strokeWidth="12"
-          fill="none"
-          strokeDasharray="10 2"
-          strokeDashoffset={circumference * (1 - progress)}
-        />
         <defs>
           <linearGradient
-            id="panico-timer-gradient"
+            id={gradientId}
             x1="0%"
             y1="0%"
             x2="100%"
@@ -81,14 +67,51 @@ export function CircularTimer({
           >
             <stop
               offset="0%"
-              stopColor="#fde047"
+              stopColor="#a3e635"
             />
             <stop
               offset="100%"
-              stopColor="#f97316"
+              stopColor="#4d7c0f"
             />
           </linearGradient>
+
+          <mask id={maskId}>
+            <circle
+              cx="50"
+              cy="50"
+              r={radius}
+              stroke="white"
+              strokeWidth="10"
+              fill="none"
+              strokeDasharray={`${circumference} ${circumference}`}
+              strokeDashoffset={-circumference * (1 - progress)}
+              style={{ transition: 'stroke-dashoffset 80ms linear' }}
+            />
+          </mask>
         </defs>
+
+        {/* Static segmented background track */}
+        <circle
+          cx="50"
+          cy="50"
+          r={radius}
+          stroke="rgba(255,255,255,0.22)"
+          strokeWidth="10"
+          fill="none"
+          strokeDasharray="10 2"
+        />
+
+        {/* Segmented foreground track, revealed by the mask as time drains */}
+        <circle
+          cx="50"
+          cy="50"
+          r={radius}
+          stroke={`url(#${gradientId})`}
+          strokeWidth="12"
+          fill="none"
+          strokeDasharray="10 2"
+          mask={`url(#${maskId})`}
+        />
       </svg>
 
       {children}

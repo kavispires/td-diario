@@ -3,7 +3,9 @@ import { Hearts } from '@components/games/Hearts';
 import { SeeResultsButton } from '@components/games/SeeResultsButton';
 import { Text } from '@components/ui/Typography';
 import { useCardWidthByContainerRef } from '@hooks/useCardWidth';
+import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
 import { Award, Gauge } from 'lucide-react';
+import { useEffect } from 'react';
 import type { DailyPanicoEntry } from 'types/games';
 import { gameInfo } from '../info';
 import { PANICO_TOTAL_HEARTS } from '../utils/constants';
@@ -58,6 +60,14 @@ export function PanicoGame({ data, initialState }: PanicoGameProps) {
     minWidth: 280,
   });
 
+  const setDarkMode = useAppRuntimeStore((state) => state.setDarkMode);
+  // Panico uses the dark background variant while it's mounted, reverting
+  // once the player navigates away.
+  useEffect(() => {
+    setDarkMode(true);
+    return () => setDarkMode(false);
+  }, [setDarkMode]);
+
   return (
     <div
       ref={containerRef}
@@ -89,10 +99,9 @@ export function PanicoGame({ data, initialState }: PanicoGameProps) {
         />
       </GameStatsRow>
 
-      <Text className="text-center text-sm text-slate-200">
+      <Text className="text-center text-sm text-white">
         Siga as instruções de quando e como apertar o botão. Aperte “Iniciar”
-        para começar e boa sorte! Progresso salvo hoje:{' '}
-        <strong>{Math.round(progress * 100)}%</strong>.
+        para começar e boa sorte!
       </Text>
 
       <SoundSfxAlert />

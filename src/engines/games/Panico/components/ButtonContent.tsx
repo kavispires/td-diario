@@ -100,7 +100,7 @@ function Label({
     <div className="flex flex-col items-center justify-center gap-3 text-center">
       <Text
         strong
-        className={cn('text-lg leading-tight text-white', className)}
+        className={cn('text-2xl leading-tight text-white', className)}
       >
         {children}
       </Text>
@@ -111,7 +111,7 @@ function Label({
 function Sentence({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 text-center">
-      <Text className="max-w-52 text-sm leading-snug text-white">
+      <Text className="max-w-64 text-lg leading-snug text-white">
         {children}
       </Text>
     </div>
@@ -128,7 +128,7 @@ function Value({
   return (
     <Text
       strong
-      className={cn('text-2xl leading-none text-gold', className)}
+      className={cn('mt-1 block text-4xl leading-none text-gold', className)}
     >
       {children}
     </Text>
@@ -241,7 +241,7 @@ export function ButtonContent({ button, pressCount }: ButtonContentProps) {
       return (
         <Sentence>
           Aperte se todos os números forem ímpares:
-          <Value className="text-xl">
+          <Value className="text-2xl">
             {button.pool?.value as string | undefined}
           </Value>
         </Sentence>
@@ -250,7 +250,7 @@ export function ButtonContent({ button, pressCount }: ButtonContentProps) {
       return (
         <Sentence>
           Aperte se todos os números forem pares:
-          <Value className="text-xl">
+          <Value className="text-2xl">
             {button.pool?.value as string | undefined}
           </Value>
         </Sentence>
@@ -259,7 +259,7 @@ export function ButtonContent({ button, pressCount }: ButtonContentProps) {
       return (
         <Sentence>
           Aperte tantas vezes quanto o número que falta na sequência
-          <Value className="text-xl">
+          <Value className="text-2xl">
             {button.pool?.value as string | undefined}
           </Value>
         </Sentence>
@@ -269,7 +269,7 @@ export function ButtonContent({ button, pressCount }: ButtonContentProps) {
         <Sentence>
           Aperte tantas vezes quanto a letra "
           {button.pool?.letter as string | undefined}" aparece
-          <Value className="text-xl">
+          <Value className="text-2xl">
             {button.pool?.value as string | undefined}
           </Value>
         </Sentence>
