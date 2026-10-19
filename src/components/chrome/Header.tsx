@@ -143,7 +143,14 @@ export function ChromeHeader() {
                 />
               </motion.button>
             ) : (
-              <TDLogoIcon className="w-6 h-6 shrink-0" />
+              <button
+                type="button"
+                className="w-6 h-6 shrink-0"
+                aria-label="Ir para o hub"
+                onClick={() => navigate('/')}
+              >
+                <TDLogoIcon className="w-6 h-6 shrink-0" />
+              </button>
             )}
           </div>
           <Title

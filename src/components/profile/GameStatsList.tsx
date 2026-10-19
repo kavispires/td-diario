@@ -17,13 +17,16 @@ type GameStatsListProps = {
 
 /**
  * Renders the Profile screen's per-game stats list: one row per game the
- * user has played, sorted by times played, each showing the game's logo,
- * name, times played, and win rate.
+ * user has played, sorted alphabetically by name, each showing the
+ * game's logo, name, times played, and win rate.
  *
- * @param props Every played game's stats, sorted descending.
+ * @param props Every played game's stats (sort order doesn't matter; this
+ * component alphabetizes them for display).
  * @returns The rendered per-game stats list.
  */
 export function GameStatsList({ perGameStats }: GameStatsListProps) {
+  const alphabetizedStats = alphabetizeByGameName(perGameStats);
+
   return (
     <section className="flex flex-col gap-3">
       <Title
@@ -34,7 +37,7 @@ export function GameStatsList({ perGameStats }: GameStatsListProps) {
       </Title>
 
       <div className="flex flex-col gap-2">
-        {perGameStats.map((stat) => (
+        {alphabetizedStats.map((stat) => (
           <GameStatsRow
             key={stat.gameKey}
             stat={stat}
@@ -43,6 +46,24 @@ export function GameStatsList({ perGameStats }: GameStatsListProps) {
       </div>
     </section>
   );
+}
+
+/**
+ * Sorts a list of per-game stats alphabetically (pt-BR) by each game's
+ * Portuguese name, falling back to its raw `gameKey` when the game can't
+ * be resolved via `findByGameKey`.
+ *
+ * @param perGameStats - Per-game stats, in any order.
+ * @returns A new array sorted alphabetically by game name.
+ */
+function alphabetizeByGameName(
+  perGameStats: ProfileGameStat[],
+): ProfileGameStat[] {
+  return [...perGameStats].sort((a, b) => {
+    const nameA = findByGameKey(a.gameKey)?.name.pt ?? a.gameKey;
+    const nameB = findByGameKey(b.gameKey)?.name.pt ?? b.gameKey;
+    return nameA.localeCompare(nameB, 'pt-BR');
+  });
 }
 
 type GameStatsRowProps = {
