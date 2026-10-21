@@ -11,8 +11,8 @@ export const gameInfo: GameInfo = {
     pt: 'Na minha, era tudo diferente!',
     en: 'In my time, everything was different!',
   },
-  releaseDate: '2026-10-04',
-  release: 'soon',
+  releaseDate: '2027-01-01',
+  release: 'unreleased',
   version: '0.0.1',
 };
 

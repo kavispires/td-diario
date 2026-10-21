@@ -1297,13 +1297,13 @@ const THINGS_COLOR_GRID: Dictionary<PoolGroupEntry<{ itemsIds: string[] }>> = {
     targetCount: 0,
     itemsIds: shuffleAndInsert(BLUE_THINGS, RED_THINGS),
   },
-  HINGS_COLOR_GRID_BLUE_TRUE: {
-    id: 'THINGS_COLOR_GRID_BLUE_TRUE',
+  THINGS_COLOR_GRID_BLUE_TRUE_B: {
+    id: 'THINGS_COLOR_GRID_BLUE_TRUE_B',
     targetCount: 1,
     itemsIds: shuffleAndInsert(RED_THINGS),
   },
-  HINGS_COLOR_GRID_BLUE_FALSE: {
-    id: 'THINGS_COLOR_GRID_BLUE_FALSE',
+  THINGS_COLOR_GRID_BLUE_FALSE_B: {
+    id: 'THINGS_COLOR_GRID_BLUE_FALSE_B',
     targetCount: 0,
     itemsIds: shuffleAndInsert(RED_THINGS, BLUE_THINGS),
   },

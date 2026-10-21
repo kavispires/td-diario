@@ -11,8 +11,8 @@ export const gameInfo: GameInfo = {
     pt: 'Qual é a música?',
     en: 'A music game coming soon!',
   },
-  releaseDate: '2026-10-04',
-  release: 'soon',
+  releaseDate: '2027-01-01',
+  release: 'unreleased',
   version: '0.0.1',
 };
 

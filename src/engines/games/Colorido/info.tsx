@@ -11,8 +11,8 @@ export const gameInfo: GameInfo = {
     pt: 'E com as cores do vento...',
     en: 'A color-guessing game coming soon!',
   },
-  releaseDate: '2026-10-04',
-  release: 'soon',
+  releaseDate: '2027-01-01',
+  release: 'unreleased',
   version: '0.0.1',
 };
 

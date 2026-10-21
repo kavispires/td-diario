@@ -165,7 +165,8 @@ export type GameInfo = {
     | 'maintenance'
     | 'disabled'
     | 'soon'
-    | 'unreleased';
+    | 'unreleased'
+    | 'retired';
   /**
    * The game's semantic version (e.g. `'0.0.1'`).
    */

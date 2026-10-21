@@ -11,7 +11,7 @@ export const gameInfo: GameInfo = {
     pt: 'Sugira conteúdos novos para os jogos do TD Diário.',
     en: 'Suggest new content for TD Diário games.',
   },
-  releaseDate: '2026-11-01',
+  releaseDate: '2026-10-18',
   release: 'stable',
   version: '1.0.0',
 };

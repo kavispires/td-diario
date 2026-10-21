@@ -100,12 +100,6 @@ export const NEWS_ENTRIES: NewsEntry[] = [
   //   gameId: 'conexoes',
   //   description: 'Ajude a avaliar se pares de imagens estão relacionados!',
   // },
-  // {
-  //   date: '2026-05-10',
-  //   type: 'new-game',
-  //   gameId: 'panico',
-  //   description: 'Você apertaria o botão? Pânico é um jogo de decisões!',
-  // },
   {
     date: '2026-05-17',
     type: 'new-game',
@@ -137,10 +131,17 @@ export const NEWS_ENTRIES: NewsEntry[] = [
   //   description: 'Qual é a música? Cante junto e descubra!',
   // },
   {
-    date: '2026-11-01',
+    date: '2026-10-18',
     type: 'new-contribution',
     gameId: 'ideias',
     description: 'Sugira conteúdos novos para os jogos do TD Diário!',
+  },
+  {
+    date: '2026-10-25',
+    type: 'new-game',
+    gameId: 'panico',
+    description:
+      'Você apertaria o botão? Quantas vezes? Siga as regras da sequência de botões e tente chegar ao final!',
   },
 
   // --- Features / announcements ---
