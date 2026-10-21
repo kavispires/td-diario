@@ -1,5 +1,6 @@
 import { USE_MOCK_DATA } from '@dev-config';
 import { generateDailyIdeiasEntry } from '@engines/contributions/Ideias/utils/generator';
+import { getEpocasDemo } from '@engines/games/Epocas/utils/demo';
 import { generateDailyEstoquistaEntry } from '@engines/games/Estoquista/utils/generator';
 import { DAILY_API, DAILY_API_ACTIONS } from '@services/adapters';
 import { logAnalyticsEvent } from '@services/firebase';
@@ -8,6 +9,12 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMillisecondsUntilTomorrow, getToday, print } from '@utils/helpers';
 import { useEffect } from 'react';
 import type { DailyResponse, GamesEntries } from '../types/puzzles';
+
+const LOCAL_GAME_DEMOS: {
+  [Id in keyof GamesEntries]?: (id: DailyResponse['id']) => GamesEntries[Id];
+} = {
+  epocas: getEpocasDemo,
+};
 
 /**
  * Registry of games that are always generated locally rather than arriving
@@ -56,6 +63,14 @@ function injectLocallyGeneratedGames(
       const generate = LOCAL_GAME_GENERATORS[id];
       // @ts-expect-error -- each generator's return type matches its own key
       challenges[id] = generate?.(responseData.id);
+    }
+  }
+
+  for (const id of Object.keys(LOCAL_GAME_DEMOS) as Array<keyof GamesEntries>) {
+    if (!challenges[id]) {
+      const generate = LOCAL_GAME_DEMOS[id];
+      // @ts-expect-error -- each generator's return type matches its own key
+      challenges[id] = generate?.();
     }
   }
 
