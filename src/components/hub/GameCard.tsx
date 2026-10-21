@@ -140,8 +140,8 @@ export function GameCard({
     // Priority 3: If it's a test/demo release
     if (gameInfo.release === 'demo') {
       return (
-        <div className="absolute -top-2 -left-2 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
-          TESTE
+        <div className="absolute -top-2 -left-2 bg-accent text-white text-[10px] font-bold italic px-2 py-0.5 rounded-full shadow-sm z-10">
+          TESTE!
         </div>
       );
     }

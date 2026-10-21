@@ -12,7 +12,7 @@ export const gameInfo: GameInfo = {
     en: 'In my time, everything was different!',
   },
   releaseDate: '2027-01-01',
-  release: 'unreleased',
+  release: 'demo',
   version: '0.0.1',
 };
 
