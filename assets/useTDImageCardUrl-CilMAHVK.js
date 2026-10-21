@@ -1,1 +1,0 @@
-import{r as e}from"./jsx-runtime-BkSabwWG.js";import{n as t}from"./createLucideIcon-BlhVbf4T.js";import{Ir as n}from"./index-DT3_g2ty.js";var r=e(t(),1);function i(e,t=`images`){let{getUrl:i}=n(t);return i(`${(0,r.useMemo)(()=>e.replace(/-/g,`/`),[e])}.jpg`)}export{i as t};
