@@ -81,6 +81,17 @@ export function isRecentRelease(releaseDate: string, maxDays = 21): boolean {
   return daysSinceRelease >= 0 && daysSinceRelease <= maxDays;
 }
 
+/**
+ * Checks whether a `'YYYY-MM-DD'` release date is still in the future
+ * (after today), used to keep not-yet-released games out of the hub grid.
+ *
+ * @param releaseDate - The game's `GameInfo.releaseDate`.
+ * @returns `true` when `releaseDate` is after today.
+ */
+export function isFutureRelease(releaseDate: string): boolean {
+  return differenceInCalendarDays(new Date(releaseDate), new Date()) > 0;
+}
+
 const methods = {
   // biome-ignore lint/suspicious/noConsole: on purpose
   count: console.count.bind(console),
