@@ -14,6 +14,13 @@ export const HEARTS = 3;
 export const ROUND_DURATION_SECONDS = 60;
 
 /**
+ * Minimum discs matched in a single attempt for the hub to treat today's
+ * run as "completed", even though the player can keep retrying in-game
+ * until they run out of hearts or reach {@link GOAL}.
+ */
+export const HUB_COMPLETION_DISC_THRESHOLD = 7;
+
+/**
  * Slot indexes used to distribute items across a disc's 3x3 playable area.
  */
 export const DISC_POSITIONS = Array.from({ length: 9 }, (_, index) => index);

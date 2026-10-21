@@ -1,4 +1,5 @@
 import { gameInfos } from '@engines';
+import { HUB_COMPLETION_DISC_THRESHOLD } from '@engines/games/AquiO/utils/constants';
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
@@ -223,12 +224,49 @@ function buildProgressEntries(
       key,
       challenge: resolvedChallenge,
       info: effectiveInfo,
-      state: getCardState(effectiveInfo.release, localState.status),
+      state: resolveCardState(key, effectiveInfo.release, localState),
       progressPercent: Math.round(localState.progress * 100),
     });
   }
 
   return entries;
+}
+
+/**
+ * Resolves a hub card's display state, applying Aqui O's "completed early"
+ * exception on top of {@link getCardState}: since the player can keep
+ * retrying there after a single attempt reaches a high disc count, the hub
+ * treats that attempt as completed without waiting for the in-game
+ * win/lose outcome, which stays driven by its own hearts/goal rules.
+ *
+ * @param key - The game's `gameInfos` id.
+ * @param release - The game's `GameInfo['release']`.
+ * @param localState - The game's locally-persisted lifecycle state.
+ * @returns The card's resolved display state.
+ */
+function resolveCardState(
+  key: GameId,
+  release: GameInfo['release'],
+  localState: DefaultGameState,
+): CardState {
+  const state = getCardState(release, localState.status);
+
+  if (state === 'disabled' || state === 'completed' || key !== 'aqui-o') {
+    return state;
+  }
+
+  const maxProgress = (
+    localState as DefaultGameState & { maxProgress?: number }
+  ).maxProgress;
+
+  if (
+    typeof maxProgress === 'number' &&
+    maxProgress >= HUB_COMPLETION_DISC_THRESHOLD
+  ) {
+    return 'completed';
+  }
+
+  return state;
 }
 
 /**
