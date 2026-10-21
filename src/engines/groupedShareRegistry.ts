@@ -5,6 +5,7 @@ import type {
   DailyAquiOEntry,
   DailyArteRuimEntry,
   DailyConjuntosEntry,
+  DailyEpocasEntry,
   DailyEstoquistaEntry,
   DailyFilmacoEntry,
   DailyInvestigacaoEntry,
@@ -22,6 +23,7 @@ import * as Alienado from './games/Alienado/utils/helpers';
 import * as AquiO from './games/AquiO/utils/helpers';
 import * as ArteRuim from './games/ArteRuim/utils/helpers';
 import * as Conjuntos from './games/Conjuntos/utils/helpers';
+import * as Epocas from './games/Epocas/utils/helpers';
 import * as Estoquista from './games/Estoquista/utils/helpers';
 import * as Filmaco from './games/Filmaco/utils/helpers';
 import * as Investigacao from './games/Investigacao/utils/helpers';
@@ -37,7 +39,7 @@ import { gameInfos } from './index';
 
 /**
  * Ids of every core game wired into the Hub's grouped-share feature (see
- * `buildGroupedShareResult`). Placeholder-only games (`colorido`, `epocas`,
+ * `buildGroupedShareResult`). Placeholder-only games (`colorido`,
  * `karaoke`) have no `buildShare`/`buildShareFromProgress` yet and are
  * intentionally excluded.
  */
@@ -47,6 +49,7 @@ export type GroupedShareGameId = keyof Pick<
   | 'aqui-o'
   | 'arte-ruim'
   | 'conjuntos'
+  | 'epocas'
   | 'estoquista'
   | 'filmaco'
   | 'investigacao'
@@ -71,7 +74,7 @@ export type GroupedShareGameId = keyof Pick<
  * @param challenge - Today's challenge payload for that game.
  * @returns The game's `{ title, text, url }` share result, or `null` when
  *   the game isn't wired into the grouped share registry (e.g. the
- *   `colorido`/`epocas`/`karaoke` placeholders) or has no challenge payload.
+ *   `colorido`/`karaoke` placeholders) or has no challenge payload.
  */
 export function buildGroupedShareResult(
   gameId: string,
@@ -117,6 +120,15 @@ export function buildGroupedShareResult(
         defaultValue: Conjuntos.getInitialState(data),
       });
       return Conjuntos.buildShareFromProgress(data, state);
+    }
+    case 'epocas': {
+      const data = challenge as DailyEpocasEntry;
+      const state = loadLocalToday({
+        key: gameInfos.epocas.key,
+        dateId: data.id,
+        defaultValue: Epocas.getInitialState(data),
+      });
+      return Epocas.buildShareFromProgress(data, state);
     }
     case 'estoquista': {
       const data = challenge as DailyEstoquistaEntry;

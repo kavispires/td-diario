@@ -5,6 +5,7 @@ import type {
   DailyArteRuimEntry,
   DailyConexoesEntry,
   DailyConjuntosEntry,
+  DailyEpocasEntry,
   DailyEstoquistaEntry,
   DailyFilmacoEntry,
   DailyIdeiasEntry,
@@ -64,11 +65,7 @@ export type GamesEntries = {
    * the game ships, like every other entry in `GamesEntries`.
    */
   colorido?: PlaceholderGameData;
-  /**
-   * Not implemented yet; will arrive from the `dailyEngine` response once
-   * the game ships, like every other entry in `GamesEntries`.
-   */
-  epocas?: PlaceholderGameData;
+  epocas?: DailyEpocasEntry;
   /**
    * Not implemented yet; will arrive from the `dailyEngine` response once
    * the game ships, like every other entry in `GamesEntries`.

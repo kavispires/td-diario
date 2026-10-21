@@ -879,3 +879,45 @@ export type DailyIdeiasEntry = {
    */
   type: 'ideias';
 };
+
+/**
+ * A single historical event in an Épocas challenge: an undated sentence
+ * paired with its secret year.
+ */
+export type DailyEpocasEvent = {
+  /**
+   * The event's real year. Negative values represent BC/BCE years.
+   */
+  year: number;
+  /**
+   * The event's description, shown to the player without its year.
+   */
+  event: string;
+};
+
+/**
+ * Today's Épocas challenge payload.
+ */
+export type DailyEpocasEntry = {
+  /**
+   * Today's daily challenge id (a date string).
+   */
+  id: string;
+  /**
+   * Sequential challenge number shown to the player.
+   */
+  number: number;
+  /**
+   * Discriminator for Épocas payloads.
+   */
+  type: 'epocas';
+  /**
+   * Dataset identifier forwarded by the backend for today's events pool.
+   */
+  setId: string;
+  /**
+   * The events to order, already shuffled into a non-chronological
+   * starting order by the backend.
+   */
+  events: DailyEpocasEvent[];
+};

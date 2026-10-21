@@ -1007,6 +1007,14 @@ export const MOCK_DAILY_RESPONSE: DailyResponse = {
       id: '2026-10-04',
       number: 1,
       type: 'epocas',
+      setId: 'brazil-history-01',
+      events: [
+        { year: 1822, event: 'Independência do Brasil é proclamada' },
+        { year: -753, event: 'Fundação da cidade de Roma (tradição lendária)' },
+        { year: 1500, event: 'Chegada dos portugueses ao Brasil' },
+        { year: 1969, event: 'Primeira chegada do homem à Lua' },
+        { year: 1888, event: 'Abolição da escravatura no Brasil' },
+      ],
     },
     karaoke: {
       id: '2026-10-04',
