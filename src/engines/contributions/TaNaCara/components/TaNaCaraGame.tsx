@@ -264,16 +264,15 @@ export function TaNaCaraGame({ data, initialState }: TaNaCaraGameProps) {
             />
           )}
 
-          {questionNumber >= Math.min(MIN_REQUIRED_QUESTIONS, totalQuestions) &&
-            questionNumber < totalQuestions && (
-              <Alert
-                type="info"
-                message="Você já respondeu o mínimo necessário."
-                description="Se cansou, já pode salvar agora ou continuar avaliando mais depoimentos."
-                showIcon
-                className="w-full"
-              />
-            )}
+          {canSubmit && questionNumber < totalQuestions && (
+            <Alert
+              type="info"
+              message="Você já respondeu o mínimo necessário."
+              description="Se cansou, já pode salvar agora ou continuar avaliando mais depoimentos."
+              showIcon
+              className="w-full"
+            />
+          )}
 
           <div className="grid w-full grid-cols-2 gap-3">
             <Button
