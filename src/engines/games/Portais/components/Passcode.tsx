@@ -43,7 +43,9 @@ type PasscodeProps = {
  * Renders the slot-like word columns used to assemble Portais' current
  * passcode, locking columns whose selected letter already matches the
  * answer. Column width is measured against the available container width
- * so even long passcodes (many columns) fit on a single line without
+ * divided by the actual column count, so it grows to fill the screen for
+ * short passcodes (up to `MAX_COLUMN_WIDTH`) and shrinks for long ones (down
+ * to `MIN_COLUMN_WIDTH`) so every column still fits on a single line without
  * wrapping, cropping, or scrolling.
  *
  * @param props Passcode, word columns, selected indexes, and interaction handler.
@@ -58,7 +60,7 @@ export function Passcode({
   disabled,
 }: PasscodeProps) {
   const [columnWidth, containerRef] = useCardWidthByContainerRef(
-    Math.max(Math.min(words.length, 15), 12),
+    Math.max(words.length, 1),
     {
       gap: COLUMN_GAP,
       minWidth: MIN_COLUMN_WIDTH,

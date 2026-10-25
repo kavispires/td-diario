@@ -12,7 +12,7 @@ export const DEFAULT_COLUMN_POSITION = 1;
  * Largest width, in pixels, a rotating passcode column (and its square
  * letter tiles) is allowed to grow to.
  */
-export const MAX_COLUMN_WIDTH = 44;
+export const MAX_COLUMN_WIDTH = 36;
 
 /**
  * Smallest width, in pixels, a rotating passcode column (and its square
