@@ -79,6 +79,7 @@ export function Disc({ disc, width, onSelect, animationDelay = 0 }: DiscProps) {
             itemId={item.itemId}
             width={itemWidth}
             padding={9}
+            disableTooltip
           />
         </button>
       ))}

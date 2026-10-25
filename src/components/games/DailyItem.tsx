@@ -48,15 +48,25 @@ type DailyItemProps = {
    * doesn't touch its container's edges. Defaults to `6`.
    */
   padding?: number;
+  /**
+   * When `true`, never shows the name tooltip, regardless of `title` or
+   * the daily dictionary. Useful for items rendered inside a fast-tapping
+   * game action (e.g. Aqui Ó's discs), where the long-press tooltip
+   * gesture conflicts with quick taps and makes selection feel buggy.
+   * Defaults to `false`.
+   */
+  disableTooltip?: boolean;
 };
 
 /**
  * Renders a single game item (e.g. a grid tile or tracker icon) by
  * resolving its id to the matching sprite sheet symbol. On a press-and-hold
  * of 1+ second (for touch devices without hover), shows the item's name in
- * a tooltip when it's present in today's `metadata.dictionary`.
+ * a tooltip when it's present in today's `metadata.dictionary`, unless
+ * `disableTooltip` is set.
  *
- * @param props Item id, sizing, optional tooltip title, classes, and padding.
+ * @param props Item id, sizing, optional tooltip title, classes, padding,
+ *   and whether the tooltip is disabled.
  * @returns The rendered item sprite.
  */
 export function DailyItem({
@@ -65,11 +75,14 @@ export function DailyItem({
   title,
   className,
   padding = 6,
+  disableTooltip = false,
 }: DailyItemProps) {
   const [source, spriteId] = getItemSpriteSource(itemId);
   const dailyChallenges = useGetDailyChallenges();
   const dictionary = dailyChallenges.data?.metadata?.dictionary;
-  const tooltipTitle = title ?? dictionary?.[itemId];
+  const tooltipTitle = disableTooltip
+    ? undefined
+    : (title ?? dictionary?.[itemId]);
   const { isPressing, handlers, dismiss } = useLongPress({
     enabled: !!tooltipTitle,
   });
