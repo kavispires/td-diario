@@ -14,8 +14,16 @@ export function SoundSfxAlert() {
   return (
     <Alert
       type="warning"
-      message="Este jogo fica melhor com o som ligado."
-      description="Use o botão de som no topo da tela para ativá-lo antes de começar."
+      message={
+        <span className="text-gold">
+          Este jogo fica melhor com o som ligado.
+        </span>
+      }
+      description={
+        <span className="text-gold">
+          Use o botão de som no topo da tela para ativá-lo antes de começar.
+        </span>
+      }
       className="w-full"
     />
   );
