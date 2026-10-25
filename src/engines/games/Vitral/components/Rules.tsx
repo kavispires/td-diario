@@ -39,8 +39,10 @@ export function Rules() {
             className="inline h-4 w-4 fill-destructive text-destructive"
             aria-hidden="true"
           />{' '}
-          e perde um a cada {HEART_LOSS_INTERVAL_SECONDS} segundos, mais um
-          segundo extra por peça do quebra-cabeça.
+          e perde um a cada {HEART_LOSS_INTERVAL_SECONDS} segundos (mínimo),
+          mais 1 segundo extra por peça do quebra-cabeça do dia — ou seja,
+          quebra-cabeças com mais peças dão mais tempo antes de perder um
+          coração.
         </Text>
       </li>
       <li>

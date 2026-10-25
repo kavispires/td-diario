@@ -90,8 +90,9 @@ export function VitralGame({ data, initialState }: VitralGameProps) {
 
       <GameTitle
         title={data.title}
-        description={`Arraste uma peça para perto de outra que combine para grudá-las.  Você perde um coração a cada
-        ${HEART_LOSS_INTERVAL_SECONDS + data.pieces.length} segundos.`}
+        description={`Arraste uma peça para perto de outra que combine para grudá-las. Você perde um coração a cada ${
+          HEART_LOSS_INTERVAL_SECONDS + data.pieces.length
+        } segundos (${HEART_LOSS_INTERVAL_SECONDS}s mínimo + 1s por peça).`}
       />
 
       <PuzzleBoard
