@@ -69,6 +69,17 @@ export function buildDailyUserUpdate(
 }
 
 /**
+ * Release stages whose completions should be recorded against the
+ * player's permanent stats/streak. Every other stage (`'demo'`,
+ * `'maintenance'`, `'disabled'`, `'soon'`, `'unreleased'`, `'retired'`)
+ * is excluded by default, so newly added stages are opted out unless
+ * explicitly added here.
+ */
+const STATS_ELIGIBLE_RELEASE_STAGES: ReadonlySet<GameInfo['release']> = new Set(
+  ['stable', 'beta'],
+);
+
+/**
  * Records a single game's completion against the current user's
  * `DailyUser` document: advances their daily streak (at most once per
  * day) and bumps that game's play stats. Performs exactly one Firestore
@@ -87,9 +98,10 @@ export function buildDailyUserUpdate(
  * that state instead of accumulating indefinitely.
  *
  * @param gameId - Kebab-case game id, matching a `GameInfo.id`.
- * @param release - The game's current `GameInfo.release` stage; when
- *   `'demo'`, this call no-ops entirely (a demo's results shouldn't affect
- *   the player's permanent stats or streak).
+ * @param release - The game's current `GameInfo.release` stage; this call
+ *   no-ops entirely unless it's in {@link STATS_ELIGIBLE_RELEASE_STAGES}
+ *   (e.g. a demo or disabled game's results shouldn't affect the
+ *   player's permanent stats or streak).
  * @param status - Whether the game was won or lost.
  * @param cloudSynced - The caller's current `GameState.cloudSynced` flag;
  *   when truthy, this call no-ops.
@@ -104,7 +116,7 @@ export async function recordGameCompletion(
   cloudSynced: boolean | undefined,
   markSynced: () => void,
 ): Promise<void> {
-  if (release === 'demo') return;
+  if (!STATS_ELIGIBLE_RELEASE_STAGES.has(release)) return;
   if (cloudSynced) return;
 
   const uid = useAuthStore.getState().user?.uid;
