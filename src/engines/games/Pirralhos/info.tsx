@@ -4,7 +4,7 @@ export const gameInfo: GameInfo = {
   id: 'pirralhos',
   key: 'PRL',
   type: 'game',
-  color: 'rgb(251, 232, 124)',
+  color: 'rgb(250, 220, 98)',
   emoji: '🧒',
   name: { pt: 'Pirralhos', en: 'Rascals' },
   tagline: {

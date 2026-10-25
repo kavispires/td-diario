@@ -21,7 +21,7 @@ import type { DailyResponse } from 'types/puzzles';
 
 export const MOCK_DAILY_RESPONSE: DailyResponse = {
   id: '2026-09-26',
-  minAppVersion: '3.1.0',
+  minAppVersion: '2.0.34',
   challenges: {
     'arte-ruim': getArteRuimDemo(),
     'aqui-o': getAquiODemo(),

@@ -148,6 +148,7 @@ export function GameResultsSplash({
               size="small"
               icon={<Puzzle />}
               block
+              className="border-white text-white hover:bg-white/10"
               onClick={() => navigate('/')}
             >
               Voltar ao Hub
@@ -156,6 +157,7 @@ export function GameResultsSplash({
               variant="ghost"
               size="small"
               block
+              className="text-white hover:bg-white/10"
               onClick={onClose}
             >
               Ver jogo
