@@ -75,8 +75,12 @@ export function useIdeiasEngine(
       }));
       setIsSubmittingAnother(false);
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-      recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
-        updateLocalStorage({ cloudSynced: true }),
+      recordGameCompletion(
+        gameInfo.key,
+        gameInfo.release,
+        'win',
+        state.cloudSynced,
+        () => updateLocalStorage({ cloudSynced: true }),
       );
       notification.success('Ideia enviada com sucesso!');
     },

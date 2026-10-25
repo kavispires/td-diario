@@ -1,3 +1,5 @@
+import { DemoAlert } from '@components/games/DemoAlert';
+import { gameInfos } from '@engines';
 import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
 import { ErrorScreen } from '@screens/states/ErrorScreen';
 import { useAppRuntimeStore } from '@store/useAppRuntimeStore';
@@ -217,6 +219,9 @@ export function GameScreen() {
         gameId={gameId}
         number={typeof data.number === 'number' ? data.number : null}
       />
+      {gameInfos[gameId as keyof typeof gameInfos]?.release === 'demo' && (
+        <DemoAlert />
+      )}
       <Game data={data} />
     </Suspense>
   );

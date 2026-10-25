@@ -224,6 +224,7 @@ export function usePortaisEngine(
       );
       recordGameCompletion(
         gameInfo.key,
+        gameInfo.release,
         shouldLogOutcome,
         state.cloudSynced,
         () => updateLocalStorage({ cloudSynced: true }),

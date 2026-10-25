@@ -100,8 +100,12 @@ export function useTaNaCaraEngine(
       setSaveFailed(false);
       setShowResults(true);
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-      recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
-        updateLocalStorage({ cloudSynced: true }),
+      recordGameCompletion(
+        gameInfo.key,
+        gameInfo.release,
+        'win',
+        state.cloudSynced,
+        () => updateLocalStorage({ cloudSynced: true }),
       );
       notification.success('Respostas salvas com sucesso!');
     },

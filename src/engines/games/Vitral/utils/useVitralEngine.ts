@@ -315,8 +315,12 @@ export function useVitralEngine(
       playSFX(nextStatus === GAME_LIFECYCLE_STATUS.WIN ? 'win' : 'swap');
       if (nextStatus === GAME_LIFECYCLE_STATUS.WIN) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-        recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
-          updateLocalStorage({ cloudSynced: true }),
+        recordGameCompletion(
+          gameInfo.key,
+          gameInfo.release,
+          'win',
+          state.cloudSynced,
+          () => updateLocalStorage({ cloudSynced: true }),
         );
       }
 

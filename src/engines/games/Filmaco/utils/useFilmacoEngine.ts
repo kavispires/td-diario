@@ -92,16 +92,24 @@ export function useFilmacoEngine(
       playSFX(isWin ? 'win' : 'addCorrect');
       if (isWin) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-        recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
-          updateLocalStorage({ cloudSynced: true }),
+        recordGameCompletion(
+          gameInfo.key,
+          gameInfo.release,
+          'win',
+          state.cloudSynced,
+          () => updateLocalStorage({ cloudSynced: true }),
         );
       }
     } else {
       playSFX(isLose ? 'lose' : 'addWrong');
       if (isLose) {
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
-        recordGameCompletion(gameInfo.key, 'lose', state.cloudSynced, () =>
-          updateLocalStorage({ cloudSynced: true }),
+        recordGameCompletion(
+          gameInfo.key,
+          gameInfo.release,
+          'lose',
+          state.cloudSynced,
+          () => updateLocalStorage({ cloudSynced: true }),
         );
       }
     }

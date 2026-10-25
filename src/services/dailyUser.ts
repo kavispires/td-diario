@@ -3,6 +3,7 @@ import { useAuthStore } from '@store/useAuthStore';
 import { getToday } from '@utils/helpers';
 import { differenceInCalendarDays } from 'date-fns';
 import { doc, updateDoc } from 'firebase/firestore';
+import type { GameInfo } from 'types/puzzles';
 import type { DailyUser, GameCompletionStatus, GameStat } from 'types/user';
 import { firestore } from './firebase';
 
@@ -86,6 +87,9 @@ export function buildDailyUserUpdate(
  * that state instead of accumulating indefinitely.
  *
  * @param gameId - Kebab-case game id, matching a `GameInfo.id`.
+ * @param release - The game's current `GameInfo.release` stage; when
+ *   `'demo'`, this call no-ops entirely (a demo's results shouldn't affect
+ *   the player's permanent stats or streak).
  * @param status - Whether the game was won or lost.
  * @param cloudSynced - The caller's current `GameState.cloudSynced` flag;
  *   when truthy, this call no-ops.
@@ -95,10 +99,12 @@ export function buildDailyUserUpdate(
  */
 export async function recordGameCompletion(
   gameId: string,
+  release: GameInfo['release'],
   status: GameCompletionStatus,
   cloudSynced: boolean | undefined,
   markSynced: () => void,
 ): Promise<void> {
+  if (release === 'demo') return;
   if (cloudSynced) return;
 
   const uid = useAuthStore.getState().user?.uid;

@@ -96,8 +96,12 @@ export function usePanicoEngine(
       if (isWin) {
         playSFX('win');
         logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-        recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
-          updateLocalStorage({ cloudSynced: true }),
+        recordGameCompletion(
+          gameInfo.key,
+          gameInfo.release,
+          'win',
+          state.cloudSynced,
+          () => updateLocalStorage({ cloudSynced: true }),
         );
       } else {
         playSFX('select');
@@ -139,8 +143,12 @@ export function usePanicoEngine(
     if (isLose) {
       playSFX('lose');
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
-      recordGameCompletion(gameInfo.key, 'lose', state.cloudSynced, () =>
-        updateLocalStorage({ cloudSynced: true }),
+      recordGameCompletion(
+        gameInfo.key,
+        gameInfo.release,
+        'lose',
+        state.cloudSynced,
+        () => updateLocalStorage({ cloudSynced: true }),
       );
     } else {
       playSFX('drama');

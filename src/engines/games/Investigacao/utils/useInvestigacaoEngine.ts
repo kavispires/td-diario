@@ -97,8 +97,12 @@ export function useInvestigacaoEngine(
     if (suspectId === data.culpritId) {
       playSFX('drama');
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
-      recordGameCompletion(gameInfo.key, 'lose', state.cloudSynced, () =>
-        updateLocalStorage({ cloudSynced: true }),
+      recordGameCompletion(
+        gameInfo.key,
+        gameInfo.release,
+        'lose',
+        state.cloudSynced,
+        () => updateLocalStorage({ cloudSynced: true }),
       );
       setState((previousState) => ({
         ...previousState,
@@ -115,8 +119,12 @@ export function useInvestigacaoEngine(
     if (isWin) {
       playSFX('win');
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-      recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
-        updateLocalStorage({ cloudSynced: true }),
+      recordGameCompletion(
+        gameInfo.key,
+        gameInfo.release,
+        'win',
+        state.cloudSynced,
+        () => updateLocalStorage({ cloudSynced: true }),
       );
     } else {
       playSFX('wee');

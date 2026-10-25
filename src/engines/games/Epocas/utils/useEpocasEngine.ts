@@ -133,8 +133,12 @@ export function useEpocasEngine(
         correctCount * CORRECT_POSITION_SCORE * state.hearts + WIN_BONUS_SCORE;
       playSFX('win');
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'win'));
-      recordGameCompletion(gameInfo.key, 'win', state.cloudSynced, () =>
-        updateLocalStorage({ cloudSynced: true }),
+      recordGameCompletion(
+        gameInfo.key,
+        gameInfo.release,
+        'win',
+        state.cloudSynced,
+        () => updateLocalStorage({ cloudSynced: true }),
       );
 
       setState((prev) => ({
@@ -154,8 +158,12 @@ export function useEpocasEngine(
 
     if (isLose) {
       logAnalyticsEvent(getGameAnalyticsEventName(gameInfo.key, 'lose'));
-      recordGameCompletion(gameInfo.key, 'lose', state.cloudSynced, () =>
-        updateLocalStorage({ cloudSynced: true }),
+      recordGameCompletion(
+        gameInfo.key,
+        gameInfo.release,
+        'lose',
+        state.cloudSynced,
+        () => updateLocalStorage({ cloudSynced: true }),
       );
     }
 
