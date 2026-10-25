@@ -103,6 +103,13 @@ export type DailyResponse = {
   metadata?: {
     dictionary?: Dictionary<string>;
   };
+  /**
+   * Minimum app version (matching `package.json`'s `version`) clients
+   * should be running, set by the backend so clients still running an
+   * older cached build can detect they're outdated and prompt for a hard
+   * refresh. Omitted while the backend doesn't send it yet.
+   */
+  minAppVersion?: string;
 };
 
 /**

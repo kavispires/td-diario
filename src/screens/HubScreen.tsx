@@ -1,4 +1,5 @@
 import { DailyStatusBoard } from '@components/DailyStatusBoard';
+import { AppUpdateBanner } from '@components/hub/AppUpdateBanner';
 import { GameCard } from '@components/hub/GameCard';
 import { GroupedShareModal } from '@components/hub/GroupedShareModal';
 import { Button } from '@components/ui/Button';
@@ -50,6 +51,8 @@ export function HubScreen() {
     // pb-24 keeps the last row of cards clear of the fixed bottom nav
     // (see ChromeNav, which pins itself only on this screen).
     <div className="flex flex-col pb-24">
+      <AppUpdateBanner />
+
       <DailyStatusBoard />
 
       <Title className="p-1 text-center text-lg">Jogue</Title>
