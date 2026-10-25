@@ -1,4 +1,8 @@
-import { DoorFrame } from '@components/game-elements/DoorFrame';
+import {
+  DOOR_FRAME_VIEWBOX,
+  DOOR_WINDOW,
+  DoorFrame,
+} from '@components/game-elements/DoorFrame';
 import { Image } from '@components/ui/Image';
 import { Text } from '@components/ui/Typography';
 import { useTDImageCardUrl } from '@hooks/useTDImageCardUrl';
@@ -146,15 +150,32 @@ function PortalImageCard({ cardId, width, alt }: PortalImageCardProps) {
   const imageUrl = useTDImageCardUrl(cardId);
 
   return (
-    <DoorFrame width={width}>
-      <Image
-        src={imageUrl}
-        alt={alt}
-        width="100%"
-        height="100%"
-        objectFit="cover"
-        rounded={false}
-      />
-    </DoorFrame>
+    <div
+      className="relative"
+      style={{
+        width,
+        aspectRatio: `${DOOR_FRAME_VIEWBOX.width} / ${DOOR_FRAME_VIEWBOX.height}`,
+      }}
+    >
+      <DoorFrame />
+      <div
+        className="absolute"
+        style={{
+          left: `${(DOOR_WINDOW.x / DOOR_FRAME_VIEWBOX.width) * 100}%`,
+          top: `${(DOOR_WINDOW.y / DOOR_FRAME_VIEWBOX.height) * 100}%`,
+          width: `${(DOOR_WINDOW.width / DOOR_FRAME_VIEWBOX.width) * 100}%`,
+          height: `${(DOOR_WINDOW.height / DOOR_FRAME_VIEWBOX.height) * 100}%`,
+        }}
+      >
+        <Image
+          src={imageUrl}
+          alt={alt}
+          width="100%"
+          height="100%"
+          objectFit="cover"
+          rounded={false}
+        />
+      </div>
+    </div>
   );
 }

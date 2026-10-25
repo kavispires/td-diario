@@ -1,41 +1,51 @@
-import type { ReactNode } from 'react';
+/**
+ * Intrinsic size, in SVG user units, of the {@link DoorFrame} artwork's
+ * `viewBox`.
+ */
+export const DOOR_FRAME_VIEWBOX = { width: 257.1, height: 318.8 };
+
+/**
+ * Position and size, in the same SVG user units as
+ * {@link DOOR_FRAME_VIEWBOX}, of the frame's transparent window — where a
+ * caller should position its own content (e.g. a preview image) so it lines
+ * up with the cutout.
+ */
+export const DOOR_WINDOW = { x: 53, y: 82, width: 150, height: 225 };
 
 /**
  * Props accepted by the {@link DoorFrame} component.
  */
 type DoorFrameProps = {
   /**
-   * Content rendered inside the door frame's opening.
-   */
-  children?: ReactNode;
-  /**
    * Additional classes merged onto the root `svg` element.
    */
   className?: string;
-  /**
-   * Rendered width, in pixels. Height scales automatically via the SVG's
-   * intrinsic aspect ratio.
-   */
-  width?: number;
 };
 
 /**
  * Renders a decorative arched door/portal frame (ported from
- * tardedivertida's `DoorFrame`), with its content placed inside the
- * opening via a `foreignObject`. Used by games like Portais to frame
- * preview images as portals.
+ * tardedivertida's `DoorFrame`) as a borderless overlay with a transparent
+ * window at {@link DOOR_WINDOW}. Used by games like Portais to frame
+ * preview images as portals: render this absolutely positioned on top of a
+ * plain HTML image that a caller itself positions to align with
+ * {@link DOOR_WINDOW} (as percentages of {@link DOOR_FRAME_VIEWBOX}).
  *
- * @param props Frame content, width, and class name.
- * @returns The rendered door frame.
+ * This intentionally has no content slot of its own — an earlier version
+ * placed the image inside the frame via an SVG `foreignObject`, but iOS
+ * Safari fails to apply percentage-based sizing to HTML embedded that way,
+ * leaving the image unclipped and overflowing. Plain CSS-positioned HTML
+ * behind the frame has no such issue.
+ *
+ * @param props Class name merged onto the root `svg` element.
+ * @returns The rendered door frame overlay.
  */
-export function DoorFrame({ children, width, className = '' }: DoorFrameProps) {
+export function DoorFrame({ className = '' }: DoorFrameProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       viewBox="0 0 257.1 318.8"
-      style={width ? { width: `${width}px` } : {}}
-      className={className}
+      className={`pointer-events-none absolute inset-0 h-full w-full ${className}`}
       aria-hidden="true"
     >
       <defs>
@@ -435,21 +445,6 @@ export function DoorFrame({ children, width, className = '' }: DoorFrameProps) {
           fill="#98616c"
           opacity="0.45"
         />
-        <path
-          fill="#231f20"
-          stroke="#231f20"
-          strokeMiterlimit="10"
-          d="M54.95 84.1h150v225h-150z"
-          opacity="0.59"
-        />
-        <foreignObject
-          x="53"
-          y="82"
-          width="150"
-          height="225"
-        >
-          {children}
-        </foreignObject>
       </g>
     </svg>
   );
