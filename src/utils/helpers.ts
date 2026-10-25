@@ -128,6 +128,20 @@ export const getGameStatuses = (status: string) => {
 };
 
 /**
+ * Resolves the status to use for a game that hasn't been won or lost yet,
+ * promoting it to `TRIED` once the player has made enough progress to be
+ * considered share-eligible on the hub.
+ * @param progress - The player's current progress value (e.g. discs matched, buttons cleared).
+ * @param threshold - The minimum progress required for the run to count as `TRIED`.
+ * @returns `GAME_LIFECYCLE_STATUS.TRIED` once `progress` reaches `threshold`, otherwise `GAME_LIFECYCLE_STATUS.IN_PROGRESS`.
+ */
+export const resolveOngoingStatus = (progress: number, threshold: number) => {
+  return progress >= threshold
+    ? GAME_LIFECYCLE_STATUS.TRIED
+    : GAME_LIFECYCLE_STATUS.IN_PROGRESS;
+};
+
+/**
  * Picks the singular or plural form of a word based on a quantity.
  *
  * @param quantity - The quantity determining which form to use.

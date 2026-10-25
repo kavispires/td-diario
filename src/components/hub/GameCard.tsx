@@ -27,12 +27,13 @@ type GameCardProps = HTMLMotionProps<'button'> & {
   state?:
     | 'available'
     | 'in-progress'
+    | 'tried'
     | 'completed'
     | 'disabled'
     | NonEmptyString;
   /**
    * Completion percentage (0 to 100) shown by the progress bar when `state`
-   * is `in-progress`.
+   * is `in-progress` or `tried`.
    */
   progressPercent?: number;
   /**
@@ -76,7 +77,13 @@ export function GameCard({
 
   // --- 2. STATES (Colors & Interactions) ---
   const isCompleted = state === 'completed';
-  const isInProgress = state === 'in-progress';
+  const isTried = state === 'tried';
+  const isInProgress = state === 'in-progress' || isTried;
+  // Plain "in-progress" renders as a raised white surface with a colored
+  // outline; "tried" instead uses the same filled, colored background as
+  // "completed" (it's already share-eligible), just with the progress bar
+  // still showing underneath.
+  const isRaisedSurface = state === 'in-progress';
   const isSoon = gameInfo.release === 'soon';
   const isMaintenance = gameInfo.release === 'maintenance';
   const isDisabled =
@@ -88,18 +95,29 @@ export function GameCard({
   const isOutlined =
     variant === 'outlined' && !isInProgress && !isCompleted && !isDisabled;
 
+  // Absolutely positioned descendants are offset from the ancestor's
+  // padding box, so `bottom-3`/`inset-x-3` lines the bar up flush with the
+  // `p-3` padding every non-large size uses, instead of adding an extra
+  // inset on top of it.
+  const progressBarInsetClass = 'inset-x-3 bottom-3';
+  // Rectangle cards (e.g. Aqui Ó, Pânico) are short enough that the
+  // centered logo/title can overlap the progress bar once it appears, so
+  // reserve extra bottom padding only for that size while in progress.
+  const inProgressButtonClass =
+    isInProgress && size === 'rectangle' ? 'pb-6' : '';
+
   // Determine dynamic styles based on state
   const dynamicStyles = {
     backgroundColor: isOutlined
       ? withAlpha(gameInfo.color, 0.25)
-      : isInProgress
+      : isRaisedSurface
         ? 'var(--color-surface-raised)'
         : isDisabled
           ? 'var(--color-border)'
           : withAlpha(gameInfo.color, 0.85),
     borderColor: isOutlined
       ? gameInfo.color
-      : isInProgress
+      : isRaisedSurface
         ? gameInfo.color
         : 'transparent',
   };
@@ -112,7 +130,7 @@ export function GameCard({
 
   const borderClasses = isOutlined
     ? 'border-4'
-    : isInProgress
+    : isRaisedSurface
       ? 'border-2'
       : 'border-0';
 
@@ -184,6 +202,7 @@ export function GameCard({
         borderClasses,
         sizeClass,
         stateClasses,
+        inProgressButtonClass,
         className,
       )}
       {...props}
@@ -191,8 +210,9 @@ export function GameCard({
       {/* Absolute Badges */}
       {renderBadge()}
 
-      {/* Completed Checkmark */}
-      {isCompleted && (
+      {/* Completed Checkmark (also shown for "tried" runs, which are
+          already share-eligible even though they're still in progress) */}
+      {(isCompleted || isTried) && (
         <div className="absolute top-2 right-2 bg-white text-success p-1 rounded-full shadow-sm">
           <Check
             size={12}
@@ -238,15 +258,24 @@ export function GameCard({
         </p>
       )}
 
-      {/* Progress Bar (Only visible if in-progress) */}
+      {/* Progress Bar: absolutely positioned so it sits flush with the
+          card's own padding instead of participating in the flex centering
+          of the logo/title above (see `inProgressButtonClass` for the
+          rectangle-only extra bottom padding that keeps it from
+          overlapping that centered content). */}
       {isInProgress && (
-        <div className="w-full mt-auto pt-2">
-          <div className="w-full bg-border h-1.5 rounded-full overflow-hidden">
+        <div className={cn('absolute', progressBarInsetClass)}>
+          <div
+            className={cn(
+              'w-full h-1.5 rounded-full overflow-hidden',
+              isRaisedSurface ? 'bg-border' : 'bg-white/40',
+            )}
+          >
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{
                 width: `${progressPercent}%`,
-                backgroundColor: gameInfo.color,
+                backgroundColor: isRaisedSurface ? gameInfo.color : 'white',
               }}
             />
           </div>

@@ -68,7 +68,9 @@ export function GroupedShareModal({ open, onClose }: GroupedShareModalProps) {
   const playedEntries = useMemo(
     () =>
       orderBy(
-        entries.filter((entry) => entry.state === 'completed'),
+        entries.filter(
+          (entry) => entry.state === 'completed' || entry.state === 'tried',
+        ),
         'info.name.pt',
         'asc',
       ),

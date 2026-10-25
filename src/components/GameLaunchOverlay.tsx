@@ -19,6 +19,7 @@ import { DualTranslate } from './ui/DualTranslate';
 const PLAY_BUTTON_LABELS = {
   completed: 'Ver Resultado',
   'in-progress': 'Continuar',
+  tried: 'Continuar',
   available: 'Jogar',
   disabled: 'Jogar',
 } as const;

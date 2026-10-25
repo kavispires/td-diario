@@ -30,8 +30,9 @@ export function HubScreen() {
   // Order the cards:
   // 1. In-progress games, ordered by progress percentage (highest first)
   // 2. Available (not yet started) games
-  // 3. Completed games
-  // 4. Disabled/unavailable games
+  // 3. Tried games (in progress, but already share-eligible)
+  // 4. Completed games
+  // 5. Disabled/unavailable games
   // Ties within a group are resolved alphabetically by name.
 
   const orderedChallenges = orderBy(

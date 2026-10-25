@@ -14,9 +14,10 @@ export const HEARTS = 3;
 export const ROUND_DURATION_SECONDS = 60;
 
 /**
- * Minimum discs matched in a single attempt for the hub to treat today's
- * run as "completed", even though the player can keep retrying in-game
- * until they run out of hearts or reach {@link GOAL}.
+ * Minimum discs matched in a single attempt for the run to be considered
+ * {@link GAME_LIFECYCLE_STATUS.TRIED | share-eligible} on the hub, even
+ * though the player can keep retrying in-game until they run out of
+ * hearts or reach {@link GOAL}.
  */
 export const HUB_COMPLETION_DISC_THRESHOLD = 7;
 

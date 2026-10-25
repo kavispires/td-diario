@@ -7,12 +7,15 @@ import {
 } from '@services/firebase';
 
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
-import { getGameStatuses } from '@utils/helpers';
+import { getGameStatuses, resolveOngoingStatus } from '@utils/helpers';
 import { playSFX } from '@utils/soundEffects';
 import { useEffect, useMemo, useState } from 'react';
 import type { DailyPanicoEntry } from 'types/games';
 import { gameInfo } from '../info';
-import { INITIAL_ACTIVE_BUTTON_INDEX } from './constants';
+import {
+  HUB_COMPLETION_BUTTON_THRESHOLD,
+  INITIAL_ACTIVE_BUTTON_INDEX,
+} from './constants';
 import { buildButtons } from './engine';
 import { getProgress } from './helpers';
 import type { GameState, SessionState } from './types';
@@ -72,7 +75,10 @@ export function usePanicoEngine(
     }));
     setState((previousState) => ({
       ...previousState,
-      status: GAME_LIFECYCLE_STATUS.IN_PROGRESS,
+      status: resolveOngoingStatus(
+        previousState.farthestButtonIndex,
+        HUB_COMPLETION_BUTTON_THRESHOLD,
+      ),
     }));
   }
 
@@ -101,7 +107,10 @@ export function usePanicoEngine(
         ...previousState,
         status: isWin
           ? GAME_LIFECYCLE_STATUS.WIN
-          : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
+          : resolveOngoingStatus(
+              farthestButtonIndex,
+              HUB_COMPLETION_BUTTON_THRESHOLD,
+            ),
         farthestButtonIndex,
         progress: getProgress(farthestButtonIndex, previousState.totalButtons),
         score:
@@ -141,7 +150,10 @@ export function usePanicoEngine(
       ...previousState,
       status: isLose
         ? GAME_LIFECYCLE_STATUS.LOSE
-        : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
+        : resolveOngoingStatus(
+            farthestButtonIndex,
+            HUB_COMPLETION_BUTTON_THRESHOLD,
+          ),
       hearts,
       farthestButtonIndex,
       progress: getProgress(farthestButtonIndex, previousState.totalButtons),

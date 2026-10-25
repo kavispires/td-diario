@@ -4,6 +4,14 @@
 export const PANICO_TOTAL_HEARTS = 5;
 
 /**
+ * Minimum buttons cleared in a run for it to be considered share-eligible
+ * (`GAME_LIFECYCLE_STATUS.TRIED`) on the hub, even though the player can
+ * keep retrying in-game until they run out of hearts or reach the end of
+ * today's sequence.
+ */
+export const HUB_COMPLETION_BUTTON_THRESHOLD = 1;
+
+/**
  * Delay, in milliseconds, shown between resolved buttons.
  */
 export const PANICO_PROCESSING_DELAY_MS = 1_000;

@@ -1,5 +1,4 @@
 import { gameInfos } from '@engines';
-import { HUB_COMPLETION_DISC_THRESHOLD } from '@engines/games/AquiO/utils/constants';
 import { loadLocalToday } from '@hooks/useDailyLocalToday';
 import { useGetDailyChallenges } from '@hooks/useGetDailyChallenges';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
@@ -44,13 +43,15 @@ const CONTRIBUTION_IDS = (Object.keys(gameInfos) as GameId[]).filter(
 /**
  * Card display states, in the exact priority order they should appear on
  * the hub (lower rank sorts first): ongoing games, then not-yet-started
- * ones, then finished ones, then locked/unavailable ones.
+ * ones, then games the player already made enough progress in to be
+ * share-eligible, then finished ones, then locked/unavailable ones.
  */
 export const CARD_STATE_ORDER = {
   'in-progress': 0,
   available: 1,
-  completed: 2,
-  disabled: 3,
+  tried: 2,
+  completed: 3,
+  disabled: 4,
 } as const;
 
 /**
@@ -93,7 +94,8 @@ export type GameProgressEntry = {
  * @param release - The game's `GameInfo['release']`.
  * @param status - The game's current `DefaultGameState['status']`.
  * @returns `'disabled'` when the game isn't available to play yet,
- *   `'completed'` for a finished game (won or lost), `'in-progress'` while
+ *   `'completed'` for a finished game (won or lost), `'tried'` for a game
+ *   still in progress but already share-eligible, `'in-progress'` while
  *   it's ongoing, or `'available'` if it hasn't been started yet.
  */
 export function getCardState(
@@ -113,6 +115,9 @@ export function getCardState(
     status === GAME_LIFECYCLE_STATUS.LOSE
   ) {
     return 'completed';
+  }
+  if (status === GAME_LIFECYCLE_STATUS.TRIED) {
+    return 'tried';
   }
   if (status === GAME_LIFECYCLE_STATUS.IN_PROGRESS) {
     return 'in-progress';
@@ -224,49 +229,12 @@ function buildProgressEntries(
       key,
       challenge: resolvedChallenge,
       info: effectiveInfo,
-      state: resolveCardState(key, effectiveInfo.release, localState),
+      state: getCardState(effectiveInfo.release, localState.status),
       progressPercent: Math.round(localState.progress * 100),
     });
   }
 
   return entries;
-}
-
-/**
- * Resolves a hub card's display state, applying Aqui O's "completed early"
- * exception on top of {@link getCardState}: since the player can keep
- * retrying there after a single attempt reaches a high disc count, the hub
- * treats that attempt as completed without waiting for the in-game
- * win/lose outcome, which stays driven by its own hearts/goal rules.
- *
- * @param key - The game's `gameInfos` id.
- * @param release - The game's `GameInfo['release']`.
- * @param localState - The game's locally-persisted lifecycle state.
- * @returns The card's resolved display state.
- */
-function resolveCardState(
-  key: GameId,
-  release: GameInfo['release'],
-  localState: DefaultGameState,
-): CardState {
-  const state = getCardState(release, localState.status);
-
-  if (state === 'disabled' || state === 'completed' || key !== 'aqui-o') {
-    return state;
-  }
-
-  const maxProgress = (
-    localState as DefaultGameState & { maxProgress?: number }
-  ).maxProgress;
-
-  if (
-    typeof maxProgress === 'number' &&
-    maxProgress >= HUB_COMPLETION_DISC_THRESHOLD
-  ) {
-    return 'completed';
-  }
-
-  return state;
 }
 
 /**

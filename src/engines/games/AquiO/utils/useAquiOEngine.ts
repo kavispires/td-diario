@@ -6,13 +6,14 @@ import {
 } from '@services/firebase';
 import { useUserPreferencesStore } from '@store/useUserPreferencesStore';
 import { GAME_LIFECYCLE_STATUS } from '@utils/constants';
-import { getGameStatuses } from '@utils/helpers';
+import { getGameStatuses, resolveOngoingStatus } from '@utils/helpers';
 import { playSFX } from '@utils/soundEffects';
 import { vibrate } from '@utils/vibrate';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DailyAquiOEntry } from 'types/games';
 import { gameInfo } from '../info';
 import {
+  HUB_COMPLETION_DISC_THRESHOLD,
   ROUND_DURATION_SECONDS,
   SPEECH_LANGUAGE,
   SPEECH_RATE,
@@ -108,12 +109,17 @@ export function useAquiOEngine(
         setState((prev) => ({
           ...prev,
           // A round timing out without winning or losing isn't a fresh,
-          // untouched game — keep it "in-progress" (rather than resetting
-          // to "idle") so the hub still shows it as played, since the
-          // player can still retry with their remaining hearts today.
+          // untouched game — keep it "in-progress" (or promote it to
+          // "tried" once enough progress has been made) rather than
+          // resetting to "idle", so the hub still shows it as played,
+          // since the player can still retry with their remaining
+          // hearts today.
           status: getGameStatuses(prev.status).isComplete
             ? prev.status
-            : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
+            : resolveOngoingStatus(
+                prev.maxProgress,
+                HUB_COMPLETION_DISC_THRESHOLD,
+              ),
         }));
       }
     };
@@ -158,7 +164,10 @@ export function useAquiOEngine(
       ...prev,
       attempts: prev.attempts + 1,
       score: 0,
-      status: GAME_LIFECYCLE_STATUS.IN_PROGRESS,
+      status: resolveOngoingStatus(
+        prev.maxProgress,
+        HUB_COMPLETION_DISC_THRESHOLD,
+      ),
     }));
 
     playSFX('addCorrect');
@@ -187,7 +196,10 @@ export function useAquiOEngine(
           ...prev,
           status: isWin
             ? GAME_LIFECYCLE_STATUS.WIN
-            : GAME_LIFECYCLE_STATUS.IN_PROGRESS,
+            : resolveOngoingStatus(
+                nextMaxProgress,
+                HUB_COMPLETION_DISC_THRESHOLD,
+              ),
           maxProgress: nextMaxProgress,
           progress: nextMaxProgress / prev.goal,
           score: nextScore,
@@ -236,7 +248,10 @@ export function useAquiOEngine(
     setState((prev) => ({
       ...prev,
       hearts: prev.hearts - 1,
-      status: GAME_LIFECYCLE_STATUS.IN_PROGRESS,
+      status: resolveOngoingStatus(
+        prev.maxProgress,
+        HUB_COMPLETION_DISC_THRESHOLD,
+      ),
     }));
 
     if (voice === 'on') {
